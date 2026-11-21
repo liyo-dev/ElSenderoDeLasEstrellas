@@ -10,7 +10,7 @@ RITMO entre_frases=0.4 mismo_hablante=0.25
 REPARTO
 will  Player                   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
 c2    NPC_Contrabandista2      nombre=CHAR_CONTRABANDISTA color=A89C8A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
-c1    NPC_Contrabandista1      nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/Pueblo/Jorge.prefab
+c1    NPC_Contrabandista1      nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab
 
 PUNTOS
 # Los dos del carro, en su campamento: el grandote y el vigía.

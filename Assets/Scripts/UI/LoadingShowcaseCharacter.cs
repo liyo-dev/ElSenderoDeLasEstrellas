@@ -69,6 +69,8 @@ public class LoadingShowcaseCharacter : MonoBehaviour
     void Awake()
     {
         ApplyRenderLayerRecursive();
+        // Línea de tinta como los personajes del juego (no llevan NPCSimpleAnimator, que es quien la pone).
+        Kits.InkOutline.InkOutlined.Ensure(gameObject);
 
         // Sin EmpezarCaras: el NPCEmotionController del modelo (hijo) puede no haber hecho aún su Awake.
         _cara = GetComponentInChildren<NPCEmotionController>(true);

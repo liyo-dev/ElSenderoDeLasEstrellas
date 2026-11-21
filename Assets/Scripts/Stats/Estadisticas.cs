@@ -54,6 +54,20 @@ public static class FormulasDeCombate
     /// daño, 25 un 33 %, 50 la mitad. Nunca llega al 100 %.
     public const float ConstanteDeDefensa = 50f;
 
+    /// Daño de un elemento contra una criatura débil a él (AfinidadElemental).
+    public const float MultiplicadorDebil = 1.5f;
+
+    /// Daño de un elemento contra una criatura que lo resiste. Nunca es 0: no hay inmunidades.
+    public const float MultiplicadorResiste = 0.6f;
+
+    /// Lo que multiplica el daño según cómo le sienta el elemento a quien lo recibe.
+    public static float MultiplicadorElemental(AfinidadAlElemento afinidad) => afinidad switch
+    {
+        AfinidadAlElemento.Debil => MultiplicadorDebil,
+        AfinidadAlElemento.Resiste => MultiplicadorResiste,
+        _ => 1f
+    };
+
     public static float DanoConAtaque(float danoBase, float ataque) =>
         danoBase * Mathf.Max(0f, ataque) / AtaqueDeReferencia;
 

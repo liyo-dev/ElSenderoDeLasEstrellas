@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sendero.Core.Feedback;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Inicializa el mundo cuando MainWorld se carga.
@@ -246,7 +247,6 @@ public class WorldBootstrap : MonoBehaviour
             // Aplicar entorno del anchor de spawn antes de esperar al jugador
             // Así el skybox/interior es correcto desde el primer frame visible
             StartCoroutine(EnsureAnchorSceneAndSpawn(anchor));
-            // Debug.Log("[WorldBootstrap] Iniciado en modo PRESET (testing)");
             return;
         }
 
@@ -279,7 +279,6 @@ public class WorldBootstrap : MonoBehaviour
             var qm = QuestManager.Instance;
             if (qm != null) qm.RestoreFromProfileFlags(runtimePreset.flags);
             
-            // Debug.Log($"[WorldBootstrap] Usando runtimePreset ya configurado → Anchor: '{anchorId}'");
         }
 
         // 3) Colocar jugador
@@ -463,7 +462,6 @@ public class WorldBootstrap : MonoBehaviour
             yield break;
         }
 
-        // Debug.Log($"[WorldBootstrap] Jugador encontrado: {player.name}, teletransportando a '{anchorId}'");
 
         // Esperar a que el jugador esté activo
         attempts = 0;

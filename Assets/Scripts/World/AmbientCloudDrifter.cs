@@ -3,6 +3,7 @@ using System.Collections;
 using Kits.WorldWrap;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Nube ambiental suelta que cruza el cielo de un lado a otro. Está SIEMPRE en movimiento: nace lejos del jugador, deriva hacia/más allá de él y sigue

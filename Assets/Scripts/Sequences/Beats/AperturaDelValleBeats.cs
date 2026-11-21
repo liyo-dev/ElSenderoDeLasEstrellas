@@ -5,7 +5,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Apertura del prólogo (INC-1200, storyboard «nuevo inicio del prólogo» del 14 nov 2026):
+// Apertura del prólogo:
 //   1. El Sendero: el Mago Oscuro pide su deseo ante el altar, el altar estalla en luz, nota un poder lejano y
 //      una estrella dorada crece hasta llenar la pantalla.               → DeseoEnElSenderoBeat
 //   2. El mapa del mundo en papel, con el punto del valle que late.     → MapaDeAperturaBeat

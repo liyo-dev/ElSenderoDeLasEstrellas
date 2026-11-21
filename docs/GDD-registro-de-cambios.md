@@ -1,5 +1,21 @@
 ## Registro de Cambios
 
+**20 de noviembre de 2026 — Cap. 3.3: el cierre de los contrabandistas, al día con lo decidido el 14 nov.**
+
+La fila 3.3 de § 5.7 aún decía «avisar a la guardia o combatir; jaulas quemadas», que Raúl retiró el 14 nov: en el claro Will se contiene y coge la pluma, la prueba para Estela. El combate solo llega si le pillan en el seguimiento. Los contrabandistas se quedan en su campamento y se van cuando Will ya está en el claro de Estela; el Cap. 4 sigue de seguido. Abierto: qué pasa con los animales de las jaulas (pregunta para Raúl).
+
+**19 de noviembre de 2026 — Debilidades elementales contra criaturas, por decisión de Raúl.**
+
+Sustituye a «no hay debilidades ni resistencias elementales en combate». Con las personas el elemento no cambia el daño (cuenta el efecto al devolver su hechizo, INC-1165); con las criaturas sí: débil ×1,5, el resto ×1, resistencia ×0,6 solo en casos concretos, nunca ×0. Los jefes-puzle conservan su mecánica y la debilidad solo multiplica el golpe que entra. Se enseña con un destello del color del elemento, sin números, y lo descubierto se apunta para el Grimorio. Afinidades: Araña y Mímico, Fuego; Demonios y Fantasma, Luz (el Fantasma resiste Oscuro); Gólem, Imp ladrón y Rocas, Viento; Beholder, Mente. Erika lo anuncia en `DLG_ERIKA_ELEMENTOS_03`. Actualizados § 3 (Enemigos y jefes), § 6.1 y «Pendiente de decidir». Copia previa en `_ClaudeBackups/debilidades-y-caminos-2026-11-19/`.
+
+**19 de noviembre de 2026 — La aldea del mar del Cap. 3: Pez enseña a nadar, Candela la del farol, sin zorro ni perro (INC-1320), por decisión de Raúl.**
+
+El nado pasa de la secundaria del Niño Pez a la historia: Pez, un adulto que se cree medio pez, enseña a nadar a Will a cambio de un recado y le nombra «pez de honor». Con el nado llega a la casa apartada de Candela, la pescadora que enciende cada noche un farol por su marido y vio el carro de los contrabandistas. La cerca rota del huerto es la última pista, de salida hacia el bosque. Fuera el zorro y el perro de la aldea (adaptación del juego; la novela no cambia). En el seguimiento, el puente se cruza a nado.
+
+**19 de noviembre de 2026 — Los aros son los ojos de Liam; el primer Demonio es casualidad, por decisión de Raúl.**
+
+Como adaptación del juego, Liam somete criaturas con aros de runas y ve por sus ojos en la bola de cristal; las reparte por caminos y bosques buscando a alguien con magia y corazón puro, y los contrabandistas le llevan criaturas en jaulas. El primer Demonio vigila el bosque y ataca a Will como a cualquier intruso; Liam lo ve por sus ojos y descubre que tiene magia, y el plan de usar a Will nace ahí. Sustituye a «Liam provoca el ataque para despertar su magia». Actualizados Premisa, Arco, Liam (§ 3), 5.5, 2.1, 3.3 y la Caja. El Gólem y el Demonio 2 los sigue orquestando Liam. Copia previa en `_ClaudeBackups/liam-aros-ojos-2026-11-19/`.
+
 **17 de noviembre de 2026 — Propuesta de clima, reloj y efectos elementales (INC-1276), sin aprobar.**
 
 Se añade a «Pendiente de decidir» una propuesta para que el clima modifique hechizos y enemigos, con reloj e icono en el HUD y pestaña «Mundo». No cambia el canon: sigue sin haber debilidades ni resistencias elementales en combate. Decidido e implementado por Raúl: el ciclo de día completo pasa a 30 min de franjas (`DayNightCycle.duracionTotalDelDia`; las transiciones van aparte). Detalle: `docs/clima-reloj-y-efectos-2026-11-17.md`.

@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d8708fd0f936346bad26dff04672db, type: 3}
+  m_Name: DLG_CAP3_LUBINA
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
+  lines:
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_LUBINA_01
+    text: "Ejem\u2026 \xBFDo\xF1a Lubina? Dice Pez que lo del martes fue un malentendido."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 12
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_LUBINA_02
+    text: "\xA1Puaj!"
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 4
+  - speakerNameId: CHAR_PEZ
+    textId: DLG_CAP3_LUBINA_03
+    text: "\xBFY bien? \xBFQu\xE9 ha dicho?"
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 13
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_LUBINA_04
+    text: "\u2026Me ha escupido."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 14
+  - speakerNameId: CHAR_PEZ
+    textId: DLG_CAP3_LUBINA_05
+    text: "\xA1Eso es que s\xED! Una dama."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 1
+  maxLinesPerPage: 0
+  isGroupConversation: 0

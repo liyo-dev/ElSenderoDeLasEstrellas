@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Game.NPC;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Los actores del grafo en El Sendero: NPCs por su persistenceId (<see cref="NPCRegistry"/>) y
@@ -94,6 +95,13 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
     // Más cerca que esto, el jugador vería al actor desaparecer, aparecer o saltar de sitio.
     const float DistanciaSinTestigos = 25f;
 
+    // Tiempo máximo andando antes de retirarle aunque el jugador aún le vea.
+    const float SegundosParaIrse = 20f;
+    const float DistanciaParaIrse = 35f;
+
+    // Actores que se están yendo andando antes de retirarse, con cuándo empezaron.
+    readonly Dictionary<string, float> _yendose = new();
+
     // Actores retirados por una agenda: se apagan y se guardan aquí para poder devolverlos.
     readonly Dictionary<string, GameObject> _retirados = new();
 
@@ -125,7 +133,20 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
             if (npc.IsInCombatOrAlert || npc.IsInCinematic) return false;
             // Un actor que ya no se ve (una escena lo ha hecho desaparecer) se puede retirar aunque
             // el jugador esté al lado: nadie le ve irse (INC-1031).
-            if (CercaDelJugador(npc.transform.position) && SeVe(npc)) return false;
+            // Con el jugador delante no se esfuma: se va andando lejos de él y se retira cuando
+            // ya está lejos (o tras un rato, si el jugador le sigue). Así se le ve marcharse en vez
+            // de quedarse plantado (INC-1406).
+            if (CercaDelJugador(npc.transform.position) && SeVe(npc))
+            {
+                if (!_yendose.TryGetValue(actorId, out float desde))
+                {
+                    if (!Marcharse(npc)) return false;
+                    _yendose[actorId] = Time.time;
+                    return false;
+                }
+                if (Time.time - desde < SegundosParaIrse) return false;
+            }
+            _yendose.Remove(actorId);
             _retirados[actorId] = npc.gameObject;
             npc.gameObject.SetActive(false);
             return true;
@@ -193,8 +214,32 @@ public sealed class NpcNarrativeAdapter : INarrativeActorDirectory, INarrativeAt
         return TryPlace(actorId, markId, false, true);
     }
 
+    // Echa a andar alejándose del jugador. False si ahora no puede (pelea, caído, cinemática).
+    static bool Marcharse(NPCBehaviourManagerV2 npc)
+    {
+        if (!PuedeAndar(npc) || !PlayerService.TryGetPlayer(out GameObject jugador) || jugador == null) return false;
+        Vector3 lejos = npc.transform.position - jugador.transform.position;
+        lejos.y = 0f;
+        if (lejos.sqrMagnitude < 0.01f) lejos = npc.transform.forward;
+        Vector3 destino = npc.transform.position + lejos.normalized * DistanciaParaIrse;
+        if (UnityEngine.AI.NavMesh.SamplePosition(destino, out var hit, 10f, UnityEngine.AI.NavMesh.AllAreas)) destino = hit.position;
+        npc.MoveToPosition(destino, maxDuration: SegundosParaIrse + 5f, turn: true);
+        return true;
+    }
+
+    // Puede obedecer una orden de andar: no está peleando, ni levantándose tras caer, ni en una cinemática.
+    static bool PuedeAndar(NPCBehaviourManagerV2 npc)
+    {
+        if (npc == null || npc.IsInCombatOrAlert || npc.IsInCinematic) return false;
+        var ciclo = npc.GetComponent<Game.NPC.Modules.NPCCombatLifecycleHandler>();
+        return ciclo == null || !ciclo.ProcesandoLaDerrota;
+    }
+
     static bool IrAndando(NPCBehaviourManagerV2 npc, SpawnAnchor mark)
     {
+        // Si ahora no puede andar (acaba de caer en una pelea…), se reintenta en la siguiente
+        // revisión en vez de dar la orden por hecha y dejarle plantado (INC-1406).
+        if (!PuedeAndar(npc)) return false;
         Vector3 destino = mark.transform.position;
         float metros = Vector3.Distance(npc.transform.position, destino);
         if (metros < 0.5f) return true;

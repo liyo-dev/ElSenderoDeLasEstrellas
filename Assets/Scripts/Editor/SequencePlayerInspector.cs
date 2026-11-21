@@ -6,11 +6,8 @@ using UnityEngine;
 ///
 /// ── Por qué no se dibuja el Inspector por defecto tal cual ────────────────────────────────────
 /// El SequencePlayer hereda de CinematicSequencerBase, que trae sus propios campos de señal de
-/// entrada/salida y de música. Pero cuando hay una SequenceDefinition asignada, esos campos NO se
-/// usan: mandan los del asset, y los del componente se quedan ahí como restos que dicen otra cosa
-/// — el 17 sep la pantalla mostraba "Signal Out: (vacío)" y "Sequence Music Id: AWAKEN" mientras el
-/// asset decía "AWAKEN_DONE" y música vacía. Dos fuentes de verdad visibles a la vez, y la que se
-/// lee no es la que manda.
+/// entrada/salida y de música. Dos fuentes de verdad visibles a la vez, y la que se lee no es la
+/// que manda.
 ///
 /// Así que se ocultan los que estén siendo ignorados y se muestra, arriba del todo, por dónde
 /// entra y por dónde sale la secuencia DE VERDAD — incluidas las salidas alternativas de las ramas,

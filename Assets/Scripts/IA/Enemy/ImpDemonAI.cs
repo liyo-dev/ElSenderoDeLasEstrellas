@@ -31,9 +31,8 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private GameObject spellEffectPrefab;
-    [Tooltip("Propuesta identidad de fase (30 ago 2026): aviso en el suelo antes de que salga un "
-             + "proyectil normal (Fase 2+), mismo patron visual que las sombras de RainAttack — antes "
-             + "el proyectil solo tenia un breve giro hacia el jugador, sin telegrafia real. "
+    [Tooltip("Aviso en el suelo antes de que salga un "
+             + "proyectil normal (Fase 2+), mismo patron visual que las sombras de RainAttack. "
              + "Si se deja vacio, reutiliza rainShadowPrefab (misma sombra que ya usa la lluvia).")]
     [SerializeField] private GameObject rangedTelegraphPrefab;
     [SerializeField] private float rangedTelegraphDuration = 0.4f;
@@ -48,10 +47,9 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [Header("Fases")]
     [SerializeField] private float phase2HealthPercent = 0.66f;
     [SerializeField] private float phase3HealthPercent = 0.33f;
-    [Tooltip("Propuesta identidad de fase (30 ago 2026): VFX opcional que se activa al entrar en "
-             + "Fase 3 y se queda encima del demonio mientras dure el combate — el 'enrage' antes solo "
-             + "se notaba en la camara (shake/flash) y en el multiplicador de velocidad, nunca en el "
-             + "propio demonio. Se deja vacio por defecto: sin asset asignado en el Inspector no pasa "
+    [Tooltip("VFX opcional que se activa al entrar en "
+             + "Fase 3 y se queda encima del demonio mientras dure el combate. "
+             + "Se deja vacio por defecto: sin asset asignado en el Inspector no pasa "
              + "nada (mismo guard que el resto de VFX opcionales de este script).")]
     [SerializeField] private GameObject enrageAuraVFXPrefab;
     private GameObject _enrageAuraInstance;
@@ -124,6 +122,31 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [SerializeField] private float[] velocidadPorFase = { 1f, 1.2f, 1.5f };
     private float _persiguiendoDesde = -1f;
 
+    [Header("Lectura del combate: lluvia (INC-1333)")]
+    [Tooltip("Efecto bajo el demonio mientras invoca la lluvia (círculo y columna hacia el cielo).")]
+    [SerializeField] private GameObject vfxInvocacion;
+    [Tooltip("Segundos que invoca, a la vista, antes de que salgan las marcas en el suelo.")]
+    [SerializeField, Min(0.2f)] private float preparacionDeLaLluvia = 1.2f;
+    [Tooltip("Si Will está más lejos, antes de invocar se acerca hasta esta distancia.")]
+    [SerializeField, Min(3f)] private float distanciaParaInvocar = 9f;
+    [Tooltip("Segundos como mucho acercándose antes de invocar.")]
+    [SerializeField, Min(0f)] private float maximoColocandose = 1.6f;
+    [Tooltip("Segundos del plano que le enseña invocando (PlanoDeAviso): la primera vez siempre; después, solo si está fuera de cuadro. 0 = sin plano.")]
+    [SerializeField, Min(0f)] private float planoDeLaInvocacion = 1.4f;
+    [SerializeField] private string sonidoInvocacion = "Demonio_Invocacion";
+
+    [Header("Lectura del combate: paso bajo tierra (INC-1333)")]
+    [Tooltip("Efecto donde se hunde.")]
+    [SerializeField] private GameObject vfxTeleSalida;
+    [Tooltip("Efecto en el suelo donde va a salir, mientras se espera.")]
+    [SerializeField] private GameObject vfxTeleAviso;
+    [Tooltip("Efecto al brotar.")]
+    [SerializeField] private GameObject vfxTeleLlegada;
+    [Tooltip("Segundos que se ve dónde va a salir antes de salir.")]
+    [SerializeField, Min(0.2f)] private float avisoDeLlegada = 0.75f;
+    [SerializeField] private string sonidoTeleSalida = "Demonio_TeleSalida";
+    [SerializeField] private string sonidoTeleLlegada = "Demonio_TeleLlegada";
+
     [Header("DEBUG")]
     [SerializeField] private bool debugLogAnimator = false;
 
@@ -173,7 +196,18 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     private float _velocidadBase;
     private float[] _umbrales;
     private Coroutine _accionActual;
+    private Coroutine _acusarGolpe;
     private TransicionDeFaseDeJefe _transicion;
+    private EsfumarseAlCaer _esfumarse;
+    private PlanoDeAviso _plano;
+    private Camera _camara;
+    private bool _invocacionVista;
+
+    // Cuerpo que se esconde bajo tierra.
+    private Renderer[] _visibles;
+    private bool[] _visibleAntes;
+    private Collider _choque;
+    private bool _oculto;
 
     // Cooldowns efectivos calculados en Awake
     private float _effSlashCooldown;
@@ -245,6 +279,11 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         _transicion = GetComponent<TransicionDeFaseDeJefe>();
         if (_transicion == null) _transicion = gameObject.AddComponent<TransicionDeFaseDeJefe>();
         _umbrales = new[] { phase2HealthPercent, isSecondEncounter ? phase3HealthPercentSecond : phase3HealthPercent };
+        _esfumarse = GetComponent<EsfumarseAlCaer>();
+        _plano = GetComponent<PlanoDeAviso>();
+        _choque = GetComponent<Collider>();
+        _visibles = GetComponentsInChildren<Renderer>(true);
+        _visibleAntes = new bool[_visibles.Length];
 
         BuildAnimatorLookup();
 
@@ -405,6 +444,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     {
         StopAllCoroutines();
         RecogerLluvia();
+        MostrarCuerpo(true);
     }
 
     private void RecogerLluvia()
@@ -421,7 +461,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         if (!hasSpawned || isDead || !canStartCombat) return;
 
         // congelar IA hostil mientras hay un diálogo abierto en
-        // cualquier parte del mundo (ver mismo fix en Spider1AI.Update). No corta un ataque que ya
+        // cualquier parte del mundo (igual que Spider1AI.Update). No corta un ataque que ya
         // esté a mitad de ejecución (eso vive en corrutinas propias de UpdateBehavior), solo evita
         // encadenar movimiento/decisiones nuevas mientras el jugador está bloqueado por el diálogo.
         if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
@@ -525,6 +565,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         if (_accionActual != null) StopCoroutine(_accionActual);
         _expuesto = false;
         _agotado = false;
+        MostrarCuerpo(true);
 
         if (currentPhase == BossPhase.Phase3) SpawnEnrageAura();
         _accionActual = StartCoroutine(TransicionDeFase());
@@ -994,33 +1035,47 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         yield return Agotarse();
     }
 
-    // En 2ª aparición: teleporta detrás del jugador en lugar de posición aleatoria
+    // Paso bajo tierra: se hunde en su sombra (efecto y sonido propios) y desaparece; en el suelo
+    // se marca dónde va a salir el tiempo justo para leerlo; brota (efecto y sonido) y golpea. En
+    // la 2ª aparición sale a la espalda de Will; en la 1ª, cerca de él.
     private IEnumerator UndergroundAttack()
     {
         EmpezarAtaque(false);
         currentState = BossState.Underground;
         lastUndergroundTime = Time.time;
-
-        PlayAnimation(AnimUnderground);
         if (agent && agent.isOnNavMesh) agent.isStopped = true;
 
-        yield return new WaitForSeconds(1f);
+        PlayAnimation(AnimUnderground, forzar: true);
+        yield return new WaitForSeconds(0.45f);
+        PlayVfx(vfxTeleSalida, transform.position, 2.5f);
+        Sonar(sonidoTeleSalida, transform.position);
+        MostrarCuerpo(false);
 
+        Vector3 destino = transform.position;
         if (player)
         {
-            Vector3 newPosition;
-            if (isSecondEncounter)
-                newPosition = player.position - player.forward * 2f;
-            else
-                newPosition = player.position + (Random.insideUnitSphere * 3f);
-
-            newPosition.y = transform.position.y;
-
-            if (NavMesh.SamplePosition(newPosition, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                transform.position = hit.position;
+            Vector3 deseado = isSecondEncounter
+                ? player.position - player.forward * 2f
+                : player.position + Random.insideUnitSphere * 3f;
+            deseado.y = player.position.y;
+            if (NavMesh.SamplePosition(deseado, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                destino = hit.position;
         }
+        PlayVfx(vfxTeleAviso, destino, avisoDeLlegada + 0.4f);
+        yield return new WaitForSeconds(avisoDeLlegada);
 
-        PlayAnimation(AnimSpawn);
+        if (agent && agent.enabled && agent.isOnNavMesh) agent.Warp(destino);
+        else transform.position = destino;
+        if (player)
+        {
+            Vector3 mira = player.position - destino;
+            mira.y = 0f;
+            if (mira.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(mira);
+        }
+        MostrarCuerpo(true);
+        PlayVfx(vfxTeleLlegada, destino, 2.5f);
+        Sonar(sonidoTeleLlegada, destino);
+        PlayAnimation(AnimSpawn, forzar: true);
         _expuesto = true; // al salir del suelo vuelve a brillar
         yield return new WaitForSeconds(0.5f);
 
@@ -1029,6 +1084,33 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         yield return new WaitForSeconds(0.5f);
         yield return Agotarse();
+    }
+
+    /// Esconde o enseña el cuerpo (y su choque) mientras va bajo tierra. Al enseñarlo vuelve cada
+    /// pieza a como estaba.
+    private void MostrarCuerpo(bool ver)
+    {
+        if (_visibles == null || ver != _oculto) return;
+        _oculto = !ver;
+        for (int i = 0; i < _visibles.Length; i++)
+        {
+            var r = _visibles[i];
+            if (!r) continue;
+            if (!ver) { _visibleAntes[i] = r.enabled; r.enabled = false; }
+            else r.enabled = _visibleAntes[i];
+        }
+        if (_choque) _choque.enabled = ver;
+    }
+
+    private static void PlayVfx(GameObject prefab, Vector3 posicion, float vida)
+    {
+        if (prefab && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(prefab, posicion, Quaternion.identity, vida);
+    }
+
+    private static void Sonar(string clave, Vector3 posicion)
+    {
+        if (!string.IsNullOrEmpty(clave)) AudioService.Instance?.PlaySFX(clave, 1f, posicion);
     }
 
     /// Marca en el suelo el sitio donde está Will, espera el aviso y embiste en línea recta hasta
@@ -1076,18 +1158,27 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         yield return Agotarse();
     }
 
-    // Lluvia de sombras: dos olas escalonadas. El aro solo brilla en el agotamiento del final:
-    // mientras cae la lluvia toca esquivar.
+    // Lluvia de sombras: se coloca a la vista, invoca (plano breve, círculo y columna) y, cuando
+    // suelta la magia, salen las marcas: dos olas escalonadas. El aro solo brilla en el
+    // agotamiento del final: mientras cae la lluvia toca esquivar.
     private IEnumerator RainAttack()
     {
         EmpezarAtaque(false);
         currentState = BossState.CastingSpell;
         lastRainTime = Time.time;
 
+        if (!_enElAire) yield return ColocarseParaInvocar();
+        currentState = BossState.CastingSpell;
         if (agent && agent.isOnNavMesh) agent.isStopped = true;
 
-        PlayAnimation(AnimCastSpell);
-        yield return new WaitForSeconds(0.5f);
+        PlayAnimation(AnimCastSpell, forzar: true);
+        if (planoDeLaInvocacion > 0f && _plano != null && (!_invocacionVista || !EnPantalla()))
+            _plano.Ensenar(planoDeLaInvocacion);
+        _invocacionVista = true;
+        PlayVfx(vfxInvocacion, transform.position, preparacionDeLaLluvia + 0.5f);
+        Sonar(sonidoInvocacion, transform.position);
+        FeedbackService.CameraShake(0.12f, preparacionDeLaLluvia);
+        yield return WaitFacingPlayer(preparacionDeLaLluvia);
 
         // Ola 1: amplia, sigue al jugador mientras avisa
         Vector3 center = player ? player.position : transform.position;
@@ -1095,13 +1186,36 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         yield return new WaitForSeconds(0.35f);
 
-        // Ola 2: más concentrada en donde el jugador se refugió, sin seguimiento
+        // Ola 2: vuelve a alzar las garras; más concentrada donde el jugador se refugió, sin seguimiento
+        PlayAnimation(AnimCastSpell, forzar: true);
         center = player ? player.position : transform.position;
         int wave2Count = rainCount / 2 + 2;
         yield return SpawnRainWave(center, wave2Count, rainRadius * 0.55f, rainWarningDuration * 0.6f, trackPlayer: false);
 
         yield return new WaitForSeconds(0.5f);
         yield return Agotarse();
+    }
+
+    /// Antes de invocar se acerca a Will (con un tope de tiempo): la lluvia se invoca a la vista.
+    private IEnumerator ColocarseParaInvocar()
+    {
+        if (!player || !agent || !agent.isOnNavMesh) yield break;
+        float fin = Time.time + maximoColocandose;
+        float limite = distanciaParaInvocar * distanciaParaInvocar;
+        while (Time.time < fin && player && (player.position - transform.position).sqrMagnitude > limite)
+        {
+            Perseguir();
+            yield return null;
+        }
+    }
+
+    /// El demonio está en el cuadro de la cámara.
+    private bool EnPantalla()
+    {
+        if (_camara == null) _camara = Camera.main;
+        if (_camara == null) return true;
+        Vector3 v = _camara.WorldToViewportPoint(transform.position + Vector3.up);
+        return v.z > 0f && v.x > 0.08f && v.x < 0.92f && v.y > 0.08f && v.y < 0.92f;
     }
 
     // Propuesta identidad de fase: aviso de un unico proyectil normal (Fase 2+),
@@ -1339,11 +1453,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         }
     }
 
-    // FIX INC-115: gira hacia el player durante los ataques a distancia (proyectil/hechizo).
-    // Antes UpdateBehavior() (unico sitio que llamaba a LookAtPlayer) se saltaba entero mientras
-    // isAttacking=true, asi que durante toda la corrutina de ProjectileAttack/CastSpellAttack
-    // (windup + rondas + cooldown, varios segundos en la 2a aparicion con rafagas triples) el
-    // demonio se quedaba congelado mirando hacia donde estuviera antes de empezar a lanzar.
+    // Gira hacia el player durante los ataques a distancia (proyectil/hechizo).
     private IEnumerator WaitFacingPlayer(float duration)
     {
         float elapsed = 0f;
@@ -1374,13 +1484,14 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     private int _lastPlayedAnimHash = -1;
     private int _lastPlayedLayer = -1;
 
-    private void PlayAnimation(int animHash)
+    /// 'forzar' la vuelve a empezar aunque sea la que ya suena (un golpe tras otro, otra invocación).
+    private void PlayAnimation(int animHash, bool forzar = false)
     {
         if (!animator) return;
 
         if (_animLookup != null && _animLookup.TryGetValue(animHash, out var info) && info.layer >= 0)
         {
-            if (_lastPlayedAnimHash == animHash && _lastPlayedLayer == info.layer) return;
+            if (!forzar && _lastPlayedAnimHash == animHash && _lastPlayedLayer == info.layer) return;
             try
             {
                 animator.Play(info.clipHash, info.layer, 0f);
@@ -1403,7 +1514,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         int layerIndex = AnimatorLayerContainingState(animHash);
         if (layerIndex >= 0)
         {
-            if (_lastPlayedAnimHash == animHash && _lastPlayedLayer == layerIndex) return;
+            if (!forzar && _lastPlayedAnimHash == animHash && _lastPlayedLayer == layerIndex) return;
             try
             {
                 animator.Play(animHash, layerIndex, 0f);
@@ -1468,33 +1579,34 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         return -1;
     }
 
+    // Solo le entra daño con el aro encendido. Cada golpe se ve y se oye (ReaccionAlGolpe:
+    // destello, sacudida, chispas y sonido); la animación de golpe, según lo que esté haciendo.
     private void OnDamageTaken(float amount)
     {
         if (isDead) return;
         if (_expuesto) _golpesEnVentana++;
 
-        // Agotado: acusa el golpe sin salir de la ventana.
+        // Agotado: acusa cada golpe (la animación vuelve a empezar) sin salir de la ventana.
         if (_agotado)
         {
-            PlayAnimation(AnimTakeDamage);
+            PlayAnimation(AnimTakeDamage, forzar: true);
             _volverAIdleEn = Time.time + 0.35f;
             return;
         }
 
+        // Preparando o soltando un ataque no se corta (sería un golpe gratis): basta la reacción.
         if (isAttacking) return;
-        StartCoroutine(TakeDamageSequence());
+        if (_acusarGolpe != null) StopCoroutine(_acusarGolpe);
+        _acusarGolpe = StartCoroutine(TakeDamageSequence());
     }
 
     private IEnumerator TakeDamageSequence()
     {
         currentState = BossState.TakingDamage;
-        bool wasAttacking = isAttacking;
-
-        PlayAnimation(AnimTakeDamage);
+        PlayAnimation(AnimTakeDamage, forzar: true);
         yield return new WaitForSeconds(0.3f);
-
-        if (!wasAttacking)
-            currentState = BossState.Idle;
+        if (currentState == BossState.TakingDamage) currentState = BossState.Idle;
+        _acusarGolpe = null;
     }
 
     private void OnDeath()
@@ -1536,6 +1648,8 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         StopCombatAndPlayDeathPose();
         _transicion.Tintar(new Color(fallenDarkenFactor, fallenDarkenFactor, fallenDarkenFactor, 1f), apagarEmision: true);
+        // Vencido sin morir: también se deshace a la vista (EsfumarseAlCaer lo apaga al acabar).
+        if (_esfumarse) _esfumarse.Esfumar();
 
         var healthBar = GetComponent<BossHealthBar>();
         if (healthBar) healthBar.Hide();
@@ -1591,8 +1705,9 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         StopAllCoroutines();
         RecogerLluvia();
+        MostrarCuerpo(true);
         CaerSiEstabaEnElAire();
-        PlayAnimation(AnimDie);
+        PlayAnimation(AnimDie, forzar: true);
 
         var colliders = GetComponentsInChildren<Collider>();
         foreach (var col in colliders)

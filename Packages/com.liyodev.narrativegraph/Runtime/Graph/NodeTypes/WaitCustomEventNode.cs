@@ -2,78 +2,83 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-[NarrativeNodeInfo("Señales", "Esperar señal", "Espera una señal custom (sticky: si ya se disparó, pasa de largo).")]
-[SavePoint("Seguro guardar mientras espera eventos")]
-[UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Assembly-CSharp")]
-public sealed class WaitCustomEventNode : NarrativeNode, INarrativeStateEffect
+namespace Liyodev.NarrativeGraph
 {
-    [NarrativeKey(NarrativeKeyKind.Signal)]
-    public string eventKey;
-
-    [Tooltip("Si está marcado (por defecto), una señal ocurrida ANTES de llegar a este nodo también cuenta (comportamiento sticky). Si se desmarca, se descarta cualquier emisión previa y solo avanza si la señal ocurre mientras este nodo está esperando.")]
-    public bool acceptEarlierEvent = true;
-
-    [Tooltip("Objeto que el jugador ya tiene cuando llega la señal (la señal avisa, por ejemplo, de una compra o de una recogida). No lo da: sirve para que el arranque de pruebas y «En vivo» sepan que, pasado este paso, el jugador lo lleva.")]
-    public NarrativeItemAsset impliedItem;
-
-    [Tooltip("Cuántas unidades del objeto lleva el jugador al llegar la señal.")]
-    [Min(1)] public int impliedItemAmount = 1;
-
-    public override void Describe(INarrativeNodeDescriber d)
+    [Serializable]
+    [NarrativeNodeInfo("Señales", "Esperar señal", "Espera una señal custom (sticky: si ya se disparó, pasa de largo).")]
+    [SavePoint("Seguro guardar mientras espera eventos")]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceNamespace: "", sourceAssembly: "Liyodev.NarrativeGraph")]
+    public sealed class WaitCustomEventNode : NarrativeNode, INarrativeStateEffect
     {
-        d.Signal(eventKey, SignalRole.Escucha);
-        if (impliedItem != null) d.Item(impliedItem, impliedItemAmount, "ya tiene");
-    }
+        [NarrativeKey(NarrativeKeyKind.Signal)]
+        [SerializeField] private string eventKey;
+        public string EventKey { get => eventKey; set => eventKey = value; }
 
-    /// Haber pasado de este nodo quiere decir que la señal llegó y, si la señal lo implica, que el
-    /// jugador ya tiene el objeto.
-    public void Project(INarrativeStateWriter state)
-    {
-        state.MarkSignalRaised(eventKey);
-        if (impliedItem != null) state.EnsureItem(impliedItem.ItemId, Mathf.Max(1, impliedItemAmount));
-    }
+        [Tooltip("Si está marcado (por defecto), una señal ocurrida ANTES de llegar a este nodo también cuenta (comportamiento sticky). Si se desmarca, se descarta cualquier emisión previa y solo avanza si la señal ocurre mientras este nodo está esperando.")]
+        [SerializeField] private bool acceptEarlierEvent = true;
+        public bool AcceptEarlierEvent { get => acceptEarlierEvent; set => acceptEarlierEvent = value; }
 
-    public override void CollectWarnings(List<string> warnings)
-    {
-        if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("eventKey vacío");
-    }
+        [Tooltip("Objeto que el jugador ya tiene cuando llega la señal (la señal avisa, por ejemplo, de una compra o de una recogida). No lo da: sirve para que el arranque de pruebas y «En vivo» sepan que, pasado este paso, el jugador lo lleva.")]
+        [SerializeField] private NarrativeItemAsset impliedItem;
 
-    public override void Enter(NarrativeContext ctx, Action ready)
-    {
-        if (!acceptEarlierEvent)
+        [Tooltip("Cuántas unidades del objeto lleva el jugador al llegar la señal.")]
+        [Min(1)] [SerializeField] private int impliedItemAmount = 1;
+
+        public override void Describe(INarrativeNodeDescriber d)
         {
-            ctx?.Signals?.ClearPendingCustom(eventKey);
+            d.Signal(eventKey, SignalRole.Escucha);
+            if (impliedItem != null) d.Item(impliedItem, impliedItemAmount, "ya tiene");
         }
 
-        // Usar GUID del nodo para hacer el flag específico a esta instancia
-        var eventReceivedKey = $"__event_{guid}_{eventKey}_received";
-        if (acceptEarlierEvent && ctx.Blackboard.Get<bool>(eventReceivedKey, false))
+        /// Haber pasado de este nodo quiere decir que la señal llegó y, si la señal lo implica, que el
+        /// jugador ya tiene el objeto.
+        public void Project(INarrativeStateWriter state)
         {
-            // El flag se consume al leerlo: si no se limpia, un nodo dentro de un bucle de reintento
-            // avanzaría sin esperar el evento real en la segunda vuelta.
-            ctx.Blackboard.Set(eventReceivedKey, false);
+            state.MarkSignalRaised(eventKey);
+            if (impliedItem != null) state.EnsureItem(impliedItem.ItemId, Mathf.Max(1, impliedItemAmount));
+        }
+
+        public override void CollectWarnings(List<string> warnings)
+        {
+            if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("eventKey vacío");
+        }
+
+        public override void Enter(NarrativeContext ctx, Action ready)
+        {
+            if (!acceptEarlierEvent)
+            {
+                ctx?.Signals?.ClearPendingCustom(eventKey);
+            }
+
+            // Usar GUID del nodo para hacer el flag específico a esta instancia
+            var eventReceivedKey = $"__event_{Guid}_{eventKey}_received";
+            if (acceptEarlierEvent && ctx.Blackboard.Get<bool>(eventReceivedKey, false))
+            {
+                // El flag se consume al leerlo: si no se limpia, un nodo dentro de un bucle de reintento
+                // avanzaría sin esperar el evento real en la segunda vuelta.
+                ctx.Blackboard.Set(eventReceivedKey, false);
     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[WaitCustom:{guid}] Evento '{eventKey}' ya fue recibido previamente → avanzando inmediatamente (flag consumido)");
+            Debug.Log($"[WaitCustom:{Guid}] Evento '{eventKey}' ya fue recibido previamente → avanzando inmediatamente (flag consumido)");
 #endif
-            ready?.Invoke();
-            return;
-        }
+                ready?.Invoke();
+                return;
+            }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[WaitCustom:{guid}] Suscribiéndose a '{eventKey}' (acceptEarlier={acceptEarlierEvent})...");
+            Debug.Log($"[WaitCustom:{Guid}] Suscribiéndose a '{eventKey}' (acceptEarlier={acceptEarlierEvent})...");
 #endif
-        void Handler()
-        {
-            ctx.Signals.OffCustom(eventKey, Handler);
-            // Marcar el evento como recibido en el blackboard (específico a este nodo)
-            ctx.Blackboard.Set(eventReceivedKey, true);
+            void Handler()
+            {
+                ctx.Signals.OffCustom(eventKey, Handler);
+                // Marcar el evento como recibido en el blackboard (específico a este nodo)
+                ctx.Blackboard.Set(eventReceivedKey, true);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[WaitCustom:{guid}] Recibido '{eventKey}' → avanzando");
+                Debug.Log($"[WaitCustom:{Guid}] Recibido '{eventKey}' → avanzando");
 #endif
-            ready?.Invoke();
+                ready?.Invoke();
+            }
+            ctx.Signals.OnCustom(eventKey, Handler);
         }
-        ctx.Signals.OnCustom(eventKey, Handler);
+
     }
-
 }

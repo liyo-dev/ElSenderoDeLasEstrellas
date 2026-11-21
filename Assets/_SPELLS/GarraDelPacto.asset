@@ -16,7 +16,7 @@ MonoBehaviour:
   displayNameId: SPELL_GARRA_PACTO_NAME
   displayName: Garra del Pacto
   kind: 0
-  element: 4
+  element: 5
   lore: "El pacto tiene u\xF1as, y Liam sabe d\xF3nde clavarlas."
   loreId: 
   prefab: {fileID: 8782389262988017905, guid: cfab68fba4e43ea49983c9d3fb83a5b4, type: 3}
@@ -107,6 +107,8 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  invisibilidadSegundos: 6
+  materialDeInvisible: {fileID: 0}
   abreProteccionSegundos: 0
   vfxProteccionAbierta: {fileID: 0}
   enGrimorio: 1

@@ -129,45 +129,43 @@ namespace Game.NPC.States
         /// mientras el agente esté fuera del NavMesh, así que hay que encargarse aquí). Devuelve
         /// true en cuanto llega.
         ///
-        /// FIX INC-NPCS-EN-ARBOLES: el comentario de cabecera de BeginManualApproach asume que
-        /// bajo la copa del árbol no hay ningún obstáculo físico real, solo el hueco del bakeo —
-        /// pero eso solo es cierto si el área "Not Walkable" del árbol cubre TODA la copa. Si algún
-        /// árbol tiene el radio de exclusión ajustado solo al tronco (bake más pequeño que la
-        /// copa, o un NavMeshObstacle mal dimensionado), el paso recto de MoveTowards puede
-        /// atravesarlo visualmente — exactamente el bug reportado de NPCs metiéndose en los
-        /// árboles del bosque. En vez de confiar en que cada árbol de cada escena esté bakeado con
-        /// el radio "correcto" (trabajo manual por árbol, no escalable), se comprueba con un
-        /// Raycast (sin alloc, un único hit, igual de barato que el resto de chequeos de este
-        /// estado) si el siguiente paso choca contra geometría real. Los personajes (jugador/otros
-        /// NPCs, distinguibles por NPCSimpleAnimator — ver regla de AGENTS.md §2, "personajes vs.
-        /// geometría en raycasts") no cuentan como bloqueo, solo props de escenario como el tronco.
-        /// Si hay bloqueo, se da el tramo por completado ahí mismo (mismo criterio que ya usa
-        /// SeekShelterState cuando el punto real está demasiado lejos del borde del NavMesh) en
-        /// vez de quedarse congelado reintentando para siempre.
+        /// El comentario de cabecera de BeginManualApproach asume que bajo la copa del árbol no hay
+        /// ningún obstáculo físico real, solo el hueco del bakeo — pero eso solo es cierto si el
+        /// área "Not Walkable" del árbol cubre TODA la copa. Si algún árbol tiene el radio de
+        /// exclusión ajustado solo al tronco (bake más pequeño que la copa, o un NavMeshObstacle
+        /// mal dimensionado), el paso recto de MoveTowards puede atravesarlo visualmente —
+        /// exactamente el bug reportado de NPCs metiéndose en los árboles del bosque. En vez de
+        /// confiar en que cada árbol de cada escena esté bakeado con el radio "correcto" (trabajo
+        /// manual por árbol, no escalable), se comprueba con un Raycast (sin alloc, un único hit,
+        /// igual de barato que el resto de chequeos de este estado) si el siguiente paso choca
+        /// contra geometría real. Los personajes (jugador/otros NPCs, distinguibles por
+        /// NPCSimpleAnimator — ver regla de AGENTS.md §2, "personajes vs. geometría en raycasts")
+        /// no cuentan como bloqueo, solo props de escenario como el tronco. Si hay bloqueo, se da
+        /// el tramo por completado ahí mismo (mismo criterio que ya usa SeekShelterState cuando el
+        /// punto real está demasiado lejos del borde del NavMesh) en vez de quedarse congelado
+        /// reintentando para siempre.
         ///
-        /// FIX complementario (mismo INC): el propio collider del árbol/prop bajo el que está el
-        /// punto de refugio (ownerCollider, ver NPCShelterPoint) se ignora explícitamente — es
-        /// justo el obstáculo que esta aproximación manual existe para rodear, y bloquear contra él
-        /// reintroduciría el bug original que BeginManualApproach ya arreglaba (el NPC se quedaba
-        /// fuera de la copa, "respetando" ese mismo collider, en vez de llegar al punto real). Solo
-        /// bloquea contra obstáculos AJENOS al punto de refugio (otro árbol, una roca, un muro).
+        /// El propio collider del árbol/prop bajo el que está el punto de refugio (ownerCollider,
+        /// ver NPCShelterPoint) se ignora explícitamente — es justo el obstáculo que esta
+        /// aproximación manual existe para rodear, y bloquear contra él reintroduciría el bug
+        /// original que BeginManualApproach ya arreglaba (el NPC se quedaba fuera de la copa,
+        /// "respetando" ese mismo collider, en vez de llegar al punto real). Solo bloquea contra
+        /// obstáculos AJENOS al punto de refugio (otro árbol, una roca, un muro).
         /// </summary>
-        // FIX INC-NPCS-EN-ARBOLES (14 ago 2026, 2ª pasada): el diagnóstico que SeekShelterState ya
-        // deja en consola ("revisar la altura Y del interactionPoint...") avisaba de que la Y
-        // autoral del interactionPoint bajo cada árbol puede no coincidir con el suelo real de esa
-        // escena (terreno irregular, o el punto colocado a ojo en el editor) — pero solo avisaba,
-        // no lo corregía: MoveTowards interpola en línea recta hacia esa Y tal cual, así que un
-        // desnivel entre el borde del NavMesh y el punto real se traduce directamente en el NPC
-        // hundiéndose o flotando mientras camina el tramo manual (bug reportado por Raúl: "los npcs
-        // se hunden en el suelo cuando se van al árbol porque llueve"). Repasar la Y de cada
-        // interactionPoint de cada árbol a mano no escala (mismo motivo por el que arriba no se
-        // arregla por NavMesh/colliders árbol por árbol) — en su lugar se reancla la Y de cada paso
-        // al suelo real, mismo patrón que ya usa el proyecto para esto (ver
-        // BossArenaController.PlaceBossOnFloor y AerialKnockbackReceiver._groundProbeMask):
-        // Raycast hacia abajo contra las layers "Floor"+"Obstacle" (las únicas que son terreno
-        // sólido de verdad, confirmado en AerialKnockbackReceiver). Si no hay suelo real cerca
-        // (layer mal puesta, hueco raro), se cae a la Y interpolada de MoveTowards sin más — nunca
-        // deja al NPC congelado por esto.
+        // El diagnóstico que SeekShelterState ya deja en consola ("revisar la altura Y del
+        // interactionPoint...") avisaba de que la Y autoral del interactionPoint bajo cada árbol
+        // puede no coincidir con el suelo real de esa escena (terreno irregular, o el punto
+        // colocado a ojo en el editor) — pero solo avisaba, no lo corregía: MoveTowards interpola
+        // en línea recta hacia esa Y tal cual, así que un desnivel entre el borde del NavMesh y el
+        // punto real se traduce directamente en el NPC hundiéndose o flotando mientras camina el
+        // tramo manual. Repasar la Y de cada interactionPoint de cada árbol a mano no escala (mismo
+        // motivo por el que arriba no se arregla por NavMesh/colliders árbol por árbol) — en su
+        // lugar se reancla la Y de cada paso al suelo real, mismo patrón que ya usa el proyecto
+        // para esto (ver BossArenaController.PlaceBossOnFloor y
+        // AerialKnockbackReceiver._groundProbeMask): Raycast hacia abajo contra las layers
+        // "Floor"+"Obstacle" (las únicas que son terreno sólido de verdad, confirmado en
+        // AerialKnockbackReceiver). Si no hay suelo real cerca (layer mal puesta, hueco raro), se
+        // cae a la Y interpolada de MoveTowards sin más — nunca deja al NPC congelado por esto.
         //
         // "Obstacle" está incluido en la máscara porque puede haber suelo irregular (rocas, raíces)
         // que cuenta como terreno sólido — pero el propio árbol/prop del punto de refugio
@@ -175,7 +173,7 @@ namespace Game.NPC.States
         // puede estar en esa layer, y su copa cuelga precisamente por ENCIMA del punto de refugio:
         // un Raycast de un único hit podría golpear la cara inferior de la copa en vez de atravesarla
         // y llegar al suelo real, colocando al NPC "de pie sobre la copa" en vez de bajo ella —
-        // exactamente el síntoma contrario (flotando) al que este fix arregla. Por eso se usa
+        // exactamente el síntoma contrario (flotando) al que evita este cálculo. Por eso se usa
         // RaycastNonAlloc (buffer fijo, sin alloc, mismo criterio que _obstructionHitsBuffer de
         // AerialKnockbackReceiver) y se descarta cualquier hit contra ignoreCollider, quedándose con
         // el primer hit real más cercano que sí sea terreno.
@@ -237,14 +235,13 @@ namespace Game.NPC.States
 
             context.Animator?.SetMovementSpeed(1f);
 
-            // FIX INC-NPCS-EN-ARBOLES (14 ago 2026, 2ª pasada): la llegada se mide ahora solo en
-            // horizontal (dir, ya sin componente Y) en vez de con "remaining" (target - next) en
-            // 3D completo. Motivo: next.y ya no seguía necesariamente la Y autoral de target — la
-            // corrección de suelo de arriba la reancla al terreno real — así que si esa Y autoral
-            // estaba desalineada con el suelo por más que arriveThreshold, "remaining" en 3D nunca
-            // bajaba del umbral y el NPC se quedaba caminando en el sitio para siempre sin llegar
-            // nunca a Arrive(). La posición vertical la decide el suelo, no interactionPoint; solo
-            // importa si ya se llegó en X/Z.
+            // La llegada se mide ahora solo en horizontal (dir, ya sin componente Y) en vez de con
+            // "remaining" (target - next) en 3D completo. Motivo: next.y ya no seguía
+            // necesariamente la Y autoral de target — la corrección de suelo de arriba la reancla
+            // al terreno real — así que si esa Y autoral estaba desalineada con el suelo por más
+            // que arriveThreshold, "remaining" en 3D nunca bajaba del umbral y el NPC se quedaba
+            // caminando en el sitio para siempre sin llegar nunca a Arrive(). La posición vertical
+            // la decide el suelo, no interactionPoint; solo importa si ya se llegó en X/Z.
             const float arriveThreshold = 0.05f;
             return dir.sqrMagnitude <= arriveThreshold * arriveThreshold;
         }

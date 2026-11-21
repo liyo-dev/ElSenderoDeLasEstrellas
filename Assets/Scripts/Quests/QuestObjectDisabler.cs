@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 // ───────────────────────────────────────────────────────────────────────────
 // CONGELADO — uno de los 7 micro-componentes de quest legacy.

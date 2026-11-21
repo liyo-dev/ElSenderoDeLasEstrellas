@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Problems in how a chapter flows, as opposed to a step's own fields: steps the story never
     /// reaches and decisions with a way out that leads nowhere.
@@ -24,7 +24,7 @@ namespace NarrativeGraphEditor.Story
             {
                 if (node == null || node.IsAnnotation) continue;
 
-                if (hasStart && !reachable.Contains(node.guid))
+                if (hasStart && !reachable.Contains(node.Guid))
                     Add(node, StoryText.T("La historia nunca llega a este paso: no sale de ningún otro conectado al inicio.",
                                           "The story never reaches this step: no step connected to the start leads here."));
 
@@ -42,13 +42,13 @@ namespace NarrativeGraphEditor.Story
 
         /// Flow problems of a step (empty if none, or if the step belongs to another graph).
         public static IReadOnlyList<string> For(NarrativeNode node)
-            => node != null && s_issues.TryGetValue(node.guid, out var list) ? list : (IReadOnlyList<string>)System.Array.Empty<string>();
+            => node != null && s_issues.TryGetValue(node.Guid, out var list) ? list : (IReadOnlyList<string>)System.Array.Empty<string>();
 
         public static bool IsFor(NarrativeGraph graph) => graph == s_graph;
 
         static void Add(NarrativeNode node, string text)
         {
-            if (!s_issues.TryGetValue(node.guid, out var list)) s_issues[node.guid] = list = new List<string>();
+            if (!s_issues.TryGetValue(node.Guid, out var list)) s_issues[node.Guid] = list = new List<string>();
             list.Add(text);
         }
 
@@ -63,8 +63,8 @@ namespace NarrativeGraphEditor.Story
                 var guid = stack.Pop();
                 if (string.IsNullOrEmpty(guid) || !seen.Add(guid)) continue;
                 var node = graph.FindNode(guid);
-                if (node?.outputs == null) continue;
-                foreach (var o in node.outputs) stack.Push(o);
+                if (node?.Outputs == null) continue;
+                foreach (var o in node.Outputs) stack.Push(o);
             }
             return seen;
         }

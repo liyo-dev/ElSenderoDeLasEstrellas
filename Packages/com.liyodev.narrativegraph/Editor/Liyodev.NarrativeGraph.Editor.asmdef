@@ -3,7 +3,6 @@
     "rootNamespace": "",
     "references": [
         "Liyodev.NarrativeGraph",
-        "Liyodev.Assistant.Editor",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [

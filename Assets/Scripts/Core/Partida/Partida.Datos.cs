@@ -85,6 +85,7 @@ public static partial class Partida
 
         if (!string.IsNullOrEmpty(d.lastSpawnAnchorId)) p.spawnAnchorId = d.lastSpawnAnchorId;
         p.posicionDeAutoguardado = d.posicionDeAutoguardado;
+        s_ultimaPosicionSegura = d.posicionDeAutoguardado;
 
         // Básicos: los del guardado que sigan desbloqueados. Un guardado anterior a INC-486 trae
         // ranuras izquierda/derecha; sin ninguno válido, el primer hechizo desbloqueado.

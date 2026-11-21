@@ -57,10 +57,8 @@ public class PerformanceCapture : MonoBehaviour
     [Header("Overlay en pantalla")]
     [SerializeField] private bool showOnScreenIndicator = true;
 
-    // Antes en 40: en una sesión larga (varias veces se ha grabado más de 1600s) se agotaba pronto
-    // y la segunda mitad de la sesión se quedaba sin ningún pico listado (ver incidencia "La lista
-    // de picos del F9 se corta a los 40" en registro-tecnico-incidencias.md). Subido a 200 y,
-    // más importante, cambiado el criterio de qué picos se conservan: ver SampleFrame().
+    // Subido a 200 y, más importante, cambiado el criterio de qué picos se conservan: ver
+    // SampleFrame().
     const int MaxSpikesRecorded = 200;
     const float BucketDurationSeconds = 1f;
 
@@ -84,11 +82,9 @@ public class PerformanceCapture : MonoBehaviour
     List<SpikeEntry> _spikeEntries;
     bool _spikesCapped;
 
-    // Antes se guardaban directamente como string, en orden de llegada, y una vez lleno el cupo
-    // se descartaba todo lo que llegara después (ver comentario en MaxSpikesRecorded). Guardar el
-    // valor en ms además del texto permite, una vez lleno el cupo, sustituir el pico más leve ya
-    // guardado por uno nuevo más grave en vez de descartarlo — así una sesión larga conserva los
-    // picos más importantes de principio a fin, no solo los primeros 200.
+    // Guardar el valor en ms además del texto permite, una vez lleno el cupo, sustituir el pico
+    // más leve ya guardado por uno nuevo más grave en vez de descartarlo — así una sesión larga
+    // conserva los picos más importantes de principio a fin, no solo los primeros 200.
     struct SpikeEntry
     {
         public float TiempoSegundos;
@@ -181,11 +177,9 @@ public class PerformanceCapture : MonoBehaviour
         if (FrameTimingManager.GetLatestTimings(1, _frameTimingBuffer) > 0)
         {
             var ft = _frameTimingBuffer[0];
-            // FrameTimingManager a veces devuelve un
-            // valor absurdamente grande en vez de un centinela limpio de "sin datos" (visto en una
-            // captura real: 439.208.083.456 ms en un único frame), lo que contamina el promedio de
-            // todo el bucket. "> 0" ya filtraba el -1/0 de "sin datos", pero no un valor imposible
-            // por arriba — se añade PlausibleFrameTimingMs como límite superior razonable.
+            // FrameTimingManager a veces devuelve un valor absurdamente grande en vez de un
+            // centinela limpio de "sin datos" (visto en una captura real: 439.208.083.456 ms en un
+            // único frame), lo que contamina el promedio de todo el bucket.
             if (ft.gpuFrameTime > 0 && ft.gpuFrameTime < PlausibleFrameTimingMs) { _bucketGpuMsSum += (float)ft.gpuFrameTime; _bucketGpuSamples++; }
             if (ft.cpuFrameTime > 0 && ft.cpuFrameTime < PlausibleFrameTimingMs) { _bucketCpuMsSum += (float)ft.cpuFrameTime; _bucketCpuSamples++; }
         }
@@ -264,7 +258,7 @@ public class PerformanceCapture : MonoBehaviour
             _lastSavedPath = SaveToDisk(json);
             _lastSaveFailed = false;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[PerformanceCapture] ⏹ Grabación detenida ({motivo}). Guardada en: {_lastSavedPath}");
+            Debug.Log($"[PerformanceCapture] Grabación detenida ({motivo}). Guardada en: {_lastSavedPath}");
 #endif
         }
         catch (Exception ex)
@@ -424,13 +418,13 @@ public class PerformanceCapture : MonoBehaviour
         if (_recording)
         {
             float t = Time.unscaledTime - _recordingStartRealtime;
-            DrawWithShadow($"🔴 Grabando rendimiento... {t:0}s · {GameplayEventLog.EventCount} eventos — F9 para parar", 16, 16, style);
+            DrawWithShadow($"Grabando rendimiento... {t:0}s · {GameplayEventLog.EventCount} eventos — F9 para parar", 16, 16, style);
         }
         else if (Time.unscaledTime < _lastSaveMessageUntil)
         {
             string msg = _lastSaveFailed
-                ? $"❌ No se pudo guardar la captura de rendimiento: {_lastSavedPath}"
-                : $"✅ Captura de rendimiento guardada en: {_lastSavedPath}";
+                ? $"No se pudo guardar la captura de rendimiento: {_lastSavedPath}"
+                : $"Captura de rendimiento guardada en: {_lastSavedPath}";
             DrawWithShadow(msg, 16, 16, style);
         }
     }

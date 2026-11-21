@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sendero.UI;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// El jugador para el grafo: su control (<see cref="PlayerActionManager"/> en modo Cinematic y el

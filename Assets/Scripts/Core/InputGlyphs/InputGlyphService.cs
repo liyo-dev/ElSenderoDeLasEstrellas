@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -308,6 +308,21 @@ namespace Core.InputGlyphs
                 if (sprite == null && buttonName == InputGlyphNames.Confirm && family != InputGlyphDeviceFamily.KeyboardMouse && familySet != null)
                     sprite = familySet.GetSprite(InputGlyphNames.South);
 
+                // Cancel (UI/Cancel): en mando, el botón de East; en teclado, Escape (el dibujo de Start).
+                if (sprite == null && buttonName == InputGlyphNames.Cancel && familySet != null)
+                    sprite = familySet.GetSprite(family == InputGlyphDeviceFamily.KeyboardMouse ? InputGlyphNames.Start : InputGlyphNames.East);
+
+                // Botones de menú (ver InputGlyphNames.MenuX): en mando, los de siempre; en teclado,
+                // C (arte propio), Q y E.
+                bool teclado = family == InputGlyphDeviceFamily.KeyboardMouse;
+                if (sprite == null && familySet != null)
+                {
+                    if (buttonName == InputGlyphNames.MenuX && !teclado) sprite = familySet.GetSprite(InputGlyphNames.West);
+                    else if (buttonName == InputGlyphNames.MenuLT) sprite = familySet.GetSprite(teclado ? InputGlyphNames.North : InputGlyphNames.TriggerLeft);
+                    else if (buttonName == InputGlyphNames.MenuRT) sprite = familySet.GetSprite(teclado ? InputGlyphNames.South : InputGlyphNames.TriggerRight);
+                    else if (buttonName == InputGlyphNames.MenuGirar) sprite = familySet.GetSprite(teclado ? InputGlyphNames.East : InputGlyphNames.Stick);
+                }
+
 
                 if (sprite == null && family != InputGlyphDeviceFamily.Xbox && xboxSet != null)
                 {
@@ -337,11 +352,11 @@ namespace Core.InputGlyphs
 
         // Calibración de tamaño para los sprites inyectados en TMP (ver BuildTmpSpriteAssets).
         //
-        // 2026-08-14 — REESCRITA. La versión anterior partía de las métricas "afinadas a ojo" de la
-        // entrada interactable_A de DialogueIcons.asset (832×1248 px, bearingX -60, bearingY 700,
-        // advance 750, scale 3) y las reescalaba con (RefHeight * 3) / alto_del_PNG, con la intención
-        // de que todos los botones salieran del mismo tamaño viniera el PNG en la resolución que
-        // viniera. El problema es que TMP YA normaliza la altura del sprite él solo:
+        // No se parte de las métricas "afinadas a ojo" de la entrada interactable_A de
+        // DialogueIcons.asset (832×1248 px, bearingX -60, bearingY 700, advance 750, scale 3) y las
+        // reescalaba con (RefHeight * 3) / alto_del_PNG, con la intención de que todos los botones
+        // salieran del mismo tamaño viniera el PNG en la resolución que viniera. El problema es que
+        // TMP YA normaliza la altura del sprite él solo:
         //
         //     currentElementScale = fontFace.ascentLine / glyph.metrics.height * character.scale
         //     (TextMeshProUGUI.cs, rama spriteFace.pointSize == 0)

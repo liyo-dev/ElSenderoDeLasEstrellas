@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// Texto a pantalla completa (recuerdos, momentos épicos, urgencia), con las frases, estilos,
 /// animaciones y audio de un DramaticPhraseConfig.
@@ -101,6 +102,9 @@ public sealed class PopupDeLoreEnCurso : NarrativeRequestRun<PedirPopupDeLore>
 
 /// Fin de la demo: en la build de la demo (<see cref="ConfiguracionDeLaDemo.EsDemo"/>) guarda la
 /// partida y lleva a los créditos; en el juego completo no hace nada y la historia sigue.
+/// La partida guardada no repite el final: al cargarla, el grafo sigue por la salida del paso (lo
+/// mismo que hace el juego completo) y el jugador aparece en el último sitio jugable (el del último
+/// auto-guardado; si no hay, su ancla).
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Fin de la demo", "En la build de la demo, guarda y lleva a los créditos. En el juego completo no hace nada y sigue.")]
 [NarrativeNoWorldEffect]
@@ -132,7 +136,14 @@ public sealed class FinDeLaDemoEnCurso : NarrativeRequestRun<PedirFinDeLaDemo>
     IEnumerator Co_Terminar()
     {
         var guardado = ServiceLocator.Get<SaveSystem>(logIfMissing: false);
-        if (guardado != null) Partida.Guardar(guardado);
+        if (guardado != null)
+        {
+            bool sinRepetir = ResumeAfterOnLoad();
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (!sinRepetir) Debug.LogWarning("[Fin de la demo] El paso no va en el flujo principal: al cargar se repetirá el final.");
+#endif
+            Partida.GuardarEnLaUltimaPosicionSegura(guardado);
+        }
         yield return new WaitForSecondsRealtime(R.espera);
         if (Application.CanStreamedLevelBeLoaded(R.escenaFinal)) SceneManager.LoadScene(R.escenaFinal);
         else Debug.LogWarning($"[Fin de la demo] La escena «{R.escenaFinal}» no está en la build.");

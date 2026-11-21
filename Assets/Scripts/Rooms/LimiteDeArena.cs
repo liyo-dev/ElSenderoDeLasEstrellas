@@ -2,9 +2,8 @@ using UnityEngine;
 
 /// Marca en el suelo el borde de una arena en modo radio (BattleEncounterSO): un anillo fino y
 /// difuso, con el color de la luz de las estrellas, que apenas se ve desde el centro y se aviva
-/// cuando el jugador se acerca al límite. Sustituye a la pared de antes («era un horror, algo más
-/// sutil», Raúl, 26 sep 2026). Lo crea y lo retira BossArenaController; vale para todas las
-/// arenas en modo radio.
+/// cuando el jugador se acerca al límite. Sustituye a la pared de antes. Lo crea y lo retira
+/// BossArenaController; vale para todas las arenas en modo radio.
 ///
 /// Sigue el terreno: cada punto del anillo se apoya en el suelo (capa Floor). No colisiona con
 /// nada: el límite de verdad lo sigue poniendo BossArenaController (empuje + «no puedes huir»).

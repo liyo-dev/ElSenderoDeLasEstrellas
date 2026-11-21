@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
+using Liyodev.NarrativeGraph;
 
 /// Cambia el grupo por historia: un compañero sale del grupo (se lo llevan; con
 /// <see cref="retirarDeLaEscena"/> deja de estar en la escena) o vuelve a él, o un personaje pasa a

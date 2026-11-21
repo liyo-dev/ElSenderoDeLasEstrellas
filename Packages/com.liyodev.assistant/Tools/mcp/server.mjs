@@ -12,7 +12,7 @@ const BRIDGE = process.env.LIYODEV_ASSISTANT_BRIDGE ?? "http://127.0.0.1:47822";
 const tools = [
   {
     name: "list_contexts",
-    description: "Assistant contexts available in the open Unity project (for example cinematics, or the narrative graph when its window is open).",
+    description: "Assistant contexts available in the open Unity project (for example cinematics and narrative-graph).",
     inputSchema: { type: "object", properties: {} },
   },
   {

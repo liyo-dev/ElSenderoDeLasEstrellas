@@ -48,7 +48,7 @@ namespace Game.NPC
     private NPCBehaviourManagerV2 _leaderManager;
     private bool _isTeamInCombat;
     private bool _isRegrouping;
-    private bool _isResurrecting; // FIX #21: guard contra Co_ResurrectTeam concurrentes
+    private bool _isResurrecting; // Guard contra Co_ResurrectTeam concurrentes
     private int _defeatedCount;
     private List<NPCBehaviourManagerV2> _allMembers = new List<NPCBehaviourManagerV2>(); // Líder + compañeros
     private Transform _currentTarget; // Referencia al jugador para calcular formación
@@ -137,7 +137,6 @@ namespace Game.NPC
         
         if (showDebugLogs)
         {
-            // Debug.Log($"[NPCCombatTeam] {name}: Equipo inicializado con {_allMembers.Count} miembros");
         }
     }
     
@@ -173,10 +172,9 @@ namespace Game.NPC
     /// usa este valor para no marcar la notificación como "hecha" cuando en realidad no lo fue.
     /// </summary>
     /// <param name="detector">
-    /// NUEVO (15 ago 2026, a petición de Raúl): el miembro del equipo que detectó al jugador.
-    /// Habla primero en la secuencia de diálogo de entrada. Puede ser null (p.ej. si algún día se
-    /// llama desde otro sitio que no sea NPCTeamMember) — en ese caso se usa el orden por defecto
-    /// (líder primero).
+    /// NUEVO: el miembro del equipo que detectó al jugador. Habla primero en la secuencia de
+    /// diálogo de entrada. Puede ser null (p.ej. si algún día se llama desde otro sitio que no
+    /// sea NPCTeamMember) — en ese caso se usa el orden por defecto (líder primero).
     /// </param>
     public bool OnPlayerDetected(Transform player, NPCBehaviourManagerV2 detector = null)
     {
@@ -350,7 +348,7 @@ namespace Game.NPC
     public void ResurrectTeam()
     {
         if (!resurrectAsTeam) return;
-        if (_isResurrecting) return; // FIX #21: evita corrutinas Co_ResurrectTeam concurrentes
+        if (_isResurrecting) return; // Evita corrutinas Co_ResurrectTeam concurrentes
 
         StartCoroutine(Co_ResurrectTeam());
     }
@@ -365,13 +363,13 @@ namespace Game.NPC
         _isTeamInCombat = true;
         _defeatedCount = 0;
         IsPostDefeatDialogueFinished = false; // Resetear flag
-        _currentTarget = player; // FIX #23: para que GetFormationPosition funcione también por esta ruta
+        _currentTarget = player; // Para que GetFormationPosition funcione también por esta ruta
 
         foreach (var member in _allMembers)
         {
             if (member != null && member.gameObject.activeInHierarchy)
             {
-                TryForceMemberIntoCombat(member, player); // FIX #1
+                TryForceMemberIntoCombat(member, player);
             }
         }
 
@@ -379,16 +377,16 @@ namespace Game.NPC
     }
 
     /// <summary>
-    /// FIX #1 (CRÍTICO, auditoría combate 15 ago 2026): fuerza a un miembro a entrar en
-    /// combate SOLO si tiene combatConfig asignado. Sin esta guarda, un miembro mal configurado
-    /// (el caso real de Lety: combatConfig vacío) entraba igualmente en CombatState y se
-    /// registraba en ActiveCombatRegistry, pero NPCBehaviourManagerV2 solo añade Damageable si
-    /// HasBehaviour(Combat) && combatConfig != null — así que nunca podía recibir daño ni morir,
-    /// _defeatedCount nunca llegaba a _allMembers.Count, e IsTeamDefeated quedaba en false para
-    /// siempre: un solo NPC mal configurado bloqueaba la condición de victoria de TODO el equipo
-    /// (sin celebración de victoria, sin gates narrativos enganchados a OnTeamDefeated). Ahora,
-    /// si falta la config, el miembro se cuenta como derrotado de inmediato (no combate, pero
-    /// tampoco bloquea al resto) y se loguea el error para detectarlo fácil en el Inspector.
+    /// Fuerza a un miembro a entrar en combate SOLO si tiene combatConfig asignado. Sin esta
+    /// guarda, un miembro mal configurado (el caso real de Lety: combatConfig vacío) entraba
+    /// igualmente en CombatState y se registraba en ActiveCombatRegistry, pero
+    /// NPCBehaviourManagerV2 solo añade Damageable si HasBehaviour(Combat) && combatConfig !=
+    /// null — así que nunca podía recibir daño ni morir, _defeatedCount nunca llegaba a
+    /// _allMembers.Count, e IsTeamDefeated quedaba en false para siempre: un solo NPC mal
+    /// configurado bloqueaba la condición de victoria de TODO el equipo (sin celebración de
+    /// victoria, sin gates narrativos enganchados a OnTeamDefeated). Ahora, si falta la config,
+    /// el miembro se cuenta como derrotado de inmediato (no combate, pero tampoco bloquea al
+    /// resto) y se loguea el error para detectarlo fácil en el Inspector.
     /// </summary>
     private void TryForceMemberIntoCombat(NPCBehaviourManagerV2 member, Transform player)
     {
@@ -478,14 +476,12 @@ namespace Game.NPC
     /// narrativo, cero executor legacy — ninguno de los dos sistemas narrativos se toca aquí.
     ///
     /// Da igual qué miembro detectó al jugador: los dos (o más) se paran y miran de inmediato
-    /// (icono + música + animación de sobresalto), luego caminan en formación hacia él (ver
-    /// Co_ApproachFormation, 1 sep 2026 — "el jugador se congela, se acercan y ENTONCES empieza
-    /// el diálogo") y solo al llegar (o tras el margen de seguridad) habla cada miembro con
-    /// dialogueOnAlert configurado, en orden — quien detectó primero, y luego el resto del
-    /// equipo — con la misma cámara grupal (enfocando a todo el equipo) durante toda la
-    /// secuencia. Al terminar (o de inmediato si nadie tiene diálogo configurado) entran en
-    /// combate todos a la vez vía ForceEnterCombat — no dependen de que cada uno "descubra" el
-    /// combate por su cuenta.
+    /// (icono + música + animación de sobresalto), luego caminan en formación hacia él y solo
+    /// al llegar (o tras el margen de seguridad) habla cada miembro con dialogueOnAlert
+    /// configurado, en orden — quien detectó primero, y luego el resto del equipo — con la
+    /// misma cámara grupal (enfocando a todo el equipo) durante toda la secuencia. Al terminar
+    /// (o de inmediato si nadie tiene diálogo configurado) entran en combate todos a la vez vía
+    /// ForceEnterCombat — no dependen de que cada uno "descubra" el combate por su cuenta.
     /// </summary>
     private IEnumerator Co_DetectAndEngage(Transform player, NPCBehaviourManagerV2 detector = null)
     {
@@ -524,31 +520,24 @@ namespace Game.NPC
             member.Brain?.ForceState(new AlertState(duration: 999f, walk: false, stopDist: 0f, skipDialogue: true));
         }
 
-        // MEJORA (1 sep 2026, petición de Raúl): "cuando Lety y Vicky me ven, el jugador se
-        // congela, las dos caminan hacia mí y ENTONCES empieza el diálogo — ese es el
-        // comportamiento correcto y debe ser igual para cualquier NPC de combate". Antes, aquí no
-        // había ninguna fase de aproximación real: el equipo se paraba en seco (walk:false arriba)
-        // y el diálogo arrancaba de inmediato, viniera el jugador de donde viniera. Ahora, tras
-        // fijar a todos en AlertState (icono/música/animación de sobresalto), se les hace caminar
-        // en formación hacia el jugador (mismo NavMeshAgent que ya usa AlertState.MoveAndRotate
-        // para NPCs en solitario) y solo cuando llegan (o tras un margen de seguridad) arranca la
-        // secuencia de diálogo de abajo.
+        // MEJORA: "cuando Lety y Vicky me ven, el jugador se congela, las dos caminan hacia mí y
+        // ENTONCES empieza el diálogo — ese es el comportamiento correcto y debe ser igual para
+        // cualquier NPC de combate". Ahora, tras fijar a todos en AlertState
+        // (icono/música/animación de sobresalto), se les hace caminar en formación hacia el
+        // jugador (mismo NavMeshAgent que ya usa AlertState.MoveAndRotate para NPCs en solitario)
+        // y solo cuando llegan (o tras un margen de seguridad) arranca la secuencia de diálogo de
+        // abajo.
         yield return Co_ApproachFormation(player);
 
-        // REDISEÑO (15 ago 2026, a petición de Raúl): "cada NPC con su propia frase; quien te
-        // ve primero habla primero, luego el resto — así se siente como un equipo sin necesitar
-        // un único diálogo compartido escrito a mano para cada combinación posible". Antes solo
-        // sonaba leaderConfig.dialogueOnAlert (la frase del líder, siempre, sin importar quién
-        // detectó); se pasó a recorrer el equipo completo empezando por el detector.
+        // REDISEÑO: "cada NPC con su propia frase; quien te ve primero habla primero, luego el
+        // resto — así se siente como un equipo sin necesitar un único diálogo compartido
+        // escrito a mano para cada combinación posible".
         //
-        // "detector primero" rompía el guion en Lety+Vicky. Sus líneas de
-        // alerta están escritas dando por hecho un orden fijo — las de Lety son la apertura
-        // ("Mira Vicky, una presa fácil"), las de Vicky son una RESPUESTA que nombra a Lety
-        // explícitamente ("Ya veo Lety... atento muchacho..."). Cuando quien detectaba primero al
-        // jugador era Vicky (depende de la posición/orientación de cada una, no es controlable),
-        // sus líneas de respuesta sonaban primero, como si Lety no llegara a hablar — exactamente
-        // lo que reportó Raúl ("empieza directamente con 'ya veo lety...'"). Las dos SÍ hablaban,
-        // solo que en el orden equivocado para este guion concreto.
+        // "detector primero" rompía el guion en Lety+Vicky. Sus líneas de alerta están escritas
+        // dando por hecho un orden fijo — las de Lety son la apertura ("Mira Vicky, una presa
+        // fácil"), las de Vicky son una RESPUESTA que nombra a Lety explícitamente ("Ya veo
+        // Lety... atento muchacho..."). Las dos SÍ hablaban, solo que en el orden equivocado para
+        // este guion concreto.
         //
         // 2. Orden de habla: ahora siempre el orden de la lista del equipo (líder primero, luego
         // el resto en el orden en que fueron añadidos) — ya NO depende de quién detectó al
@@ -610,7 +599,7 @@ namespace Game.NPC
         foreach (var member in _allMembers)
         {
             if (member != null && member.gameObject.activeInHierarchy)
-                TryForceMemberIntoCombat(member, player); // FIX #1
+                TryForceMemberIntoCombat(member, player);
         }
 
         if (showDebugLogs)
@@ -624,13 +613,13 @@ namespace Game.NPC
     }
 
     /// <summary>
-    /// NUEVO (1 sep 2026, petición de Raúl): fase de aproximación del equipo antes del
-    /// diálogo de alerta — reemplaza el "pararse en seco" por un acercamiento real, en formación,
-    /// hacia el jugador (congelado mientras tanto por Co_DetectAndEngage). Reutiliza
-    /// GetFormationPosition (ya existente, antes solo usado por gizmos) para que cada miembro
-    /// camine a su hueco del semicírculo frente al jugador. Salvaguardada con APPROACH_MAX_TIME
-    /// por si algún miembro se queda atascado (pathing bloqueado, formación inalcanzable) — en
-    /// ese caso se corta la espera y se continúa igualmente con el diálogo.
+    /// NUEVO: fase de aproximación del equipo antes del diálogo de alerta — reemplaza el "pararse
+    /// en seco" por un acercamiento real, en formación, hacia el jugador (congelado mientras
+    /// tanto por Co_DetectAndEngage). Reutiliza GetFormationPosition (ya existente, antes solo
+    /// usado por gizmos) para que cada miembro camine a su hueco del semicírculo frente al
+    /// jugador. Salvaguardada con APPROACH_MAX_TIME por si algún miembro se queda atascado
+    /// (pathing bloqueado, formación inalcanzable) — en ese caso se corta la espera y se continúa
+    /// igualmente con el diálogo.
     /// </summary>
     private const float APPROACH_ARRIVE_DIST = 0.5f;
     private const float APPROACH_MAX_TIME = 8f;
@@ -758,7 +747,7 @@ namespace Game.NPC
     /// </summary>
     private IEnumerator Co_ResurrectTeam()
     {
-        _isResurrecting = true; // FIX #21
+        _isResurrecting = true;
 
         if (showDebugLogs)
         {
@@ -790,7 +779,7 @@ namespace Game.NPC
 #endif
         }
 
-        _isResurrecting = false; // FIX #21
+        _isResurrecting = false;
     }
     
     #endregion

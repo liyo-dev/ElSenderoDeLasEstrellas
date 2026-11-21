@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Contrabandista_Vigia
       objectReference: {fileID: 0}
+    - target: {fileID: 8218803521262484469, guid: 5118f931c03a5874cbda28b2a3df997f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9096993529721017303, guid: 5118f931c03a5874cbda28b2a3df997f, type: 3}
       propertyPath: configuration.combatConfig
       value: 

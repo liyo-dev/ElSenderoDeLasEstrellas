@@ -69,12 +69,10 @@ namespace Game.Core.Pooling
         {
             T obj = null;
 
-            // Intentar obtener del pool.
-            // FIX INC-544: saltar las instancias que Unity ya destruyó mientras esperaban en
-            // la pila (p. ej. un VFX que se devolvió colgando de un padre ajeno y ese padre murió
-            // después). Antes se devolvía la referencia "fake-null" y el SetActive de abajo
-            // lanzaba MissingReferenceException. Una instancia muerta simplemente se descarta:
-            // ya no cuenta ni como disponible ni como en uso.
+            // Intentar obtener del pool. Saltar las instancias que Unity ya destruyó mientras
+            // esperaban en la pila (p. ej. un VFX que se devolvió colgando de un padre ajeno y
+            // ese padre murió después). Una instancia muerta simplemente se descarta: ya no
+            // cuenta ni como disponible ni como en uso.
             while (_available.Count > 0)
             {
                 T candidate = _available.Pop();
@@ -150,7 +148,6 @@ namespace Game.Core.Pooling
         /// cuando el objeto fue destruido externamente (p. ej. su padre, ver
         /// VfxPoolService.Update) y por tanto no se debe reactivar ni reutilizar — solo hay que
         /// dejar de contarlo como "en uso" para no agotar el pool con referencias fake-null.
-        /// FIX A3.
         /// </summary>
         public void ForceRelease(T obj)
         {

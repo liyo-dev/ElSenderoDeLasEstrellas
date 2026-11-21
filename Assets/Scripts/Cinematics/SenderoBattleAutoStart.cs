@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Arranca automáticamente la secuencia de apertura de la Batalla Final al cargar la escena de

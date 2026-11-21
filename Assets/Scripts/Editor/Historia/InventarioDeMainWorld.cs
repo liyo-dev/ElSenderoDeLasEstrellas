@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Inventario de MainWorld para montar los capítulos de la historia: lo que ya hay en la escena y

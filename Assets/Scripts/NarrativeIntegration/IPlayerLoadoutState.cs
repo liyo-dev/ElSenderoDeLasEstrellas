@@ -1,3 +1,4 @@
+using Liyodev.NarrativeGraph;
 /// Parte del estado proyectado propia de este juego: habilidades y hechizos del jugador.
 /// Un INarrativeStateWriter que la conozca la expone con TryGetExtension; los nodos que la usan
 /// (PedirDesbloqueo) no dependen de cómo se guarde.

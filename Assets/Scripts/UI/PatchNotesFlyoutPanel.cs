@@ -26,22 +26,18 @@ using DG.Tweening;
 /// 3. (Opcional) Si el autodetect del botón no lo encuentra, arrastrarlo a
 ///    <see cref="patchNotesButtonOverride"/>.
 ///
-/// Contenido de las notas (24 ago 2026 — reemplaza el campo de texto fijo que había antes; 25 ago
-/// 2026 — a petición de Raúl, se quitó el histórico de versiones anteriores, ver nota en
-/// PatchNotesBuildGuard.cs): el texto ya NO se edita en el Inspector ni va hardcodeado aquí. Se
+/// Contenido de las notas: el texto ya NO se edita en el Inspector ni va hardcodeado aquí. Se
 /// compone en runtime, en <see cref="BuildPatchNotesText"/>, a partir de:
 /// - La versión real del build (<see cref="Application.version"/>) y la fecha real del build
 ///   (Resources/PatchNotes/BuildDate.txt) — así la cabecera SIEMPRE coincide con lo que muestra
 ///   <c>VersionLabelUI</c> en pantalla, nunca puede quedarse desfasada.
 /// - Assets/Resources/PatchNotes/CurrentEntryBullets.txt — los cambios de la build en curso (solo
-///   los bullets, sin cabecera). Esto SÍ se sigue editando a mano durante el desarrollo, igual que
-///   antes, solo que ahora es un archivo de texto plano en vez de un campo del Inspector.
-/// El panel muestra únicamente esta entrada (la de la versión que se acaba de subir) — ya no hay
-/// histórico de versiones anteriores. <c>PatchNotesBuildGuard</c> (Editor) conserva
-/// CurrentEntryBullets.txt entre builds para permitir recompilar sin perder las notas. Ese mismo
-/// script CANCELA el build si CurrentEntryBullets.txt está vacío o sin rellenar, para que nunca
-/// vuelva a salir una build con notas de parche en blanco o con texto de marcador de posición
-/// visible para los jugadores.
+/// los bullets, sin cabecera). El panel muestra únicamente esta entrada (la de la versión que se
+/// acaba de subir) — ya no hay histórico de versiones anteriores. <c>PatchNotesBuildGuard</c>
+/// (Editor) conserva CurrentEntryBullets.txt entre builds para permitir recompilar sin perder las
+/// notas. Ese mismo script CANCELA el build si CurrentEntryBullets.txt está vacío o sin rellenar,
+/// para que nunca vuelva a salir una build con notas de parche en blanco o con texto de marcador
+/// de posición visible para los jugadores.
 ///
 /// Localización: el título ("NOTAS DEL PARCHE") sí usa <see cref="LocalizedText"/>
 /// (clave PatchNotes_Title, ui_es.json/ui_en.json) y se traduce solo. El CONTENIDO (los archivos de
@@ -98,7 +94,7 @@ public class PatchNotesFlyoutPanel : MonoBehaviour
 
     void Start()
     {
-        // Mismo fix documentado en CreditsFlyoutPanel: el botón del menú puede seguir inactivo en el
+        // Como en CreditsFlyoutPanel: el botón del menú puede seguir inactivo en el
         // primer frame (animación de entrada del ButtonPanel todavía no ha terminado), así que se
         // reintenta durante un margen en vez de buscar una sola vez.
         StartCoroutine(WirePatchNotesButtonWithRetry());
@@ -371,10 +367,9 @@ public class PatchNotesFlyoutPanel : MonoBehaviour
         closeLabel.margin = Vector4.zero;
         closeLabel.raycastTarget = false;
         _closeLabel = closeLabel;
-        // FIX (24 ago 2026 — "X" de cerrar descentrada, ver el mismo fix en CreditsFlyoutPanel.cs y
-        // BugReportFlyoutPanel.cs): en vez de centrar por métricas de fuente (que dejaban el glifo
-        // descuadrado según el carácter/fuente), se mide la tinta renderizada real del mesh de TMP y
-        // se centra el RectTransform contra eso. Válido para cualquier fuente sin recalibrar a mano.
+        // En vez de centrar por métricas de fuente (que dejaban el glifo descuadrado según el
+        // carácter/fuente), se mide la tinta renderizada real del mesh de TMP y se centra el
+        // RectTransform contra eso. Válido para cualquier fuente sin recalibrar a mano.
         CenterGlyphOnRenderedInk(closeLabel);
 
         var closeIconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
@@ -499,15 +494,13 @@ public class PatchNotesFlyoutPanel : MonoBehaviour
     // métricas de la fuente (avance de carácter, cap height, ascender/descender) que usa
     // TextAlignmentOptions y que no siempre coinciden con los píxeles visibles de un glifo concreto
     // — evita tener que recalibrar constantes a mano cada vez que cambia la fuente o el carácter.
-    // FIX (24 ago 2026, ver BugReportFlyoutPanel.cs — mismo bug, "la X primero sale mal y al hacer
-    // click se pone bien"): esto se llama en el mismo Awake() en el que se acaba de añadir el
-    // CanvasScaler del panel, que todavía no ha calculado su escala real en ese instante (Unity lo
-    // hace en su propio paso de actualización de Canvas, no de forma síncrona al añadir el
-    // componente) — medir aquí sin más se hacía contra un canvas a medio asentar, y cualquier
-    // interacción posterior forzaba de paso una actualización de canvas que dejaba ver la posición
-    // "real", pero el desplazamiento ya aplicado una vez con datos viejos se quedaba mal para
-    // siempre. `Canvas.ForceUpdateCanvases()` fuerza esa actualización pendiente de forma síncrona
-    // ANTES de medir.
+    // Esto se llama en el mismo Awake() en el que se acaba de añadir el CanvasScaler del panel, que
+    // todavía no ha calculado su escala real en ese instante (Unity lo hace en su propio paso de
+    // actualización de Canvas, no de forma síncrona al añadir el componente) — medir aquí sin más
+    // se hacía contra un canvas a medio asentar, y cualquier interacción posterior forzaba de paso
+    // una actualización de canvas que dejaba ver la posición "real", pero el desplazamiento ya
+    // aplicado una vez con datos viejos se quedaba mal para siempre. `Canvas.ForceUpdateCanvases()`
+    // fuerza esa actualización pendiente de forma síncrona ANTES de medir.
     static void CenterGlyphOnRenderedInk(TextMeshProUGUI label)
     {
         Canvas.ForceUpdateCanvases();

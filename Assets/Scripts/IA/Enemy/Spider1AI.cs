@@ -18,7 +18,7 @@ public class Spider1AI : MonoBehaviour
     [Header("Comportamiento")]
     [SerializeField] private float detectionRange = 8f;
     [SerializeField] private float attackRange = 1.5f;
-    [Tooltip("Radio de patrulla alrededor del punto de spawn. Antes era muy pequeño (5) y las arañas se veían encerradas en una zona diminuta; ahora patrullan una zona bastante más amplia.")]
+    [Tooltip("Radio de patrulla alrededor del punto de spawn.")]
     [SerializeField] private float patrolRadius = 18f;
     [Tooltip("Tiempo BASE de pausa entre tramos de patrulla. La pausa real se aleatoriza (ver RandomIdleTime) entre un 25% y un 100% de este valor para que no se vean todas las arañas paradas el mismo tiempo exacto.")]
     [SerializeField] private float idleTime = 1f;
@@ -241,11 +241,11 @@ public class Spider1AI : MonoBehaviour
                 }
                 else
                 {
-                    // FIX 4 sep 2026: antes se reproducía AnimWalk de forma incondicional en cuanto
-                    // el estado era Patrol, aunque el NavMeshAgent tuviera velocidad casi nula
-                    // (bloqueado por un obstáculo/otra araña, o todavía acelerando) — se veía la
-                    // araña "caminando en el sitio" sin desplazarse (reportado por Raúl). Ahora la
-                    // animación de andar solo se reproduce si de verdad se está moviendo; si no, Idle.
+                    // Antes se reproducía AnimWalk de forma incondicional en cuanto el estado era
+                    // Patrol, aunque el NavMeshAgent tuviera velocidad casi nula (bloqueado por un
+                    // obstáculo/otra araña, o todavía acelerando) — se veía la araña "caminando en el
+                    // sitio" sin desplazarse. Ahora la animación de andar solo se reproduce si de
+                    // verdad se está moviendo; si no, Idle.
                     if (agent.velocity.sqrMagnitude > 0.1f)
                     {
                         LookAtDirection(agent.velocity.normalized);
@@ -262,8 +262,7 @@ public class Spider1AI : MonoBehaviour
 
     /// <summary>
     /// Pausa de idle aleatorizada a partir de idleTime, para que las arañas no se vean todas
-    /// "congeladas" el mismo tiempo exacto entre tramos de patrulla (petición Raúl, 4 sep 2026:
-    /// "no tienen que estar quietas").
+    /// "congeladas" el mismo tiempo exacto entre tramos de patrulla.
     /// </summary>
     private float RandomIdleTime()
     {
@@ -316,15 +315,12 @@ public class Spider1AI : MonoBehaviour
         // Activar el marker de objetivo del jugador (ver PlayerTargeting.Scan)
         if (_targetable != null) _targetable.isInActiveCombat = true;
 
-        // Spider1AI no pasaba por ActiveCombatRegistry (a
-        // diferencia de CombatState/ImpDemonAI/GolemBossAI), así que si se unía a una pelea ya en
-        // marcha (p.ej. contra Lety+Vicky) L1/R1 (CombatCameraTargeting.GetOrderedTargets) nunca
-        // la incluía en el ciclo de objetivos — quedaba imposible de seleccionar aunque estuviera
-        // atacando. Registrarla aquí la hace ciclable igual que cualquier otro enemigo.
-        // Petición de Raúl (1 sep 2026, misma sesión): enemigo "menor" — cuenta como combate
-        // (Battle Mode, ciclable con L1/R1) pero NO debe enganchar la cámara automáticamente al
-        // cruzarse con el jugador por el bosque (era muy tedioso). El marcador de apuntado para
-        // hechizos lo sigue dando el auto-scan normal de PlayerTargeting, vía
+        // Spider1AI no pasaba por ActiveCombatRegistry (a diferencia de
+        // CombatState/ImpDemonAI/GolemBossAI), así que si se unía a una pelea ya en marcha (p.ej.
+        // contra Lety+Vicky) L1/R1 (CombatCameraTargeting.GetOrderedTargets) nunca la incluía en
+        // el ciclo de objetivos — quedaba imposible de seleccionar aunque estuviera atacando.
+        // Registrarla aquí la hace ciclable igual que cualquier otro enemigo. El marcador de
+        // apuntado para hechizos lo sigue dando el auto-scan normal de PlayerTargeting, vía
         // Targetable.isInActiveCombat (ya activado arriba) — no depende de esto.
         ActiveCombatRegistry.RegisterNPC(gameObject, allowsCameraLock: false);
     }
@@ -375,7 +371,7 @@ public class Spider1AI : MonoBehaviour
         PlayAnimation(AnimAttack);
 
         // Impulso corto hacia el jugador al arrancar el golpe: sensación de más "chicha" en vez de
-        // golpear en seco desde parado (petición Raúl, 4 sep 2026).
+        // golpear en seco desde parado.
         if (attackLungeDistance > 0f && player)
         {
             Vector3 lungeDir = (player.position - transform.position); lungeDir.y = 0f;

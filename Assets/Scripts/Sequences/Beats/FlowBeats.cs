@@ -391,6 +391,14 @@ public class MusicBeat : SequenceBeat
     [Tooltip("Segundos de desvanecido al parar. Solo se usa cuando 'musicId' está vacío.")]
     public float fadeOut = 0.5f;
 
+    [Tooltip("Cambio de tema sin fundido cruzado (un golpe de efecto a propósito). Por defecto, si ya suena " +
+             "otro tema, el cambio es un fundido cruzado de al menos 'FundidoMinimo' s (regla de Raúl, 19 nov 2026: " +
+             "los cambios de música en las cinemáticas no van de golpe).")]
+    public bool corteSeco = false;
+
+    /// Fundido cruzado mínimo al cambiar de un tema a otro dentro de una cinemática.
+    public const float FundidoMinimo = 3f;
+
     [Tooltip("Segundo de la pista en el que arranca (manda sobre 'continuarDondeIba'). Menor que 0 = no se usa. " +
              "Para que el clímax de un tema caiga en un momento concreto: arrancarlo N segundos antes con «desde @etiqueta-N».")]
     public float desdeSegundo = -1f;
@@ -423,8 +431,20 @@ public class MusicBeat : SequenceBeat
             fundido = 0f;
         }
 
+        // Si ya suena otro tema, nunca de golpe: fundido cruzado (salvo «corteSeco»).
+        if (!ctx.Saltando && !corteSeco && fundido < FundidoMinimo && OtroTemaSonando(player, musicId))
+            fundido = FundidoMinimo;
+
         player.PlayMusic(musicId, continuar, fundido, desde);
         yield break;
+    }
+
+    private static bool OtroTemaSonando(SequencePlayer player, string id)
+    {
+        var audio = AudioService.Instance;
+        if (audio == null || audio.CurrentMusicClip == null) return false;
+        var clip = player.ClipDeMusica(id);
+        return clip == null || clip != audio.CurrentMusicClip;
     }
 }
 

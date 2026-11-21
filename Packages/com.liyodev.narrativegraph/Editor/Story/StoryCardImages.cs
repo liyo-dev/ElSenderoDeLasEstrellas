@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Retrato del personaje de un id, si el juego tiene los suyos (si no, se saca del prefab).
     public interface INarrativePortraitSource

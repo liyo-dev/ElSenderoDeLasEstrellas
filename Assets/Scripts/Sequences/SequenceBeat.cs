@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Contexto que recibe cada beat al ejecutarse. Le da acceso a los actores (por ID), al escenario
 /// (planos de cámara y marcas de posición), y al reproductor (cámara, bocadillos, señales).
@@ -153,8 +154,6 @@ public sealed class SequenceContext
             return cached;
         }
 
-        // La escena toma al personaje antes de buscarlo: si la historia lo tenía retirado del
-        // mundo, vuelve ahora (la escena manda en la pantalla) y nadie lo mueve hasta soltarlo.
         if (_reparto.Add(actorId)) RepartoDeEscena.Tomar(actorId);
 
         if (!_personajesVisibles.TryGetValue(actorId, out var actor))

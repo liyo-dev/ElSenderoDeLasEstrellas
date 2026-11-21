@@ -6,6 +6,7 @@ using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Lo que el montaje de los capítulos pone en las escenas: en MainWorld, bajo «Capítulos
@@ -62,11 +63,13 @@ public static partial class MontajeDeLosCapitulos
         s_cines.Clear(); s_papeles.Clear(); s_personajes.Clear(); s_misiones.Clear();
     }
 
-    private static TramoDeHistoria Tramo(string empieza, string acaba = null)
+    private static TramoDeHistoria Tramo(string empieza, string acaba = null, params string[] tambienAcabaCon)
     {
         var t = new TramoDeHistoria();
         if (!string.IsNullOrEmpty(empieza)) t.empiezaConSenal.Add(empieza);
         if (!string.IsNullOrEmpty(acaba)) t.acabaConSenal.Add(acaba);
+        foreach (var s in tambienAcabaCon)
+            if (!string.IsNullOrEmpty(s)) t.acabaConSenal.Add(s);
         return t;
     }
 
@@ -120,8 +123,8 @@ public static partial class MontajeDeLosCapitulos
         var g = AssetDatabase.LoadAssetAtPath<NarrativeGraph>("Assets/NarrativeGraph/Sendero.asset");
         if (g?.FindNode("sendero-tras-capitulo") is WaitCustomEventNode w)
         {
-            w.eventKey = FinCap4;
-            w.displayTitle = $"Tras el capítulo anterior ({FinCap4})";
+            w.EventKey = FinCap4;
+            w.DisplayTitle = $"Tras el capítulo anterior ({FinCap4})";
             EditorUtility.SetDirty(g);
             informe.AppendLine($"Sendero: espera {FinCap4} (antes {FinCap2}).");
         }
@@ -196,6 +199,13 @@ public static partial class MontajeDeLosCapitulos
             }
         informe.AppendLine($"Personajes según la historia: {s_personajes.Count} ({situaciones.Count} situaciones).");
         Sendero.Narrative.Editor.PiezasDePersonaje.Poner(situaciones, informe);
+        // Los grafos de los capítulos 3 y 4 solo llevan piezas de este montaje: las que ya no salen de
+        // sus tablas (personajes retirados, tramos renombrados o pasos quitados) se quitan.
+        foreach (var ruta in new[] { "Assets/NarrativeGraph/Cap3.asset", "Assets/NarrativeGraph/Cap4.asset" })
+        {
+            var g = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(ruta);
+            if (g != null && Sendero.Narrative.Editor.PiezasDePersonaje.QuitarSobrantes(g, situaciones, informe) > 0) AssetDatabase.SaveAssets();
+        }
     }
 
     // ── Start ───────────────────────────────────────────────────────────────────────────────
@@ -417,6 +427,7 @@ public static partial class MontajeDeLosCapitulos
             }
         }
         PonerObjetosDeMision(raiz.transform, informe);
+        PonerPresenciasQueAcechan(raiz.transform, informe);
         MontarCinematicas(escena, raiz.transform, marcas, informe);
         PonerExtrasDeEscena(raiz.transform, marcas, informe);
 
@@ -518,6 +529,9 @@ public static partial class MontajeDeLosCapitulos
         var a = padre.gameObject.AddComponent<ActivoEnTramo>();
         a.Tramo.empiezaConSenal.AddRange(tramo.empiezaConSenal);
         a.Tramo.acabaConSenal.AddRange(tramo.acabaConSenal);
+        a.Tramo.empiezaConMisionActiva.AddRange(tramo.empiezaConMisionActiva);
+        a.Tramo.acabaConMisionIniciada.AddRange(tramo.acabaConMisionIniciada);
+        a.Tramo.acabaConMisionCompletada.AddRange(tramo.acabaConMisionCompletada);
         a.Objetos.Add(objeto);
         objeto.SetActive(false);
     }
@@ -572,6 +586,9 @@ public static partial class MontajeDeLosCapitulos
         caja.center = go.transform.InverseTransformPoint(b.center + Vector3.up * Mathf.Max(0f, 1.6f - b.size.y) * 0.5f);
         caja.size = new Vector3(b.size.x / escala.x, Mathf.Max(b.size.y, 1.6f) / escala.y, b.size.z / escala.z);
         go.AddComponent<Escondite>();
+        // Sin colliders que choquen, la cámara de las charlas no lo veía y se metía dentro del
+        // matorral (pantalla verde al pillar al jugador escondido, INC-1406).
+        if (go.GetComponent<Kits.Core.CameraOccluder>() == null) go.AddComponent<Kits.Core.CameraOccluder>();
     }
 
     /// <summary>

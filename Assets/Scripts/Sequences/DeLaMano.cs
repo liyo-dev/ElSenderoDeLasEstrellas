@@ -74,26 +74,8 @@ public class DeLaMano : MonoBehaviour
         Alcanzar(_suyo, medio + separa, _peso);
     }
 
-    /// IK de dos huesos: gira el hombro y el codo para que la mano llegue a <paramref name="objetivo"/>,
-    /// doblando el codo hacia donde ya lo dobla la animación.
+    /// IK de dos huesos (Kits.Core.TwoBoneIK): la mano llega a <paramref name="objetivo"/>, con el codo
+    /// doblado hacia donde ya lo dobla la animación.
     private static void Alcanzar(Brazo br, Vector3 objetivo, float peso)
-    {
-        Vector3 A = br.hombro.position, B = br.codo.position, C = br.mano.position;
-        float l1 = (B - A).magnitude, l2 = (C - B).magnitude;
-        if (l1 < 1e-4f || l2 < 1e-4f) return;
-        Vector3 haciaObj = objetivo - A;
-        float d = Mathf.Clamp(haciaObj.magnitude, Mathf.Abs(l1 - l2) + 1e-3f, l1 + l2 - 1e-3f);
-        Vector3 dir = haciaObj.sqrMagnitude > 1e-6f ? haciaObj.normalized : (C - A).normalized;
-        float cosA = Mathf.Clamp((l1 * l1 + d * d - l2 * l2) / (2f * l1 * d), -1f, 1f);
-        Vector3 doblez = Vector3.ProjectOnPlane(B - A, dir);
-        if (doblez.sqrMagnitude < 1e-6f) doblez = Vector3.ProjectOnPlane(Vector3.down, dir);
-        doblez.Normalize();
-        Vector3 codo = A + dir * (l1 * cosA) + doblez * (l1 * Mathf.Sqrt(1f - cosA * cosA));
-
-        Quaternion giroHombro = Quaternion.FromToRotation(B - A, codo - A) * br.hombro.rotation;
-        br.hombro.rotation = Quaternion.Slerp(br.hombro.rotation, giroHombro, peso);
-        B = br.codo.position; C = br.mano.position;
-        Quaternion giroCodo = Quaternion.FromToRotation(C - B, objetivo - B) * br.codo.rotation;
-        br.codo.rotation = Quaternion.Slerp(br.codo.rotation, giroCodo, peso);
-    }
+        => Kits.Core.TwoBoneIK.Reach(br.hombro, br.codo, br.mano, objetivo, peso);
 }

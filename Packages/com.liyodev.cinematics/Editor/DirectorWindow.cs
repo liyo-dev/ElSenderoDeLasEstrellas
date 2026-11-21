@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Liyodev.Assistant;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -91,8 +90,8 @@ namespace Liyodev.Cinematics
         private Label _chipsIA;
         private Button _plegarIA;
         private Button _conectarIA;
-        private AssistantView _vistaIA;
-        private IAssistantContext _contextoIA;
+        private VisualElement _vistaIA;
+        private IDirectorAssistant _ia;
         private bool _iaPlegada;
         private Rect _area;
         private float _anchoCentro = 640f;
@@ -120,6 +119,16 @@ namespace Liyodev.Cinematics
             ventana.minSize = new Vector2(1180, 820);
             ventana.titleContent = new GUIContent("Director");
             ventana.Show();
+        }
+
+        /// Lleva el cabezal de la mesa abierta a un segundo (lo usa la vista «Pistas por personaje»).
+        public static void PedirSegundo(float t)
+        {
+            foreach (var v in Resources.FindObjectsOfTypeAll<DirectorWindow>())
+            {
+                v.IrA(t);
+                return;
+            }
         }
 
         /// Abre la mesa si hace falta y elige una cinemática por id. Lo usa el puente del asistente.
@@ -153,8 +162,13 @@ namespace Liyodev.Cinematics
             EditorApplication.update -= Tick;
             EditorApplication.playModeStateChanged -= AlCambiarElModoDeJuego;
             CinematicsEditorServices.Cambiaron -= RefrescarLista;
-            if (_contextoIA != null) _contextoIA.Changed -= AlCambiarElContextoIA;
-            AssistantSettings.Changed -= ActualizarBotonDeIA;
+            if (_ia != null)
+            {
+                _ia.SettingsChanged -= ActualizarBotonDeIA;
+                _ia.Dispose();
+                _ia = null;
+                _vistaIA = null;
+            }
             Parar();
             CerrarVista();
             LiberarTexturaEnVivo();
@@ -533,7 +547,8 @@ namespace Liyodev.Cinematics
             root.AddToClassList("assistant-root");
             root.style.flexDirection = FlexDirection.Column;
 
-            string hojaDeEstilo = AssistantPaths.StyleSheet;
+            _ia ??= DirectorAssistant.Create();
+            string hojaDeEstilo = _ia?.StyleSheetPath;
             var hoja = string.IsNullOrEmpty(hojaDeEstilo) ? null : AssetDatabase.LoadAssetAtPath<StyleSheet>(hojaDeEstilo);
             if (hoja != null) root.styleSheets.Add(hoja);
 
@@ -572,14 +587,17 @@ namespace Liyodev.Cinematics
             _chipsIA.style.color = new Color(0.66f, 0.77f, 0.87f);
             cabecera.Add(_chipsIA);
 
-            _conectarIA = new Button(AssistantConnectWindow.Open)
+            _conectarIA = new Button(() => _ia?.OpenConnect())
             {
                 tooltip = "Elegir o cambiar la IA (tu cuenta de ChatGPT, Google o Claude).",
             };
             cabecera.Add(_conectarIA);
             ActualizarBotonDeIA();
-            AssistantSettings.Changed -= ActualizarBotonDeIA;
-            AssistantSettings.Changed += ActualizarBotonDeIA;
+            if (_ia != null)
+            {
+                _ia.SettingsChanged -= ActualizarBotonDeIA;
+                _ia.SettingsChanged += ActualizarBotonDeIA;
+            }
 
             _plegarIA = new Button(() =>
             {
@@ -590,22 +608,16 @@ namespace Liyodev.Cinematics
             cabecera.Add(_plegarIA);
             _cajaIA.Add(cabecera);
 
-            _contextoIA = AssistantContexts.Find("cinematics");
-            if (_contextoIA != null)
+            _vistaIA = _ia?.CreateView(() => { RefrescarLista(); RepintarMesa(); }, RepintarMesa);
+            if (_vistaIA != null)
             {
-                _contextoIA.Changed -= AlCambiarElContextoIA;
-                _contextoIA.Changed += AlCambiarElContextoIA;
-                _vistaIA = new AssistantView(_contextoIA);
-                _vistaIA.SettingsRequested += AssistantConnectWindow.Open;
-                _vistaIA.Applied += () => { RefrescarLista(); RepintarMesa(); };
-                _vistaIA.BusyChanged += RepintarMesa;
                 var respuestas = _vistaIA.Q<ScrollView>();
                 if (respuestas != null) respuestas.style.maxHeight = AltoRespuestasIA;
                 _cajaIA.Add(_vistaIA);
             }
             else
             {
-                _cajaIA.Add(new Label("El asistente no está disponible en este proyecto."));
+                _cajaIA.Add(new Label("Para hablar con la IA desde aquí, instala el paquete Liyodev Assistant (com.liyodev.assistant). El Director funciona entero sin él."));
             }
             return _cajaIA;
         }
@@ -627,15 +639,12 @@ namespace Liyodev.Cinematics
             }
         }
 
-        private void AlCambiarElContextoIA() => _vistaIA?.RefreshState();
-
         /// El botón dice qué IA está conectada; sin ninguna, invita a conectarla.
         private void ActualizarBotonDeIA()
         {
             if (_conectarIA == null) return;
-            _conectarIA.text = AssistantSettings.IsReady
-                ? "IA: " + AssistantSettings.Name(AssistantSettings.Current)
-                : "Conectar mi IA";
+            _conectarIA.style.display = _ia != null ? DisplayStyle.Flex : DisplayStyle.None;
+            if (_ia != null) _conectarIA.text = _ia.ConnectLabel;
         }
 
         /// La línea de contexto de la caja: lo que la IA sabe que se está mirando.
@@ -675,7 +684,7 @@ namespace Liyodev.Cinematics
                 if (dibujos > 0) texto += $" · {dibujos} dibujo(s)";
                 if (notas > 0) texto += $" · {notas} nota(s)";
             }
-            if (_vistaIA != null && _vistaIA.Busy) texto += " · la IA está trabajando…";
+            if (_ia != null && _ia.Busy) texto += " · la IA está trabajando…";
             if (_chipsIA.text != texto) _chipsIA.text = texto;
         }
 
@@ -1329,17 +1338,17 @@ namespace Liyodev.Cinematics
             EditorGUILayout.EndScrollView();
 
             int encargos = _detalle.entrada?.encargos ?? 0;
-            if (_vistaIA != null && _vistaIA.Busy)
+            if (_ia != null && _ia.Busy)
             {
                 using (new EditorGUI.DisabledScope(true))
                     GUILayout.Button("La IA está trabajando…", EditorStyles.miniButton);
             }
-            else if (encargos > 0 && _vistaIA != null)
+            else if (encargos > 0 && _ia != null && _vistaIA != null)
             {
                 if (GUILayout.Button($"Que la IA resuelva los encargos ({encargos})", EditorStyles.miniButton))
                 {
                     if (_iaPlegada) { _iaPlegada = false; EditorPrefs.SetBool(ClaveIaPlegada, false); AplicarPliegueIA(); }
-                    _vistaIA.SendQuickAction();
+                    _ia.SendQuickAction();
                 }
             }
 

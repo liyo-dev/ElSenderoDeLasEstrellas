@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 6515943437805202735}
   - component: {fileID: 2479842632914731824}
   - component: {fileID: 5863029241882994393}
+  - component: {fileID: 2962813764074294864}
   m_Layer: 7
   m_Name: Fantasma
   m_TagString: Untagged
@@ -308,6 +309,7 @@ MonoBehaviour:
   animacionDeMuerte: 
   segundosHastaDesaparecer: 2.5
   vfxAlDesaparecer: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
+  puntosDeSintonia: 20
   soloDeNoche: 1
   umbralDeNoche: 0.5
   vfxAparecer: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
@@ -343,6 +345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 6
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &2479842632914731824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,6 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &5863029241882994393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,6 +381,21 @@ MonoBehaviour:
   soloConLaMision: 
   radioDeProximidad: 0
   debugLogs: 0
+--- !u!114 &2962813764074294864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2341307386822018481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_FANTASMA
+  debilidades: 03000000i
+  resistencias: 05000000i
 --- !u!1 &2763179180327069334
 GameObject:
   m_ObjectHideFlags: 0

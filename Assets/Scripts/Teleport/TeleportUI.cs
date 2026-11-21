@@ -302,11 +302,11 @@ public class TeleportUI : MonoBehaviour
     
     private void RefreshList()
     {
-        // FIX INC-023: recalcular los nombres localizados antes de pintar la lista. Si el
-        // punto se desbloqueó muy pronto (p.ej. primer uso del teletransporte) y
-        // LocalizationManager aún no estaba listo, el nombre quedó cacheado en inglés;
-        // para cuando el jugador llega a abrir esta UI ya ha dado tiempo de sobra a que la
-        // localización cargue, así que lo recalculamos aquí en vez de esperar a recargar partida.
+        // Recalcular los nombres localizados antes de pintar la lista. Si el punto se desbloqueó
+        // muy pronto (p.ej. primer uso del teletransporte) y LocalizationManager aún no estaba
+        // listo, el nombre quedó cacheado en inglés; para cuando el jugador llega a abrir esta UI
+        // ya ha dado tiempo de sobra a que la localización cargue, así que lo recalculamos aquí
+        // en vez de esperar a recargar partida.
         TeleportRegistry.RefreshAllDisplayNames();
 
         // Limpiar lista actual

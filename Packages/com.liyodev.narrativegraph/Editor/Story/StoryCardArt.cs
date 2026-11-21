@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Pinta los pictogramas de StoryPictograms en las tarjetas, de dos maneras: la banda, rellena
     /// a dos tonos del color de la familia y con un eco grande del mismo dibujo, girado y

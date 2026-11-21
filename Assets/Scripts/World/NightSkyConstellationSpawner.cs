@@ -3,72 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Constelaciones decorativas de noche — formas inventadas hechas de "estrellas guía" (más grandes y
-/// brillantes que el polvo de <see cref="NightSkyStarSpawner"/>) conectadas por líneas reales en el
-/// mundo 3D, como en un mapa estelar clásico (Orión, la Osa Mayor...). Petición de Raúl, 25 ago 2026:
-/// *"quiero que te inventes una [forma] para nuestro juego o algunas que se vean a lo lejos [...]
-/// porque en un futuro scope tendremos que hacer la forma del personaje de Will"* — es decir, **esta
-/// pasada NO dibuja la silueta de Will** (eso queda para un scope futuro, cuando haya que reconstruir
-/// su silueta punto a punto); por ahora son formas propias inventadas para el juego, pensadas para
-/// leerse bien de lejos: una espada, una corona y una estrella guía (compás), con temática coherente
-/// con "El Sendero de las Estrellas" — ver <see cref="BuildConstellationDefinitions"/>.
+/// Constelaciones decorativas de noche: formas inventadas hechas de "estrellas guía" (más grandes y
+/// brillantes que el polvo de <see cref="NightSkyStarSpawner"/>) unidas por líneas reales en el
+/// mundo 3D, como en un mapa estelar clásico.
 ///
-/// Mismo patrón estructural y las mismas dos garantías ya probadas en <c>NightSkyStarSpawner</c> (ver
-/// ese script para el razonamiento completo de cada una — no se repiten aquí por brevedad):
+/// Comparte con <c>NightSkyStarSpawner</c> el patrón y las dos garantías (ver ese script):
 ///
-/// 1) **GameObjects 3D reales, no Quads/billboards** — cada "estrella guía" es una malla propia
-///    generada en código (ver <see cref="GenerateBeaconMesh"/>), variante más grande y simétrica de la
-///    malla de <c>NightSkyStarSpawner.GenerateStarMesh</c> (6 puntas iguales en vez de 2 largas + 1
-///    corta) para que se distingan a simple vista de las estrellas de fondo — como en un mapa estelar
-///    real, donde las estrellas con nombre se marcan distinto que el resto.
-/// 2) **Oclusión garantizada por el mismo anclaje al farClipPlane de la cámara** (ver
-///    <see cref="ComputeActiveRadius"/>) — ninguna estrella guía ni ninguna línea puede quedar delante
-///    de una montaña o terreno, por el mismo razonamiento matemático (nada que la cámara dibuje puede
-///    estar más lejos que su propio farClipPlane).
+/// 1) GameObjects 3D reales, no billboards: cada estrella guía es una malla propia generada en
+///    código (<see cref="GenerateBeaconMesh"/>), más grande y simétrica (6 puntas iguales) que la del
+///    polvo para distinguirse a simple vista.
+/// 2) Oclusión por anclaje al farClipPlane de la cámara (<see cref="ComputeActiveRadius"/>): ninguna
+///    estrella ni línea queda delante de una montaña o del terreno.
 ///
-/// **Técnica nueva de este script**: cada constelación se define como un boceto 2D plano (un punto
-/// (0,0) central y una lista de puntos alrededor, en unidades locales) y se proyecta sobre la esfera
-/// del cielo mediante una dirección de centro (acimut/elevación) más una proyección gnómica (de plano
-/// tangente) — ver <see cref="ComputeDirection"/>. Para el tamaño angular pequeño de estas
-/// constelaciones (6-9°) la distorsión es despreciable, así que la forma dibujada se ve tal cual se
-/// diseñó, sin deformarse por estar "pegada" a una esfera.
+/// Cada constelación se define como un boceto 2D plano (un punto central (0,0) y una lista de puntos
+/// alrededor, en unidades locales) y se proyecta sobre la esfera del cielo con una dirección de centro
+/// (acimut/elevación) y una proyección gnómica (<see cref="ComputeDirection"/>). Con tamaños de 6-9°
+/// la distorsión es despreciable.
 ///
-/// Las líneas que conectan las estrellas de cada constelación son <c>LineRenderer</c> reales en el
-/// mundo (world space, no UI), con el mismo material <c>Sprites/Default</c> ya confirmado compatible
-/// con URP en este proyecto (ver comentario de clase de <c>NightSkyStarSpawner</c>) — así que también
-/// quedan correctamente ocluidas contra montañas/terreno por el mismo test de profundidad.
+/// Las líneas son <c>LineRenderer</c> en espacio de mundo con el material <c>Sprites/Default</c>, así
+/// que también quedan ocluidas por el mismo test de profundidad.
 ///
-/// **Nota de instalación**: este componente es nuevo (no existía antes en la escena de Raúl), así que
-/// hay que añadirlo a mano a un GameObject de la escena de mundo (por ejemplo, el mismo que ya lleva
-/// <see cref="NightSkyStarSpawner"/>) desde el Editor — esta sesión no tiene Editor de Unity para
-/// hacerlo automáticamente. Si <see cref="dayNightCycle"/> se deja vacío, se busca solo en Awake.
+/// Instalación: se añade a mano a un GameObject de la escena de mundo (p. ej. el que lleva
+/// <see cref="NightSkyStarSpawner"/>). Si <see cref="dayNightCycle"/> está vacío, se busca en Awake.
 ///
-/// 25 ago 2026 — **coordinación con el polvo de fondo (<c>NightSkyStarSpawner</c>)**: Raúl preguntó
-/// explícitamente si esto se complementaba con las estrellas ambientales o si se podían "pisar". Sin
-/// coordinación, sí podían: el polvo de fondo se generó (pasada anterior, mismo día) con un sesgo
-/// hacia la parte alta del cielo (<c>topBiasExponent</c>) que cae justo en la misma franja de
-/// elevación (50-60°) donde viven estas constelaciones, así que había bastante probabilidad de que
-/// alguna estrella de polvo cayera encima o muy cerca de una estrella guía o de una línea, rompiendo
-/// la lectura de la forma. Fix: este script publica una zona de exclusión por constelación (centro +
-/// radio angular, calculado del punto más lejano del boceto) en <see cref="ExclusionZones"/>, una
-/// lista <c>static</c> que <c>NightSkyStarSpawner</c> consulta al colocar cada estrella de polvo para
-/// apartarla si cae dentro — ver el comentario de clase de <c>NightSkyStarSpawner</c> para el otro
-/// lado de esta coordinación. Acoplamiento deliberadamente en un solo sentido (el polvo, mucho más
-/// numeroso y genérico, es quien evita a las constelaciones, con nombre y forma propios — no al
-/// revés) y con caída elegante: si este componente no está añadido a la escena, la lista queda vacía
-/// y <c>NightSkyStarSpawner</c> se comporta exactamente igual que antes de este fix.
-///
-/// 25 ago 2026 (pasada siguiente) — endurecimiento preventivo: Raúl reportó la misma regresión de
-/// oclusión ("estrellas delante de las montañas") en <c>NightSkyStarSpawner</c>, causada por una
-/// carrera de inicialización en arranques en frío (<c>Camera.main</c> aún null en el único frame de
-/// margen de <c>CheckInitialStateDelayed</c>) combinada con valores obsoletos ya serializados en la
-/// escena — ver el comentario de clase de <c>NightSkyStarSpawner</c> para el análisis completo. Este
-/// script comparte exactamente el mismo patrón (mismo <c>CheckInitialStateDelayed</c>, mismo
-/// <c>fallbackRadius</c> de último recurso), así que se aplica aquí el mismo arreglo preventivo
-/// (<see cref="WaitForMainCamera"/>) aunque esta regresión concreta no se reportó en este script —
-/// los valores de <c>fallbackRadius</c> en la escena de Raúl ya estaban al día (900, sin problema de
-/// staleness aquí porque este componente se añadió después de todas las pasadas anteriores), pero la
-/// carrera de inicialización en sí es la misma.
+/// Exclusión del polvo: el script publica una zona por constelación (centro y radio angular del punto
+/// más lejano del boceto) en <see cref="ExclusionZones"/>, lista estática que
+/// <c>NightSkyStarSpawner</c> consulta para apartar las estrellas de polvo que caerían encima de una
+/// estrella guía o de una línea. El acoplamiento es de un solo sentido y, si este componente no está
+/// en la escena, la lista queda vacía y el polvo no se aparta.
 /// </summary>
 public class NightSkyConstellationSpawner : MonoBehaviour
 {
@@ -110,9 +72,9 @@ public class NightSkyConstellationSpawner : MonoBehaviour
     // [SerializeField], ver ese comentario de clase para el porqué.
     private const float FarClipMarginFactor = 0.99f;
 
-    // Mismo arreglo y misma razón que NightSkyStarSpawner.MaxCameraWaitFrames (25 ago 2026, ver el
-    // comentario de clase de ese script, pasada 5): evita que un arranque en frío sin Camera.main
-    // todavía listo deje las constelaciones ancladas para siempre al fallbackRadius de último recurso.
+    // Mismo arreglo y misma razón que NightSkyStarSpawner.MaxCameraWaitFrames: evita que un arranque
+    // en frío sin Camera.main todavía listo deje las constelaciones ancladas para siempre al
+    // fallbackRadius de último recurso.
     private const int MaxCameraWaitFrames = 30;
 
     private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -225,9 +187,9 @@ public class NightSkyConstellationSpawner : MonoBehaviour
         yield return null;
         if (dayNightCycle != null && dayNightCycle.CurrentTimeOfDay == DayNightCycle.TimeOfDay.Night)
         {
-            // Mismo arreglo y misma razón que NightSkyStarSpawner.CheckInitialStateDelayed (25 ago
-            // 2026, pasada 5) — esperar a que Camera.main exista de verdad antes de construir, en vez
-            // de asumir que un solo frame de margen basta.
+            // Mismo arreglo y misma razón que NightSkyStarSpawner.CheckInitialStateDelayed — esperar
+            // a que Camera.main exista de verdad antes de construir, en vez de asumir que un solo
+            // frame de margen basta.
             yield return WaitForMainCamera();
             BuildConstellationsIfNeeded();
             StartFade(1f);
@@ -415,20 +377,18 @@ public class NightSkyConstellationSpawner : MonoBehaviour
         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         renderer.receiveShadows = false;
         renderer.sharedMaterial = _starMaterial;
-        // FIX — INC-101, "mirando de frente a una constelación se borran algunas
-        // estrellas guía, girando la cámara reaparecen": cada estrella guía vive en el MISMO punto
-        // exacto que el extremo de línea que la conecta (ver SpawnLine, misma expresión
-        // direction * _activeRadius) — ambos materiales son Sprites/Default (transparente,
-        // alpha-blended, sin ZWrite), así que Unity los ordena por distancia a cámara como
-        // desempate dentro de la misma sortingLayer/sortingOrder. En un punto compartido esa
-        // distancia es prácticamente idéntica para los dos renderers, así que el orden queda
-        // inestable y depende de redondeos que cambian con el ángulo de vista — justo cuando se
-        // mira derecho al vértice (máxima coincidencia) es cuando más fácil es que la línea (más
-        // tenue, lineBrightness) gane el desempate y tape a la estrella; girar la cámara rompe el
-        // empate y la estrella reaparece. Fix: sortingOrder explícito para que las estrellas SIEMPRE
-        // dibujen después de (encima de) las líneas, sin depender de ningún desempate por distancia
-        // — además refuerza la intención de diseño ya declarada arriba ("las líneas son solo una
-        // guía discreta, el ojo se va primero a las estrellas").
+        // Cada estrella guía vive en el MISMO punto exacto que el extremo de línea que la conecta
+        // (ver SpawnLine, misma expresión direction * _activeRadius) — ambos materiales son
+        // Sprites/Default (transparente, alpha-blended, sin ZWrite), así que Unity los ordena por
+        // distancia a cámara como desempate dentro de la misma sortingLayer/sortingOrder. En un
+        // punto compartido esa distancia es prácticamente idéntica para los dos renderers, así que
+        // el orden queda inestable y depende de redondeos que cambian con el ángulo de vista — justo
+        // cuando se mira derecho al vértice (máxima coincidencia) es cuando más fácil es que la
+        // línea (más tenue, lineBrightness) gane el desempate y tape a la estrella; girar la cámara
+        // rompe el empate y la estrella reaparece. Se usa sortingOrder explícito para que las
+        // estrellas SIEMPRE dibujen después de (encima de) las líneas, sin depender de ningún
+        // desempate por distancia — además refuerza la intención de diseño ya declarada arriba ("las
+        // líneas son solo una guía discreta, el ojo se va primero a las estrellas").
         renderer.sortingOrder = 1;
 
         _starRenderers.Add(renderer);
@@ -460,9 +420,9 @@ public class NightSkyConstellationSpawner : MonoBehaviour
         lr.numCapVertices = 2;
         lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         lr.receiveShadows = false;
-        // FIX — INC-101: sortingOrder explícito (por debajo del de las estrellas guía,
-        // ver SpawnBeaconStar) para que nunca gane el desempate de orden transparente en los puntos
-        // donde una línea comparte posición exacta con una estrella guía.
+        // SortingOrder explícito (por debajo del de las estrellas guía, ver SpawnBeaconStar) para
+        // que nunca gane el desempate de orden transparente en los puntos donde una línea comparte
+        // posición exacta con una estrella guía.
         lr.sortingOrder = 0;
         lr.positionCount = polyline.Length;
 
@@ -580,7 +540,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Bocetos de las constelaciones inventadas para esta pasada — NINGUNA es la silueta de Will (ver
+    /// Bocetos de las constelaciones inventadas para este script — NINGUNA es la silueta de Will (ver
     /// comentario de clase, eso queda para un scope futuro). Tres formas simples y reconocibles de
     /// lejos, con temática de "El Sendero de las Estrellas": una espada, una corona y una estrella
     /// guía/compás. Repartidas cada ~120° en acimut y a bastante altura (50-60° de elevación, muy por

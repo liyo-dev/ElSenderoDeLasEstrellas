@@ -111,9 +111,8 @@ public partial class CharacterAppearanceRegistry
 
     private static bool Toca(AtuendoDeEscena atuendo, Slot personaje) => atuendo != null && atuendo.De(personaje) != null;
 
-    // Antes de cambiar los atuendos de un personaje, lo que el jugador le haya cambiado pasa a la
-    // ropa de debajo. Un cuerpo que este registro aún no ha vestido no tiene nada propio que
-    // guardar: su apariencia llega después (preset o valores de partida).
+    // Un cuerpo que este registro aún no ha vestido no tiene nada propio que guardar: su
+    // apariencia llega después (preset o valores de partida).
     private void GuardarRopaDeLosTocados(AtuendoDeEscena uno, AtuendoDeEscena otro)
     {
         for (int i = 0; i < ControlDelJugador.Personajes; i++)

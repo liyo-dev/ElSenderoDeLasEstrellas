@@ -202,7 +202,7 @@ namespace Sendero.UI
         private void OnEnable()
         {
             if (_cansado && !_caido) Respirar(true);
-            if (_vivo != null && _posicion != PosicionDeRetrato.Oculto) _vivo.Mostrar(_personaje, true);
+            if (FuentesDeRetrato.Existe(_vivo) && _posicion != PosicionDeRetrato.Oculto) _vivo.Mostrar(_personaje, true);
             ActiveCombatRegistry.OnNPCEnteredCombat += AlCambiarElCombate;
             ActiveCombatRegistry.OnNPCExitedCombat += AlCambiarElCombate;
             RefrescarImagen();
@@ -222,7 +222,7 @@ namespace Sendero.UI
             Matar(ref _tCara, false);
             Respirar(false);
             _finDelGolpe = 0f;
-            if (_vivo != null) _vivo.Mostrar(_personaje, false);
+            if (FuentesDeRetrato.Existe(_vivo)) _vivo.Mostrar(_personaje, false);
             if (_material != null) _material.SetColor(IdDestello, new Color(colorDelGolpe.r, colorDelGolpe.g, colorDelGolpe.b, 0f));
         }
 
@@ -263,7 +263,7 @@ namespace Sendero.UI
             _posicion = posicion;
             bool visible = posicion != PosicionDeRetrato.Oculto;
             if (visible && !gameObject.activeSelf) { gameObject.SetActive(true); animar = false; }
-            if (_vivo != null) _vivo.Mostrar(_personaje, visible);
+            if (FuentesDeRetrato.Existe(_vivo)) _vivo.Mostrar(_personaje, visible);
             if (!visible)
             {
                 Matar(ref _tCarrusel, false);
@@ -289,7 +289,7 @@ namespace Sendero.UI
             {
                 Matar(ref _tSalto, true);
                 _tSalto = cuerpo.DOPunchAnchorPos(new Vector2(0f, alturaDelSalto), duracionDelCambio, 1, 0f).SetUpdate(true);
-                if (_vivo != null) _vivo.Reaccionar(_personaje, ReaccionDeRetrato.Saludo);
+                if (FuentesDeRetrato.Existe(_vivo)) _vivo.Reaccionar(_personaje, ReaccionDeRetrato.Saludo);
             }
             MostrarBarras();
             RefrescarAspecto(animar);
@@ -418,7 +418,7 @@ namespace Sendero.UI
         {
             if (!isActiveAndEnabled || _caido) return;
             _finDelGolpe = Time.unscaledTime + caraDeGolpe;
-            if (_vivo != null) _vivo.Reaccionar(_personaje, ReaccionDeRetrato.Golpe);
+            if (FuentesDeRetrato.Existe(_vivo)) _vivo.Reaccionar(_personaje, ReaccionDeRetrato.Golpe);
             if (vaiven != null)
             {
                 Matar(ref _tSacudida, true);
@@ -493,8 +493,8 @@ namespace Sendero.UI
         private bool Obtener(ExpresionDeRetrato expresion, out ImagenDeRetrato img)
         {
             img = default;
-            if (_fuente != null && _fuente.TryObtener(_personaje, expresion, out img) && img.Valida) return true;
-            return _respaldo != null && _respaldo.TryObtener(_personaje, expresion, out img) && img.Valida;
+            if (FuentesDeRetrato.Existe(_fuente) && _fuente.TryObtener(_personaje, expresion, out img) && img.Valida) return true;
+            return FuentesDeRetrato.Existe(_respaldo) && _respaldo.TryObtener(_personaje, expresion, out img) && img.Valida;
         }
 
         // ─── Aspecto (saturación, brillo, halo) ────────────────────────────────

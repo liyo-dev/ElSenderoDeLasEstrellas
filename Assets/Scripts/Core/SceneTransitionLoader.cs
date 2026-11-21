@@ -220,7 +220,9 @@ public static class SceneTransitionLoader
             // Unity reporta 0..0.9 durante la carga; 1 al activar
             float raw = op.progress;                       // 0..0.9
             float normalized = (raw < 0.9f) ? raw / 0.9f : 1f;
-            loadingUI?.SetProgress(normalized);
+            // La escena principal es solo una parte: después el mundo se monta (escenas aditivas,
+            // colocar al jugador, interiores). El 100 % no llega hasta que todo está listo.
+            loadingUI?.SetProgress(normalized * ParteDeLaEscenaPrincipal);
 
             if (raw >= 0.9f)
             {
@@ -237,8 +239,7 @@ public static class SceneTransitionLoader
                 // hacia cámara haciendo su gesto (ver LoadingScreenController.SetProgress) — sin
                 // esto, una carga muy rápida taparía la pantalla en negro antes de que se llegue
                 // a ver el gesto.
-                float prePause = (loadingUI != null) ? Mathf.Max(0.05f, loadingUI.GestureHoldTime) : 0.05f;
-                yield return new WaitForSecondsRealtime(prePause);
+                yield return new WaitForSecondsRealtime(0.05f);
 
                 // Poner pantalla en negro ANTES de activar la escena para evitar el parpadeo:
                 // la overlay de carga sigue encima en este punto, así que no se ve nada raro
@@ -260,8 +261,8 @@ public static class SceneTransitionLoader
             yield return null;
         }
 
-        // Llegados aquí, la escena destino está activa
-        loadingUI?.SetProgress(1f);
+        // Llegados aquí, la escena destino está activa, pero el mundo aún se está montando.
+        loadingUI?.SetProgress(ParteDeLaEscenaPrincipal);
 
         // El tiempo no se toca aquí: las pausas o cámaras lentas pedidas por objetos de la escena
         // descargada las descarta TimeScaleArbiterService al descargarse (sus claves mueren), y
@@ -277,7 +278,18 @@ public static class SceneTransitionLoader
 
         const float TopeEspera = 30f;
         float limiteEspera = Time.unscaledTime + TopeEspera;
-        while (Telon.Cerrado && Time.unscaledTime < limiteEspera) yield return null;
+        float inicioDelMontaje = Time.unscaledTime;
+        while (Telon.Cerrado && Time.unscaledTime < limiteEspera)
+        {
+            // Mientras el mundo se monta (no se sabe cuánto falta) el número avanza cada vez más
+            // despacio hacia el 99 %, sin llegar al 100 hasta que el Telón se abre.
+            float t = Time.unscaledTime - inicioDelMontaje;
+            loadingUI?.SetProgress(Mathf.Lerp(ParteDeLaEscenaPrincipal, 0.99f, 1f - Mathf.Exp(-t / 2.5f)));
+            yield return null;
+        }
+        // Ahora sí: todo listo. Los personajes se giran y hacen su gesto antes de quitar la carga.
+        loadingUI?.SetProgress(1f);
+        if (loadingUI != null) yield return new WaitForSecondsRealtime(Mathf.Max(0.05f, loadingUI.GestureHoldTime));
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (Telon.Cerrado)
             Debug.LogWarning($"[SceneTransitionLoader] El Telón sigue cerrado {TopeEspera}s después de cargar '{targetScene}'; se quita la pantalla de carga igualmente.");
@@ -304,6 +316,9 @@ public static class SceneTransitionLoader
     }
 
     /// Descarga todas las escenas cargadas menos 'conservar', que pasa a ser la activa.
+    /// Parte de la barra que corresponde a cargar la escena principal; el resto, a montar el mundo.
+    private const float ParteDeLaEscenaPrincipal = 0.7f;
+
     private static IEnumerator DescargarTodoSalvo(Scene conservar)
     {
         SceneManager.SetActiveScene(conservar);

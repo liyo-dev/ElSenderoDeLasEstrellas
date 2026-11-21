@@ -1,11 +1,13 @@
 #if UNITY_EDITOR
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
 /// <summary>
 /// Vestuario propio de los NPCs con peso en la historia (Eldran, Victoria, Erika, Oliver, el Rey, el
-/// posadero y la boticaria, con su pañuelo verde salvia en la cabeza; el Archimago, el Mago Oscuro y Liora), hecho en Blender (Tools/Modelos/&lt;Personaje&gt;/). Usa lo mismo que los
+/// posadero y la boticaria, con su pañuelo verde salvia en la cabeza; el Archimago, el Mago Oscuro y Liora; Eldran joven y
+/// Silas joven, del recuerdo de «La mañana después»), hecho en Blender (Tools/Modelos/&lt;Personaje&gt;/). Usa lo mismo que los
 /// protagonistas (<see cref="AspectoDeProtagonista.PonerPiezas"/>): la pieza de cuerpo nueva entra en
 /// el modelo de cada uno junto a la que llevaba, se enciende y la de antes se queda apagada. La piel
 /// de debajo (manos, brazos) usa el material de su cuerpo de siempre, así que conserva su tono de piel.
@@ -175,6 +177,38 @@ public static class VestuarioDeLosNPCs
             Apagar = new string[] {  },
             Colores = new[] { ("Salvia", new Color(0.56f, 0.68f, 0.52f)), ("SalviaOscura", new Color(0.34f, 0.45f, 0.33f)), ("Crema", new Color(0.96f, 0.92f, 0.8f)), ("Flor", new Color(0.98f, 0.8f, 0.36f)), ("Cuero", new Color(0.42f, 0.27f, 0.16f)), ("CueroOscuro", new Color(0.26f, 0.16f, 0.09f)), ("PeloCastano", new Color(0.42f, 0.24f, 0.13f)), ("PeloCastanoOscuro", new Color(0.3f, 0.16f, 0.08f)), ("CintaCrema", new Color(0.96f, 0.92f, 0.8f)) },
         },
+        // El recuerdo de «La mañana después» (INC-1338): Eldran joven y Silas joven, con prefab propio (ver PrepararElRecuerdo).
+        new AspectoDeProtagonista.Ficha
+        {
+            Nombre = "Eldran joven",
+            Carpeta = Carpeta + "/EldranJoven",
+            PrefabPropio = PrefabDeEldranJoven,
+            CuerpoDeAntes = "Body12",
+            Modelos = new[] { PrefabDeEldranJoven },
+            Propios = new[] { PrefabDeEldranJoven },
+            Piezas = new[]
+            {
+            new AspectoDeProtagonista.Pieza { Nombre = "Hair23_EldranJoven", Categoria = PartCategory.Hair, Vecina = "Hair13" },   // su Hair13, en castaño oscuro
+            },
+            Apagar = new string[] {  },
+            Colores = new[] { ("Pelo", new Color(0.15f, 0.095f, 0.065f)), ("PeloClaro", new Color(0.23f, 0.15f, 0.1f)) },
+        },
+        new AspectoDeProtagonista.Ficha
+        {
+            Nombre = "Silas joven",
+            Carpeta = Carpeta + "/SilasJoven",
+            PrefabPropio = PrefabDeSilasJoven,
+            CuerpoDeAntes = "Body08",
+            Modelos = new[] { PrefabDeSilasJoven },
+            Propios = new[] { PrefabDeSilasJoven },
+            Piezas = new[]
+            {
+            new AspectoDeProtagonista.Pieza { Nombre = "Body36_Relojero", Categoria = PartCategory.Body, Vecina = "Body08" },
+            new AspectoDeProtagonista.Pieza { Nombre = "Hair22_Silas", Categoria = PartCategory.Hair, Vecina = "Hair13" },
+            },
+            Apagar = new[] { "Hat06", "Eyebrow02" },   // el sombrero y las cejas del mago del pack
+            Colores = new[] { ("Camisa", new Color(0.93f, 0.9f, 0.82f)), ("CamisaSombra", new Color(0.78f, 0.74f, 0.66f)), ("Chaleco", new Color(0.36f, 0.14f, 0.24f)), ("ChalecoOscuro", new Color(0.24f, 0.08f, 0.15f)), ("Panuelo", new Color(0.56f, 0.72f, 0.8f)), ("Laton", new Color(0.8f, 0.62f, 0.25f)), ("Esfera", new Color(0.96f, 0.93f, 0.84f)), ("Pantalon", new Color(0.33f, 0.35f, 0.41f)), ("Cuero", new Color(0.36f, 0.22f, 0.12f)), ("CueroClaro", new Color(0.58f, 0.4f, 0.24f)), ("CueroOscuro", new Color(0.2f, 0.12f, 0.07f)), ("PeloCobre", new Color(0.5f, 0.27f, 0.14f)), ("PeloCobreOscuro", new Color(0.36f, 0.18f, 0.09f)) },
+        },
     };
 
     [MenuItem("El Sendero/Personajes/NPCs/Vestuario propio de los NPCs", priority = 60)]
@@ -183,6 +217,7 @@ public static class VestuarioDeLosNPCs
         if (Application.isPlaying) { OrdenesDelEditor.Avisar("Vestuario de los NPCs", "Hazlo fuera de Play."); return; }
         var informe = new StringBuilder();
         PrepararLiora(informe);
+        PrepararElRecuerdo(informe);
         foreach (var f in Fichas)
         {
             if (AssetDatabase.LoadAssetAtPath<GameObject>($"{f.Carpeta}/{f.Piezas[0].Nombre}.fbx") == null)
@@ -190,6 +225,7 @@ public static class VestuarioDeLosNPCs
             if (AspectoDeProtagonista.PonerPiezas(f, informe)) informe.AppendLine($"{f.Nombre}: vestido.");
         }
         CoronarAlRey(informe);
+        CabezasDelRecuerdo(informe);
         AssetDatabase.SaveAssets();
         OrdenesDelEditor.Avisar("Vestuario de los NPCs", informe.ToString());
     }
@@ -214,6 +250,47 @@ public static class VestuarioDeLosNPCs
             entrada.prefab = prefab;
             EditorUtility.SetDirty(roster);
             informe.AppendLine("Liora: el roster del prólogo usa ya su prefab.");
+        }
+    }
+
+    private const string PrefabDeEldranJoven = "Assets/_NPCs/Recuerdos/EldranJoven.prefab";
+    private const string PrefabDeSilasJoven = "Assets/_NPCs/Recuerdos/SilasJoven.prefab";
+
+    /// El recuerdo en blanco y negro de «La mañana después» (Cap2_02_MananaDespues, INC-1338) usaba el Eldran de ahora
+    /// (pelo blanco y bigote) y el mago barbudo del pack para Silas. Cada uno tiene ahora su prefab, copia del que usaba,
+    /// para que su ropa y su cabeza no cambien las del Eldran de ahora ni las del mago: (prefab, copia de, cabeza que se
+    /// enciende, piezas que se apagan). La cabeza va aparte de las fichas porque es una pieza que el modelo ya trae.
+    private static readonly (string prefab, string copiaDe, string[] encender, string[] apagar)[] DelRecuerdo =
+    {
+        (PrefabDeEldranJoven, "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab", new[] { "Head01_Male" }, new[] { "Head05_Santa" }),   // sin barba ni bigote
+        (PrefabDeSilasJoven, "Assets/_NPCs/MagoPrimero.prefab", new[] { "Head01_Male" }, new[] { "Head04_Red" }),
+    };
+
+    private static void PrepararElRecuerdo(StringBuilder informe)
+    {
+        foreach (var (prefab, copiaDe, _, _) in DelRecuerdo)
+        {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(prefab) != null) continue;
+            informe.AppendLine(AssetDatabase.CopyAsset(copiaDe, prefab) ? $"{prefab}: creado (copia de {copiaDe})." : $"{prefab}: no he podido copiar {copiaDe}.");
+        }
+    }
+
+    private static void CabezasDelRecuerdo(StringBuilder informe)
+    {
+        foreach (var (prefab, _, encender, apagar) in DelRecuerdo)
+        {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(prefab) == null) { informe.AppendLine($"{prefab}: no existe."); continue; }
+            var raiz = PrefabUtility.LoadPrefabContents(prefab);
+            try
+            {
+                var nombres = new System.Collections.Generic.HashSet<string>(raiz.GetComponentsInChildren<Renderer>(true).Select(r => r.name));
+                var faltan = encender.Where(n => !nombres.Contains(n)).ToArray();
+                if (faltan.Length > 0) { informe.AppendLine($"{prefab}: le falta {string.Join(", ", faltan)}; cabeza sin cambiar."); continue; }
+                PiezaNuevaDelModelo.Encender(raiz, encender, apagar);
+                PrefabUtility.SaveAsPrefabAsset(raiz, prefab);
+                informe.AppendLine($"{prefab}: cabeza {string.Join(", ", encender)}.");
+            }
+            finally { PrefabUtility.UnloadPrefabContents(raiz); }
         }
     }
 

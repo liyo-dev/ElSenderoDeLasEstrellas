@@ -54,6 +54,10 @@ sc = bpy.context.scene
 arm = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 arm.data.pose_position = 'POSE'
 mallas = [o for o in bpy.data.objects if o.type == 'MESH']
+SOLO = [n for n in (opcion("--solo", "") or "").split(",") if n]   # como en chequeo_choques: un cuerpo cada vez
+if SOLO:
+    for o in [o for o in mallas if o.name not in SOLO]: bpy.data.objects.remove(o)
+    mallas = [o for o in bpy.data.objects if o.type == 'MESH']
 
 def enganchar(o):
     mw = o.matrix_world.copy(); o.parent = arm; o.matrix_world = mw

@@ -151,12 +151,12 @@ public class BossIntroPresentationService : MonoBehaviour
         }
         finally
         {
-            // Red de seguridad (INC-207 hotfix 2026-09-15): si cualquier paso anterior lanzó una
-            // excepción a mitad de la presentación (p. ej. una referencia nula específica de un
-            // boss concreto), NUNCA dejar la pantalla en negro ni la cámara del boss activa para
-            // siempre. yield no está permitido dentro de un finally, así que la restauración aquí
-            // es siempre instantánea (sin fundido) — mejor un corte brusco que una pantalla negra
-            // permanente que obligue a reiniciar el juego.
+            // Red de seguridad: si cualquier paso anterior lanzó una excepción a mitad de la
+            // presentación (p. ej. una referencia nula específica de un boss concreto), NUNCA
+            // dejar la pantalla en negro ni la cámara del boss activa para siempre. yield no está
+            // permitido dentro de un finally, así que la restauración aquí es siempre instantánea
+            // (sin fundido) — mejor un corte brusco que una pantalla negra permanente que obligue
+            // a reiniciar el juego.
             if (cameraSwapped)
             {
                 if (bossCamera != null) bossCamera.gameObject.SetActive(false);

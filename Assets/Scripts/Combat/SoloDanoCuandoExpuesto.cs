@@ -4,12 +4,9 @@ using UnityEngine;
 /// momento, el golpe no le quita vida; si 'curacionPorGolpe' es mayor que 0, además la recupera
 /// (esa parte de lo que le habría quitado). En los dos casos avisa de un golpe mal dado.
 ///
-/// Raúl, 26 sep 2026: «el demonio solo puede recibir daño cuando sale el aro». El 27 sep 2026
-/// quitó la curación del Demonio 1: «es el primer jefe, solo le matamos cuando se le enciende el
-/// aro, pero no absorbe los ataques» (curacionPorGolpe = 0). Quién dice cuándo está expuesto lo decide otro componente
-/// (IExpuestoAlDano; en el Demonio, RuneCollar mientras el aro brilla), así que esta regla sirve
-/// para cualquier jefe con su propia ventana. Va en el mismo GameObject que su Damageable.
-/// Ver INC-469.
+/// Quién dice cuándo está expuesto lo decide otro componente (IExpuestoAlDano; en el Demonio, RuneCollar mientras el
+/// aro brilla), así que esta regla sirve para cualquier jefe con su propia ventana. Va en el mismo GameObject que su
+/// Damageable. Ver INC-469.
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Damageable))]
 public sealed class SoloDanoCuandoExpuesto : MonoBehaviour, IFiltroDeDano

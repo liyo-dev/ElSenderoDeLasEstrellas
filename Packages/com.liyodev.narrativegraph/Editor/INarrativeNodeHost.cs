@@ -1,4 +1,4 @@
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Anything on the canvas that shows a node and can be edited from the inspector.
     public interface INarrativeNodeHost

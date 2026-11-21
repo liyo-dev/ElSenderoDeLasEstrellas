@@ -108,8 +108,8 @@ public class CinematicCameraShot
         {
             DialogueShotType.CloseUpNPC => -5f,
             DialogueShotType.Wide => 5f,
-            DialogueShotType.OverShoulderPlayer => -8f,  // Añadido: ángulo hacia abajo para ver mejor al NPC
-            DialogueShotType.OverShoulderNPC => -8f,     // Añadido: ángulo hacia abajo para ver mejor al Player
+            DialogueShotType.OverShoulderPlayer => -8f,  // Ángulo hacia abajo para ver mejor al NPC
+            DialogueShotType.OverShoulderNPC => -8f,     // Ángulo hacia abajo para ver mejor al Player
             _ => 0f
         };
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Un pictograma por categoría de paso, dibujado sobre una rejilla de 24 × 24. Es el único
     /// origen de los dibujos del editor: la banda de la tarjeta lo pinta relleno a dos tonos y la

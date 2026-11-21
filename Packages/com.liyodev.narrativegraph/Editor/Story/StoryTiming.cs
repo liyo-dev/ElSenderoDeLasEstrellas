@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Sonda de tiempos del editor de la historia: apunta en <see cref="FilePath"/> cada operación
     /// que pasa de <see cref="Threshold"/> ms, con lo que tardó cada una de sus partes, para saber

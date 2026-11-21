@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Qué magia tiene cada personaje (INC-503). El grimorio es uno solo para todo el grupo
@@ -13,6 +14,12 @@ using Slot = PartyControlManager.CharacterSlot;
 ///   guardado, llevan los de su ficha.
 ///
 /// Los combos no se equipan: salen todos con la Y cuando el personaje va al mando.
+///
+/// Sets fijos (decidido por Raúl, 20 nov 2026): cada personaje tiene 4 rápidos (X) y 4 combos (Y)
+/// de sus elementos, los de su ficha (también la de Will), y aparte un especial que se aprende con
+/// una misión (<see cref="MagicSpellSO.especialConMision"/>). Ya no se eligen: los rápidos que sabe
+/// van siempre puestos, en el orden de la ficha (<see cref="BasicosEquipados"/>). Will los va
+/// aprendiendo con la historia; Estela y Liam los traen todos.
 /// </summary>
 public static class GrimorioDelPersonaje
 {
@@ -71,9 +78,63 @@ public static class GrimorioDelPersonaje
 
     /// Se equipa como básico (X, rota con LB): proyectiles y haces del grimorio. Zonas,
     /// teletransporte y levitación no.
+    /// La levitación sí (es un rápido de Liam: se mantiene la X).
     public static bool EsBasico(MagicSpellSO s) =>
-        EsDelGrimorio(s) && s.slotType != SpellSlotType.SpecialOnly
-        && s.kind != MagicKind.Zone && s.kind != MagicKind.Teleport && s.kind != MagicKind.Levitation;
+        EsDelGrimorio(s) && s.slotType != SpellSlotType.SpecialOnly && !s.especialConMision
+        && s.kind != MagicKind.Zone && s.kind != MagicKind.Teleport && s.kind != MagicKind.Invisibility;
+
+    // ── El set fijo de cada uno (4 rápidos, 4 combos y el especial) ───────
+
+    /// La ficha del personaje, también la de Will (para el orden de su set).
+    public static FichaDePersonaje FichaDelSet(Slot slot) => slot == Slot.Will ? FichaDePersonaje.De(slot) : Ficha(slot);
+
+    /// Los 4 rápidos del set del personaje, en su orden (los sepa ya o no).
+    public static List<MagicSpellSO> RapidosDelSet(Slot slot)
+    {
+        var result = new List<MagicSpellSO>(MagicCaster.BasicSlotCount);
+        var ficha = FichaDelSet(slot);
+        if (ficha != null)
+            foreach (var s in ficha.Basicos) Add(result, s, soloBasicos: true);
+        return result;
+    }
+
+    /// Los 4 combos del set del personaje, en su orden (los sepa ya o no). Sin el especial.
+    public static List<MagicSpellSO> CombosDelSet(Slot slot)
+    {
+        var result = new List<MagicSpellSO>(4);
+        var ficha = FichaDelSet(slot);
+        if (ficha != null && ficha.Combos != null)
+            foreach (var s in ficha.Combos)
+                if (s != null && s.HasCombo && !s.especialConMision && EsDelGrimorio(s) && !result.Contains(s)) result.Add(s);
+        return result;
+    }
+
+    /// El especial con misión del personaje (Will: Amanecer), lo sepa ya o no. Null si aún no tiene.
+    public static MagicSpellSO EspecialDe(Slot slot)
+    {
+        var lib = Biblioteca;
+        if (lib == null) return null;
+        foreach (var s in lib.Spells)
+            if (s != null && s.especialConMision && s.caster == slot && EsDelGrimorio(s)) return s;
+        return null;
+    }
+
+    /// Ya lo sabe: Will, si lo ha desbloqueado; Estela y Liam, si viene en su ficha o lo han desbloqueado.
+    public static bool LoSabe(Slot slot, MagicSpellSO s)
+    {
+        if (s == null) return false;
+        if (slot != Slot.Will)
+        {
+            var ficha = Ficha(slot);
+            if (ficha != null)
+            {
+                foreach (var b in ficha.Basicos) if (b == s) return true;
+                if (ficha.Combos != null) foreach (var c in ficha.Combos) if (c == s) return true;
+            }
+        }
+        var preset = Preset;
+        return preset != null && preset.unlockedSpells != null && preset.unlockedSpells.Contains(s.spellId) && s.caster == slot;
+    }
 
     // ── Lo que sabe ───────────────────────────────────────────────────────
 
@@ -150,27 +211,16 @@ public static class GrimorioDelPersonaje
         return nueva.hechizos;
     }
 
-    /// Básicos que lleva equipados un compañero (hasta 4, en orden de LB, sin huecos).
+    /// Rápidos que lleva puestos (hasta 4, en orden de LB, sin huecos): los de su set que ya sabe,
+    /// en el orden de la ficha; si sabe alguno más de los suyos (partidas antiguas), detrás.
     public static List<MagicSpellSO> BasicosEquipados(Slot slot)
     {
         var result = new List<MagicSpellSO>(MagicCaster.BasicSlotCount);
-        if (slot == Slot.Will) return result;
-
-        var ids = IdsEquipados(Preset, slot, crear: false);
-        if (ids == null)
-        {
-            var ficha = Ficha(slot);
-            if (ficha != null) result.AddRange(ficha.Basicos);
-            return result;
-        }
-
-        var disponibles = BasicosDisponibles(slot);
-        foreach (var id in ids)
-        {
-            if (id == SpellId.None) continue;
-            var s = disponibles.Find(x => x.spellId == id);
-            if (s != null && !result.Contains(s) && result.Count < MagicCaster.BasicSlotCount) result.Add(s);
-        }
+        foreach (var s in RapidosDelSet(slot))
+            if (LoSabe(slot, s) && result.Count < MagicCaster.BasicSlotCount) result.Add(s);
+        var otros = slot == Slot.Will ? new List<MagicSpellSO>(Desbloqueados(slot)) : BasicosDisponibles(slot);
+        foreach (var s in otros)
+            if (EsBasico(s) && !result.Contains(s) && result.Count < MagicCaster.BasicSlotCount) result.Add(s);
         return result;
     }
 
@@ -235,6 +285,7 @@ public static class GrimorioDelPersonaje
         if (s.groupShieldSeconds > 0f) parts.Add(L("SPELL_FX_SHIELD", "Escudo al grupo"));
         if (s.zoneOnCaster) parts.Add(L("SPELL_FX_ON_CASTER", "Alrededor de quien lo lanza"));
         if (s.kind == MagicKind.Teleport) parts.Add(string.Format(L("SPELL_FX_BLINK", "Teletransporte de {0} m"), s.teleportDistance));
+        if (s.kind == MagicKind.Invisibility) parts.Add(string.Format(L("SPELL_FX_INVISIBLE", "Invisible {0} s (se rompe al atacar)"), s.invisibilidadSegundos));
         return string.Join(" · ", parts);
     }
 

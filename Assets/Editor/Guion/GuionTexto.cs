@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using System.Text;
 using UnityEngine;
@@ -53,12 +54,16 @@ public sealed class GuionTexto
     public string zona;
     public Rect zonaRect;
     public PresentacionDeTexto texto = PresentacionDeTexto.Subtitulo;
+    /// «VIDA no»: sin vida de fondo automática (ver HornoVida). Por defecto, encendida.
+    public bool vida = true;
     public float pausaEntreFrases = 0.3f;
     public float pausaMismoHablante = 0.12f;
     public readonly List<Reparto> reparto = new();
     public readonly List<PuntoDef> puntos = new();
     public readonly List<Orden> hilo = new();
     public readonly List<Orden> pistas = new();
+    /// Paletas de hechizo («PALETA luz vfxProyectil=… sfxImpacto=… velocidad=14»): «lanza … hechizo=luz».
+    public readonly Dictionary<string, Dictionary<string, string>> paletas = new();
     public readonly List<string> errores = new();
     public string huella;
 
@@ -120,6 +125,7 @@ public sealed class GuionTexto
         string seccion = "CABECERA";
         var lineas = fuente.Replace("\r\n", "\n").Split('\n');
         var aliasConocidos = new HashSet<string>();
+        Compases compases = null;
         for (int n = 0; n < lineas.Length; n++)
         {
             string crudo = lineas[n];
@@ -129,6 +135,15 @@ public sealed class GuionTexto
             int numero = n + 1;
             var tok = Trocear(l);
             string primera = tok[0];
+
+            // Filas de un bloque COMPASES: «etiqueta | celda de a | celda de b …» (ver LeerFila).
+            if (compases != null && seccion == "HILO" && l.Contains("|"))
+            {
+                foreach (var sintetica in compases.Fila(l, numero, g))
+                    LeerHilo(g, Trocear(sintetica), sintetica, numero, aliasConocidos);
+                continue;
+            }
+            if (compases != null && primera != "COMPASES") compases = null;
 
             switch (primera)
             {
@@ -157,6 +172,20 @@ public sealed class GuionTexto
                         case "subtitulo_grande": g.texto = PresentacionDeTexto.SubtituloGrande; break;
                         default: g.errores.Add($"línea {numero}: TEXTO no reconocido ({l})"); break;
                     }
+                    continue;
+                case "VIDA":
+                    g.vida = Resto(tok).Trim().ToLowerInvariant() != "no";
+                    continue;
+                case "PALETA":
+                    if (tok.Count < 2) { g.errores.Add($"línea {numero}: PALETA necesita un nombre"); continue; }
+                    g.paletas[tok[1]] = Opciones(tok, 2, out _);
+                    continue;
+                case "COMPASES":
+                    if (seccion != "HILO") { g.errores.Add($"línea {numero}: COMPASES va dentro del HILO"); continue; }
+                    compases = LeerCompases(g, tok, numero, aliasConocidos);
+                    continue;
+                case "FIN_COMPASES":
+                    compases = null;
                     continue;
                 case "RITMO":
                     var o = Opciones(tok, 1, out _);
@@ -200,46 +229,8 @@ public sealed class GuionTexto
                     break;
                 }
                 case "HILO":
-                {
-                    var orden = new Orden { linea = numero, texto = l };
-                    if (primera.StartsWith("@") && tok.Count == 1)
-                    {
-                        orden.defineEtiqueta = primera.Substring(1);
-                        orden.verbo = "etiqueta";
-                        g.hilo.Add(orden);
-                        break;
-                    }
-                    int i = 0;
-                    if (tok[0] == "&") { orden.arranque = Arranque.ALaVez; i = 1; }
-                    else if (tok[0] == "&&") { orden.arranque = Arranque.ALaVezYEspera; i = 1; }
-                    else if (tok[0].Length > 1 && tok[0][0] == '+' && EsNumero(tok[0].Substring(1))) { orden.arranque = Arranque.TrasInicio; orden.desfase = Num(tok[0].Substring(1), 0); i = 1; }
-                    else if (tok[0].Length > 1 && tok[0][0] == '-' && EsNumero(tok[0].Substring(1))) { orden.arranque = Arranque.Solape; orden.desfase = Num(tok[0].Substring(1), 0); i = 1; }
-                    else if (tok[0] == "desde" && tok.Count > 2 && tok[1].StartsWith("@"))
-                    {
-                        orden.arranque = Arranque.DesdeEtiqueta;
-                        LeerEtiquetaConDesfase(tok[1].Substring(1), out orden.etiqueta, out orden.desfase);
-                        i = 2;
-                    }
-                    if (i >= tok.Count) { g.errores.Add($"línea {numero}: orden vacía"); break; }
-                    if (aliasConocidos.Contains(tok[i]))
-                    {
-                        orden.actor = tok[i];
-                        if (!LeerCuerpo(tok, i + 1, orden, out string error)) { g.errores.Add($"línea {numero}: {error}"); break; }
-                    }
-                    else
-                    {
-                        orden.verbo = tok[i].ToLowerInvariant();
-                        orden.opciones = Opciones(tok, i + 1, out orden.args);
-                        if (orden.verbo != "plano" && orden.verbo != "efecto" && orden.verbo != "espera" && orden.verbo != "eje"
-                            && !Azucar.Contains(orden.verbo))
-                        {
-                            g.errores.Add($"línea {numero}: no sé qué es «{tok[i]}» (¿un alias que falta en REPARTO?)");
-                            break;
-                        }
-                    }
-                    g.hilo.Add(orden);
+                    LeerHilo(g, tok, l, numero, aliasConocidos);
                     break;
-                }
                 default:
                     g.errores.Add($"línea {numero}: fuera de sección ({l})");
                     break;
@@ -250,11 +241,186 @@ public sealed class GuionTexto
         return g;
     }
 
+
+    private static void LeerHilo(GuionTexto g, List<string> tok, string l, int numero, HashSet<string> aliasConocidos)
+    {
+        string primera = tok[0];
+        var orden = new Orden { linea = numero, texto = l };
+        if (primera.StartsWith("@") && tok.Count == 1)
+        {
+            orden.defineEtiqueta = primera.Substring(1);
+            orden.verbo = "etiqueta";
+            g.hilo.Add(orden);
+            return;
+        }
+        int i = 0;
+        if (tok[0] == "&") { orden.arranque = Arranque.ALaVez; i = 1; }
+        else if (tok[0] == "&&") { orden.arranque = Arranque.ALaVezYEspera; i = 1; }
+        else if (tok[0].Length > 1 && tok[0][0] == '+' && EsNumero(tok[0].Substring(1))) { orden.arranque = Arranque.TrasInicio; orden.desfase = Num(tok[0].Substring(1), 0); i = 1; }
+        else if (tok[0].Length > 1 && tok[0][0] == '-' && EsNumero(tok[0].Substring(1))) { orden.arranque = Arranque.Solape; orden.desfase = Num(tok[0].Substring(1), 0); i = 1; }
+        else if (tok[0] == "desde" && tok.Count > 2 && tok[1].StartsWith("@"))
+        {
+            orden.arranque = Arranque.DesdeEtiqueta;
+            LeerEtiquetaConDesfase(tok[1].Substring(1), out orden.etiqueta, out orden.desfase);
+            i = 2;
+        }
+        if (i >= tok.Count) { g.errores.Add($"línea {numero}: orden vacía"); return; }
+        if (aliasConocidos.Contains(tok[i]))
+        {
+            orden.actor = tok[i];
+            if (!LeerCuerpo(tok, i + 1, orden, out string error)) { g.errores.Add($"línea {numero}: {error}"); return; }
+        }
+        else
+        {
+            orden.verbo = tok[i].ToLowerInvariant();
+            orden.opciones = Opciones(tok, i + 1, out orden.args);
+            if (orden.verbo != "plano" && orden.verbo != "efecto" && orden.verbo != "espera" && orden.verbo != "eje"
+                && !Azucar.Contains(orden.verbo))
+            {
+                g.errores.Add($"línea {numero}: no sé qué es «{tok[i]}» (¿un alias que falta en REPARTO?)");
+                return;
+            }
+        }
+        g.hilo.Add(orden);
+        return;
+    }
+
+
+    // ── COMPASES: pistas por personaje alineadas (cinemática viva, 19 nov 2026) ─────────────────
+    //
+    //   PALETA luz vfxProyectil=… vfxImpacto=… sfxLanzamiento=… sfxImpacto=… velocidad=14
+    //   COMPASES duelo actores=archimago,mago [desde=@duelo] [solape=0.15]
+    //   1 ataque  dura=1.2 | esquiva salto           | lanza MagicRight hechizo=sombra a=archimago
+    //   2 contra           | lanza MagicLeft hechizo=luz a=mago | reacciona Sobresalto01
+    //   FIN_COMPASES          (o cualquier línea sin «|»)
+    //
+    // Cada fila es un compás: todas sus celdas empiezan a la vez y el compás dura lo que la
+    // acción más larga (la animación entera, con su anticipación); «dura=N» en la etiqueta lo
+    // alarga. Celda vacía, «-», «(auto)» o «(nada)»: sin orden; ahí entran la reacción automática y
+    // la vida de fondo. Verbos propios: lanza, reacciona/recibe/cae, sostiene, esquiva/salta; el
+    // resto, cualquier orden de personaje. Se traduce a órdenes del HILO de siempre.
+
+    private sealed class Compases
+    {
+        public string nombre;
+        public readonly List<string> actores = new();
+        public float solape;
+        public readonly Dictionary<string, string> ids = new();
+
+        private static readonly Dictionary<string, float> Suelta = new()
+        {
+            ["MagicLeft"] = 0.35f, ["MagicRight"] = 0.35f, ["MagicSpecial"] = 0.55f,
+            ["Conjuro_Lanzar"] = 0.45f, ["HumanM@MagicAttackDirect2H01"] = 0.5f, ["HumanM@MagicAttackCall1H01_L"] = 0.45f,
+        };
+
+        private string Id(string alias) => alias != null && ids.TryGetValue(alias, out var id) ? id : alias;
+
+        public List<string> Fila(string l, int numero, GuionTexto g)
+        {
+            var res = new List<string>();
+            var extra = new List<string>();
+            var caras = new List<string>();
+            var partes = l.Split('|');
+            if (partes.Length - 1 > actores.Count)
+            {
+                g.errores.Add($"línea {numero}: la fila tiene {partes.Length - 1} celdas y COMPASES {nombre} tiene {actores.Count} actores");
+                return res;
+            }
+            string inv(float f) => f.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string prefijo = solape > 0f ? $"-{inv(solape)} " : "";
+            bool primera = true;
+            for (int i = 1; i < partes.Length; i++)
+            {
+                string celda = partes[i].Trim();
+                if (celda.Length == 0 || celda == "-" || celda.StartsWith("(")) continue;
+                string principal = Celda(actores[i - 1], celda, numero, g, extra, caras);
+                if (principal == null) continue;
+                res.Add((primera ? prefijo : "&& ") + principal);
+                primera = false;
+            }
+            foreach (var t in partes[0].Trim().Split(' '))
+                if (t.StartsWith("dura=")) { res.Add((primera ? prefijo : "&& ") + "espera " + t.Substring(5)); primera = false; }
+            // Lo que sale «+s» desde el inicio del compás (el hechizo cuando suelta la mano), al final:
+            // así no mueve el inicio de las demás celdas.
+            res.AddRange(caras);
+            res.AddRange(extra);
+            return res;
+        }
+
+        private string Celda(string actor, string celda, int numero, GuionTexto g, List<string> extra, List<string> caras)
+        {
+            var t = Trocear(celda);
+            string verbo = t[0].ToLowerInvariant();
+            var op = Opciones(t, 1, out var sueltos);
+            // «cara=X» en cualquier celda: la cara cambia al empezar el compás.
+            if (op.TryGetValue("cara", out var cara)) { caras.Add($"& {actor} cara {cara}"); op.Remove("cara"); t = t.Where(x => !x.StartsWith("cara=")).ToList(); }
+            switch (verbo)
+            {
+                case "lanza":
+                {
+                    string gesto = sueltos.FirstOrDefault();
+                    if (gesto == null) { g.errores.Add($"línea {numero}: «lanza» necesita el gesto (lanza MagicLeft hechizo=luz a=mago)"); return null; }
+                    string a = op.TryGetValue("a", out var obj) ? obj : null;
+                    float suelta = op.TryGetValue("suelta", out var su) ? Num(su, 0.4f) : (Suelta.TryGetValue(gesto, out var s0) ? s0 : 0.4f);
+                    var campos = new List<string> { $"lanzaId={Id(actor)}", "esperarAlImpacto=false" };
+                    if (a != null) campos.Add($"objetivoId={Id(a)}");
+                    if (op.TryGetValue("hechizo", out var pal))
+                    {
+                        if (g.paletas.TryGetValue(pal, out var p)) campos.AddRange(p.Select(kv => $"{kv.Key}={kv.Value}"));
+                        else g.errores.Add($"línea {numero}: no hay PALETA «{pal}» (PALETA {pal} vfxProyectil=… sfxImpacto=…)");
+                    }
+                    campos.AddRange(op.Where(kv => kv.Key is not ("a" or "hechizo" or "suelta")).Select(kv => $"{kv.Key}={kv.Value}"));
+                    extra.Add($"+{suelta.ToString(System.Globalization.CultureInfo.InvariantCulture)} efecto SpellBeat " + string.Join(" ", campos));
+                    return $"{actor} gesto {gesto}";
+                }
+                case "reacciona": case "recibe": case "cae":
+                    return $"{actor} gesto {string.Join(" ", t.Skip(1))}";
+                case "sostiene":
+                    return $"{actor} bucle {string.Join(" ", t.Skip(1))}";
+                case "esquiva": case "salta":
+                {
+                    var d = new Dictionary<string, string>
+                    {
+                        ["altura"] = "2.4", ["desplazamiento"] = "2", ["haciaElLado"] = "true",
+                        ["subida"] = "0.35", ["sostener"] = "0.45", ["caida"] = "0.45",
+                    };
+                    foreach (var kv in op) d[kv.Key] = kv.Value;
+                    float dura = Num(d["subida"], 0.35f) + Num(d["sostener"], 0.45f) + Num(d["caida"], 0.45f) + 0.15f;
+                    if (!d.ContainsKey("dura")) d["dura"] = dura.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    return $"efecto SaltoBeat actorId={Id(actor)} " + string.Join(" ", d.Select(kv => $"{kv.Key}={kv.Value}"));
+                }
+                default:
+                    return $"{actor} {string.Join(" ", t)}";
+            }
+        }
+    }
+
+    private static Compases LeerCompases(GuionTexto g, List<string> tok, int numero, HashSet<string> aliasConocidos)
+    {
+        var c = new Compases { nombre = tok.Count > 1 ? tok[1] : "sin_nombre" };
+        var op = Opciones(tok, 2, out _);
+        if (!op.TryGetValue("actores", out var lista)) { g.errores.Add($"línea {numero}: COMPASES necesita actores=a,b,…"); return null; }
+        foreach (var a in lista.Split(','))
+        {
+            string alias = a.Trim();
+            if (!aliasConocidos.Contains(alias)) g.errores.Add($"línea {numero}: «{alias}» no está en el REPARTO");
+            c.actores.Add(alias);
+        }
+        foreach (var r in g.reparto) c.ids[r.alias] = r.id;
+        c.solape = op.TryGetValue("solape", out var s) ? Num(s, 0f) : 0f;
+        if (op.TryGetValue("desde", out var desde) && desde.StartsWith("@"))
+        {
+            string l = $"desde {desde} espera 0";
+            LeerHilo(g, Trocear(l), l, numero, aliasConocidos);
+        }
+        return c;
+    }
+
     /// Órdenes cortas que se traducen a efectos (ver HorneadorDeGuion.Azucar).
     public static readonly HashSet<string> Azucar = new()
     {
         "musica", "silencio", "sonido", "ambiente", "hora", "fundido", "destello", "sacudida", "cutin",
-        "vfx", "bandas", "lento", "postproceso", "prop", "clima", "flag"
+        "vfx", "bandas", "lento", "postproceso", "prop", "clima", "flag", "pasa_el_tiempo"
     };
 
     private static bool LeerCuerpo(List<string> tok, int desde, Orden orden, out string error)

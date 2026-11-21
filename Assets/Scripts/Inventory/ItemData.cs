@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Objeto del juego. Hereda de NarrativeItemAsset para que el grafo narrativo pueda darlo, pedirlo
 /// o esperarlo sin conocer el inventario.

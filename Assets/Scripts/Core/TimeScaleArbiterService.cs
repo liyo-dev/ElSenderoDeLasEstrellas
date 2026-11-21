@@ -93,8 +93,8 @@ public static class TimeScaleArbiterService
     }
 
     /// <summary>
-    /// Libera la petición de <paramref name="owner"/>, si la tenía. No hace nada si no la tenía,
-    /// así que se puede llamar en cualquier ruta de limpieza sin comprobar antes.
+    /// No hace nada si no la tenía, así que se puede llamar en cualquier ruta de limpieza sin
+    /// comprobar antes.
     /// </summary>
     public static void Release(object owner)
     {

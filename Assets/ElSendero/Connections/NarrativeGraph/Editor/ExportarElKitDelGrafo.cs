@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using Debug = UnityEngine.Debug;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {
@@ -47,9 +48,9 @@ namespace Sendero.Narrative.Editor
             var cmd = new StringBuilder();
             cmd.AppendLine("@echo off");
             cmd.AppendLine($"echo INICIO {proyecto} > \"{logs}\\kit_prueba_estado.txt\"");
-            cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -executeMethod NarrativeGraphEditor.NarrativeSamples.ImportAll -quit -logFile \"{logs}\\kit_prueba_import.log\"");
+            cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -executeMethod Liyodev.NarrativeGraph.Editor.NarrativeSamples.ImportAll -quit -logFile \"{logs}\\kit_prueba_import.log\"");
             cmd.AppendLine($"echo IMPORTADO %ERRORLEVEL% >> \"{logs}\\kit_prueba_estado.txt\"");
-            cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -executeMethod NarrativeGraphSamples.ElFaro.ElFaroBuilder.BuildAndOpen -quit -logFile \"{logs}\\kit_prueba_ejemplo.log\"");
+            cmd.AppendLine($"\"{unity}\" -batchmode -nographics -projectPath \"{proyecto}\" -executeMethod Liyodev.NarrativeGraph.Samples.ElFaro.ElFaroBuilder.BuildAndOpen -quit -logFile \"{logs}\\kit_prueba_ejemplo.log\"");
             cmd.AppendLine($"echo EJEMPLO %ERRORLEVEL% >> \"{logs}\\kit_prueba_estado.txt\"");
             cmd.AppendLine($"echo FIN >> \"{logs}\\kit_prueba_estado.txt\"");
             var bat = Path.Combine(logs, "kit_prueba.cmd");

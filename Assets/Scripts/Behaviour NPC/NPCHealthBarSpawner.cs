@@ -65,7 +65,6 @@ namespace Game.NPC
             {
                 _damageable.OnDamaged += OnFirstDamage;
                 _isSubscribed = true;
-                // Debug.Log($"[NPCHealthBarSpawner] Suscrito a OnDamaged de {name}");
             }
         }
         
@@ -107,13 +106,10 @@ namespace Game.NPC
         /// <summary>
         /// Instancia el prefab de la barra de vida.
         /// 
-        /// INC-125: Raúl reportó que, al matar NPCs, la barra de vida aparece
-        /// duplicada (dos cajas superpuestas) justo durante el zoom/slowmo de
-        /// DeathCameraEffect — momento en el que, al estar la cámara muy cerca del NPC, se hace
-        /// evidente. No se pudo aislar un único punto del código que instancie dos veces de forma
+        /// No se pudo aislar un único punto del código que instancie dos veces de forma
         /// determinista (tanto NPCBehaviourManagerV2.EnsureRequiredComponents() como
-        /// CombatState.OnEnter() reutilizan el MISMO componente vía GetComponent antes de
-        /// añadir uno nuevo, y _healthBarInstance ya bloqueaba una doble instanciación DESDE ESTE
+        /// CombatState.OnEnter() reutilizan el MISMO componente vía GetComponent antes de añadir
+        /// uno nuevo, y _healthBarInstance ya bloqueaba una doble instanciación DESDE ESTE
         /// componente). Como red de seguridad — y para dejar rastro en consola si vuelve a pasar —
         /// se limpia aquí cualquier instancia de barra de vida "huérfana" (no rastreada en
         /// _healthBarInstance, por ejemplo si otro camino la creó o si una referencia se perdió)

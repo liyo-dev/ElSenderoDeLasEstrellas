@@ -69,6 +69,8 @@ namespace Game.NPC.Combate
                 var tipo = accion.sePuedeDevolver ? TipoDeAmenaza.Devolvible : TipoDeAmenaza.NoBloqueable;
                 if (!_carga.Cargar(accion.proyectil, _boca, Vector3.zero, objetivo, velocidad, _alSalir, accion.segundosDeAviso, tipo))
                     return false;
+                // La bola que crece en la mano ya lleva el color de su elemento.
+                if (accion.conElemento) EnemyProjectile.TenirConElemento(_carga.BolaEnCarga, accion.elemento);
             }
             _fase = Fase.Cargando;
             return true;
@@ -139,6 +141,11 @@ namespace Game.NPC.Combate
             if (rb != null) rb.isKinematic = false;
             proyectil.AsignarLanzador(_cuerpo);
             proyectil.PermitirDevolucion(_accion.sePuedeDevolver);
+            if (_accion.conElemento)
+            {
+                proyectil.AsignarElemento(_accion.elemento);
+                EnemyProjectile.TenirConElemento(bola, _accion.elemento);
+            }
             if (_accion.velocidad > 0f) proyectil.SetSpeed(_accion.velocidad);
             proyectil.Initialize(direccion, _accion.dano);
         }

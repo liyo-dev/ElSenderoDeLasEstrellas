@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Qué pieza «Personaje desde aquí» vale para cada personaje en un punto de la historia, a
     /// partir de lo proyectado (hechos ActorState / ActorUsual). Lo «de siempre» que ponen los
@@ -26,7 +26,7 @@ namespace NarrativeGraphEditor
             var usual = Layer(story, NarrativeCoreFacts.ActorUsual);
             var result = new List<Entry>();
             var actors = new SortedSet<string>(current.Keys.Concat(usual.Keys));
-            foreach (var s in AtStart(nodes)) actors.Add(s.node.actorId);
+            foreach (var s in AtStart(nodes)) actors.Add(s.node.ActorId);
 
             foreach (var actor in actors)
             {
@@ -38,7 +38,7 @@ namespace NarrativeGraphEditor
                     result.Add(new Entry { Actor = actor, Node = found.node, Graph = found.graph, Source = pick.source });
                     continue;
                 }
-                var start = AtStart(nodes).LastOrDefault(s => s.node.actorId == actor);
+                var start = AtStart(nodes).LastOrDefault(s => s.node.ActorId == actor);
                 if (start.node != null) result.Add(new Entry { Actor = actor, Node = start.node, Graph = start.graph });
             }
             return result;
@@ -48,13 +48,13 @@ namespace NarrativeGraphEditor
         public static string Describe(ActorStateNode n)
         {
             var parts = new List<string>();
-            parts.Add(n.presence switch
+            parts.Add(n.Presence switch
             {
-                ActorPresence.AtMark => StoryText.T($"en {n.markId}", $"at {n.markId}"),
+                ActorPresence.AtMark => StoryText.T($"en {n.MarkId}", $"at {n.MarkId}"),
                 ActorPresence.Away => StoryText.T("no está", "away"),
                 _ => StoryText.T("donde esté", "wherever they are"),
             });
-            var lines = n.lines?.Where(l => l != null).Select(l => l.name).ToList();
+            var lines = n.Lines?.Where(l => l != null).Select(l => l.name).ToList();
             if (lines != null && lines.Count > 0) parts.Add(StoryText.T("si le hablas: ", "if you talk: ") + string.Join(", ", lines));
             return string.Join(" · ", parts);
         }
@@ -73,7 +73,7 @@ namespace NarrativeGraphEditor
                     var g = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
                     if (g?.nodes == null) continue;
                     foreach (var n in g.nodes)
-                        if (n is ActorStateNode a && !string.IsNullOrEmpty(a.guid)) map[a.guid] = (a, g);
+                        if (n is ActorStateNode a && !string.IsNullOrEmpty(a.Guid)) map[a.Guid] = (a, g);
                 }
                 return map;
             });
@@ -87,11 +87,11 @@ namespace NarrativeGraphEditor
                 {
                     var node = graph.FindNode(graph.startNodeGuid);
                     var seen = new HashSet<string>();
-                    while (node != null && node.outputs != null && node.outputs.Count == 1 && seen.Add(node.guid))
+                    while (node != null && node.Outputs != null && node.Outputs.Count == 1 && seen.Add(node.Guid))
                     {
-                        node = graph.FindNode(node.outputs[0]);
+                        node = graph.FindNode(node.Outputs[0]);
                         if (node is not ActorStateNode a) break;
-                        if (a.layer == ActorStateNode.Layer.Usual) list.Add((a, graph));
+                        if (a.PieceLayer == ActorStateNode.Layer.Usual) list.Add((a, graph));
                     }
                 }
                 return list;

@@ -87,6 +87,7 @@ public class PorteoDeCompanero : MonoBehaviour
 
     private void OnDisable()
     {
+        PosesDeMedioCuerpo.Soltar(_animatorPortador, this);
         if (_pushedActionMode && _playerActionManager != null)
         {
             _playerActionManager.PopMode(ActionMode.Carrying);
@@ -239,9 +240,11 @@ public class PorteoDeCompanero : MonoBehaviour
             _animatorCuerpo.speed = 0f;
         }
 
-        // 5. Activar postura de carga en portador (UpperBody layer 1)
+        // 5. Activar postura de carga en portador (UpperBody layer 1); llevar a alguien manda sobre
+        // las poses de ambiente.
         if (_animatorPortador != null)
         {
+            PosesDeMedioCuerpo.Reclamar(_animatorPortador, this, PosesDeMedioCuerpo.Llevar);
             if (upperBodyLayer > 0 && upperBodyLayer < _animatorPortador.layerCount)
             {
                 _animatorPortador.SetLayerWeight(upperBodyLayer, 1f);
@@ -310,6 +313,7 @@ public class PorteoDeCompanero : MonoBehaviour
         {
             _animatorPortador.SetLayerWeight(upperBodyLayer, 0f);
         }
+        PosesDeMedioCuerpo.Soltar(_animatorPortador, this);
 
         // 5. Restaurar modo del jugador
         if (_pushedActionMode && _playerActionManager != null)

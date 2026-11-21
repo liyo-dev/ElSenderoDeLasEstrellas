@@ -39,6 +39,7 @@ MonoBehaviour:
     attackSeconds: 0.08
     releaseSeconds: 0.65
     holdAfterVoiceSeconds: 0.5
+  segundosDeMemoriaDeMusica: 60
   battles:
   - battleId: Demon_1
     music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
@@ -508,7 +509,7 @@ MonoBehaviour:
   - eventKey: SFX_Pueblo_Contraventana_Abre
     sfx: {fileID: 8300000, guid: db4ecc404e82e490aa2bfc722a9115b2, type: 3}
   - eventKey: SFX_Pueblo_Contraventana_Golpe
-    sfx: {fileID: 8300000, guid: 94c903b0eac2ca271b3077c4709d4db0, type: 3}
+    sfx: {fileID: 8300000, guid: ca2be8f75d19a7f48b41cbddc87b8865, type: 3}
   - eventKey: SFX_Prologo_EstallidoSube
     sfx: {fileID: 8300000, guid: 31a945b57d725e4458585d623dcc8bec, type: 3}
   - eventKey: SFX_Prologo_PreviaEstallido
@@ -519,6 +520,18 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 6c9b380316abdd6469ab9abec9f71040, type: 3}
   - eventKey: SFX_Prologo_LanzamientoConjuro
     sfx: {fileID: 8300000, guid: 3113503b4f2c1a047b1e59da07018747, type: 3}
+  - eventKey: Demonio_Golpe
+    sfx: {fileID: 8300000, guid: d1d4df486b3087a46af5b54cf782073d, type: 3}
+  - eventKey: Demonio_Rechazo
+    sfx: {fileID: 8300000, guid: f9f051d426296f64391c00d07e1361f0, type: 3}
+  - eventKey: Demonio_Invocacion
+    sfx: {fileID: 8300000, guid: afdc61d6d622e034dac96db1585cb323, type: 3}
+  - eventKey: Demonio_TeleSalida
+    sfx: {fileID: 8300000, guid: e773ec971f4c83342995c677f43a0477, type: 3}
+  - eventKey: Demonio_TeleLlegada
+    sfx: {fileID: 8300000, guid: 0de78f7084f81e04fbcdf20b66f353b3, type: 3}
+  - eventKey: Demonio_Esfumarse
+    sfx: {fileID: 8300000, guid: ee53458f7ae2cc045bc3367604ba2a9f, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}
@@ -644,4 +657,9 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 7e6020d6644fe0849b4a629c967ccfa6, type: 3}
     fadeIn: 0
     fadeOut: 1
+    sinBucle: 1
+  - sequenceId: PROLOGO_CLIMAX_CRESCENDO
+    music: {fileID: 8300000, guid: d58649b592f0b5c479f693fbe8d254a7, type: 3}
+    fadeIn: 0.3
+    fadeOut: 2
     sinBucle: 1

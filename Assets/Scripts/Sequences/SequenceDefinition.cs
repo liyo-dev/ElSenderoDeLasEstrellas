@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Una secuencia cinemática escrita como DATOS, no como código.
 ///

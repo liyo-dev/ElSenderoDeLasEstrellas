@@ -4,12 +4,13 @@ using UnityEditor;
 using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Events;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Capítulo 4, «El Bosque Prohibido y el Gólem» (GDD § 5.8, novelas VII–VIII). En la build de la demo, aquí se corta.
 /// 4.1 Estela en su claro lee el aro y entra en el grupo · 4.2 la casa entre raíces y la primera
 /// receta del combo (Cúpula Estelar) · 4.3 la prueba de la campana (llegar sin chamuscar las
-/// figuras de barro; Levitación por instinto) · 4.4 el Gólem (Encuentro_Golem1, con el barro del
+/// figuras de barro) · 4.4 el Gólem (Encuentro_Golem1, con el barro del
 /// arroyo: <see cref="ZonaDeBarro"/>) · 4.5 la manzana harinosa · 4.6 la bifurcación, Liam entra en
 /// el grupo y la bota del vado · fin de la demo (<see cref="PedirFinDeLaDemo"/>).
 /// Escenario: el claro de Estela (−330, 65) reúne la entrada de Estela, su casa (una tienda entre
@@ -166,9 +167,11 @@ public static partial class MontajeDeLosCapitulos
             P("estela-aparece", "Estela está en su claro (el roster la pone)", Flag(FlagEstelaAparece)),
             // 4.1 · El bosque y Estela
             P("bosque", "4.1 · Hacia el Bosque Prohibido (probar desde aquí)", Emitir(S4.Bosque)),
-            P("mision-estela", "Misión: la hechicera del bosque (aviso de misión nueva)", new StartQuestNode { questId = MisionEstela, noGiver = true }),
-            P("punto-bosque", "4.1 · Punto de guardado: el cruce", Punto("CAP4_INICIO", "Cap3_Amanecer")),
+            P("mision-estela", "Misión: la hechicera del bosque (aviso de misión nueva)", new StartQuestNode { QuestId = MisionEstela, NoGiver = true }),
+            P("punto-bosque", "4.1 · Punto de guardado: junto al claro de los contrabandistas", Punto("CAP4_INICIO", "Cap3_Matorral")),
             P("llegada-claro", "4.1 · Llega al claro de los troncos quemados", Esperar(S4.LlegadaClaro)),
+            // Con Will ya lejos, los contrabandistas se van de su claro (camino del barco).
+            P("contrabandistas-fin", "4.1 · Los contrabandistas se van de su claro (Will ya está lejos)", Emitir(S3.ContrabandistasFin)),
             P("mando-estela", "4.1 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("estela", "4.1 · Cinemática: Estela, el aro y «ya me lo cobraré»", Cinematica("CAP4_ESTELA")),
             P("estela-grupo", "4.1 · Estela entra en el grupo", Grupo(PedirGrupo.Accion.EntraEnElGrupo, "Estela")),
@@ -182,7 +185,7 @@ public static partial class MontajeDeLosCapitulos
             P("manana-hora", "4.2 · Amanece", GameStepNode.For(new PedirHoraDelDia { targetTime = DayNightCycle.TimeOfDay.Morning, immediate = true })),
             P("manana-will", "4.2 · Will se despierta junto a la casa", Llevar("Player", "Cap4_Campana_Salida")),
             P("punto-casa", "4.2 · Punto de guardado: la casa de Estela", Punto("CAP4_CASA", "Cap4_Campana_Salida")),
-            P("mision-reino", "Misión: rumbo al Reino (aviso de misión nueva)", new StartQuestNode { questId = MisionReino, noGiver = true }),
+            P("mision-reino", "Misión: rumbo al Reino (aviso de misión nueva)", new StartQuestNode { QuestId = MisionReino, NoGiver = true }),
             P("campana", "4.3 · La prueba de la campana (probar desde aquí)", Emitir(S4.Campana)),
             P("mando-manana", "4.2 · Will al mando", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("manana", "4.2 · Cinemática: el cartel y la primera receta", Cinematica("CAP4_MANANA")),
@@ -196,10 +199,7 @@ public static partial class MontajeDeLosCapitulos
             P("campana-fin", "4.3 · Fin de la prueba (Liam, en la loma)", Emitir(S4.CampanaFin)),
             P("figura", "4.3 · Cinemática: la figura que resbala, las figuras rehechas y el que observa", Cinematica("CAP4_FIGURA")),
             P("figura-destapa", "4.3 · Se destapa la pantalla tras la cinemática", Destapar()),
-            P("levitacion", "4.3 · Aprende Levitación por instinto", Desbloquear(SpellId.Levitation, equipar: true)),
-            P("levitacion-tuto", "4.3 · Tutorial: Levitación", Tutorial("TUTORIAL_CAP4_LEVITACION",
-                "Nuevo hechizo: Levitación. Ya está entre tus hechizos: lánzalo para flotar sobre el agua, el barro y los huecos.",
-                "New spell: Levitation. It's now among your spells: cast it to float over water, mud and gaps.", esperar: true)),
+            // La Levitación ya no la aprende Will aquí: es un rápido de Liam (sets de 4 y 4, 20 nov 2026).
             P("paso-campana", "Paso: la prueba de la campana", Completar(MisionReino, "CAP4_CAMPANA")),
             // 4.4 · El Gólem
             P("golem", "4.4 · Hacia el Reino: el Gólem (probar desde aquí)", Emitir(S4.Golem)),

@@ -1,9 +1,7 @@
 {
     "name": "Liyodev.Cinematics.Editor",
     "rootNamespace": "",
-    "references": [
-        "Liyodev.Assistant.Editor"
-    ],
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],

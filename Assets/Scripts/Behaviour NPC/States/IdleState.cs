@@ -31,10 +31,10 @@ namespace Game.NPC.States
         private const float WORK_CHECK_INTERVAL = 0.5f;
         private NPCWorkRoute _rutaDeTrabajo;
 
-        // FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
-        // (cada 0.2s por NPC parado). Mismo patrón que AlertState (FIX #10). La mayoría de NPCs
-        // ambiente no tiene NPCTeamMember, así que el GetComponent fallaba constantemente y
-        // aparecía como GC.Alloc en el profiler (NPCBehaviourManagerV2.Update -> CheckPlayerDetection).
+        // Cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection (cada 0.2s por NPC parado).
+        // Mismo patrón que AlertState. La mayoría de NPCs ambiente no tiene NPCTeamMember, así que el
+        // GetComponent fallaba constantemente y aparecía como GC.Alloc en el profiler
+        // (NPCBehaviourManagerV2.Update -> CheckPlayerDetection).
         private NPCTeamMember _teamMember;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private bool _loggedCombatBlockThisIdle; // evita spam: solo un log por bloqueo, no por frame
@@ -73,7 +73,7 @@ namespace Game.NPC.States
             _socialScanTimer = 0f;
             _workCheckTimer = 0f;
             _rutaDeTrabajo = null;
-            _teamMember = context.Transform.GetComponent<NPCTeamMember>(); // FIX rendimiento: una vez por entrada al estado
+            _teamMember = context.Transform.GetComponent<NPCTeamMember>(); // Una vez por entrada al estado
         }
 
         public override void OnExit(NPCStateContext context)
@@ -91,8 +91,8 @@ namespace Game.NPC.States
             
             _idleTimer += Time.deltaTime;
             
-            // FIX CRÍTICO: Asegurar que el NavMeshAgent permanezca detenido
-            // Esto previene que paths residuales o velocidad acumulada cause movimiento
+            // Asegurar que el NavMeshAgent permanezca detenido Esto previene que paths
+            // residuales o velocidad acumulada cause movimiento
             if (context.Agent != null && context.Agent.enabled && context.Agent.isOnNavMesh)
             {
                 // DETENCIÓN MUY AGRESIVA: Forzar cada frame
@@ -201,7 +201,7 @@ namespace Game.NPC.States
             if (context.WasDefeatedInCombat) return;
             if (context.Player == null) return;
 
-            var teamMember = _teamMember; // FIX rendimiento: cacheado en OnEnter, ver campo _teamMember arriba
+            var teamMember = _teamMember; // Cacheado en OnEnter, ver campo _teamMember arriba
 
             // Bloqueo global: si ya hay otro combate activo, este NPC no debe iniciar uno nuevo.
             // EXCEPCIÓN: si un compañero de MI equipo ya está en combate, no bloquear. Este es
@@ -273,12 +273,12 @@ namespace Game.NPC.States
                 // Si chocamos con algo que NO es el jugador, estamos bloqueados
                 if (hit.transform != context.Player && !hit.transform.IsChildOf(context.Player))
                 {
-                    // FIX INC-073: el layerMask usado aquí incluye "Everything" salvo que se
-                    // configure coverLayerMask explícitamente, así que el propio compañero de
-                    // equipo (p.ej. Lety y Vicky, colocados muy cerca el uno del otro) podía tapar
-                    // el raycast del otro y ninguno de los dos llegaba a "ver" al jugador
-                    // acercarse — había que atacarles para forzar el combate. Un compañero del
-                    // mismo equipo no debe bloquear la detección.
+                    // El layerMask usado aquí incluye "Everything" salvo que se configure
+                    // coverLayerMask explícitamente, así que el propio compañero de equipo (p.ej.
+                    // Lety y Vicky, colocados muy cerca el uno del otro) podía tapar el raycast
+                    // del otro y ninguno de los dos llegaba a "ver" al jugador acercarse — había
+                    // que atacarles para forzar el combate. Un compañero del mismo equipo no debe
+                    // bloquear la detección.
                     var hitTeamMember = hit.transform.GetComponentInParent<NPCTeamMember>();
                     bool isTeammate = hitTeamMember != null && teamMember != null && hitTeamMember.Team == teamMember.Team;
                     if (!isTeammate)

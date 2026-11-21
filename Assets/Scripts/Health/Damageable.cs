@@ -186,16 +186,15 @@ public class Damageable : MonoBehaviour, IDamageable
 
         if (deathVFX)
         {
-            // FIX #3: antes Instantiate+Destroy directo, el
-            // mismo patrón que ya causó un bug real y arreglado en NPCCombatLifecycleHandler.cs
-            // ("el prefab no se autodestruía y quedaba flotando en el suelo indefinidamente").
-            // Damageable es más genérico que ese handler (lo usa más que solo NPCs de combate),
-            // así que nunca había recibido el mismo fix. Regla del proyecto: VFX de un solo uso
-            // siempre vía VfxPoolService.
+            // Antes Instantiate+Destroy directo, el mismo patrón que ya causó un bug real y
+            // arreglado en NPCCombatLifecycleHandler.cs ("el prefab no se autodestruía y
+            // quedaba flotando en el suelo indefinidamente"). Damageable es más genérico que
+            // ese handler (lo usa más que solo NPCs de combate), así que también usa el pool.
+            // Regla del proyecto: VFX de un solo uso siempre vía VfxPoolService.
             VfxPoolService.Instance.Play(deathVFX, transform.position, transform.rotation, Mathf.Max(0.25f, deathVFXLifetime));
         }
 
-        if (destroyOnDeath) Destroy(gameObject);
+        if (destroyOnDeath) Destroy(gameObject, _esperaAlDestruir);
         else
         {
             // Estado "inerte" sencillo
@@ -204,6 +203,13 @@ public class Damageable : MonoBehaviour, IDamageable
             enabled = false;
         }
     }
+
+    // Segundos entre la muerte y la destrucción del objeto (destroyOnDeath), para que se vea caer.
+    private float _esperaAlDestruir;
+
+    /// Al morir, espera estos segundos antes de destruir el objeto (lo pide quien enseña la caída,
+    /// p. ej. EsfumarseAlCaer). Nunca acorta una espera ya pedida. Ver INC-1333.
+    public void RetrasarDestruccion(float segundos) => _esperaAlDestruir = Mathf.Max(_esperaAlDestruir, segundos);
 
     // === Nuevo: permitir cambiar política de destrucción en runtime ===
     public void SetDestroyOnDeath(bool destroy)

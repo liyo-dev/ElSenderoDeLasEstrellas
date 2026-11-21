@@ -1521,6 +1521,98 @@
             "value": "On guard, then! Let us see how long you last."
         },
         {
+            "key": "DLG_ERIKA_LECCIONES_01",
+            "value": "So you're leaving the village, Will? Well, you're not walking out those gates without knowing how to defend yourself."
+        },
+        {
+            "key": "DLG_ERIKA_LECCIONES_02",
+            "value": "I'll throw a few soft ones at you. They won't hurt, don't worry. Just do what I say."
+        },
+        {
+            "key": "DLG_ERIKA_LECCIONES_03",
+            "value": "Okay. Teach me."
+        },
+        {
+            "key": "ERIKA_LECCION_PROTEGERSE_INICIO",
+            "value": "When I throw something, hold up your Protection and take it."
+        },
+        {
+            "key": "ERIKA_LECCION_BIEN",
+            "value": "That's it!"
+        },
+        {
+            "key": "ERIKA_LECCION_CONTRAATACAR_INICIO",
+            "value": "First, the counter. I'll throw a ball at you: press B just as it reaches you and send it back."
+        },
+        {
+            "key": "ERIKA_LECCION_CONTRAATACAR_FIN",
+            "value": "Phew! You sent it right back. That's a counter."
+        },
+        {
+            "key": "ERIKA_LECCION_LLUVIA_INICIO",
+            "value": "Now, protect yourself. I'll make meteors rain down: hold B to keep your shield up and wait it out."
+        },
+        {
+            "key": "ERIKA_LECCION_LLUVIA_FIN",
+            "value": "Well held! With your shield up, not even a rain of fire can knock you down."
+        },
+        {
+            "key": "ERIKA_LECCION_ESCUDO_INICIO",
+            "value": "My shield is made of light, see the colour? Only light can break it. Use the Astral Flame."
+        },
+        {
+            "key": "ERIKA_LECCION_ESCUDO_REBOTE",
+            "value": "That won't break it! A shield of light only yields to light."
+        },
+        {
+            "key": "ERIKA_LECCION_ESCUDO_FIN",
+            "value": "Broken! Every shield yields to magic of its own colour."
+        },
+        {
+            "key": "ERIKA_LECCION_PROTEGERSE_FIN",
+            "value": "Well held!"
+        },
+        {
+            "key": "ERIKA_LECCION_DEVOLVER_INICIO",
+            "value": "Now raise your Protection just as it reaches you: you'll send it back."
+        },
+        {
+            "key": "ERIKA_LECCION_DEVOLVER_FIN",
+            "value": "Phew! That left me dizzy. That's sending it back."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_01",
+            "value": "One more thing. In this world, magic has elements: Fire, Wind, Light, Mind and Dark."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_02",
+            "value": "Against people the element doesn't matter: what counts is the spell's strength. But if you send theirs back, something happens: light stuns, mind puts them to sleep…"
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_03",
+            "value": "Creatures on the road are another story: each one has an element that hurts it more. When you hit it, you'll see."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_04",
+            "value": "And this is for you: Eldran asked me to give it to you. Your grimoire. It's all explained in there."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_05",
+            "value": "Look: a new page just woke up, the Prism Ball. Try it on me."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_06",
+            "value": "My own grimoire! Okay, Erika. Whenever you're ready."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_07",
+            "value": "On guard, then! For real this time."
+        },
+        {
+            "key": "ERIKA_DUELO_FASE2",
+            "value": "Alright, warm-up's over!"
+        },
+        {
             "key": "DLG_ERIKA_DESPUES_01",
             "value": "If you want another round, you know where I am. And come back in one piece."
         },
@@ -2042,19 +2134,19 @@
         },
         {
             "key": "DLG_CAP3_LUCES_01",
-            "value": "Have you seen any of those animals yourself?"
+            "value": "What strange things?"
         },
         {
             "key": "DLG_CAP3_LUCES_02",
-            "value": "Animals, no. But a few weeks back, one night I couldn't sleep, I saw lights on the forest road."
+            "value": "A few weeks back, one night I couldn't sleep, I saw lights on the forest road. They weren't lanterns. They were almost at ground level, all bunched together."
         },
         {
             "key": "DLG_CAP3_LUCES_03",
-            "value": "They weren't lanterns. They were almost at ground level, all bunched together."
+            "value": "Fireflies?"
         },
         {
             "key": "DLG_CAP3_LUCES_04",
-            "value": "Fireflies?"
+            "value": "Fireflies don't all light up at once. That rose and fell, slowly… like something breathing in its sleep."
         },
         {
             "key": "DLG_CAP3_ZORRO_01",
@@ -2070,11 +2162,11 @@
         },
         {
             "key": "DLG_CAP3_HUERTO_01",
-            "value": "Reddish fur caught on the wood… This is where Lucía saw the fox."
+            "value": "Deep ruts heading out toward the forest road… A heavily loaded cart, and off the track."
         },
         {
             "key": "DLG_CAP3_HUERTO_02",
-            "value": "It rubbed itself here until the fur came off. As if the collar hurt it."
+            "value": "Straw caught on the broken board. It's still glowing a little… the way the light the innkeeper saw breathes."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_01",
@@ -2198,7 +2290,7 @@
         },
         {
             "key": "DLG_CAP3_LUCES_05",
-            "value": "Fireflies don't all light up at once. That rose and fell, slowly… like something breathing in its sleep."
+            "value": "I've been telling people for weeks and nobody listens. Not even the guards at the crossroads."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_05",
@@ -2294,7 +2386,7 @@
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_C3_2_01",
-            "value": "Last night a dog with a strange collar spent hours scratching against the house with the lobster pots, the one with the thatched roof. I didn't sleep a wink."
+            "value": "Carts at night? I sleep like a log. The one who doesn't sleep is Candela, the one with the lantern."
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_1_01",
@@ -2330,7 +2422,7 @@
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_1_01",
-            "value": "Lucía, the little girl from the inn, says she saw a fox with a collar at the garden fence. That girl sees all sorts… but this time I believe her."
+            "value": "This morning the garden fence was broken. Lucía says it was a cart. This time, I believe her."
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_2_01",
@@ -2414,7 +2506,7 @@
         },
         {
             "key": "DLG_ALDEA_ROSARIO_C3_1_01",
-            "value": "Lucía talks about nothing but that fox. And the spoon, of course."
+            "value": "Lucía talks about nothing but the broken fence. And the spoon, of course."
         },
         {
             "key": "DLG_ALDEA_ROSARIO_C3_2_01",
@@ -2455,6 +2547,222 @@
         {
             "key": "CAP3_BOC_PRUEBA",
             "value": "A lightbird feather. With this, Estela will have to listen to me."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_06",
+            "value": "I believe you. I'm taking this to Estela, the sorceress of the Forbidden Forest… but first I want to be sure."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_07",
+            "value": "Then talk to Candela, the one with the lantern. She doesn't sleep: every night she lights a lantern in her window, in case her Andrés's boat comes back. If something went down that road, she saw it."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_08",
+            "value": "She lives in the house on the water, and there's no walkway out there. Either you swim, or nothing."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_09",
+            "value": "Pez will teach you, if you can put up with him. He's on the pier, talking to the fish."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_10",
+            "value": "And if you want to see those carts with your own eyes, wait for them at night by the fire on the forest road."
+        },
+        {
+            "key": "DLG_CAP3_CABOS_01",
+            "value": "What Candela saw. The innkeeper's lights travel in those cages."
+        },
+        {
+            "key": "DLG_CAP3_CABOS_02",
+            "value": "I'll write it all down on the sheet. Tonight I'll wait for the cart by the fire on the forest road."
+        },
+        {
+            "key": "DLG_CAP3_CABOS_03",
+            "value": "I'll write it all down on the sheet. Tonight I'll wait for the cart by the fire on the forest road."
+        },
+        {
+            "key": "DLG_CAP3_POSADERO_PISTAS_01",
+            "value": "Pez is on the pier, talking to the fish. If he teaches you, swim to the lantern house. Candela doesn't bite… hardly ever."
+        },
+        {
+            "key": "PRESENCIA_CAJA_AVISO",
+            "value": "What was that…?"
+        },
+        {
+            "key": "PRESENCIA_CAJA_GOLPE",
+            "value": "Something knocked the box out of my arms! If I hear it again, I'd better keep still until it's gone."
+        },
+        {
+            "key": "PRESENCIA_CAJA_ALIVIO",
+            "value": "…It's gone. Come on, Eldran's waiting."
+        },
+        {
+            "key": "DLG_CAP3_LUCIA_CERCA_01",
+            "value": "I saw a cart too! Well… I saw the broken fence in the morning."
+        },
+        {
+            "key": "DLG_CAP3_LUCIA_CERCA_02",
+            "value": "My dad says it was a cow. Cows don't leave glowing straw!"
+        },
+        {
+            "key": "DLG_CAP3_PEZ_01",
+            "value": "Shh. I'm in a meeting."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_02",
+            "value": "…Yes, yes, I'll tell him."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_03",
+            "value": "The sardines say you smell of land. Want to swim? Everybody wants to swim. Nobody wants to listen."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_04",
+            "value": "I need to get to the house with the lantern."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_05",
+            "value": "I'll teach you, but a favour for a favour. Doña Lubina, by the last post, hasn't spoken to me since Tuesday."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_06",
+            "value": "Tell her Tuesday was a misunderstanding. She'll know."
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_01",
+            "value": "Ahem… Doña Lubina? Pez says Tuesday was a misunderstanding."
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_02",
+            "value": "Ugh!"
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_03",
+            "value": "Well? What did she say?"
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_04",
+            "value": "…She spat at me."
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_05",
+            "value": "That means yes! A true lady."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_01",
+            "value": "A deal's a deal. Swimming lesson. First: think like a fish."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_02",
+            "value": "…No. You're still thinking like a boy. It shows in your ears."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_03",
+            "value": "Arms like you're applauding a sardine very far away. Legs like you don't care about anything."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_04",
+            "value": "And breathe when the sea isn't looking."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_05",
+            "value": "And that's it?"
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_06",
+            "value": "By the authority granted to me by some clams I can't remember… I name you honorary fish!"
+        },
+        {
+            "key": "DLG_CAP3_PEZ_ADIOS_01",
+            "value": "Follow the floating barrels: they'll take you to the lantern house. The fish call them buoys. Fish are very refined."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_ADIOS_02",
+            "value": "Candela has been lighting that lantern for ten years. The fish say Andrés isn't coming back."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_ADIOS_03",
+            "value": "I don't tell her. Some things are easier to hear with the light on."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_01",
+            "value": "Andrés?… No. Forgive me, lad. Every time someone climbs those steps I think it's him."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_02",
+            "value": "The innkeeper says you can see the forest road at night."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_03",
+            "value": "From here you can see everything: the sea, the harbour and the road up to the forest. I light the lantern every night, in case Andrés is looking for the house."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_04",
+            "value": "Three nights ago a cart went by with no lantern. Two men: a big one, between the shafts, and another in front, looking every which way."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_05",
+            "value": "Under the blanket they had cages. And inside, something glowed, went dark and glowed again. Like my lantern when it's low on oil."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_06",
+            "value": "They went out past the garden, by the fence, and up toward the fire on the forest road."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_07",
+            "value": "Tonight I'll go and see."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_08",
+            "value": "Go. And come back. We've done enough waiting here."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_RECADO_01",
+            "value": "Have you spoken to Doña Lubina yet? She's very particular. The last post, at the end of the pier."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_BOYAS_01",
+            "value": "Honorary fish! Follow the barrels to the lantern house. And don't talk to Candela about fish: she doesn't like them."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_DESPUES_01",
+            "value": "The fish say you're going to do something brave tonight. Fish exaggerate a lot."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_DESPUES_01",
+            "value": "Go. And come back. We've done enough waiting here."
+        },
+        {
+            "key": "CHAR_PEZ",
+            "value": "Fish"
+        },
+        {
+            "key": "CHAR_CANDELA",
+            "value": "Candela"
+        },
+        {
+            "key": "DLG_PEZ_01",
+            "value": "Shh. The anchovies are telling a joke."
+        },
+        {
+            "key": "DLG_CANDELA_01",
+            "value": "Every night I light the lantern. Just in case."
+        },
+        {
+            "key": "DLG_ALDEA_PEZ_1_01",
+            "value": "The anchovies are unbearable today."
+        },
+        {
+            "key": "DLG_ALDEA_PEZ_2_01",
+            "value": "If you see Doña Lubina, tell her I'm still waiting for an apology."
+        },
+        {
+            "key": "DLG_ALDEA_CANDELA_1_01",
+            "value": "Every night I light the lantern. Just in case."
+        },
+        {
+            "key": "DLG_ALDEA_CANDELA_2_01",
+            "value": "From here you can see everything: the sea, the harbour and the forest road."
         }
     ]
 }

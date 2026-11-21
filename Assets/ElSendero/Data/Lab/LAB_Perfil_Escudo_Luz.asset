@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505b709263e653344a3fa268f29aa1a3, type: 3}
+  m_Name: LAB_Perfil_Escudo_Luz
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Combate.PerfilDeCombate
+  acciones:
+  - nombre: Luz 1
+    proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+    animacion: MagicLeft
+    distanciaMinima: 0
+    distanciaMaxima: 12
+    segundosDeAviso: 0.5
+    segundosDeRecuperacion: 0.45
+    enfriamiento: 1.5
+    costeDeMana: 20
+    dano: 10
+    velocidad: 0
+    peso: 0.5
+    funcion: 1
+    sePuedeDevolver: 1
+    conElemento: 1
+    elemento: 3
+  - nombre: Luz 2
+    proyectil: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
+    animacion: MagicRight
+    distanciaMinima: 0
+    distanciaMaxima: 12
+    segundosDeAviso: 0.5
+    segundosDeRecuperacion: 0.45
+    enfriamiento: 2.5
+    costeDeMana: 30
+    dano: 20
+    velocidad: 0
+    peso: 0.3
+    funcion: 0
+    sePuedeDevolver: 1
+    conElemento: 1
+    elemento: 3
+  - nombre: Luz 3 (no se devuelve)
+    proyectil: {fileID: 7541299261854152833, guid: 71b502122a0cfe640969b5a2538bcdc1, type: 3}
+    animacion: MagicSpecial
+    distanciaMinima: 0
+    distanciaMaxima: 12
+    segundosDeAviso: 0.8
+    segundosDeRecuperacion: 0.8
+    enfriamiento: 5
+    costeDeMana: 45
+    dano: 35
+    velocidad: 0
+    peso: 0.2
+    funcion: 2
+    sePuedeDevolver: 0
+    conElemento: 1
+    elemento: 3
+  defensas:
+    esquivar: 0
+    distanciaDeEsquiva: 3
+    recuperacionDeEsquiva: 1.2
+    escudo: 1
+    duracionDelEscudo: 3
+    enfriamientoDelEscudo: 2.5
+    escudoElemental: 1
+    elementoDelEscudo: 3
+    cubrirseParaRecargar: 1
+    radioDeCobertura: 14
+    recargaACubierto: 1.5
+    leerLaRepeticion: 0
+    repeticionesParaLeerla: 3
+    segundosDeRepeticion: 12
+  caracter:
+    agresividad: 0.6
+    cautela: 0.8
+    movilidad: 0.6
+    paciencia: 0.5
+    distanciaPreferida: 7
+    distanciaMinima: 3
+    distanciaMaxima: 12
+    velocidadAndando: 2.5
+    velocidadCorriendo: 6
+    atacantesALaVez: 1
+    umbralDeVueltasContinuas: 0.8
+    leeLaDefensaDelJugador: 1
+  dificultad: 0.5
+  fases: []
+  afinidades: []

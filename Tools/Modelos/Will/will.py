@@ -14,6 +14,10 @@ args = sys.argv[sys.argv.index("--")+1:]
 BASE, SALIDA = args[0], args[1]
 import os
 PANTALON_CLARO = os.environ.get("WILL_PANTALON", "") == "claro"
+# Pelo (19 nov 2026, Raúl: «el pelo de Will es un horror; prefiero el original pero con este color»): por defecto es el
+# Hair01 del pack tal cual (su pelo de antes del 1 nov), sin cejas y con los colores de ahora. WILL_PELO=picos vuelve
+# a los picos levantados (1–19 nov 2026).
+PELO_ORIGINAL = os.environ.get("WILL_PELO", "original") != "picos"
 bpy.ops.wm.open_mainfile(filepath=BASE)
 arm = bpy.data.objects["Armature"]; cuerpo = bpy.data.objects["Body05"]
 for o in list(bpy.data.objects):
@@ -172,6 +176,8 @@ for v0 in bm.verts:
     if len(isla) < 60 and max(v.co.y for v in isla) < -0.2: quitar += isla
 bmesh.ops.delete(bm, geom=quitar, context='VERTS')
 print("CEJAS FUERA", len(quitar))
+if PELO_ORIGINAL:   # la forma original, sin deformar (se pone al final de esta sección, tras los cálculos de abajo)
+    me_original = pelo.data.copy(); bm.to_mesh(me_original)
 borde = {v for v in bm.verts if any(len(e.link_faces) < 2 for e in v.link_edges)}
 def suave(a, b, x):
     u = min(1.0, max(0.0, (x - a) / (b - a))); return u * u * (3 - 2 * u)
@@ -261,6 +267,8 @@ if ANGULO < 180:
     duras = [e for e in bm2.edges if len(e.link_faces) == 2 and math.degrees(e.calc_face_angle()) > ANGULO]
     for e in bm2.edges: e.smooth = e not in duras
     bm2.to_mesh(pelo.data); bm2.free()
+if PELO_ORIGINAL:
+    viejo = pelo.data; pelo.data = me_original; bpy.data.meshes.remove(viejo)
 def pegado_co(co):
     t = (co - C).normalized(); return (co - C).length < radio(t) + PEGADO + 0.035
 CASCO = {v.index for v in pelo.data.vertices if pegado_co(v.co)}
@@ -268,7 +276,8 @@ bm_c.free(); bpy.data.objects.remove(cab)
 pelo.data.materials.clear(); pelo.data.materials.append(MAT["Pelo"]); pelo.data.materials.append(MAT["PeloClaro"])
 for f in pelo.data.polygons:
     en_casco = all(i in CASCO for i in f.vertices)
-    f.use_smooth = True; f.material_index = 1 if f.normal.z > 0.55 and not en_casco else 0
+    if not PELO_ORIGINAL: f.use_smooth = True   # el original conserva sus caras planas y sus normales
+    f.material_index = 1 if f.normal.z > 0.55 and not en_casco else 0
 for g in list(pelo.vertex_groups): pelo.vertex_groups.remove(g)
 GRUPOS["pelo"].append((pelo, H))
 
@@ -284,28 +293,42 @@ def radio_camiseta(z):
     for (z0, r0), (z1, r1) in zip(p, p[1:]):
         if z <= z1: return r0 + (r1 - r0) * (z - z0) / (z1 - z0)
     return p[-1][1]
-torno("traje", "Camiseta", CAMISETA, "Camiseta", elip=ELIP)
+_cam = torno("traje", "Camiseta", CAMISETA, "Camiseta", elip=ELIP)
+# Bajo la axila la camiseta se estrecha un poco de lado (19 nov 2026, INC-1309 y la prueba de Raúl: «de espaldas se ve
+# que la camiseta se mete en la carne de los brazos»). Lo que de verdad lo arregla es la axila blanda (más abajo).
+AXILA_ESTRECHA = float(os.environ.get("WILL_AXILA", "0.10"))   # parte del ancho que se quita en z 0,57
+for v in _cam.data.vertices:
+    z = v.co.z; u = max(0.0, 1.0 - abs(z - 0.57) / 0.09)
+    v.co.x *= 1.0 - AXILA_ESTRECHA * u * u * (3 - 2 * u)
 toro("traje", "BajoCamiseta", (0, -0.01, 0.378), 0.188, 0.011, "Dorado", None, escala=(1, ELIP, 1))   # ribete del bajo
 # Fondo bajo la camiseta, del color del pantalón: el cuerpo de debajo está quitado y, tumbado o visto desde los pies,
 # por el bajo se veía el interior vacío de la camiseta (14 nov 2026; ver ../Prendas/chequeo_huecos.py).
 bm = bmesh.new(); _c = bm.verts.new((0, -0.01, 0.41))
-_anillo = [bm.verts.new((math.cos(2 * math.pi * k / 40) * 0.174, -0.01 + math.sin(2 * math.pi * k / 40) * 0.174 * ELIP, 0.41)) for k in range(40)]
+# 0,155 (antes 0,174): con las piernas dobladas (sentado, tumbado en la cama) su borde salía por la camiseta y se veía
+# una mancha oscura sobre la tripa (19 nov 2026, pose «tumbado» del chequeo)
+FONDO_R = 0.155
+_anillo = [bm.verts.new((math.cos(2 * math.pi * k / 40) * FONDO_R, -0.01 + math.sin(2 * math.pi * k / 40) * FONDO_R * ELIP, 0.41)) for k in range(40)]
 for k in range(40): bm.faces.new((_c, _anillo[(k + 1) % 40], _anillo[k]))
 bm.normal_update()
 for f in bm.faces:
     if f.normal.z > 0: f.normal_flip()   # mira hacia abajo
 nueva("traje", "Fondo", bm, "Pantalon", {"pelvis": 1.0})
 Z_BRAZO = 0.633
+BRAZO_DESDE = float(os.environ.get("WILL_BRAZO_DESDE", "0.19"))
+BOCA_MANGA = 0.275   # donde acaba la manga corta (y su ribete)
+FIN_MANGA_CHAQUETA = float(os.environ.get("WILL_FIN_MANGA_CHAQUETA", "0.275"))
 for lado, s in (("l", 1), ("r", -1)):
     # Manga corta: del hombro a medio brazo, con ribete dorado
     tubo("traje", f"Manga_{lado}", [(0.15 * s, -0.003, Z_BRAZO + 0.004), (0.22 * s, -0.003, Z_BRAZO + 0.002), (0.275 * s, -0.003, Z_BRAZO)],
          [0.08, 0.079, 0.077], "Camiseta", None, cerrar=False)
-    toro("traje", f"RibeteManga_{lado}", (0.274 * s, -0.003, Z_BRAZO), 0.077, 0.011, "Dorado", None, rot=(0, math.radians(90), 0))
+    toro("traje", f"RibeteManga_{lado}", (0.274 * s, -0.003, Z_BRAZO), 0.077, 0.009, "Dorado", None, rot=(0, math.radians(90), 0))   # 0,011 → 0,009 (19 nov)
     esfera("traje", f"Hombro_{lado}", (0.16 * s, -0.003, Z_BRAZO + 0.006), (0.082, 0.08, 0.08), "Camiseta", None)
     # Brazo de piel: nace dentro de la manga y entra en la mano con el radio del borde de la mano (~0,07), para que
     # la muñeca no haga escalón; el tubo es de piel y la manga queda por fuera, así la ropa no se mete en la piel.
-    tubo("traje", f"Brazo_{lado}", [(0.24 * s, -0.003, Z_BRAZO), (0.3 * s, -0.002, Z_BRAZO), (0.36 * s, 0.0, Z_BRAZO), (0.42 * s, -0.002, Z_BRAZO - 0.003), (0.475 * s, -0.003, Z_BRAZO - 0.005)],
-         [0.068, 0.067, 0.067, 0.069, 0.07], "Piel", None, cerrar=False)
+    # Nace junto al hombro (0,19, bajo la bola del hombro), no a media manga (0,24): con el brazo caído y sentado, la boca
+    # de la manga se levanta por la axila y dejaba ver el borde del tubo de piel (Raúl, 19 nov 2026, Will en la cama).
+    tubo("traje", f"Brazo_{lado}", [(BRAZO_DESDE * s, -0.003, Z_BRAZO), (0.24 * s, -0.003, Z_BRAZO), (0.3 * s, -0.002, Z_BRAZO), (0.36 * s, 0.0, Z_BRAZO), (0.42 * s, -0.002, Z_BRAZO - 0.003), (0.475 * s, -0.003, Z_BRAZO - 0.005)],
+         [0.06, 0.068, 0.067, 0.067, 0.069, 0.07], "Piel", None, cerrar=False)
     # Pantalón y botas altas con vuelta
     tubo("traje", f"Pernera_{lado}", [(0.096 * s, 0.003, 0.41), (0.103 * s, 0.0, 0.33), (0.11 * s, -0.001, 0.24), (0.115 * s, 0.003, 0.2)],
          [0.082, 0.082, 0.076, 0.074], "Pantalon", None, cerrar=False)
@@ -361,9 +384,11 @@ for lado, a in (("l", ABIERTO[0]), ("r", ABIERTO[1])):
     tubo("chaqueta", f"Solapa_{lado}", [sobre_chaqueta(a, 0.72 - i * (0.72 - 0.375) / 11, 0.0) for i in range(12)], [0.01] * 12, "Dorado", None)
 tubo("chaqueta", "BajoChaqueta", [sobre_chaqueta(ABIERTO[0] + (ABIERTO[1] - ABIERTO[0]) * k / 40, 0.372, 0.0) for k in range(41)], [0.01] * 41, "Dorado", None)
 for lado, s in (("l", 1), ("r", -1)):
-    tubo("chaqueta", f"MangaChaqueta_{lado}", [(0.15 * s, -0.003, Z_BRAZO + 0.004), (0.24 * s, -0.003, Z_BRAZO + 0.002), (0.32 * s, -0.003, Z_BRAZO)],
+    # La vuelta acaba un radio de manga antes del codo (codo en 0,36): a 0,32, al doblar el codo el antebrazo se metía en
+    # la boca de la manga (19 nov 2026). Y va con el brazo (no a medias con el antebrazo): no se rasga al doblarlo.
+    tubo("chaqueta", f"MangaChaqueta_{lado}", [(0.15 * s, -0.003, Z_BRAZO + 0.004), (0.22 * s, -0.003, Z_BRAZO + 0.002), (FIN_MANGA_CHAQUETA * s, -0.003, Z_BRAZO)],
          [0.1, 0.098, 0.096], "Chaqueta", None, cerrar=False)
-    toro("chaqueta", f"Remangado_{lado}", (0.322 * s, -0.003, Z_BRAZO), 0.096, 0.016, "Chaqueta", {f"upperarm_{lado}": 0.5, f"lowerarm_{lado}": 0.5}, rot=(0, math.radians(90), 0))
+    toro("chaqueta", f"Remangado_{lado}", ((FIN_MANGA_CHAQUETA + 0.002) * s, -0.003, Z_BRAZO), 0.096, 0.016, "Chaqueta", None, rot=(0, math.radians(90), 0))
     esfera("chaqueta", f"HombroChaqueta_{lado}", (0.16 * s, -0.003, Z_BRAZO + 0.008), (0.1, 0.098, 0.098), "Chaqueta", None)
 
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
@@ -386,7 +411,39 @@ for o, _ in GRUPOS["traje"]:
         o.data.materials.clear(); o.data.materials.append(cuerpo.data.materials[0])
         uv = o.data.uv_layers.new(name=uv_cuerpo.name)
         for d in uv.data: d.uv = piel_uv
+        # Lo del brazo de piel que queda bajo la manga va del color de la manga: con el brazo caído y sentado, por la axila
+        # la piel asomaba por encima del ribete como una cuña clara (19 nov 2026); así, si asoma, se ve tela.
+        if o.name.startswith("Brazo_"):
+            o.data.materials.append(MAT["Camiseta"])
+            for f in o.data.polygons:
+                if abs((o.matrix_world @ f.center).x) < BOCA_MANGA: f.material_index = 1   # hasta bajo el ribete
 rl.pesar_piezas(GRUPOS["pelo"], cuerpo, arm, con_cuerpo=False); rl.pesar_piezas(rl.completar_zonas(GRUPOS["traje"]), cuerpo, arm); rl.pesar_piezas(rl.completar_zonas(GRUPOS["chaqueta"]), cuerpo, arm, con_cuerpo=False)
+# Axila blanda (19 nov 2026, INC-1309): con el brazo caído la parte de abajo de la manga, su ribete y el arranque del
+# brazo giraban alrededor del hombro y se metían 2-3 cm en el costado de la camiseta (de espaldas se veía la tela del
+# tronco atravesando la manga). Esa parte de abajo sigue también al pecho (spine_03): la boca de la manga se aplasta un
+# poco en vez de hundirse. WILL_AXILA_BLANDA=0 lo apaga.
+AXILA_BLANDA = float(os.environ.get("WILL_AXILA_BLANDA", "0.3"))
+# Hasta dónde llega a lo largo del brazo (19 nov 2026): antes llegaba hasta la boca de la manga (0,27-0,36) y, con el brazo
+# caído y sentado, el ribete se doblaba y la boca se abría por la axila. Ahora solo junto al hombro: la boca y el ribete
+# van enteros con el brazo, como un aro, y lo que se aplasta queda tapado por el propio brazo.
+AXILA_X0, AXILA_X1 = (float(x) for x in os.environ.get("WILL_AXILA_TRAMO", "0.17,0.25").split(","))
+def _suave(a, b, x):
+    u = min(1.0, max(0.0, (x - a) / (b - a))); return u * u * (3 - 2 * u)
+for o, _ in GRUPOS["traje"] + (GRUPOS["chaqueta"] if os.environ.get("WILL_AXILA_CHAQUETA", "0") == "1" else []):
+    # las piezas del brazo de la camiseta (por nombre o por zona). La chaqueta no: con la camiseta quitada bajo su manga,
+    # si su manga siguiera al pecho se metería en el brazo al levantarlo (19 nov 2026)
+    if AXILA_BLANDA <= 0 or not (o.name.lower().startswith("brazo_") or any(k in o.name.lower() for k in rl.PALABRAS_DE_BRAZO)): continue
+    if "spine_03" not in o.vertex_groups: o.vertex_groups.new(name="spine_03")
+    nombres = {g.index: g.name for g in o.vertex_groups}
+    for v in o.data.vertices:
+        p = o.matrix_world @ v.co
+        k = AXILA_BLANDA * _suave(0.0, 0.07, Z_BRAZO - p.z) * (1 - _suave(AXILA_X0, AXILA_X1, abs(p.x)))
+        if k <= 0: continue
+        ws = {nombres[g.group]: g.weight for g in v.groups}; tot = sum(ws.values()) or 1.0
+        ws = {n: w / tot * (1 - k) for n, w in ws.items()}; ws["spine_03"] = ws.get("spine_03", 0.0) + k
+        ws = dict(sorted(ws.items(), key=lambda x: -x[1])[:4]); tot = sum(ws.values())   # Unity: como mucho 4 huesos
+        for n in nombres.values(): o.vertex_groups[n].remove([v.index])
+        for n, w in ws.items(): o.vertex_groups[n].add([v.index], w / tot, 'REPLACE')
 # Primero los pesos (la ropa los copia del cuerpo entero, brazos y piernas incluidos); después
 # del cuerpo de Body05 solo se quedan las manos: su torso lleva pintada la ropa vieja y asomaba por la camisa
 bm = bmesh.new(); bm.from_mesh(cuerpo.data)
@@ -400,6 +457,18 @@ camiseta = unir(GRUPOS["traje"], "Body23_Aventurero", extra=cuerpo)
 # La versión con chaqueta es otro cuerpo entero (la misma ropa con la chaqueta encima), no una pieza suelta: así va en
 # el hueco de cuerpo del armario y deja libre el de la capa (Raúl, 8 nov: chaqueta y capa a la vez).
 copia = camiseta.copy(); copia.data = camiseta.data.copy(); bpy.context.scene.collection.objects.link(copia)
+# Con la chaqueta, lo de la camiseta que queda dentro de su manga no se ve: se quita (manga corta, su ribete, la bola del
+# hombro y el brazo de piel hasta la vuelta de la chaqueta). Si se deja, al mover el brazo atraviesa la manga de la
+# chaqueta (19 nov 2026: dos graves, el ribete y el brazo dentro de MangaChaqueta).
+DENTRO_DE_LA_CHAQUETA = float(os.environ.get("WILL_PIEL_DESDE_CHAQUETA", "0.26"))
+_nombres = str(copia.data.get("piezas", "")).split("|")
+_bm = bmesh.new(); _bm.from_mesh(copia.data); _capa = _bm.faces.layers.int.get("pieza")
+_fuera = [f for f in _bm.faces if _capa is not None and 0 <= f[_capa] < len(_nombres) and (
+    _nombres[f[_capa]].startswith(("Manga_", "RibeteManga_", "Hombro_"))
+    or (_nombres[f[_capa]].startswith("Brazo_") and abs((copia.matrix_world @ f.calc_center_median()).x) < DENTRO_DE_LA_CHAQUETA))]
+bmesh.ops.delete(_bm, geom=_fuera, context='FACES'); _bm.to_mesh(copia.data); _bm.free()
+print("CHAQUETA: quitadas", len(_fuera), "caras de la camiseta tapadas por la chaqueta")
+rl.seguir_etiquetas([o for o, _ in GRUPOS["chaqueta"]], copia)   # que el chequeo nombre bien las piezas de la chaqueta
 unir(GRUPOS["chaqueta"], "Body24_AventureroChaqueta", extra=copia)
 bpy.ops.wm.save_as_mainfile(filepath=SALIDA)
 print("WILL", [(o.name, len(o.data.vertices), [m.name for m in o.data.materials]) for o in bpy.data.objects if o.type == 'MESH'])

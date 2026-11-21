@@ -1,13 +1,15 @@
 # Chequeo de choques — liora.blend
-**PASA (27 avisos menores: mirar las fotos)**
+**PASA (35 avisos menores: mirar las fotos)**
 
-Poses revisadas: 78 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba, manos_juntas, sentado)
+Poses revisadas: 97 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, Idle_Normal_NoWeapon, InteractWithPeople_NoWeapon, Greeting01_NoWeapon, Victory_NoWeapon, Sleeping_NoWeapon + brazos_bajados, mano_al_frente, brazos_cruzados, brazos_arriba, manos_juntas, sentado, cabeza_arriba, cabeza_abajo, cabeza_girada, tronco_adelante, tronco_atras, tronco_girado, tumbado)
 
 ## Tela que se rasga (aristas estiradas)
-- Hair21_Liora:PeloCastano@head (-0.00,0.76): 11 (peor en MoveFWD_Normal_InPlace_NoWeapon@3.7)
 - Body35_Liora:Hombro_l (+0.17,0.64): 10 (peor en MoveFWD_Normal_InPlace_NoWeapon@5.0)
 - Body35_Liora:Hombro_r (-0.17,0.64): 10 (peor en brazos_bajados)
+- Body35_Liora:Faja (-0.00,0.45): 10 (peor en tronco_adelante)
+- Body35_Liora:Vestido (-0.00,0.46): 10 (peor en tronco_atras)
 - Body35_Liora:Manga_l (+0.34,0.63): 7 (peor en InteractWithPeople_NoWeapon@141.0)
+- Body35_Liora:Botin_r (-0.12,0.07): 7 (peor en Sleeping_NoWeapon@17.7)
 - Body35_Liora:Manga_r (-0.34,0.63): 6 (peor en InteractWithPeople_NoWeapon@71.0)
 - Body35_Liora:Botin_l (+0.12,0.07): 5 (peor en MoveFWD_Normal_InPlace_NoWeapon@10.3)
 
@@ -34,7 +36,23 @@ Poses revisadas: 78 (WalkFWD_InPlace_NoWeapon, MoveFWD_Normal_InPlace_NoWeapon, 
 - Body35_Liora:Faja (-0.00,0.45): 34 (peor en brazos_bajados, dentro de cuerpo/upperarm_l)
 - Body35_Liora:Suela_l (+0.12,0.01): 32 (peor en MoveFWD_Normal_InPlace_NoWeapon@6.3, dentro de cuerpo/foot_l)
 - Body35_Liora:Manga_r (-0.34,0.63): 30 (peor en Victory_NoWeapon@17.7, dentro de cuerpo/upperarm_r)
-- Body35_Liora:Manga_l (+0.34,0.63): 22 (peor en Victory_NoWeapon@5.2, dentro de cuerpo/upperarm_l)
+- Body35_Liora:Manga_l (+0.34,0.63): 27 (peor en Sleeping_NoWeapon@14.3, dentro de cuerpo/upperarm_l)
+- Hair21_Liora:PeloCastano@neck_01 (-0.00,0.76): 12 (peor en cabeza_arriba, dentro de cuerpo/pelvis)
+- Hair21_Liora:CintaCrema@neck_01 (+0.04,0.86): 11 (peor en cabeza_arriba, dentro de PeloCastano@head (+0.00,1.13))
+- Hair21_Liora:CintaCrema@neck_01 (-0.04,0.86): 11 (peor en cabeza_arriba, dentro de PeloCastano@head (+0.00,1.13))
 
 ## Piezas que se separan (cm)
+- nada
+
+## Tela tendida sobre otra prenda a menos de 3 mm: parpadea (puntos)
+- Body35_Liora:PunoForro_r (-0.43,0.63): 27 (peor en InteractWithPeople_NoWeapon@53.5, sobre Manga_r (-0.34,0.63))
+- Body35_Liora:PunoForro_l (+0.43,0.63): 25 (peor en WalkFWD_InPlace_NoWeapon@12.7, sobre BocaManga_l (+0.44,0.63))
+
+## Cabeza que se hunde en la ropa al moverla (puntos de la cabeza)
+- Body35_Liora:Cuello (-0.00,0.75): 4 (peor en Victory_NoWeapon@1.0)
+
+## Piel propia que se mete en la ropa (puntos: carne atravesada por la tela; las manos solo avisan)
+- nada
+
+## Pelo que sale por fuera del gorro o sombrero (puntos)
 - nada

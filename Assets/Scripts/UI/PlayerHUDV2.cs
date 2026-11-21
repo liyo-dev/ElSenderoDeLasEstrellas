@@ -6,9 +6,8 @@ using DG.Tweening;
 namespace Sendero.UI
 {
     /// <summary>
-    /// Sistema de HUD del jugador V2 - Con referencias desde Inspector.
-    /// Usa arte personalizado en lugar de crear UI dinámicamente.
-    /// Version: 2025-12-24
+    /// Sistema de HUD del jugador V2 - Con referencias desde Inspector. Usa arte
+    /// personalizado en lugar de crear UI dinámicamente.
     /// 
     /// Vida, maná y visibilidad del HUD. Los círculos de combate (X, Y, B) los lleva
     /// CombatButtonsHUD (INC-485).
@@ -246,13 +245,11 @@ namespace Sendero.UI
             if (_healthSystem != null)
             {
                 _healthSystem.OnHealthChanged.AddListener(OnHealthChanged);
-                // Debug.Log("[PlayerHUDV2] Suscrito a OnHealthChanged");
             }
             
             if (_manaPool != null)
             {
                 _manaPool.OnManaChanged.AddListener(OnManaChanged);
-                // Debug.Log($"[PlayerHUDV2] Suscrito a OnManaChanged de ManaPool en '{_manaPool.gameObject.name}'");
             }
             else
             {
@@ -339,7 +336,7 @@ namespace Sendero.UI
             // tweens de escala a la vez y la barra se quedaba desajustada/creciendo fuera de su caja).
             healthFillImage.DOKill();
             healthFillImage.transform.DOKill(true); // true = completa el punch en curso (vuelve a escala 1) antes de matarlo
-            healthFillImage.transform.localScale = Vector3.one; // red de seguridad por si ya venía desajustada de antes de este fix
+            healthFillImage.transform.localScale = Vector3.one; // red de seguridad por si ya venía desajustada
             
             if (isDamage)
             {
@@ -466,7 +463,7 @@ namespace Sendero.UI
         /// de RefreshManaBar) precisamente para no depender de que ManaPool siga disparando
         /// OnManaChanged: así la barra siempre termina de converger a su valor final, incluyendo
         /// el "encaje" a fillAmount exacto que hace falta para que el sprite muestre su puntita
-        /// redondeada completa. Ver el FIX comentado en RefreshManaBar().
+        /// redondeada completa.
         /// </summary>
         private void TickManaRegen()
         {
@@ -665,7 +662,6 @@ namespace Sendero.UI
             }
             
             ForceRefresh();
-            // Debug.Log("[PlayerHUDV2] HUD actualizado manualmente");
         }
         
         [ContextMenu("Validate Setup")]

@@ -36,13 +36,18 @@ MAT, GRUPOS = T.mat, T.grupos
 nueva, transformar, esfera, toro, torno, tubo, caja = T.nueva, T.transformar, T.esfera, T.toro, T.torno, T.tubo, T.caja
 
 # ── Abrigo: largo hasta la rodilla y con vuelo, para que las piernas se muevan dentro sin estirarlo ──
-torno("traje", "Abrigo", [(0.725, 0.15), (0.67, 0.2), (0.58, 0.212), (0.5, 0.203), (0.45, 0.203), (0.36, 0.228), (0.27, 0.25), (0.19, 0.268)],
+abrigo = torno("traje", "Abrigo", [(0.725, 0.15), (0.67, 0.2), (0.58, 0.212), (0.5, 0.203), (0.45, 0.203), (0.36, 0.228), (0.27, 0.25), (0.19, 0.268)],
       "Abrigo", grosor=0.009)
-toro("traje", "Bajo", (0, -0.01, 0.192), 0.266, 0.011, "AbrigoOscuro", None, escala=(1, 0.92, 1))
-# Solapas: el borde del abrigo baja por delante, del cuello al bajo, y tres botones de latón
-tubo("traje", "Solapa", curva((0.04, -0.165, 0.72), (0.03, -0.225, 0.5), (0.03, -0.262, 0.2), 10), [0.013] * 10, "AbrigoOscuro", None)
-for z, y in ((0.62, -0.212), (0.54, -0.21), (0.38, -0.225)):
-    esfera("traje", f"Boton{int(z*100)}", (0.075, y, z), (0.017, 0.008, 0.017), "Laton", None)
+toro("traje", "Bajo", (0, -0.01, 0.192), 0.266, 0.011, "AbrigoOscuro", rl.Zona(sobre=abrigo), escala=(1, 0.92, 1))
+# Solapa: el borde del abrigo baja por delante del cuello al cinturón y acaba debajo de él; tres botones de latón,
+# todos por encima del cinturón. Por debajo, el faldón no lleva tira ni botón: sentado, el faldón cae sobre el regazo
+# y una tira oscura con un botón en la punta se leía como un palo en la mano (cinemática de la mañana después).
+# La solapa y los botones copian los pesos del abrigo (van pegados a él y se mueven con él).
+SOLAPA_BAJO = 0.43   # tapada por el cinturón (z 0,45, grueso 0,019)
+puntos = [p for p in curva((0.04, -0.165, 0.72), (0.03, -0.225, 0.5), (0.03, -0.262, 0.2), 40) if p[2] >= SOLAPA_BAJO]
+tubo("traje", "Solapa", puntos[::3] + ([puntos[-1]] if (len(puntos) - 1) % 3 else []), [0.013], "AbrigoOscuro", rl.Zona(sobre=abrigo))
+for z, y in ((0.65, -0.213), (0.585, -0.212), (0.515, -0.206)):
+    esfera("traje", f"Boton{int(z*100)}", (0.075, y, z), (0.017, 0.008, 0.017), "Laton", rl.Zona(sobre=abrigo, rigida=True))
 # Cuello alto y vuelto
 torno("traje", "Cuello", [(0.77, 0.165), (0.745, 0.2), (0.71, 0.218)], "AbrigoOscuro", seg=40, grosor=0.014)
 # Cinturón de cuero con hebilla, por fuera del abrigo

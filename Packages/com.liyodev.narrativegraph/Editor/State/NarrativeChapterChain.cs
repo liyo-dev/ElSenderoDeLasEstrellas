@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// How chapters follow each other. A chapter starts after another when one of its steps waits
     /// for a signal that the other chapter raises; that step is the bridge between both.
@@ -32,12 +32,12 @@ namespace NarrativeGraphEditor
 
             var node = graph.FindNode(targetGuid);
             bool crossesBridge = false;
-            while (node != null && (node.IsGraphEntry || IsBridge(node)) && node.outputs != null && node.outputs.Count == 1)
+            while (node != null && (node.IsGraphEntry || IsBridge(node)) && node.Outputs != null && node.Outputs.Count == 1)
             {
                 crossesBridge |= IsBridge(node);
-                node = graph.FindNode(node.outputs[0]);
+                node = graph.FindNode(node.Outputs[0]);
             }
-            if (crossesBridge && node != null) targetGuid = node.guid;
+            if (crossesBridge && node != null) targetGuid = node.Guid;
 
             AddPrevious(graph, targetGuid, raisers, result, new HashSet<NarrativeGraph> { graph });
             return result;
@@ -74,7 +74,7 @@ namespace NarrativeGraphEditor
                         if (node == null) continue;
                         foreach (var signal in References(node).Signals)
                             if (signal.Role == SignalRole.Emite && !string.IsNullOrEmpty(signal.Key))
-                                list.Add((signal.Key, new Chapter { Graph = other, BridgeGuid = node.guid }));
+                                list.Add((signal.Key, new Chapter { Graph = other, BridgeGuid = node.Guid }));
                     }
                 }
                 return list;
@@ -97,8 +97,8 @@ namespace NarrativeGraphEditor
                     AddPrevious(previous.Graph, previous.BridgeGuid, raisers, result, seen);
                     result.Add(previous);
                 }
-                if (node.outputs != null)
-                    foreach (var o in node.outputs) queue.Enqueue(o);
+                if (node.Outputs != null)
+                    foreach (var o in node.Outputs) queue.Enqueue(o);
             }
         }
 

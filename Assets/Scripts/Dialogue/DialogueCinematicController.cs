@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Sendero.Core.Feedback;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Controlador cinematográfico avanzado para diálogos usando Cinemachine.
@@ -73,46 +74,17 @@ public class DialogueCinematicController : MonoBehaviour
     [SerializeField] private float dialogueCameraMinDistance = 2.4f;
 
     [Header("Anti-intrusión (NPCs ajenos cruzándose en cámara)")]
-    [Tooltip("Radio (m) alrededor del punto medio de la conversación en el que se detiene la navegación de NPCs ambientales ajenos al diálogo (no el NPC principal, no el player, no party) mientras dura la escena.")]
-    [SerializeField] private float bystanderFreezeRadius = 9f;
-    [Tooltip("Cada cuánto (segundos) se reescanea el radio de congelado, por si un NPC nuevo entra en él o alguno reanuda su ruta entre reescaneos")]
-    [SerializeField] private float bystanderRescanInterval = 0.6f;
     [Tooltip("Cada cuánto (segundos) se comprueba si algún personaje se ha metido entre la cámara y quien habla (red de seguridad final, independiente del congelado preventivo)")]
     [SerializeField] private float intruderCheckInterval = 0.12f;
     [Tooltip("Radio del SphereCast usado para detectar intrusos entre la cámara y la cara de quien habla")]
     [SerializeField] private float intruderProbeRadius = 0.3f;
 
-    // ── Anti-intrusión: NPCs ambientales que caminan dentro del encuadre del diálogo ──
-    // Contexto (Agosto 2026): la cámara de diálogo solo evitaba geometría estática (paredes) y
-    // ocultaba party members no-hablantes; cualquier NPC ambiental ajeno a la conversación podía
-    // cruzarse libremente delante de cámara sin que nada lo detectara. Doble red, sin tocar la FSM:
-    //  1) Preventiva (RescanAndFreezeBystanders): HardStop periódico sobre el NavMeshAgent de los
-    //     NPCs ambientales cercanos que no participan en el diálogo. Solo actúa a nivel de agente
-    //     (no cambia su estado ni su lógica), así que no hay riesgo de interferir con quests o el
-    //     grafo narrativo — en el peor caso el NPC retoma su ruta con normalidad al siguiente tick.
-    //  2) Reactiva (CheckAndHideCameraIntruders): si aun así algo se cruza en la línea cámara→cara
-    //     del speaker, se oculta su renderer (mismo patrón que HideNonSpeakingPartyMembers) hasta
-    //     que deje de bloquear. Esta es la garantía real: aunque el congelado falle o llegue tarde,
-    //     nunca se ve a un personaje tapando la cámara en primerísimo plano.
-    //
-    // Incidencia (Agosto 2026): "el NPC que habla desaparece, tapado por algo, y coincide siempre
-    // con el turno de hablar". Causa real: la capa reactiva (2) solo trataba como intruso a un
-    // collider si su root ya estaba en _bystanderRootTransforms (un NPC ambiental fichado por la
-    // capa 1). Objetos de escenario que NO son NPCs — típicamente una puerta abriéndose/cerrándose
-    // junto a la conversación — nunca entraban en esa lista, así que si la hoja de la puerta
-    // empezaba a moverse DESPUÉS de fijar el plano (CalculateCameraPosition solo evita obstrucciones
-    // que ya existían en ESE instante, no vuelve a comprobar mientras la línea sigue en pantalla),
-    // terminaba cruzándose en la línea cámara→cara sin que nada la detectara. Encima, si no había
-    // ningún NPC ambiental cerca (caso típico: solo player + NPC + puerta en la sala),
-    // _bystanderRootTransforms.Count era 0 y CheckAndHideCameraIntruders ni siquiera llegaba a
-    // lanzar el SphereCast — la red de seguridad estaba deshabilitada del todo en esos diálogos.
-    // Fix: la capa reactiva ya no depende de la lista de bystanders fichados; cualquier collider
-    // que se cruce en esa línea (que no sea el propio speaker/player/NPC/party) se trata como
-    // intruso, sea o no un NPC conocido.
-    private readonly List<Game.NPC.NPCBehaviourManagerV2> _nearbyBystanderBuffer = new List<Game.NPC.NPCBehaviourManagerV2>();
-    private readonly HashSet<Game.NPC.NPCBehaviourManagerV2> _frozenBystanders = new HashSet<Game.NPC.NPCBehaviourManagerV2>();
-    private readonly HashSet<Transform> _bystanderRootTransforms = new HashSet<Transform>();
-    private float _bystanderRescanTimer;
+    // ── Anti-intrusión: lo que se cruza entre la cámara y quien habla ──
+    // Los vecinos que no toman parte en la charla no se congelan: los aparta, o les da algo que
+    // hacer, Game.NPC.TestigosDeCharla (ver ReaccionesAnteCharlas). Aquí queda la red de seguridad
+    // (CheckAndHideCameraIntruders): si aun así algo se cruza en la línea cámara→cara de quien
+    // habla —un vecino, una puerta que se abre, cualquier collider que no sea del reparto de la
+    // charla—, se ocultan sus renderers hasta que deje de tapar.
 
     private readonly RaycastHit[] _intruderHitsBuffer = new RaycastHit[8];
     // Buffer para la verificación de "cámara embebida" (ver CameraPositionIsEmbedded)
@@ -194,7 +166,6 @@ public class DialogueCinematicController : MonoBehaviour
 
     void Awake()
     {
-        // Debug.Log($"[DialogueCinematicController] Awake iniciado en GameObject: {gameObject.name}");
         
         // CRÍTICO: El GameObject DEBE estar activo para funcionar
         if (!gameObject.activeSelf)
@@ -217,11 +188,11 @@ public class DialogueCinematicController : MonoBehaviour
         
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        // Debug.Log($"[DialogueCinematicController] Instancia marcada como DontDestroyOnLoad");
 
         // Cachear máscara de colisión para obstrucciones de cámara grupal
-        // Default (0), Floor (10), Obstacle (15) — geometría estática que puede bloquear la vista
-        _camObstructionMask = (1 << 0) | (1 << 10) | (1 << 15);
+        // Default, Floor, Obstacle y Climb: geometría que puede bloquear la vista (barandillas y
+        // tablones de puentes y escaleras van en Climb). Ver INC-1331.
+        _camObstructionMask = LayerMask.GetMask("Default", "Floor", "Obstacle", "Climb");
 
         // Crear rig para las cámaras de diálogo
         GameObject rigObj = new GameObject("DialogueCinematicRig");
@@ -333,7 +304,6 @@ public class DialogueCinematicController : MonoBehaviour
                 dialogueCameraData.renderShadows = mainCameraData.renderShadows;
                 dialogueCameraData.requiresDepthTexture = mainCameraData.requiresDepthTexture;
                 dialogueCameraData.requiresColorTexture = mainCameraData.requiresColorTexture;
-                // Debug.Log($"[DialogueCinematicController] URP Camera Data configurada - RenderType: Base, PostProcessing: {dialogueCameraData.renderPostProcessing}");
             }
         }
         else
@@ -371,7 +341,6 @@ public class DialogueCinematicController : MonoBehaviour
         dialogueBrain.DefaultBlend.Time = 0.8f;
         dialogueBrain.ChannelMask = (OutputChannels)1; // Canal 1 para cámaras de diálogo
         
-        // Debug.Log($"[DialogueCinematicController] Cámara de diálogo creada - GameObject: {dialogueCameraObject.activeSelf}, Camera.enabled: {dialogueCamera.enabled}, Depth: {dialogueCamera.depth}, CullingMask incluye UI: {((dialogueCamera.cullingMask & (1 << LayerMask.NameToLayer("UI"))) != 0)}");
     }
 
 
@@ -387,7 +356,6 @@ public class DialogueCinematicController : MonoBehaviour
         if (mainGameplayCamera != null)
         {
             originalGameplayCameraPriority = mainGameplayCamera.Priority.Value;
-            // Debug.Log($"[DialogueCinematicController] Cámara de gameplay encontrada: {mainGameplayCamera.name} (Priority original: {originalGameplayCameraPriority})");
         }
         else
         {
@@ -399,7 +367,6 @@ public class DialogueCinematicController : MonoBehaviour
         // Desactivar todas las cámaras del pool inicialmente
         DisableAllDialogueCameras();
         
-        // Debug.Log("[DialogueCinematicController] Start completado - Sistema listo");
     }
 
     void OnDestroy()
@@ -439,7 +406,6 @@ public class DialogueCinematicController : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
-            // Debug.Log("[DialogueCinematicController] Instancia del Singleton limpiada");
         }
     }
 
@@ -460,16 +426,9 @@ public class DialogueCinematicController : MonoBehaviour
             }
         }
 
-        // ── Anti-intrusión: reescaneo de bystanders + red de seguridad de intrusos en cámara ──
+        // ── Anti-intrusión: red de seguridad de intrusos en cámara ──
         if (isInCinematicMode)
         {
-            _bystanderRescanTimer -= Time.deltaTime;
-            if (_bystanderRescanTimer <= 0f)
-            {
-                _bystanderRescanTimer = bystanderRescanInterval;
-                RescanAndFreezeBystanders();
-            }
-
             _intruderCheckTimer -= Time.deltaTime;
             if (_intruderCheckTimer <= 0f)
             {
@@ -590,14 +549,13 @@ public class DialogueCinematicController : MonoBehaviour
                     currentLineIndex = 0;
                     nextCutAtLine = CalculateNextCutLine();
 
-                    // FIX — "la cámara está en otro sitio" en diálogos grupales tras
-                    // un teletransporte. Esta rama solo actualizaba el plano (shot) del diálogo
-                    // encadenado, pero nunca recalculaba el montaje grupal (_groupCamBaseDir,
-                    // _cachedGroupCenter/_groupLookAtTarget, ni el semicírculo de
-                    // PositionMembersForGroupDialogue). 'npc' aquí es siempre el transform del
+                    // En diálogos grupales tras un teletransporte. Esta rama solo actualizaba el
+                    // plano (shot) del diálogo encadenado, pero nunca recalculaba el montaje grupal
+                    // (_groupCamBaseDir, _cachedGroupCenter/_groupLookAtTarget, ni el semicírculo
+                    // de PositionMembersForGroupDialogue). 'npc' aquí es siempre el transform del
                     // propio NPCInteractiveNarrativeExecutor que dispara la cadena, y 'player' es
-                    // el rig único (PlayerService.Player) — así que esta rama se activa SIEMPRE
-                    // que dos diálogos del mismo executor se encadenan dentro del grace period de
+                    // el rig único (PlayerService.Player) — así que esta rama se activa SIEMPRE que
+                    // dos diálogos del mismo executor se encadenan dentro del grace period de
                     // arriba, exactamente el patrón [Diálogo] → TeleportPlayer → [Diálogo grupal]:
                     // el diálogo grupal heredaba el encuadre calculado para la posición/sala
                     // ANTERIOR al teletransporte (o, si el diálogo anterior era individual, ni
@@ -644,8 +602,7 @@ public class DialogueCinematicController : MonoBehaviour
         currentLineIndex = 0;
         nextCutAtLine = CalculateNextCutLine();
 
-        // FIX — "hay nubes tan bajas que tapan la cámara en los diálogos": la
-        // cámara de diálogo suele mirar desde más cerca/arriba que la cámara de exploración
+        // La cámara de diálogo suele mirar desde más cerca/arriba que la cámara de exploración
         // normal, así que una nube ambiental (AmbientCloudDrifter) que en ese instante esté
         // cruzando cerca puede cortar el plano. AmbientCloudDirector.SetAmbientCloudsVisible ya
         // existía para esto (pensado originalmente para FocusCameraNode) pero nada lo llamaba
@@ -688,6 +645,11 @@ public class DialogueCinematicController : MonoBehaviour
         // PASO 1: Capturar referencia a la cámara principal de Unity ANTES de cualquier cambio
         // CRÍTICO: Debe hacerse antes de cambiar tags o activar otras cámaras
         mainUnityCamera = Camera.main;
+
+        // La cámara de diálogo se ve como la de juego (renderer, postprocesado, contorno, volúmenes,
+        // capas): se copian sus ajustes cada vez, no una sola vez al crearla. Ver INC-1325.
+        if (mainUnityCamera != null && dialogueCamera != null && mainUnityCamera != dialogueCamera)
+            AjustesDeRenderDeCamara.Copiar(mainUnityCamera, dialogueCamera);
         
         // PASO 2: Desactivar la cámara principal de Unity PRIMERO (antes de activar la nuestra)
         // Esto evita conflictos de rendering en URP
@@ -695,7 +657,6 @@ public class DialogueCinematicController : MonoBehaviour
         {
             mainUnityCameraWasEnabled = mainUnityCamera.enabled;
             mainUnityCamera.enabled = false;
-            // Debug.Log($"[DialogueCinematicController] Cámara principal de Unity ({mainUnityCamera.name}) DESACTIVADA temporalmente para evitar conflictos URP");
         }
 
         // PASO 3: Desactivar la cámara virtual de gameplay de Cinemachine
@@ -723,8 +684,6 @@ public class DialogueCinematicController : MonoBehaviour
             // Activar rendering forzado
             forceRenderingActive = true;
 
-            // Debug.Log($"[DialogueCinematicController] Componente Camera activado (era: {wasEnabled}, ahora: {dialogueCamera.enabled}, isActiveAndEnabled: {dialogueCamera.isActiveAndEnabled})");
-            // Debug.Log($"[DialogueCinematicController] Camera details - Depth: {dialogueCamera.depth}, ClearFlags: {dialogueCamera.clearFlags}, CullingMask: {dialogueCamera.cullingMask}, TargetTexture: {(dialogueCamera.targetTexture == null ? "NULL (pantalla)" : dialogueCamera.targetTexture.name)}, Tag: {dialogueCameraObject.tag}");
         }
         else
         {
@@ -733,11 +692,8 @@ public class DialogueCinematicController : MonoBehaviour
 #endif
         }
 
-        // PASO 4.5: Congelar de inmediato a los NPCs ambientales cercanos que no participan
-        // en el diálogo, para que el plano de apertura no arranque con alguien cruzando el encuadre.
-        _bystanderRescanTimer = bystanderRescanInterval;
+        // PASO 4.5: La red de seguridad de intrusos empieza a mirar desde el primer plano.
         _intruderCheckTimer = intruderCheckInterval;
-        RescanAndFreezeBystanders();
 
         // PASO 5: Activar el plano de apertura
         ApplyShotWithContext(activeProfile.openingShot, true);
@@ -751,18 +707,11 @@ public class DialogueCinematicController : MonoBehaviour
         /// orienta a NPC/player/compañeros hacia ese centro. Requiere <see cref="currentPlayer"/>
         /// y <see cref="currentNPC"/> ya asignados.
         ///
-        /// Extraído del cuerpo de <see cref="StartCinematic"/> (antes solo se ejecutaba ahí) para
-        /// poder reutilizarlo también desde la rama de "diálogo encadenado" de StartCinematic —
-        /// ver el FIX documentado junto a esa rama: sin volver a llamar a este
-        /// método ahí, un diálogo grupal encadenado (p.ej. tras un TeleportPlayer del mismo
-        /// NPCInteractiveNarrativeExecutor) heredaba el encuadre/posiciones calculados para la
-        /// ubicación del diálogo ANTERIOR en vez de la actual.
         /// </summary>
         private void SetupGroupConversationStaging()
         {
-            // Vista 3/4: perpendicular al eje player-NPC combinada con profundidad.
-            // Evaluamos ambos lados (perpendicular y -perpendicular) con raycast para elegir
-            // el que tenga más espacio libre (evita colocar la cámara detrás de paredes/puertas).
+            // Evaluamos ambos lados (perpendicular y -perpendicular) con raycast para elegir el
+            // que tenga más espacio libre (evita colocar la cámara detrás de paredes/puertas).
             Vector3 playerToNpc = currentNPC.position - currentPlayer.position;
             playerToNpc.y = 0f;
             if (playerToNpc.sqrMagnitude > 0.01f)
@@ -818,7 +767,7 @@ public class DialogueCinematicController : MonoBehaviour
                 {
                     if (m == null || ControlDelJugador.RepresentadoPorElJugador(m)) continue;
                     foreach (var r in m.GetComponentsInChildren<Renderer>(true))
-                        if (r != null) r.enabled = true;
+                        if (r != null) r.forceRenderingOff = false;
                     if (m.IsActiveInParty)
                     { initGroupCenter += m.transform.position; initCount++; }
                 }
@@ -905,11 +854,11 @@ public class DialogueCinematicController : MonoBehaviour
         /// <summary>
         /// Apaga el modo cinematográfico YA, sin esperar el período de gracia.
         ///
-        /// FIX 16 sep 2026. EndCinematic() no
-        /// apaga nada: lanza EndCinematicDelayed(), que espera `chainDialogueGracePeriod` (0,5 s en
-        /// Start.unity) por si viene otro diálogo encadenado. Durante ese medio segundo la cámara de
-        /// diálogo SIGUE SIENDO LA ACTIVA, congelada donde se quedó — y si ese último encuadre era
-        /// un plano corto del oyente, se ve su cabeza a bocajarro con el diálogo ya cerrado.
+        /// EndCinematic() no apaga nada: lanza EndCinematicDelayed(), que espera
+        /// `chainDialogueGracePeriod` (0,5 s en Start.unity) por si viene otro diálogo encadenado.
+        /// Durante ese medio segundo la cámara de diálogo SIGUE SIENDO LA ACTIVA, congelada donde se
+        /// quedó — y si ese último encuadre era un plano corto del oyente, se ve su cabeza a
+        /// bocajarro con el diálogo ya cerrado.
         ///
         /// Ese período de gracia tiene todo el sentido en una conversación suelta, donde no se sabe
         /// si viene otra detrás. Pero dentro de una secuencia cinemática SÍ se sabe: la secuencia
@@ -967,7 +916,6 @@ public class DialogueCinematicController : MonoBehaviour
             // Desactivar rendering forzado
             forceRenderingActive = false;
             
-            // Debug.Log($"[DialogueCinematicController] Componente Camera desactivado (era: {wasEnabled}, ahora: {dialogueCamera.enabled})");
         }
 
         // Reactivar la cámara de gameplay de Cinemachine (si existe)
@@ -995,7 +943,6 @@ public class DialogueCinematicController : MonoBehaviour
         if (mainUnityCamera != null && mainUnityCameraWasEnabled)
         {
             mainUnityCamera.enabled = true;
-            // Debug.Log($"[DialogueCinematicController] Cámara principal de Unity REACTIVADA");
         }
         mainUnityCamera = null;
         
@@ -1031,8 +978,7 @@ public class DialogueCinematicController : MonoBehaviour
         // Restaurar party members ocultos
         ShowAllPartyMembers();
 
-        // Liberar bystanders congelados y restaurar cualquier intruso oculto por la red de seguridad
-        UnfreezeBystanders();
+        // Restaurar cualquier intruso oculto por la red de seguridad
         RestoreAllHiddenIntruders();
 
         // Mostrar el HUD con fade suave
@@ -1045,8 +991,29 @@ public class DialogueCinematicController : MonoBehaviour
         currentLineIndex = 0;
     }
 
+    private static readonly List<Renderer> _bufferDeRenderers = new List<Renderer>();
+
+    /// Lo que se oculta de alguien que no debe salir en un plano: sus renderers, menos las partículas
+    /// que viven en el mundo aunque cuelguen de él (la lluvia y el clima siguen al jugador; si se
+    /// ocultaran con él, dejaría de llover en los planos en los que no sale). Ver INC-1325.
+    private static Renderer[] RenderersQueSeOcultan(Transform raiz)
+    {
+        _bufferDeRenderers.Clear();
+        foreach (var r in raiz.GetComponentsInChildren<Renderer>(true))
+        {
+            if (r is ParticleSystemRenderer && r.TryGetComponent(out ParticleSystem ps)
+                && ps.main.simulationSpace == ParticleSystemSimulationSpace.World) continue;
+            _bufferDeRenderers.Add(r);
+        }
+        return _bufferDeRenderers.ToArray();
+    }
+
     /// <summary>
-    /// Oculta visualmente al player para que no aparezca en los planos cinematográficos
+    /// Oculta visualmente al player para que no aparezca en los planos cinematográficos.
+    /// Todo lo que se oculta en los planos de diálogo (player, NPC, compañeros, intrusos) usa
+    /// <c>forceRenderingOff</c>, no <c>enabled</c>: las caras cambian ojos, bocas y símbolos
+    /// encendiendo sus renderers, y con <c>enabled</c> los ojos del que no sale en el plano
+    /// volvían a verse flotando delante de cámara. Ver INC-1325.
     /// </summary>
     private void HidePlayer()
     {
@@ -1056,13 +1023,13 @@ public class DialogueCinematicController : MonoBehaviour
         if (playerRenderers == null)
         {
             // Obtener todos los renderers del player (incluyendo hijos)
-            playerRenderers = currentPlayer.GetComponentsInChildren<Renderer>(true);
+            playerRenderers = RenderersQueSeOcultan(currentPlayer);
             playerRenderersWereEnabled = new bool[playerRenderers.Length];
             
             // Guardar estado original
             for (int i = 0; i < playerRenderers.Length; i++)
             {
-                playerRenderersWereEnabled[i] = playerRenderers[i].enabled;
+                playerRenderersWereEnabled[i] = playerRenderers[i].forceRenderingOff;
             }
         }
         
@@ -1071,7 +1038,7 @@ public class DialogueCinematicController : MonoBehaviour
         {
             if (playerRenderers[i] != null)
             {
-                playerRenderers[i].enabled = false;
+                playerRenderers[i].forceRenderingOff = true;
             }
         }
         
@@ -1096,7 +1063,7 @@ public class DialogueCinematicController : MonoBehaviour
             {
                 if (playerRenderers[i] != null)
                 {
-                    playerRenderers[i].enabled = playerRenderersWereEnabled[i];
+                    playerRenderers[i].forceRenderingOff = playerRenderersWereEnabled[i];
                 }
             }
             
@@ -1119,7 +1086,7 @@ public class DialogueCinematicController : MonoBehaviour
             {
                 if (renderer != null)
                 {
-                    renderer.enabled = true;
+                    renderer.forceRenderingOff = false;
                 }
             }
             
@@ -1147,13 +1114,13 @@ public class DialogueCinematicController : MonoBehaviour
         if (npcRenderers == null)
         {
             // Obtener todos los renderers del NPC (incluyendo hijos)
-            npcRenderers = currentNPC.GetComponentsInChildren<Renderer>(true);
+            npcRenderers = RenderersQueSeOcultan(currentNPC);
             npcRenderersWereEnabled = new bool[npcRenderers.Length];
             
             // Guardar estado original
             for (int i = 0; i < npcRenderers.Length; i++)
             {
-                npcRenderersWereEnabled[i] = npcRenderers[i].enabled;
+                npcRenderersWereEnabled[i] = npcRenderers[i].forceRenderingOff;
             }
         }
         
@@ -1162,7 +1129,7 @@ public class DialogueCinematicController : MonoBehaviour
         {
             if (npcRenderers[i] != null)
             {
-                npcRenderers[i].enabled = false;
+                npcRenderers[i].forceRenderingOff = true;
             }
         }
         
@@ -1187,7 +1154,7 @@ public class DialogueCinematicController : MonoBehaviour
             {
                 if (npcRenderers[i] != null)
                 {
-                    npcRenderers[i].enabled = npcRenderersWereEnabled[i];
+                    npcRenderers[i].forceRenderingOff = npcRenderersWereEnabled[i];
                 }
             }
             
@@ -1210,7 +1177,7 @@ public class DialogueCinematicController : MonoBehaviour
             {
                 if (renderer != null)
                 {
-                    renderer.enabled = true;
+                    renderer.forceRenderingOff = false;
                 }
             }
             
@@ -1234,12 +1201,12 @@ public class DialogueCinematicController : MonoBehaviour
 
         if (!Game.NPC.PlayerParty.HasInstance) return;
 
-        // FIX "compañero desaparece en diálogos 1:1": antes se ocultaba a CUALQUIER miembro
-        // activo del equipo sin comprobar distancia, así que un compañero siguiendo al jugador
-        // pero completamente fuera de plano (ej. Liam mientras se juega con Estela hablando con
-        // un tercer NPC) desaparecía igualmente durante toda la conversación aunque nunca
-        // pudiera bloquear la cámara. Solo ocultamos a quien esté lo bastante cerca del centro
-        // de la conversación como para representar un riesgo real de obstrucción.
+        // 1": antes se ocultaba a CUALQUIER miembro activo del equipo sin comprobar distancia,
+        // así que un compañero siguiendo al jugador pero completamente fuera de plano (ej. Liam
+        // mientras se juega con Estela hablando con un tercer NPC) desaparecía igualmente
+        // durante toda la conversación aunque nunca pudiera bloquear la cámara. Solo ocultamos
+        // a quien esté lo bastante cerca del centro de la conversación como para representar un
+        // riesgo real de obstrucción.
         Vector3 conversationCenter = (currentPlayer != null && currentNPC != null)
             ? (currentPlayer.position + currentNPC.position) * 0.5f
             : (currentPlayer != null ? currentPlayer.position : speaker.position);
@@ -1254,13 +1221,13 @@ public class DialogueCinematicController : MonoBehaviour
             // No ocultar a compañeros demasiado lejos de la conversación para bloquear la cámara
             if (Vector3.Distance(m.transform.position, conversationCenter) > nonSpeakingPartyHideRadius) continue;
 
-            var renderers = m.GetComponentsInChildren<Renderer>(true);
+            var renderers = RenderersQueSeOcultan(m.transform);
             foreach (var r in renderers)
             {
                 if (r == null) continue;
                 _hiddenPartyRenderers.Add(r);
-                _hiddenPartyRenderersOrigState.Add(r.enabled);
-                r.enabled = false;
+                _hiddenPartyRenderersOrigState.Add(r.forceRenderingOff);
+                r.forceRenderingOff = true;
             }
         }
 
@@ -1280,7 +1247,7 @@ public class DialogueCinematicController : MonoBehaviour
         for (int i = 0; i < _hiddenPartyRenderers.Count; i++)
         {
             if (_hiddenPartyRenderers[i] != null)
-                _hiddenPartyRenderers[i].enabled = _hiddenPartyRenderersOrigState[i];
+                _hiddenPartyRenderers[i].forceRenderingOff = _hiddenPartyRenderersOrigState[i];
         }
         _hiddenPartyRenderers.Clear();
         _hiddenPartyRenderersOrigState.Clear();
@@ -1291,60 +1258,10 @@ public class DialogueCinematicController : MonoBehaviour
     // ═══════════════════════════════════════════════════════════
 
     /// <summary>
-    /// Capa preventiva: detiene (HardStop sobre el NavMeshAgent, sin tocar su FSM) a los NPCs
-    /// ambientales dentro del radio de la conversación que no son el NPC principal, el player ni
-    /// party members. No interfiere con NPCs ya ocupados en su propio combate/cinemática/interacción.
-    /// Se llama al iniciar el diálogo y se refresca periódicamente desde LateUpdate.
-    /// </summary>
-    private void RescanAndFreezeBystanders()
-    {
-        if (currentPlayer == null) return;
-
-        Vector3 center = currentNPC != null
-            ? (currentPlayer.position + currentNPC.position) * 0.5f
-            : currentPlayer.position;
-
-        NPCAmbientRegistry.GetActiveNPCsInRadius(center, bystanderFreezeRadius, _nearbyBystanderBuffer);
-
-        for (int i = 0; i < _nearbyBystanderBuffer.Count; i++)
-        {
-            var npc = _nearbyBystanderBuffer[i];
-            if (npc == null) continue;
-            if (npc.transform == currentNPC || npc.transform == currentPlayer) continue;
-            if (IsPartyMember(npc.transform)) continue;
-
-            var ctx = npc.Context;
-            if (ctx != null && (ctx.IsInCombat || ctx.IsInCinematic || ctx.IsInteracting || ctx.WasDefeatedInCombat))
-                continue;
-
-            if (npc.Agent != null)
-                Game.NPC.Common.NavMeshAgentUtility.HardStop(npc.Agent);
-
-            if (_frozenBystanders.Add(npc))
-                _bystanderRootTransforms.Add(npc.transform);
-        }
-    }
-
-    /// <summary>
-    /// Libera a todos los bystanders congelados. No hace falta "reactivarlos" explícitamente:
-    /// HardStop solo tocó el NavMeshAgent, nunca su FSM, así que su propio estado (Wander/Idle)
-    /// retoma la navegación con normalidad en cuanto vuelve a evaluarse.
-    /// </summary>
-    private void UnfreezeBystanders()
-    {
-        _frozenBystanders.Clear();
-        _bystanderRootTransforms.Clear();
-    }
-
-    /// <summary>
     /// Capa reactiva (red de seguridad): comprueba si CUALQUIER collider —NPC ambiental, puerta,
     /// mobiliario animado, lo que sea— se ha metido entre la cámara y la cara de quien habla, y si
-    /// es así oculta sus renderers hasta que deje de bloquear. Garantiza que, aunque el congelado
-    /// preventivo de bystanders (que solo cubre NPCs) falle, llegue tarde, o directamente no
-    /// aplique porque el intruso no es un NPC, nunca se vea a alguien tapando la cámara.
-    /// Antes de Agosto 2026 esto solo miraba <see cref="_bystanderRootTransforms"/> y ni siquiera
-    /// se ejecutaba si no había NPCs ambientales fichados cerca — ver comentario de contexto más
-    /// arriba para el bug real que causaba (puertas cruzándose en cámara sin ser detectadas).
+    /// es así oculta sus renderers hasta que deje de bloquear. Garantiza que, aunque un vecino no se
+    /// aparte a tiempo o el intruso no sea un NPC, nunca se vea a alguien tapando la cámara.
     /// </summary>
     private void CheckAndHideCameraIntruders()
     {
@@ -1400,6 +1317,15 @@ public class DialogueCinematicController : MonoBehaviour
             _frameIntruders.Add(hideTarget);
         }
 
+        // Lo que tapa sin colliders (CameraOccluder) no sale en el SphereCast: se mira por su caja.
+        var tapanSinColliders = Kits.Core.CameraOccluder.Active;
+        for (int i = 0; i < tapanSinColliders.Count; i++)
+        {
+            var o = tapanSinColliders[i];
+            if (o == null || o.transform.IsChildOf(focusTarget)) continue;
+            if (o.Blocks(camPos, camPos + dir * castDist, intruderProbeRadius)) _frameIntruders.Add(o.transform);
+        }
+
         foreach (var intruder in _frameIntruders)
         {
             if (_hiddenIntruders.Add(intruder))
@@ -1430,13 +1356,13 @@ public class DialogueCinematicController : MonoBehaviour
     private void HideIntruderRenderers(Transform root)
     {
         if (root == null) return;
-        var renderers = root.GetComponentsInChildren<Renderer>(true);
+        var renderers = RenderersQueSeOcultan(root);
         for (int i = 0; i < renderers.Length; i++)
         {
             var r = renderers[i];
             if (r == null || _hiddenIntruderOrigState.ContainsKey(r)) continue;
-            _hiddenIntruderOrigState[r] = r.enabled;
-            r.enabled = false;
+            _hiddenIntruderOrigState[r] = r.forceRenderingOff;
+            r.forceRenderingOff = true;
         }
     }
 
@@ -1449,7 +1375,7 @@ public class DialogueCinematicController : MonoBehaviour
             var r = renderers[i];
             if (r != null && _hiddenIntruderOrigState.TryGetValue(r, out bool orig))
             {
-                r.enabled = orig;
+                r.forceRenderingOff = orig;
                 _hiddenIntruderOrigState.Remove(r);
             }
         }
@@ -1463,7 +1389,7 @@ public class DialogueCinematicController : MonoBehaviour
     {
         foreach (var kvp in _hiddenIntruderOrigState)
         {
-            if (kvp.Key != null) kvp.Key.enabled = kvp.Value;
+            if (kvp.Key != null) kvp.Key.forceRenderingOff = kvp.Value;
         }
         _hiddenIntruderOrigState.Clear();
         _hiddenIntruders.Clear();
@@ -1855,9 +1781,6 @@ public class DialogueCinematicController : MonoBehaviour
         /// </summary>
         private Vector3 CalculateCameraPosition(CinematicCameraShot shot, Transform target)
         {
-            // ── MODO CONVERSACIÓN GRUPAL ──
-            // Cámara estable en ángulo 3/4 que encuadra a todo el grupo,
-            // con ligero sesgo hacia el speaker actual.
             if (_isGroupConversation && target != null)
             {
                 // Centro del grupo incluyendo party members si están disponibles
@@ -2020,7 +1943,7 @@ public class DialogueCinematicController : MonoBehaviour
 
             Vector3 camPos;
             
-            // AJUSTE: Aumentar distancia mínima para alejar MUCHO MÁS todos los planos
+            // Aumentar distancia mínima para alejar MUCHO MÁS todos los planos
             // Aumentado especialmente para Player y Party Members (como Estela)
             float effectiveDistance = Mathf.Max(shot.Distance * 2.2f, 3.0f); // Multiplicador 2.2x y mínimo de 3m
 
@@ -2192,6 +2115,13 @@ public class DialogueCinematicController : MonoBehaviour
                     break;
             }
 
+            // ── Ángulo despejado (modo 1:1) ──
+            // Antes de acercar la cámara a lo que tape, se prueba a girarla alrededor de quien habla
+            // (a la misma distancia, nunca menos de dialogueCameraMinDistance) hasta encontrar una
+            // vista limpia de su cara, contando también lo que tapa sin colliders (CameraOccluder,
+            // p. ej. un carro). Solo si no hay ninguna se acerca, como siempre. Ver INC-1331.
+            camPos = AnguloDespejado(target, camPos, Mathf.Max(shot.Height, 1.2f));
+
             // ── Evitar obstrucciones (modo 1:1) ──
             // Si hay geometría (muro, árbol, roca...) entre el personaje y la posición calculada
             // de cámara, acercamos la cámara hasta justo delante del obstáculo. Sin esto, la cámara
@@ -2240,18 +2170,17 @@ public class DialogueCinematicController : MonoBehaviour
             // speaker/player/NPC/party, la alejamos en pasos cortos hasta liberarse (tope de
             // seguridad para no huir indefinidamente si la sala entera es estrecha).
             {
-                // FIX 5 sep 2026 ("seguimos viendo la cabeza de Will con el Pirata" - recurrencia
-                // tras el fix del 4 sep): aquel fix hizo que un compañero SÍ cuente como obstrucción
-                // en diálogos 1:1 (correcto), pero el retroceso de aquí seguía calculando la
-                // dirección de escape alejándose del TARGET encuadrado (p.ej. el Pirata), no del
-                // obstáculo real. Un compañero suele estar de pie cerca del jugador, justo en el
-                // lado hacia el que mira esta cámara (target → jugador) - así que "alejarse del
-                // target" empujaba la cámara MÁS adentro de su cabeza en vez de sacarla, y tras
-                // agotar los pasos sin éxito no había ningún último recurso (a diferencia del modo
-                // grupal, que sí eleva la cámara si el retroceso lateral no basta). Ahora nos
-                // alejamos del propio obstáculo detectado (recalculando cada paso, por si al
-                // apartarnos rozamos otro collider distinto), y si aun así no basta, elevamos la
-                // cámara por encima de las cabezas como último recurso, igual que en modo grupal.
+                // Un compañero SÍ cuenta como obstrucción en diálogos 1:1
+                // (correcto), pero el retroceso de aquí seguía calculando la dirección de escape
+                // alejándose del TARGET encuadrado (p.ej. el Pirata), no del obstáculo real. Un
+                // compañero suele estar de pie cerca del jugador, justo en el lado hacia el que mira
+                // esta cámara (target → jugador) - así que "alejarse del target" empujaba la cámara
+                // MÁS adentro de su cabeza en vez de sacarla, y tras agotar los pasos sin éxito no
+                // había ningún último recurso (a diferencia del modo grupal, que sí eleva la cámara
+                // si el retroceso lateral no basta). Ahora nos alejamos del propio obstáculo
+                // detectado (recalculando cada paso, por si al apartarnos rozamos otro collider
+                // distinto), y si aun así no basta, elevamos la cámara por encima de las cabezas
+                // como último recurso, igual que en modo grupal.
                 const int maxLateralBackoffSteps = 6;
                 const float lateralBackoffStep = 0.2f;
                 float embedCheckRadius = dialogueCameraSelfClearance * 0.6f;
@@ -2305,6 +2234,56 @@ public class DialogueCinematicController : MonoBehaviour
             return camPos;
         }
 
+        private static readonly float[] s_girosDeLaCamaraDeCharla = { 0f, 25f, -25f, 50f, -50f, 75f, -75f, 100f, -100f };
+
+        // Gira la cámara alrededor de 'target' hasta que ve su cabeza sin nada en medio; si ningún
+        // giro lo consigue, la deja como estaba.
+        private Vector3 AnguloDespejado(Transform target, Vector3 camPos, float alturaDeLaCabeza)
+        {
+            Vector3 cabeza = target.position + Vector3.up * alturaDeLaCabeza;
+            Vector3 plano = camPos - target.position;
+            float alto = plano.y;
+            plano.y = 0f;
+            float distancia = plano.magnitude;
+            if (distancia < 0.01f) return camPos;
+            Vector3 rumbo = plano / distancia;
+            distancia = Mathf.Max(distancia, dialogueCameraMinDistance);
+            for (int i = 0; i < s_girosDeLaCamaraDeCharla.Length; i++)
+            {
+                Vector3 prueba = target.position + Quaternion.Euler(0f, s_girosDeLaCamaraDeCharla[i], 0f) * rumbo * distancia;
+                prueba.y = target.position.y + alto;
+                if (VistaDespejada(prueba, cabeza, target)) return prueba;
+            }
+            return camPos;
+        }
+
+        // Nada entre la cámara y la cabeza salvo el reparto de la charla (los compañeros solo no
+        // cuentan en las charlas de grupo), ni la cámara metida en algo.
+        private bool VistaDespejada(Vector3 cam, Vector3 cabeza, Transform target)
+        {
+            Vector3 d = cabeza - cam;
+            float largo = d.magnitude;
+            if (largo < 0.1f) return true;
+            d /= largo;
+            float tramo = largo - dialogueCameraSelfClearance;
+            if (tramo > 0f)
+            {
+                int n = Physics.SphereCastNonAlloc(cam, groupCameraProbeRadius * 0.5f, d, _groupCamProbeBuffer, tramo,
+                    _camObstructionMask, QueryTriggerInteraction.Ignore);
+                for (int i = 0; i < n; i++)
+                {
+                    var col = _groupCamProbeBuffer[i].collider;
+                    if (col == null) continue;
+                    Transform root = col.transform.root;
+                    if (root == target || root == currentPlayer || root == currentNPC) continue;
+                    if (_isGroupConversation && IsPartyMember(root)) continue;
+                    return false;
+                }
+            }
+            if (Kits.Core.CameraOccluder.AnyBlocks(cam, cabeza, 0.15f, target)) return false;
+            return !CameraPositionIsEmbedded(cam, dialogueCameraSelfClearance * 0.6f, target);
+        }
+
         /// <summary>
         /// Comprueba si <paramref name="pos"/> se solapa con geometría sólida que no sea el propio
         /// speaker/player/NPC principal/party (ver comentario en el bloque que la llama, dentro de
@@ -2320,7 +2299,7 @@ public class DialogueCinematicController : MonoBehaviour
         /// Igual que <see cref="CameraPositionIsEmbedded(Vector3, float, Transform)"/> pero además
         /// devuelve en <paramref name="obstructionPos"/> la posición (root) del obstáculo detectado,
         /// para que quien llame pueda apartar la cámara alejándose de ÉL en vez de alejarse a ciegas
-        /// del target encuadrado (ver FIX 5 sep 2026 en el llamador, más abajo).
+        /// del target encuadrado.
         /// </summary>
         private bool CameraPositionIsEmbedded(Vector3 pos, float radius, Transform target, out Vector3 obstructionPos)
         {
@@ -2372,8 +2351,7 @@ public class DialogueCinematicController : MonoBehaviour
 
         /// <summary>
         /// Evalúa ambos lados perpendiculares al eje player-NPC y devuelve la dirección
-        /// con más espacio libre (raycast). Combina la perpendicular elegida con un sesgo
-        /// de profundidad (0.3 × playerToNpc) para obtener la vista 3/4.
+        /// con más espacio libre (raycast).
         /// </summary>
         private Vector3 PickBestGroupCameraDirection(Vector3 perpendicular, Vector3 playerToNpc)
         {
@@ -2527,7 +2505,7 @@ public class DialogueCinematicController : MonoBehaviour
     /// Incluye el NPC de Will cuando otro va al mando (<see cref="ControlDelJugador.NpcDe"/>): no
     /// pasa por NPCPartyMember.JoinParty() ni vive en PlayerParty.Members, y sin contarlo aquí
     /// CheckAndHideCameraIntruders le apagaría los renderers como a cualquier intruso al cruzarse
-    /// ante la cámara, y RescanAndFreezeBystanders lo congelaría como viandante de fondo.
+    /// ante la cámara.
     /// </summary>
     private bool IsPartyMember(Transform t)
     {

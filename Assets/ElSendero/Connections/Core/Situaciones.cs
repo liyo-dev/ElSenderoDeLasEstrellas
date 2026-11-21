@@ -10,4 +10,12 @@ public static class Situaciones
 
     /// Hay al menos una cinemática en marcha (<see cref="CinematicSequencerBase"/>).
     public const string Cinematica = "cinematica";
+    /// Hay una conversación abierta en la caja de diálogo (<see cref="DialogueManager"/>).
+    public const string Dialogo = "dialogo";
+
+    /// El grupo va en sigilo, siguiendo a alguien sin que le vea (<see cref="SigiloDelGrupo"/>).
+    public const string Sigilo = "sigilo";
+    /// Se juega una prueba que no para (una huida a ritmo, como el Templo del Coro): no se abren los
+    /// menús rápidos, que un toque sin querer en mitad de un cambio de personaje deja vendido al jugador.
+    public const string PruebaSinPausa = "prueba_sin_pausa";
 }

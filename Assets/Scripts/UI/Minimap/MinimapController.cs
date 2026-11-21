@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -71,7 +72,7 @@ public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
              "espuma, profundidad calculada a partir de la textura de profundidad de la propia cámara) " +
              "que, vistos desde la cámara ortográfica del minimapa, se leen como una " +
              "mancha plana sin detalle — y si el terreno de alrededor queda por debajo del nivel del mar " +
-             "en algún punto, esa mancha puede llegar a tapar terreno e iconos (INC-197, 12 sept 2026). " +
+             "en algún punto, esa mancha puede llegar a tapar terreno e iconos (INC-197). " +
              "Con esto activo, mientras renderiza esta cámara se sustituye el material de esas superficies " +
              "por uno plano y simple (Resources/Shaders/Mat_MinimapAgua), pensado para leerse bien desde " +
              "arriba, sin tocar su aspecto en la cámara principal.")]
@@ -170,6 +171,12 @@ public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
             if (minimapImage != null)
                 minimapImage.texture = renderTexture;
         }
+
+        // Desde la altura de esta cámara ninguna sombra cae dentro de la distancia de sombras de la calidad,
+        // así que el minimapa nunca las enseña: sin pedirlas, URP no rehace el mapa de sombras para ella en
+        // cada fotograma. Ver INC-1339.
+        var datosDeCamara = minimapCamera.GetUniversalAdditionalCameraData();
+        if (datosDeCamara != null) datosDeCamara.renderShadows = false;
 
         // La cámara siempre mira hacia abajo
         minimapCamera.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
@@ -354,13 +361,13 @@ public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
     }
 
     // ── Niebla global desactivada solo mientras renderiza esta cámara ──────────
-    // RenderSettings.fog es un estado GLOBAL (no existe culling mask para niebla), así
-    // que sin esto la niebla de lluvia/tormenta/niebla de DayNightCycle (rainFogDensityMultiplier,
-    // etc.) se aplicaba también al minimapa. Al ser una cámara ortográfica top-down con altura
-    // fija (cameraHeight), la distancia cámara-suelo es prácticamente constante en toda la
-    // imagen — a diferencia de la cámara principal, donde la niebla degrada con la distancia,
-    // aquí toda la textura del minimapa se "blanqueaba" de golpe y uniformemente en cuanto subía
-    // la densidad de niebla (INC: minimapa en blanco durante la lluvia, 1 sep 2026).
+    // RenderSettings.fog es un estado GLOBAL (no existe culling mask para niebla), así que sin
+    // esto la niebla de lluvia/tormenta/niebla de DayNightCycle (rainFogDensityMultiplier, etc.)
+    // se aplicaba también al minimapa. Al ser una cámara ortográfica top-down con altura fija
+    // (cameraHeight), la distancia cámara-suelo es prácticamente constante en toda la imagen — a
+    // diferencia de la cámara principal, donde la niebla degrada con la distancia, aquí toda la
+    // textura del minimapa se "blanqueaba" de golpe y uniformemente en cuanto subía la densidad de
+    // niebla.
     void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
     {
         if (camera != minimapCamera) return;

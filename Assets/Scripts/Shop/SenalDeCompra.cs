@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Avisa al grafo narrativo cuando el jugador compra un objeto concreto (INC-436).
 ///

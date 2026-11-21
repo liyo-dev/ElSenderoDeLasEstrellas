@@ -62,6 +62,12 @@ namespace Game.NPC.Combate
 
         [Tooltip("El jugador puede devolverla con la B. Si el jugador abusa de la B, el cerebro prefiere las que no.")]
         public bool sePuedeDevolver = true;
+
+        [Tooltip("Es magia de un elemento: rompe el escudo del jugador de su mismo color y deja al personaje aturdido 2 s. Apagado = lo que diga el proyectil (sin elemento, solo empuja).")]
+        public bool conElemento;
+
+        [Tooltip("Elemento de la magia (también tiñe la bola de su color).")]
+        public MagicElement elemento = MagicElement.Fire;
     }
 
     /// <summary>Cómo se defiende.</summary>
@@ -86,6 +92,12 @@ namespace Game.NPC.Combate
         [Min(0f), Tooltip("Segundos hasta poder volver a levantarlo.")]
         public float enfriamientoDelEscudo = 8f;
 
+        [Tooltip("El escudo es elemental: solo lo rompe el elemento que dicta RuptoresDeEscudo (el de su mismo elemento); lo demás rebota. Apagado = escudo común, que para todo.")]
+        public bool escudoElemental;
+
+        [Tooltip("Elemento del escudo elemental.")]
+        public MagicElement elementoDelEscudo = MagicElement.Storm;
+
         [Tooltip("Con poco maná busca cobertura de verdad (comprobada con rayos) para recargar.")]
         public bool cubrirseParaRecargar = true;
 
@@ -94,6 +106,15 @@ namespace Game.NPC.Combate
 
         [Min(1f), Tooltip("Multiplica la recarga de maná mientras está a cubierto.")]
         public float recargaACubierto = 1.5f;
+
+        [Range(0f, 1f), Tooltip("Cuánto aprende del hechizo que el jugador repite: si lanza el mismo varias veces seguidas, lo esquiva y se protege de él más a menudo (0 = no lo nota).")]
+        public float leerLaRepeticion = 0f;
+
+        [Min(2), Tooltip("Lanzamientos del mismo hechizo, dentro de la ventana, a partir de los que empieza a leerlo.")]
+        public int repeticionesParaLeerla = 3;
+
+        [Min(3f), Tooltip("Segundos que mira hacia atrás para contar lanzamientos del mismo hechizo.")]
+        public float segundosDeRepeticion = 12f;
     }
 
     /// <summary>Carácter: cuánto arriesga, cuánto se mueve, cuánto espera.</summary>
@@ -129,14 +150,64 @@ namespace Game.NPC.Combate
 
         [Range(1, 4), Tooltip("Cuántos del grupo pueden atacar al mismo objetivo a la vez (NPCAttackCoordinator). Los demás rodean.")]
         public int atacantesALaVez = 1;
+        [Range(0f, 1f), Tooltip("Contra un escudo mantenido: con movilidad o dificultad desde este valor da vueltas continuas alrededor del objetivo; por debajo, flanquea una vez y espera a que lo baje.")]
+        public float umbralDeVueltasContinuas = 0.8f;
+
+        [Tooltip("Adapta sus ataques a la defensa del jugador: con el escudo mantenido deja de lanzar lo devolvible y rodea, y usa menos lo que le devuelven. Apagado = lanza igual (lecciones, entrenamientos).")]
+        public bool leeLaDefensaDelJugador = true;
     }
 
-    /// <summary>Hueco para las fases de un combate (etapa E3). Todavía no tiene efecto.</summary>
+    /// <summary>
+    /// Una fase del combate a partir de la segunda: cuando la vida baja de <see cref="desdeVida"/>,
+    /// el NPC hace una transición que se lee (se para, es invulnerable, dice su frase, hace su gesto
+    /// y, si se pide, sacude la pantalla) y sigue peleando con otro catálogo, carácter o defensas.
+    /// El golpe que cruza el umbral se queda en él: ninguna fase se salta de un solo golpe.
+    /// </summary>
     [Serializable]
     public sealed class FaseDeCombate
     {
-        public string nombre;
-        [Range(0f, 1f)] public float desdeVida = 0.5f;
+        [Tooltip("Nombre para depurar (sale en el Inspector del cerebro).")]
+        public string nombre = "Fase";
+
+        [Range(0.05f, 0.95f), Tooltip("Fracción de vida a la que empieza esta fase.")]
+        public float desdeVida = 0.5f;
+
+        [Header("Qué cambia")]
+        [Tooltip("Ataques desde esta fase. Vacío = sigue con los de antes.")]
+        public List<AccionDeCombate> acciones = new List<AccionDeCombate>();
+
+        [Tooltip("Cambia el carácter por el de abajo.")]
+        public bool cambiaCaracter;
+        public CaracterDeCombate caracter = new CaracterDeCombate();
+
+        [Tooltip("Cambia las defensas por las de abajo.")]
+        public bool cambiaDefensas;
+        public DefensasDeCombate defensas = new DefensasDeCombate();
+
+        [Range(-1f, 1f), Tooltip("Dificultad desde esta fase (negativa = la de antes).")]
+        public float dificultad = -1f;
+
+        [Header("Transición")]
+        [Min(0f), Tooltip("Segundos de la transición: quieto, invulnerable y sin atacar.")]
+        public float segundosDeTransicion = 1.5f;
+
+        [Tooltip("Estado del Animator (capa de medio cuerpo) que hace al cambiar. Vacío = ninguno.")]
+        public string animacion = "";
+
+        [Tooltip("Clave de localización de la frase que dice al cambiar (bocadillo). Vacía = usa el texto.")]
+        public string claveDeFrase = "";
+
+        [TextArea(1, 3), Tooltip("Frase que dice al cambiar, si la clave no está traducida. Vacía = no dice nada.")]
+        public string frase = "";
+
+        [Tooltip("La frase sale en la caja de diálogo y la transición espera a que el jugador la cierre (explicaciones de un combate de entrenamiento). Apagado = bocadillo.")]
+        public bool fraseEnCaja;
+
+        [Tooltip("Sacudida de cámara y destello al acabar la transición.")]
+        public bool sacudida = true;
+
+        [Range(0f, 1f), Tooltip("Recupera vida hasta esta fracción al acabar la transición (0 = nada).")]
+        public float recuperaVidaHasta = 0f;
     }
 
     /// <summary>Hueco para las afinidades de elemento (etapa posterior). Todavía no tiene efecto.</summary>
@@ -165,10 +236,10 @@ namespace Game.NPC.Combate
         [Range(0f, 1f), Tooltip("Dificultad: reflejos, rapidez al decidir, puntería en la decisión y pausas entre ataques.")]
         public float dificultad = 0.6f;
 
-        [Header("Sin efecto todavía")]
-        [Tooltip("Fases del combate (etapa E3).")]
+        [Tooltip("Fases a partir de la segunda, de más vida a menos. La primera es lo de arriba.")]
         public List<FaseDeCombate> fases = new List<FaseDeCombate>();
 
+        [Header("Sin efecto todavía")]
         [Tooltip("Afinidades de elemento (etapa posterior).")]
         public List<AfinidadDeCombate> afinidades = new List<AfinidadDeCombate>();
     }

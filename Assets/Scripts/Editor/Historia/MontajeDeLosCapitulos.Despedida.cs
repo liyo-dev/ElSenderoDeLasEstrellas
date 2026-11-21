@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// La despedida del pueblo y el viaje a pie hasta la aldea del mar (INC-967).
@@ -128,12 +129,12 @@ public static partial class MontajeDeLosCapitulos
         const string vieja = "pieza-npc_eldran-backtousual-cap-23-espera-en-la-salida-del-pueblo-cap3-camino";
         var g = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(ruta);
         if (g == null || g.FindNode(vieja) is not ActorStateNode pieza) return;
-        string siguiente = pieza.outputs != null && pieza.outputs.Count > 0 ? pieza.outputs[0] : string.Empty;
+        string siguiente = pieza.Outputs != null && pieza.Outputs.Count > 0 ? pieza.Outputs[0] : string.Empty;
         foreach (var n in g.nodes)
         {
-            if (n?.outputs == null) continue;
-            for (int i = 0; i < n.outputs.Count; i++)
-                if (n.outputs[i] == vieja) n.outputs[i] = siguiente;
+            if (n?.Outputs == null) continue;
+            for (int i = 0; i < n.Outputs.Count; i++)
+                if (n.Outputs[i] == vieja) n.Outputs[i] = siguiente;
         }
         g.nodes.Remove(pieza);
         EditorUtility.SetDirty(g);
@@ -147,14 +148,14 @@ public static partial class MontajeDeLosCapitulos
         P("adios-hablar", "3.0 · Hablar con Eldran en la salida del pueblo (probar desde aquí)", Hablar(Eldran)),
         P("adios", "3.0 · Cinemática: la despedida («es un hasta pronto»)", Cinematica("CAP3_DESPEDIDA")),
         P("adios-paso", "Paso: reunirse con Eldran (cierra «Hora de partir»)", Completar(MisionPartir, "CAP2_ADIOS_ELDRAN", cerrar: true)),
-        P("mision", "Misión: las marcas de hierro (aviso de misión nueva)", new StartQuestNode { questId = MisionCap3, noGiver = true }),
+        P("mision", "Misión: las marcas de hierro (aviso de misión nueva)", new StartQuestNode { QuestId = MisionCap3, NoGiver = true }),
         P("camino", "3.1 · Camino del puerto, a pie (probar desde aquí)", Emitir(SD.Camino)),
         P("camino-punto", "3.1 · Punto de guardado: la salida del pueblo", Punto("CAP3_SALIDA", MarcaWillSalida)),
         // A mitad de camino salta el interludio de Tobías y se sigue andando, sin rótulos ni cambio de hora.
         P("acampada-llega", "3.1 · Pasa por la mitad del camino", Esperar(SD.Acampada)),
-        P("espejo-carga", "3.1 · Interludio: carga la torre de Liam (probar desde aquí)", new AdditiveSceneNode { operacion = AdditiveSceneNode.Operacion.Cargar, sceneName = "TorreDeLiam", waitForCompletion = true }),
+        P("espejo-carga", "3.1 · Interludio: carga la torre de Liam (probar desde aquí)", new AdditiveSceneNode { Operation = AdditiveSceneNode.Operacion.Cargar, SceneName = "TorreDeLiam", WaitForCompletion = true }),
         P("espejo", "3.1 · Cinemática: Tobías en el espejo", Cinematica("CAP3_ESPEJO")),
-        P("espejo-descarga", "3.1 · Descarga la torre de Liam", new AdditiveSceneNode { operacion = AdditiveSceneNode.Operacion.Descargar, sceneName = "TorreDeLiam", waitForCompletion = true }),
+        P("espejo-descarga", "3.1 · Descarga la torre de Liam", new AdditiveSceneNode { Operation = AdditiveSceneNode.Operacion.Descargar, SceneName = "TorreDeLiam", WaitForCompletion = true }),
         P("camino-destapa", "3.1 · Se destapa la pantalla y se sigue andando", Destapar()),
         P("camino-punto2", "3.1 · Punto de guardado: a mitad del camino", Punto("CAP3_ACAMPADA_CAMINO", MarcaAcampadaCamino)),
     };
@@ -174,29 +175,29 @@ public static partial class MontajeDeLosCapitulos
         if (completar == null || oliverDlg == null || join == null || punto == null)
         { informe.AppendLine("AVISO: el Cap. 2 no tiene los nodos de la despedida que esperaba; no lo toco."); return; }
 
-        var cap2 = new Capitulo { Etiqueta = "Cap2", Ruta = RutaCap2, Prefijo = "", Nombre = completar.chapter };
-        Vector2 sitio = completar.position;
+        var cap2 = new Capitulo { Etiqueta = "Cap2", Ruta = RutaCap2, Prefijo = "", Nombre = completar.Chapter };
+        Vector2 sitio = completar.Position;
         Poner(g, cap2, "cap2-adios-senal", "26d.- «Ve a despedirte» (señal)", sitio + new Vector2(0f, 200f),
             Emitir(SenalADespedirse), new List<string> { "cap2-adios-mision" });
         Poner(g, cap2, "cap2-adios-mision", "26e.- Misión: hora de partir", sitio + new Vector2(380f, 200f),
-            new StartQuestNode { questId = MisionPartir, noGiver = true }, new List<string> { "cap2-despedida-oliver-talk" });
-        Poner(g, cap2, "cap2-adios-paso-oliver", "29.- Paso: despedirse de Oliver", oliverDlg.position + new Vector2(260f, 0f),
-            Completar(MisionPartir, "CAP2_ADIOS_OLIVER"), new List<string> { join.guid });
-        completar.outputs = new List<string> { "cap2-adios-senal" };
-        oliverDlg.outputs = new List<string> { "cap2-adios-paso-oliver" };
-        oliverDlg.displayTitle = "28.- Oliver: nos vemos pronto";
-        join.displayTitle = "33.- Cap. 2 completado - Eldran espera en la salida del pueblo";
+            new StartQuestNode { QuestId = MisionPartir, NoGiver = true }, new List<string> { "cap2-despedida-oliver-talk" });
+        Poner(g, cap2, "cap2-adios-paso-oliver", "29.- Paso: despedirse de Oliver", oliverDlg.Position + new Vector2(260f, 0f),
+            Completar(MisionPartir, "CAP2_ADIOS_OLIVER"), new List<string> { join.Guid });
+        completar.Outputs = new List<string> { "cap2-adios-senal" };
+        oliverDlg.Outputs = new List<string> { "cap2-adios-paso-oliver" };
+        oliverDlg.DisplayTitle = "28.- Oliver: nos vemos pronto";
+        join.DisplayTitle = "33.- Cap. 2 completado - Eldran espera en la salida del pueblo";
         Sendero.Narrative.Editor.ArranqueDeLasPruebas.FijarAncla(punto, MarcaWillSalida);
 
         // La despedida de Eldran ya no es aquí: es la cinemática de la salida (Cap. 3).
         var fuera = new[] { "cap2-despedida-fork", "cap2-despedida-espera", "cap2-despedida-oliver-hecha",
                             "cap2-despedida-eldran-talk", "cap2-despedida-eldran-dlg", "cap2-despedida-eldran-hecha" };
-        int quitados = g.nodes.RemoveAll(n => n != null && fuera.Contains(n.guid));
+        int quitados = g.nodes.RemoveAll(n => n != null && fuera.Contains(n.Guid));
         EditorUtility.SetDirty(g);
         foreach (var n in g.nodes)
-            foreach (var s in n.outputs)
+            foreach (var s in n.Outputs)
                 if (!string.IsNullOrEmpty(s) && g.FindNode(s) == null)
-                    informe.AppendLine($"ERROR · Cap2: «{n.displayTitle}» lleva a «{s}», que no existe.");
+                    informe.AppendLine($"ERROR · Cap2: «{n.DisplayTitle}» lleva a «{s}», que no existe.");
         informe.AppendLine($"Cap. 2: despedida en la salida del pueblo ({quitados} nodos de la despedida anterior retirados).");
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Emite una señal narrativa en este instante de la secuencia, para que el mundo reaccione dentro
 /// del plano (un portal que se abre, una barrera que cae) en vez de al terminar la escena. Lo que

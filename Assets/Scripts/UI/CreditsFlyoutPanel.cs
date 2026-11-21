@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Panel de créditos "rápido" para el MainMenu: al pulsar CRÉDITOS, en vez de cargar la escena
@@ -42,11 +43,6 @@ public class CreditsFlyoutPanel : MonoBehaviour
     [Header("Contenido")]
     [TextArea(10, 60)]
     [SerializeField] string creditsText =
-        // Raúl pidió quitar su nombre de los créditos y seguía apareciendo
-        // — estaba también duplicado en CreditsSceneController.cs (el crawl completo de
-        // Credits.unity), así que había que editar los dos sitios a la vez para que
-        // desapareciera de verdad en ambas pantallas de créditos (el panel rápido de pausa y
-        // el crawl cinemático final).
         "Créditos de assets\n\n\n\n" +
         "VFX\n\n" +
         "Matthew Guz - Spell Area of Effect, Orbs Effects\n\n" +
@@ -255,9 +251,9 @@ public class CreditsFlyoutPanel : MonoBehaviour
 
     Button FindCreditsButton()
     {
-        // FIX (16 ago 2026, ver comentario en Start()): FindObjectsInactive.Include en vez del
-        // valor por defecto (Exclude) — el botón puede estar temporalmente inactivo (panel de
-        // menú aún no revelado por su animación de entrada) en el frame en que se busca.
+        // FindObjectsInactive.Include en vez del valor por defecto (Exclude) — el botón puede
+        // estar temporalmente inactivo (panel de menú aún no revelado por su animación de
+        // entrada) en el frame en que se busca.
         //
         // "el botón CRÉDITOS del MainMenu ya no abre nada". El footer de
         // ESTE MISMO panel (BuildFooter(), más abajo) tiene el texto "Ver créditos completos >>",
@@ -532,15 +528,14 @@ public class CreditsFlyoutPanel : MonoBehaviour
         closeLabel.margin = Vector4.zero;
         closeLabel.raycastTarget = false;
         _closeLabel = closeLabel;
-        // FIX (24 ago 2026, tras varias rondas a ojo que no cuadraban del todo — ver historial: primero
-        // se cambió a VerticalAlignmentOptions.Capline porque Center vertical se basa en el
+        // Primero se cambió a VerticalAlignmentOptions.Capline porque Center vertical se basa en el
         // ascender/descender completo de la fuente y no en la altura real del glifo; luego, en
-        // BugReportFlyoutPanel, se añadió además un desplazamiento horizontal fijo de -6 calibrado a
-        // ojo contra una captura — pero con otra captura posterior la "X" seguía sin verse centrada).
-        // En vez de seguir afinando constantes a mano, se mide la tinta renderizada de verdad: se fuerza
-        // el mesh de TMP y se centra el RectTransform según el bounds real del glifo, no según sus
-        // métricas de fuente (avance de carácter / cap height, que no coinciden exactamente con los
-        // píxeles pintados). Válido para cualquier fuente o carácter sin tener que recalibrar a mano.
+        // BugReportFlyoutPanel, se añadió además un desplazamiento horizontal fijo de -6 calibrado a ojo
+        // contra una captura — pero con otra captura posterior la "X" seguía sin verse centrada). En vez
+        // de seguir afinando constantes a mano, se mide la tinta renderizada de verdad: se fuerza el
+        // mesh de TMP y se centra el RectTransform según el bounds real del glifo, no según sus métricas
+        // de fuente (avance de carácter / cap height, que no coinciden exactamente con los píxeles
+        // pintados). Válido para cualquier fuente o carácter sin tener que recalibrar a mano.
         CenterGlyphOnRenderedInk(closeLabel);
 
         var closeIconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
@@ -671,15 +666,13 @@ public class CreditsFlyoutPanel : MonoBehaviour
     // métricas de la fuente (avance de carácter, cap height, ascender/descender) que usa
     // TextAlignmentOptions y que no siempre coinciden con los píxeles visibles de un glifo concreto
     // — evita tener que recalibrar constantes a mano cada vez que cambia la fuente o el carácter.
-    // FIX (24 ago 2026, ver BugReportFlyoutPanel.cs — mismo bug, "la X primero sale mal y al hacer
-    // click se pone bien"): esto se llama en el mismo Awake() en el que se acaba de añadir el
-    // CanvasScaler del panel, que todavía no ha calculado su escala real en ese instante (Unity lo
-    // hace en su propio paso de actualización de Canvas, no de forma síncrona al añadir el
-    // componente) — medir aquí sin más se hacía contra un canvas a medio asentar, y cualquier
-    // interacción posterior forzaba de paso una actualización de canvas que dejaba ver la posición
-    // "real", pero el desplazamiento ya aplicado una vez con datos viejos se quedaba mal para
-    // siempre. `Canvas.ForceUpdateCanvases()` fuerza esa actualización pendiente de forma síncrona
-    // ANTES de medir.
+    // Esto se llama en el mismo Awake() en el que se acaba de añadir el CanvasScaler del panel, que
+    // todavía no ha calculado su escala real en ese instante (Unity lo hace en su propio paso de
+    // actualización de Canvas, no de forma síncrona al añadir el componente) — medir aquí sin más
+    // se hacía contra un canvas a medio asentar, y cualquier interacción posterior forzaba de paso
+    // una actualización de canvas que dejaba ver la posición "real", pero el desplazamiento ya
+    // aplicado una vez con datos viejos se quedaba mal para siempre. `Canvas.ForceUpdateCanvases()`
+    // fuerza esa actualización pendiente de forma síncrona ANTES de medir.
     static void CenterGlyphOnRenderedInk(TextMeshProUGUI label)
     {
         Canvas.ForceUpdateCanvases();

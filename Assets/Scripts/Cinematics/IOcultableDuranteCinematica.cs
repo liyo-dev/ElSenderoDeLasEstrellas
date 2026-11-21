@@ -13,7 +13,6 @@ public interface IOcultableDuranteCinematica
     /// liberarlo después sin afectar a los demás.
     void Ocultar(object quien);
 
-    /// Libera la petición de la clave que pidió esconderlo.
     void Mostrar(object quien);
 }
 

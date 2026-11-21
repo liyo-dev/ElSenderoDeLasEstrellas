@@ -138,7 +138,7 @@ public class EnvironmentController : MonoBehaviour
     void HandleSceneLoaded(Scene scene, LoadSceneMode __) => OnSceneChanged(scene.name);
 
     // Escenas que no son mundo de juego: nunca deben heredar el skybox/ambient "congelado" de la
-    // última vez que estuvimos en exterior/interior (ver FIX en OnSceneChanged más abajo).
+    // última vez que estuvimos en exterior/interior.
     static readonly string[] NonGameplaySceneNames =
     {
         "MainMenu", "Credits", "CharacterCreator", "LoadingScreen", "SplashScreen"
@@ -150,7 +150,7 @@ public class EnvironmentController : MonoBehaviour
         _cinematicReapplyPending = false;
 
         // este objeto es
-        // DontDestroyOnLoad y, antes de este fix, _mode nunca se reseteaba entre escenas —
+        // DontDestroyOnLoad, así que _mode se resetea al cambiar de escena (si no, nunca se reseteaba) —
         // solo el _needReapply de abajo decidía si tocar RenderSettings o no. Al volver al
         // MainMenu (p.ej. tras morir e ir a GameOverManager.TransitionToMainMenu()), _mode
         // seguía siendo Interior/Exterior de la última sesión de juego, así que en cuanto
@@ -434,7 +434,7 @@ public class EnvironmentController : MonoBehaviour
         }
 
         // al igual que en ApplyInteriorTo/ForceApplyInteriorTo, gestionar la visibilidad
-        // de zonas también en el flujo cinemático. Antes de este fix, entrar en un interior
+        // de zonas también en el flujo cinemático. Sin esto, entrar en un interior
         // "por secuencia" (ej: TabernaSequencer, que nunca pasa por TeleportService/ApplyInterior)
         // dejaba el skybox/color de cámara correctos pero NO ocultaba zonesToHideOnEnter ni el
         // mundo exterior — solo entrar andando (vía AnchorSetter/TeleportService → ApplyInterior)
@@ -504,27 +504,23 @@ public class EnvironmentController : MonoBehaviour
         // rompiendo también la restauración al salir (RestoreZoneVisibility depende de esta misma
         // referencia). Se resuelve por registro (ExteriorWorldRoot, O(1), sin recorrer la escena).
         //
-        // entre el 11 y el 12 sept esto pasó a resolverse por
-        // NOMBRE — cada AnchorEnvironment tenía que listar a mano, en exteriorWorldRootName/
-        // exteriorWorldRootNames, cada GameObject raíz que quisiera ocultar. Frágil: un
-        // ExteriorWorldRoot nuevo en la escena (con el componente puesto y todo) se quedaba fuera
-        // en silencio si nadie se acordaba de añadir también su nombre a la lista de cada anchor/
-        // cinemática — pasó de verdad con "CAPITULOS": tenía el componente pero ningún anchor lo
-        // listaba, así que su Rigidbody seguía simulando cuando el resto del mundo se ocultaba
-        // durante una secuencia, y una caja de quest caía al vacío (ver
-        // incidencia-caja-eldran-cae-sin-parar-2026-09-14.md). Ahora, si hideExteriorWorld está
-        // activo, se ocultan TODOS los ExteriorWorldRoot registrados en la escena, sin excepción —
-        // el propio componente ya es la marca de "esto es mundo exterior, ocúltame"; no hace falta
-        // ninguna lista de nombres en ningún sitio más. exteriorWorldRootName/exteriorWorldRootNames
-        // en AnchorEnvironment.cs quedan sin uso (no se han borrado para no perder los valores ya
-        // serializados en anchors existentes, pero pueden vaciarse con tranquilidad).
-        // antes se ocultaba cada root con SetActive(false),
-        // lo que además de dejar de renderizarlo paraba TODA su simulación (Update, NavMeshAgent,
+        // Frágil: un ExteriorWorldRoot nuevo en la escena (con el componente puesto y todo) se
+        // quedaba fuera en silencio si nadie se acordaba de añadir también su nombre a la lista de
+        // cada anchor/ cinemática — pasó de verdad con "CAPITULOS": tenía el componente pero ningún
+        // anchor lo listaba, así que su Rigidbody seguía simulando cuando el resto del mundo se
+        // ocultaba durante una secuencia, y una caja de quest caía al vacío. Ahora, si
+        // hideExteriorWorld está activo, se ocultan TODOS los ExteriorWorldRoot registrados en la
+        // escena, sin excepción — el propio componente ya es la marca de "esto es mundo exterior,
+        // ocúltame"; no hace falta ninguna lista de nombres en ningún sitio más.
+        // exteriorWorldRootName/exteriorWorldRootNames en AnchorEnvironment.cs quedan sin uso (no se
+        // han borrado para no perder los valores ya serializados en anchors existentes, pero pueden
+        // vaciarse con tranquilidad). antes se ocultaba cada root con SetActive(false), lo que
+        // además de dejar de renderizarlo paraba TODA su simulación (Update, NavMeshAgent,
         // coroutines) — causaba p. ej. que una coroutine de cinemática en curso sobre un NPC del
-        // root "AI" (Oliver) no pudiera pararse ni relanzarse limpiamente al saltarla
-        // ("Coroutine couldn't be started because the game object 'Oliver' is inactive"). Ahora
-        // se llama a SetVisible(false), que solo apaga Renderer/Light — el mundo exterior sigue
-        // sin verse desde el interior, pero su simulación no se congela. Ver ExteriorWorldRoot.cs.
+        // root "AI" (Oliver) no pudiera pararse ni relanzarse limpiamente al saltarla ("Coroutine
+        // couldn't be started because the game object 'Oliver' is inactive"). Ahora se llama a
+        // SetVisible(false), que solo apaga Renderer/Light — el mundo exterior sigue sin verse desde
+        // el interior, pero su simulación no se congela. Ver ExteriorWorldRoot.cs.
         if (env.hideExteriorWorld)
         {
             var resolved = ExteriorWorldRoot.AllRegistered();

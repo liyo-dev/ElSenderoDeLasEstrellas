@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// La partida de El Sendero vista por el grafo narrativo. Los flags narrativos viven en

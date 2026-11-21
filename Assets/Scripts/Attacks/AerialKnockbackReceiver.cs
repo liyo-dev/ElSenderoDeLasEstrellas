@@ -162,8 +162,9 @@ public class AerialKnockbackReceiver : MonoBehaviour
         Launch(backwardDirection, distance, height, duration, derriba: false);
 
     /// <summary>
-    /// Lanza al cuerpo del jugador alejándolo del origen. Solo acepta al jugador vivo y sin
-    /// escudo ni ventana de parada; devuelve true cuando aplica el derribo.
+    /// Lanza al cuerpo del jugador alejándolo del origen. Solo acepta al jugador vivo, sin
+    /// escudo ni ventana de parada y fuera del tramo invulnerable de la esquiva; devuelve true
+    /// cuando aplica el derribo.
     /// </summary>
     public static bool Derribar(GameObject objetivo, Vector3 origen, float distancia, float altura, float duracion)
     {
@@ -177,6 +178,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
         if (salud != null && !salud.IsAlive) return false;
         var escudo = cuerpo.GetComponent<PlayerShieldController>();
         if (escudo != null && (escudo.IsParryWindowOpen || escudo.IsDefending)) return false;
+        if (cuerpo.TryGetComponent(out EsquivaDelJugador esquiva) && esquiva.EsInvulnerable) return false;
 
         if (!cuerpo.TryGetComponent(out AerialKnockbackReceiver receptor))
             receptor = cuerpo.gameObject.AddComponent<AerialKnockbackReceiver>();
@@ -257,6 +259,9 @@ public class AerialKnockbackReceiver : MonoBehaviour
         }
         Vector3 obstructionOrigin = transform.position + Vector3.up * _obstructionProbeHeight;
         distance = ClampLaunchDistance(obstructionOrigin, flatDir, distance);
+        // Tampoco cruza un borde: un derribo en un puente o junto a un barranco aterriza antes
+        // de la caída, no en el agua o abajo. Ver INC-1331.
+        distance = Kits.Core.GroundProbe.DistanceToEdge(transform.position, flatDir, distance, CaidaMaximaAlLanzar, Physics.DefaultRaycastLayers, transform);
 
         Vector3 startPos = transform.position;
         Vector3 lastIntendedPos = startPos;
@@ -435,6 +440,9 @@ public class AerialKnockbackReceiver : MonoBehaviour
 
         return _lastGroundY;
     }
+
+    // Desnivel máximo que puede salvar un lanzamiento al aterrizar, en metros.
+    private const float CaidaMaximaAlLanzar = 1f;
 
     private float ClampLaunchDistance(Vector3 origin, Vector3 direction, float requestedDistance)
     {

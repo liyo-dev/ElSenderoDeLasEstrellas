@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_ROSARIO
     textId: DLG_ALDEA_ROSARIO_C3_1_01
-    text: "Luc\xEDa no habla de otra cosa que del zorro. Y de la cuchara, claro."
+    text: "Luc\xEDa no habla de otra cosa que de la cerca rota. Y de la cuchara, claro."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

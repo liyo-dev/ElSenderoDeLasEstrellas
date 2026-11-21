@@ -1,0 +1,2299 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082a53157464af24dbbd18e59d69c644, type: 3}
+  m_Name: Partitura del guardian
+  m_EditorClassIdentifier: Kits.Puzzles::Kits.Puzzles.MusicScore
+  clip: {fileID: 8300000, guid: 4f7bb758c9647ac4ab7fe626a3528639, type: 3}
+  beatTimes:
+  - 0.099
+  - 0.476
+  - 0.865
+  - 1.271
+  - 1.689
+  - 2.113
+  - 2.531
+  - 2.926
+  - 3.344
+  - 3.75
+  - 4.156
+  - 4.551
+  - 4.952
+  - 5.346
+  - 5.741
+  - 6.142
+  - 6.56
+  - 6.978
+  - 7.372
+  - 7.79
+  - 8.179
+  - 8.586
+  - 8.998
+  - 9.41
+  - 9.81
+  - 10.24
+  - 10.693
+  - 11.163
+  - 11.633
+  - 12.028
+  - 12.417
+  - 12.91
+  - 13.317
+  - 13.729
+  - 14.141
+  - 14.565
+  - 15.006
+  - 15.441
+  - 15.877
+  - 16.254
+  - 16.637
+  - 17.078
+  - 17.496
+  - 17.908
+  - 18.344
+  - 18.75
+  - 19.156
+  - 19.54
+  - 19.94
+  - 20.323
+  - 20.718
+  - 21.113
+  - 21.525
+  - 21.954
+  - 22.367
+  - 22.779
+  - 23.191
+  - 23.603
+  - 24.021
+  - 24.439
+  - 24.863
+  - 25.269
+  - 25.681
+  - 26.111
+  - 26.523
+  - 26.929
+  - 27.347
+  - 27.771
+  - 28.166
+  - 28.59
+  - 29.002
+  - 29.449
+  - 29.843
+  - 30.25
+  - 30.668
+  - 31.097
+  - 31.539
+  - 31.945
+  - 32.34
+  - 32.758
+  - 33.21
+  - 33.599
+  - 33.994
+  - 34.406
+  - 34.824
+  - 35.236
+  - 35.654
+  - 36.078
+  - 36.49
+  - 36.902
+  - 37.314
+  - 37.727
+  - 38.156
+  - 38.568
+  - 38.998
+  - 39.439
+  - 39.869
+  - 40.287
+  - 40.71
+  - 41.146
+  - 41.558
+  - 42.104
+  - 42.539
+  - 42.951
+  - 43.34
+  - 43.758
+  - 44.176
+  - 44.588
+  - 45.064
+  - 45.494
+  - 45.912
+  - 46.318
+  - 46.736
+  - 47.142
+  - 47.554
+  - 47.955
+  - 48.361
+  - 48.791
+  - 49.191
+  - 49.586
+  - 49.998
+  - 50.405
+  - 50.823
+  - 51.229
+  - 51.647
+  - 52.048
+  - 52.471
+  - 52.878
+  - 53.29
+  - 53.696
+  - 54.108
+  - 54.52
+  - 54.933
+  - 55.368
+  - 55.763
+  - 56.163
+  - 56.564
+  - 56.976
+  - 57.394
+  - 57.8
+  - 58.218
+  - 58.613
+  - 59.048
+  - 59.437
+  - 59.855
+  - 60.227
+  - 60.621
+  - 61.068
+  - 61.504
+  - 61.904
+  - 62.305
+  - 62.705
+  - 63.118
+  - 63.518
+  - 63.965
+  - 64.354
+  - 64.749
+  - 65.126
+  - 65.509
+  - 65.91
+  - 66.31
+  - 66.711
+  - 67.1
+  - 67.506
+  - 67.889
+  - 68.267
+  - 68.667
+  - 69.079
+  - 69.503
+  - 69.909
+  - 70.316
+  - 70.722
+  - 71.14
+  - 71.546
+  - 71.959
+  - 72.365
+  - 72.8
+  - 73.224
+  - 73.596
+  - 74.002
+  - 74.414
+  - 74.82
+  - 75.233
+  - 75.645
+  - 76.051
+  - 76.458
+  - 76.87
+  - 77.282
+  - 77.688
+  - 78.1
+  - 78.524
+  - 78.93
+  - 79.348
+  - 79.778
+  - 80.179
+  - 80.608
+  - 80.968
+  - 81.34
+  - 81.792
+  - 82.21
+  - 82.634
+  - 83.035
+  - 83.453
+  - 83.859
+  - 84.283
+  - 84.666
+  - 85.084
+  - 85.513
+  - 85.931
+  - 86.314
+  - 86.75
+  - 87.144
+  - 87.58
+  - 87.998
+  - 88.416
+  - 88.834
+  - 89.275
+  - 89.716
+  - 90.122
+  - 90.552
+  - 90.947
+  - 91.371
+  - 91.812
+  - 92.224
+  - 92.607
+  - 93.008
+  - 93.414
+  - 93.832
+  - 94.232
+  - 94.621
+  - 95.016
+  - 95.422
+  - 95.823
+  - 96.258
+  - 96.7
+  - 97.117
+  - 97.553
+  - 97.942
+  - 98.371
+  - 98.807
+  - 99.242
+  - 99.666
+  - 100.095
+  - 100.513
+  - 100.926
+  - 101.343
+  - 101.761
+  - 102.179
+  - 102.592
+  - 103.015
+  - 103.41
+  - 103.822
+  - 104.234
+  - 104.647
+  - 105.059
+  - 105.477
+  - 105.889
+  - 106.307
+  - 106.707
+  - 107.143
+  - 107.561
+  - 107.95
+  - 108.356
+  - 108.768
+  - 109.174
+  - 109.592
+  - 109.999
+  - 110.411
+  - 110.823
+  - 111.235
+  - 111.647
+  - 112.06
+  - 112.472
+  - 112.89
+  - 113.348
+  - 113.708
+  - 114.161
+  - 114.573
+  - 115.02
+  - 115.473
+  - 115.908
+  - 116.367
+  - 116.762
+  - 117.098
+  - 117.435
+  - 117.83
+  - 118.219
+  - 118.59
+  - 118.967
+  - 119.374
+  - 119.798
+  - 120.239
+  - 120.639
+  - 121.04
+  - 121.423
+  - 121.835
+  - 122.282
+  - 122.688
+  - 123.077
+  - 123.472
+  - 123.867
+  - 124.25
+  - 124.633
+  - 125.045
+  - 125.504
+  - 125.945
+  - 126.38
+  - 126.798
+  - 127.216
+  - 127.623
+  - 128.029
+  - 128.441
+  - 128.859
+  - 129.254
+  - 129.695
+  - 130.107
+  - 130.525
+  - 130.943
+  - 131.349
+  - 131.756
+  firstDownbeatIndex: 0
+  beatsPerMeasure: 4
+  cues:
+  - time: 0.093
+    voice: PRESENTACION
+    measure: 1
+    beat: 1
+  - time: 0.093
+    voice: INTRO_PUM
+    measure: 0
+    beat: 0
+  - time: 0.81
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 1.02
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 1.22
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 1.43
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 1.65
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 1.86
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 2.07
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 2.27
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 2.49
+    voice: INTRO_ESCALA
+    measure: 0
+    beat: 0
+  - time: 2.74
+    voice: PRESENTACION
+    measure: 2
+    beat: 3.5
+  - time: 2.74
+    voice: INTRO_PUM
+    measure: 0
+    beat: 0
+  - time: 3.344
+    voice: COMPAS_AFINACION
+    measure: 3
+    beat: 1
+  - time: 6.56
+    voice: COMPAS_AFINACION
+    measure: 5
+    beat: 1
+  - time: 8.829
+    voice: PRESENTACION
+    measure: 6
+    beat: 2.5
+  - time: 9.81
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 9.81
+    voice: COMPAS_AFINACION
+    measure: 7
+    beat: 1
+  - time: 10.24
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 11.16
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 11.63
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 12.03
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 12.405
+    voice: PRESENTACION
+    measure: 8
+    beat: 3
+  - time: 12.42
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 12.91
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 13.317
+    voice: COMPAS_AFINACION
+    measure: 9
+    beat: 1
+  - time: 13.32
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
+  - time: 13.723
+    voice: PRESENTACION
+    measure: 9
+    beat: 2
+  - time: 13.73
+    voice: INTRO_DOREMI
+    measure: 0
+    beat: 0
+  - time: 14.56
+    voice: INTRO_DOREMI
+    measure: 0
+    beat: 0
+  - time: 15.44
+    voice: INTRO_DOREMI
+    measure: 0
+    beat: 0
+  - time: 16.637
+    voice: COMPAS_AFINACION
+    measure: 11
+    beat: 1
+  - time: 17.908
+    voice: PRESENTACION
+    measure: 11
+    beat: 4
+  - time: 19.94
+    voice: COMPAS_AFINACION
+    measure: 13
+    beat: 1
+  - time: 21.525
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 1
+  - time: 21.954
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 2
+  - time: 22.367
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 3
+  - time: 22.573
+    voice: LOSA
+    measure: 14
+    beat: 3.5
+  - time: 22.779
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 4
+  - time: 23.191
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 23.191
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 1
+  - time: 23.397
+    voice: LOSA
+    measure: 15
+    beat: 1.5
+  - time: 23.603
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 23.603
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 2
+  - time: 24.021
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 24.021
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 3
+  - time: 24.23
+    voice: LOSA
+    measure: 15
+    beat: 3.5
+  - time: 24.439
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 24.439
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 4
+  - time: 24.863
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 24.863
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 1
+  - time: 25.066
+    voice: LOSA
+    measure: 16
+    beat: 1.5
+  - time: 25.269
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 25.269
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 2
+  - time: 25.681
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 3
+  - time: 25.681
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 25.896
+    voice: LOSA
+    measure: 16
+    beat: 3.5
+  - time: 26.111
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 26.111
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 4
+  - time: 26.523
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 26.523
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 1
+  - time: 26.726
+    voice: LOSA
+    measure: 17
+    beat: 1.5
+  - time: 26.929
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 26.929
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 2
+  - time: 27.347
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 27.347
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 3
+  - time: 27.559
+    voice: LOSA
+    measure: 17
+    beat: 3.5
+  - time: 27.771
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 27.771
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 4
+  - time: 28.166
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 1
+  - time: 28.378
+    voice: LOSA
+    measure: 18
+    beat: 1.5
+  - time: 28.59
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 2
+  - time: 29.002
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 3
+  - time: 29.226
+    voice: LOSA
+    measure: 18
+    beat: 3.5
+  - time: 29.449
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 4
+  - time: 29.843
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 1
+  - time: 30.047
+    voice: LOSA
+    measure: 19
+    beat: 1.5
+  - time: 30.25
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 2
+  - time: 30.668
+    voice: BOMBARDINO_PUM
+    measure: 0
+    beat: 3
+  - time: 30.883
+    voice: LOSA
+    measure: 19
+    beat: 3.5
+  - time: 31.097
+    voice: BOMBARDINO_PAM
+    measure: 0
+    beat: 4
+  - time: 31.945
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 31.945
+    voice: NOTA_GRANDE
+    measure: 0
+    beat: 0
+  - time: 32.758
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 32.758
+    voice: NOTA_GRANDE
+    measure: 0
+    beat: 0
+  - time: 33.599
+    voice: LOSA
+    measure: 21
+    beat: 2
+  - time: 35.236
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 35.236
+    voice: NOTA_GRANDE
+    measure: 0
+    beat: 0
+  - time: 35.236
+    voice: LOSA
+    measure: 22
+    beat: 2
+  - time: 36.078
+    voice: NOTA_GRANDE
+    measure: 0
+    beat: 0
+  - time: 36.078
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 36.078
+    voice: LOSA
+    measure: 22
+    beat: 4
+  - time: 38.568
+    voice: LOSA
+    measure: 24
+    beat: 2
+  - time: 39.439
+    voice: LOSA
+    measure: 24
+    beat: 4
+  - time: 40.287
+    voice: LOSA
+    measure: 25
+    beat: 2
+  - time: 41.558
+    voice: LOSA
+    measure: 26
+    beat: 1
+  - time: 45.494
+    voice: COLUMNA
+    measure: 28
+    beat: 2
+  - time: 46.318
+    voice: COLUMNA
+    measure: 28
+    beat: 4
+  - time: 46.736
+    voice: PULMONES
+    measure: 0
+    beat: 0
+  - time: 47.142
+    voice: COLUMNA
+    measure: 29
+    beat: 2
+  - time: 48.361
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 48.791
+    voice: COLUMNA
+    measure: 30
+    beat: 2
+  - time: 48.791
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 49.191
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 49.586
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 49.998
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 50.405
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 50.823
+    voice: FOGONAZO
+    measure: 0
+    beat: 0
+  - time: 51.229
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 51.647
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 52.048
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 52.471
+    voice: COLUMNA
+    measure: 32
+    beat: 3
+  - time: 52.471
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 52.878
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 53.29
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 53.696
+    voice: COLUMNA
+    measure: 33
+    beat: 2
+  - time: 53.696
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 54.108
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 54.52
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 54.933
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 55.368
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 55.763
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 56.163
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 56.77
+    voice: MUSICAL
+    measure: 0
+    beat: 0
+  - time: 56.976
+    voice: MUSICAL
+    measure: 0
+    beat: 0
+  - time: 57.394
+    voice: MUSICAL_FIN
+    measure: 0
+    beat: 0
+  - time: 57.394
+    voice: COLUMNA
+    measure: 35
+    beat: 3
+  - time: 57.8
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 58.218
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 58.613
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 59.048
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 59.242
+    voice: COLUMNA
+    measure: 36
+    beat: 3.5
+  - time: 60.227
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 60.621
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 61.286
+    voice: COLUMNA
+    measure: 38
+    beat: 0.5
+  - time: 61.904
+    voice: LLAMA_DEL_TIEMPO
+    measure: 0
+    beat: 0
+  - time: 63.118
+    voice: PROYECTIL
+    measure: 39
+    beat: 1
+  - time: 67.889
+    voice: PROYECTIL
+    measure: 42
+    beat: 1
+  - time: 67.889
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 68.667
+    voice: COLUMNA
+    measure: 42
+    beat: 3
+  - time: 68.667
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 69.291
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 69.503
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 69.503
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 69.909
+    voice: PROYECTIL
+    measure: 43
+    beat: 2
+  - time: 70.1125
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 70.316
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 70.722
+    voice: LOSA
+    measure: 43
+    beat: 4
+  - time: 70.722
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 71.14
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 71.14
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 71.14
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 71.343
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 71.546
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 71.7525
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 71.959
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 71.959
+    voice: COLUMNA
+    measure: 44
+    beat: 3
+  - time: 71.959
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 72.365
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 72.582504
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 72.76
+    voice: PROYECTIL
+    measure: 45
+    beat: 0.91
+  - time: 72.8
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 72.8
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 73.172
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 73.172
+    voice: LOSA
+    measure: 45
+    beat: 1.87
+  - time: 73.224
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 73.59
+    voice: PILAR_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 73.59
+    voice: COLUMNA
+    measure: 45
+    beat: 2.99
+  - time: 73.596
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 74.002
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 74.414
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 74.414
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 74.414
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 74.617004
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 74.82
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 75.026505
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 75.233
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 75.233
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 75.233
+    voice: COLUMNA
+    measure: 46
+    beat: 3
+  - time: 76.051
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 76.051
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 76.051
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 76.664
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 76.87
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 77.282
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 77.282
+    voice: COLUMNA
+    measure: 47
+    beat: 4
+  - time: 77.688
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 77.688
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 77.688
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 77.894
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 78.1
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 78.312
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 78.524
+    voice: PROYECTIL
+    measure: 48
+    beat: 3
+  - time: 78.524
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 79.139
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 79.348
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 79.348
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 79.348
+    voice: COLUMNA
+    measure: 49
+    beat: 1
+  - time: 79.348
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 79.778
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 79.9785
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 80.179
+    voice: LOSA
+    measure: 49
+    beat: 3
+  - time: 80.179
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 80.608
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 80.968
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 80.968
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 80.968
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 81.34
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 81.34
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 81.792
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 81.792
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 82.21
+    voice: LOSA
+    measure: 50
+    beat: 4
+  - time: 82.634
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 83.859
+    voice: LOSA
+    measure: 51
+    beat: 4
+  - time: 84.283
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 85.2985
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 85.513
+    voice: LOSA
+    measure: 52
+    beat: 4
+  - time: 85.722
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 85.931
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 86.532
+    voice: COLUMNA
+    measure: 53
+    beat: 2.5
+  - time: 86.75
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 87.58
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 87.58
+    voice: PROYECTIL
+    measure: 54
+    beat: 1
+  - time: 87.58
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 87.789
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 88.207
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 88.625
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 88.834
+    voice: LOSA
+    measure: 54
+    beat: 4
+  - time: 89.054504
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 89.275
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 89.919
+    voice: LOSA
+    measure: 55
+    beat: 2.5
+  - time: 90.552
+    voice: LOSA
+    measure: 55
+    beat: 4
+  - time: 90.947
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 91.812
+    voice: COLUMNA
+    measure: 56
+    beat: 3
+  - time: 92.607
+    voice: LOSA
+    measure: 57
+    beat: 1
+  - time: 92.607
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 94.232
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 94.232
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 95.823
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 95.823
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 97.077
+    voice: COLUMNA
+    measure: 59
+    beat: 3.9
+  - time: 97.1
+    voice: PUERTAS
+    measure: 0
+    beat: 0
+  - time: 97.117
+    voice: FUEGO
+    measure: 59
+    beat: 4
+  - time: 97.117
+    voice: RAYO
+    measure: 59
+    beat: 4
+  - time: 97.553
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 97.553
+    voice: FUEGO
+    measure: 60
+    beat: 1
+  - time: 97.93
+    voice: OLEADA
+    measure: 60
+    beat: 1.97
+  - time: 97.942
+    voice: FUEGO
+    measure: 60
+    beat: 2
+  - time: 97.942
+    voice: RAYO
+    measure: 60
+    beat: 2
+  - time: 98.371
+    voice: FUEGO
+    measure: 60
+    beat: 3
+  - time: 98.807
+    voice: RAYO
+    measure: 60
+    beat: 4
+  - time: 98.807
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 98.807
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 98.807
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 98.807
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 98.807
+    voice: FUEGO
+    measure: 60
+    beat: 4
+  - time: 99.242
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 99.242
+    voice: FUEGO
+    measure: 61
+    beat: 1
+  - time: 99.666
+    voice: FUEGO
+    measure: 61
+    beat: 2
+  - time: 99.666
+    voice: RAYO
+    measure: 61
+    beat: 2
+  - time: 99.666
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 99.666
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 99.666
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 99.666
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 100.095
+    voice: FUEGO
+    measure: 61
+    beat: 3
+  - time: 100.513
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 100.513
+    voice: RAYO
+    measure: 61
+    beat: 4
+  - time: 100.513
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 100.513
+    voice: FUEGO
+    measure: 61
+    beat: 4
+  - time: 100.513
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 100.513
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 100.926
+    voice: FUEGO
+    measure: 62
+    beat: 1
+  - time: 100.926
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 101.343
+    voice: RAYO
+    measure: 62
+    beat: 2
+  - time: 101.343
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 101.343
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 101.343
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 101.343
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 101.343
+    voice: FUEGO
+    measure: 62
+    beat: 2
+  - time: 101.761
+    voice: FUEGO
+    measure: 62
+    beat: 3
+  - time: 102.179
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 102.179
+    voice: RAYO
+    measure: 62
+    beat: 4
+  - time: 102.179
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 102.179
+    voice: FUEGO
+    measure: 62
+    beat: 4
+  - time: 102.179
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 102.179
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 102.592
+    voice: FUEGO
+    measure: 63
+    beat: 1
+  - time: 102.592
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 103.015
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 103.015
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 103.015
+    voice: RAYO
+    measure: 63
+    beat: 2
+  - time: 103.015
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 103.015
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 103.015
+    voice: FUEGO
+    measure: 63
+    beat: 2
+  - time: 103.41
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 103.41
+    voice: FUEGO
+    measure: 63
+    beat: 3
+  - time: 103.822
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 103.822
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 103.822
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 103.822
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 103.822
+    voice: RAYO
+    measure: 63
+    beat: 4
+  - time: 103.822
+    voice: FUEGO
+    measure: 63
+    beat: 4
+  - time: 104.229
+    voice: OLEADA
+    measure: 64
+    beat: 0.99
+  - time: 104.234
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 104.234
+    voice: FUEGO
+    measure: 64
+    beat: 1
+  - time: 104.647
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 104.647
+    voice: RAYO
+    measure: 64
+    beat: 2
+  - time: 104.647
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 104.647
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 104.647
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 104.647
+    voice: FUEGO
+    measure: 64
+    beat: 2
+  - time: 105.059
+    voice: FUEGO
+    measure: 64
+    beat: 3
+  - time: 105.059
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 105.477
+    voice: FUEGO
+    measure: 64
+    beat: 4
+  - time: 105.477
+    voice: RAYO
+    measure: 64
+    beat: 4
+  - time: 105.477
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 105.477
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 105.477
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 105.477
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 105.889
+    voice: FUEGO
+    measure: 65
+    beat: 1
+  - time: 106.307
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 106.307
+    voice: RAYO
+    measure: 65
+    beat: 2
+  - time: 106.307
+    voice: FUEGO
+    measure: 65
+    beat: 2
+  - time: 106.307
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 106.307
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 106.307
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 106.307
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 106.707
+    voice: FUEGO
+    measure: 65
+    beat: 3
+  - time: 106.707
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 107.143
+    voice: RAYO
+    measure: 65
+    beat: 4
+  - time: 107.143
+    voice: FUEGO
+    measure: 65
+    beat: 4
+  - time: 107.143
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 107.143
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 107.143
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 107.143
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 107.143
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 107.561
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 107.561
+    voice: FUEGO
+    measure: 66
+    beat: 1
+  - time: 107.95
+    voice: FUEGO
+    measure: 66
+    beat: 2
+  - time: 107.95
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: RAYO
+    measure: 66
+    beat: 2
+  - time: 107.95
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 108.356
+    voice: FUEGO
+    measure: 66
+    beat: 3
+  - time: 108.356
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: FUEGO
+    measure: 66
+    beat: 4
+  - time: 108.768
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: RAYO
+    measure: 66
+    beat: 4
+  - time: 108.768
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 109.169
+    voice: OLEADA
+    measure: 67
+    beat: 0.99
+  - time: 109.174
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 109.174
+    voice: FUEGO
+    measure: 67
+    beat: 1
+  - time: 109.592
+    voice: RAYO
+    measure: 67
+    beat: 2
+  - time: 109.592
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 109.592
+    voice: FUEGO
+    measure: 67
+    beat: 2
+  - time: 109.592
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 109.592
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 109.592
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 109.592
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 109.999
+    voice: FUEGO
+    measure: 67
+    beat: 3
+  - time: 110.411
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 110.411
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 110.411
+    voice: FUEGO
+    measure: 67
+    beat: 4
+  - time: 110.411
+    voice: RAYO
+    measure: 67
+    beat: 4
+  - time: 110.411
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 110.411
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 110.411
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 110.823
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 110.823
+    voice: FUEGO
+    measure: 68
+    beat: 1
+  - time: 111.235
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 111.235
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 111.235
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 111.235
+    voice: RAYO
+    measure: 68
+    beat: 2
+  - time: 111.235
+    voice: FUEGO
+    measure: 68
+    beat: 2
+  - time: 111.235
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 111.235
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 111.647
+    voice: FUEGO
+    measure: 68
+    beat: 3
+  - time: 112.06
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 112.06
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 112.06
+    voice: RAYO
+    measure: 68
+    beat: 4
+  - time: 112.06
+    voice: FUEGO
+    measure: 68
+    beat: 4
+  - time: 112.06
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 112.06
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 112.06
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 112.472
+    voice: FUEGO
+    measure: 69
+    beat: 1
+  - time: 112.472
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 112.89
+    voice: RAYO
+    measure: 69
+    beat: 2
+  - time: 112.89
+    voice: FUEGO
+    measure: 69
+    beat: 2
+  - time: 112.89
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 112.89
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 112.89
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 112.89
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 119.374
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 119.798
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 120.239
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 120.355
+    voice: LOSA
+    measure: 73
+    beat: 4.28
+  - time: 120.639
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 120.639
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 121.284
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 121.284
+    voice: COLUMNA
+    measure: 74
+    beat: 2.65
+  - time: 121.783
+    voice: LOSA
+    measure: 74
+    beat: 3.88
+  - time: 121.783
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 122.282
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 122.282
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 123.472
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 123.82
+    voice: PROYECTIL
+    measure: 76
+    beat: 0.88
+  - time: 123.867
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 123.867
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 124.25
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 124.987
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 124.987
+    voice: LOSA
+    measure: 76
+    beat: 3.87
+  - time: 125.463
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 125.463
+    voice: COLUMNA
+    measure: 77
+    beat: 0.91
+  - time: 125.504
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 125.504
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 125.504
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 125.504
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 125.614
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 125.68775
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 125.724
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 125.834
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 125.83475
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 125.944
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 125.945
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 126.0175
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 126.054
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.1625
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 126.164
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.273994
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.34375
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 126.383995
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.4845
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 126.493996
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.604
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.62383
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 126.714
+    voice: ROSAS
+    measure: 0
+    beat: 0
+  - time: 126.798
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 126.97217
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.1115
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.216
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 127.216
+    voice: LAGRIMA
+    measure: 0
+    beat: 0
+  - time: 127.216
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 127.216
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 127.24992
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.38559
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.55517
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.623
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 127.69067
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.79217
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.927505
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 127.994
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 127.994
+    voice: COLUMNA
+    measure: 78
+    beat: 2.91
+  - time: 128.029
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 128.37233
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 128.406
+    voice: PROYECTIL
+    measure: 78
+    beat: 3.92
+  - time: 128.813
+    voice: LOSA
+    measure: 79
+    beat: 0.89
+  - time: 128.859
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 128.859
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 128.859
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 128.859
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 128.99066
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 129.15524
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 129.3275
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 129.43774
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 129.58475
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 129.695
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 129.72934
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 129.86667
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.004
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.14183
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.28116
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.45532
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.525
+    voice: PLATILLO_DEL_ESTRIBILLO
+    measure: 0
+    beat: 1
+  - time: 130.525
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 130.525
+    voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 130.62949
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.76883
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.897
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 130.897
+    voice: LOSA
+    measure: 80
+    beat: 1.89
+  - time: 130.90816
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 130.943
+    voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 131.0445
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 131.17982
+    voice: SEMICORCHEA
+    measure: 0
+    beat: 0
+  - time: 131.349
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 131.709
+    voice: FIN
+    measure: 80
+    beat: 3.77

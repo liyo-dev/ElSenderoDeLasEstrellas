@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// "Game connections": each system the story talks to (dialogue, quests, inventory, camera...)
     /// and which class of the game answers for it. Nothing to fill in here; it is a map.

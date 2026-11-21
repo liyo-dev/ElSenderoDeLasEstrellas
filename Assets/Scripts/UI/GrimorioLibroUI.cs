@@ -108,6 +108,12 @@ public class GrimorioLibroUI : MonoBehaviour
     private Vector2[] _ribbonBase;
 
     public bool IsOpen => _open;
+    /// <summary>Hay un grimorio abierto: el menú de Start esconde su barra de pistas para que no se monten.</summary>
+    public static bool AlgunoAbierto { get; private set; }
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetAlgunoAbierto() => AlgunoAbierto = false;
+#endif
     public int ClosedFrame { get; private set; } = -1;
 
     private static readonly Slot[] Order = { Slot.Will, Slot.Estela, Slot.Liam };
@@ -131,6 +137,7 @@ public class GrimorioLibroUI : MonoBehaviour
     {
         Core.InputGlyphs.InputGlyphService.FamilyChanged -= OnFamilyChanged;
         MostrarPanelesDelMenu(true, false);
+        if (_open) { _open = false; AlgunoAbierto = false; }
     }
 
     // Los iconos de botón cambian con el mando: se rehace la página y la barra de pistas.
@@ -151,6 +158,7 @@ public class GrimorioLibroUI : MonoBehaviour
 
         _index = FindStart(startAt);
         _open = true;
+        AlgunoAbierto = true;
         _openedAt = Time.unscaledTime;
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
@@ -177,6 +185,7 @@ public class GrimorioLibroUI : MonoBehaviour
     {
         if (!_open) return;
         _open = false;
+        AlgunoAbierto = false;
         ClosedFrame = Time.frameCount;
         MostrarPanelesDelMenu(true, true);
         group.DOKill();
@@ -267,22 +276,19 @@ public class GrimorioLibroUI : MonoBehaviour
         {
             if (!CharacterAvailable(slot)) continue;
 
+            // Mismo orden que el menú de Magia (sets fijos, 20 nov 2026): los 4 rápidos, los 4
+            // combos y el especial con misión. Lo demás que sea suyo (si lo hubiera), detrás.
+            var all = new List<MagicSpellSO>();
+            foreach (var s in GrimorioDelPersonaje.RapidosDelSet(slot)) if (!all.Contains(s)) all.Add(s);
+            foreach (var s in GrimorioDelPersonaje.CombosDelSet(slot)) if (!all.Contains(s)) all.Add(s);
+            var especial = GrimorioDelPersonaje.EspecialDe(slot);
+            if (especial != null && !all.Contains(especial)) all.Add(especial);
+            var extra = new List<MagicSpellSO>(GrimorioDelPersonaje.BasicosDisponibles(slot));
+            foreach (var c in GrimorioDelPersonaje.CombosDisponibles(slot)) if (!extra.Contains(c)) extra.Add(c);
+            foreach (var s in extra) if (!all.Contains(s)) all.Add(s);
+
             var known = new List<MagicSpellSO>();
-            known.AddRange(GrimorioDelPersonaje.BasicosDisponibles(slot));
-            foreach (var c in GrimorioDelPersonaje.CombosDisponibles(slot)) if (!known.Contains(c)) known.Add(c);
-
-            var all = new List<MagicSpellSO>(known);
-            if (lib != null)
-                foreach (var s in lib.Spells)
-                    if (s != null && s.caster == slot && GrimorioDelPersonaje.EsDelGrimorio(s) && !all.Contains(s)) all.Add(s);
-
-            all.Sort((a, b) =>
-            {
-                int ka = a.HasCombo ? 1 : 0, kb = b.HasCombo ? 1 : 0;
-                if (ka != kb) return ka.CompareTo(kb);
-                if (a.HasCombo && a.comboSequence.Length != b.comboSequence.Length) return a.comboSequence.Length.CompareTo(b.comboSequence.Length);
-                return string.CompareOrdinal(a.GetLocalizedName(), b.GetLocalizedName());
-            });
+            foreach (var s in all) if (GrimorioDelPersonaje.LoSabe(slot, s) || extra.Contains(s)) known.Add(s);
 
             foreach (var s in all)
                 _pages.Add(new Pagina { spell = s, known = known.Contains(s), owner = slot });
@@ -478,7 +484,7 @@ public class GrimorioLibroUI : MonoBehaviour
         {
             SetStep(0, x, Loc("GRIMOIRE_STEP_CAST", "Lanzar"));
             SetStep(1, Core.InputGlyphs.InputGlyphService.SpriteTag(Core.InputGlyphs.InputGlyphNames.ShoulderLeft),
-                Loc("GRIMOIRE_STEP_ROTATE", "Cambiar de básico"));
+                Loc("GRIMOIRE_STEP_ROTATE", "Pasar al siguiente rápido"));
             if (castArrow) castArrow.SetActive(false);
         }
     }
@@ -519,25 +525,22 @@ public class GrimorioLibroUI : MonoBehaviour
 
     private void ShowEquipped(MagicSpellSO s, Slot owner)
     {
+        if (s.especialConMision)
+        {
+            SetTag(equippedTag, equippedTagText, Loc("GRIMOIRE_SPECIAL_QUEST", "Especial · se aprende con una misión"), comboTagColor);
+            return;
+        }
         if (s.HasCombo)
         {
-            SetTag(equippedTag, equippedTagText, Loc("GRIMOIRE_COMBO_ALWAYS", "No ocupa ranura · siempre a mano"), comboTagColor);
+            SetTag(equippedTag, equippedTagText, Loc("GRIMOIRE_COMBO_ALWAYS", "Combo · siempre a mano"), comboTagColor);
             return;
         }
         if (s.slotType == SpellSlotType.SpecialOnly) { SetTag(equippedTag, equippedTagText, null, Color.clear); return; }
 
-        int slot = -1;
-        if (owner == Slot.Will)
-        {
-            var preset = UnlockService.GetActivePreset();
-            if (preset != null && preset.basicSpellIds != null) slot = preset.basicSpellIds.IndexOf(s.spellId);
-        }
-        else
-        {
-            slot = GrimorioDelPersonaje.BasicosEquipados(owner).IndexOf(s);
-        }
-        if (slot >= 0) SetTag(equippedTag, equippedTagText, string.Format(Loc("GRIMOIRE_EQUIPPED", "Equipado · ranura {0}"), slot + 1), equippedColor);
-        else SetTag(equippedTag, equippedTagText, Loc("GRIMOIRE_NOT_EQUIPPED", "Sin equipar"), notEquippedColor);
+        // Los rápidos van siempre puestos, en el orden del set (LB pasa al siguiente).
+        int slot = GrimorioDelPersonaje.BasicosEquipados(owner).IndexOf(s);
+        if (slot >= 0) SetTag(equippedTag, equippedTagText, string.Format(Loc("GRIMOIRE_QUICK_ORDER", "Rápido {0} de 4"), slot + 1), equippedColor);
+        else SetTag(equippedTag, equippedTagText, Loc("GRIMOIRE_QUICK_UNKNOWN", "Rápido · aún no lo sabe"), notEquippedColor);
     }
 
     private void UpdateHint()
@@ -586,7 +589,8 @@ public class GrimorioLibroUI : MonoBehaviour
         Mathf.Approximately(v, Mathf.Round(v)) ? Mathf.RoundToInt(v).ToString() : v.ToString("0.#");
 
     private static string KindName(MagicSpellSO s) =>
-        s.kind == MagicKind.Levitation ? Loc("GRIMOIRE_KIND_LEVITATION", "Levitación")
+        s.especialConMision ? Loc("GRIMOIRE_KIND_SPECIAL", "Especial")
+        : s.kind == MagicKind.Levitation ? Loc("GRIMOIRE_KIND_LEVITATION", "Levitación")
         : s.HasCombo ? Loc("GRIMOIRE_KIND_COMBO", "Combo")
         : Loc("GRIMOIRE_KIND_BASIC", "Básico");
 
@@ -601,6 +605,7 @@ public class GrimorioLibroUI : MonoBehaviour
         MagicElement.Storm => new Color(0.3f, 0.6f, 0.48f),
         MagicElement.Light => new Color(0.79f, 0.59f, 0.16f),
         MagicElement.Mind => new Color(0.48f, 0.29f, 0.66f),
+        MagicElement.Dark => new Color(0.3f, 0.14f, 0.36f),
         _ => new Color(0.42f, 0.29f, 0.17f)
     };
 
@@ -617,6 +622,7 @@ public class GrimorioLibroUI : MonoBehaviour
         MagicElement.Storm => Loc("ELEMENT_STORM", "Viento"),
         MagicElement.Light => Loc("ELEMENT_LIGHT", "Luz"),
         MagicElement.Mind => Loc("ELEMENT_MIND", "Mente"),
+        MagicElement.Dark => Loc("ELEMENT_DARK", "Oscuro"),
         _ => e.ToString()
     };
 

@@ -1,3 +1,4 @@
+using Liyodev.NarrativeGraph;
 /// <summary>
 /// Al cargar el grafo una escena en aditivo, instancia los NPCs del roster cuyos puntos de
 /// aparición viven en ella. WorldBootstrap solo lo hace al arrancar el mundo, antes de que esa

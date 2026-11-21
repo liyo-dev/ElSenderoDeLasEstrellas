@@ -90,7 +90,12 @@ namespace Liyodev.Cinematics
         [Tooltip("Sonido que toca en ese instante (música o efecto), para el animatic.")]
         public AudioClip clip;
         [Range(0f, 1f)] public float volumen = 1f;
+        [Tooltip("Qué es este trozo en la vista de pistas: acción, reacción, reacción automática o vida de fondo.")]
+        public CinemaClipClase clase;
     }
+
+    /// Para la vista «Pistas por personaje»: lo escrito (acción o reacción) y lo que pone solo el horno.
+    public enum CinemaClipClase { Accion = 0, Reaccion = 1, Automatica = 2, Vida = 3 }
 
     /// Una fila del timeline: la cámara, cada personaje, la música, los efectos.
     [Serializable]

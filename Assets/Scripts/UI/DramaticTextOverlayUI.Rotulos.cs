@@ -4,6 +4,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Liyodev.NarrativeGraph;
 
 /// Las otras formas de texto en pantalla que dibuja este mismo servicio, para que nadie más
 /// monte su propio Canvas de texto:

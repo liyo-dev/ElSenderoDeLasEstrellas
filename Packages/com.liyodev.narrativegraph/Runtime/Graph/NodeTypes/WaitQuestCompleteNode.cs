@@ -1,59 +1,62 @@
 using System;
 using System.Collections.Generic;
 
-[Serializable]
-[NarrativeNodeInfo("Quests", "Esperar quest completada", "Se queda esperando hasta que la quest esté completada.")]
-[SavePoint("Seguro guardar mientras espera quests")]
-[UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Assembly-CSharp")]
-public sealed class WaitQuestCompleteNode : NarrativeNode, INarrativeStateEffect
+namespace Liyodev.NarrativeGraph
 {
-    [NarrativeKey(NarrativeKeyKind.Quest)]
-    public string questId;
-    Action _cb;
-    public bool debugLogs = false;
-
-    void Log(string msg)
+    [Serializable]
+    [NarrativeNodeInfo("Quests", "Esperar quest completada", "Se queda esperando hasta que la quest esté completada.")]
+    [SavePoint("Seguro guardar mientras espera quests")]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceNamespace: "", sourceAssembly: "Liyodev.NarrativeGraph")]
+    public sealed class WaitQuestCompleteNode : NarrativeNode, INarrativeStateEffect
     {
-        if (debugLogs)
-            NarrativeLog.Info($"[WaitQuestCompleteNode] {msg}");
-    }
+        [NarrativeKey(NarrativeKeyKind.Quest)]
+        [UnityEngine.SerializeField] private string questId;
+        Action _cb;
+        [UnityEngine.SerializeField] private bool debugLogs = false;
 
-    public override void Describe(INarrativeNodeDescriber d) => d.Quest(questId, "Espera a que se complete");
-
-    public override void CollectWarnings(List<string> warnings)
-    {
-        if (string.IsNullOrWhiteSpace(questId)) warnings.Add("questId vacío");
-    }
-
-    public void Project(INarrativeStateWriter state)
-    {
-        if (!string.IsNullOrWhiteSpace(questId)) state.CompleteQuest(questId);
-    }
-
-    public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
-    {
-        if (ctx.Signals.IsQuestCompleted(questId))
+        void Log(string msg)
         {
-            Log($"Quest '{questId}' already completed → advancing");
-            onReadyToAdvance?.Invoke();
-            return;
+            if (debugLogs)
+                NarrativeLog.Info($"[WaitQuestCompleteNode] {msg}");
         }
-        _cb = () =>
-        {
-            Log($"Quest '{questId}' completion received → advancing");
-            onReadyToAdvance?.Invoke();
-        };
-        Log($"Waiting quest '{questId}' completion");
-        ctx.Signals.OnQuestCompleted(questId, _cb);
-    }
 
-    public override void Exit(NarrativeContext ctx)
-    {
-        if (_cb != null)
+        public override void Describe(INarrativeNodeDescriber d) => d.Quest(questId, "Espera a que se complete");
+
+        public override void CollectWarnings(List<string> warnings)
         {
-            ctx.Signals.OffQuestCompleted(questId, _cb);
-            Log($"Unsubscribed from quest '{questId}' completion");
+            if (string.IsNullOrWhiteSpace(questId)) warnings.Add("questId vacío");
         }
-        _cb = null;
+
+        public void Project(INarrativeStateWriter state)
+        {
+            if (!string.IsNullOrWhiteSpace(questId)) state.CompleteQuest(questId);
+        }
+
+        public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
+        {
+            if (ctx.Signals.IsQuestCompleted(questId))
+            {
+                Log($"Quest '{questId}' already completed → advancing");
+                onReadyToAdvance?.Invoke();
+                return;
+            }
+            _cb = () =>
+            {
+                Log($"Quest '{questId}' completion received → advancing");
+                onReadyToAdvance?.Invoke();
+            };
+            Log($"Waiting quest '{questId}' completion");
+            ctx.Signals.OnQuestCompleted(questId, _cb);
+        }
+
+        public override void Exit(NarrativeContext ctx)
+        {
+            if (_cb != null)
+            {
+                ctx.Signals.OffQuestCompleted(questId, _cb);
+                Log($"Unsubscribed from quest '{questId}' completion");
+            }
+            _cb = null;
+        }
     }
 }

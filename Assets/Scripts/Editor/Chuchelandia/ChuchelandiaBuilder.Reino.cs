@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Slot = PartyControlManager.CharacterSlot;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// El reino libre (tramo 6, de CHUCHE_REINO_LIBRE a la llegada al salón) y su misión opcional,
@@ -195,7 +196,7 @@ public static partial class ChuchelandiaBuilder
         mision.description = "";
         mision.detailedDescriptionId = "CHUCHE_TROMPETILLAS_DETAIL";
         mision.detailedDescription = "";
-        // Un paso por trompetilla: el grafo marca uno por cada una que se coge (el diario enseña 2/5).
+        // Un paso por trompetilla: el grafo marca uno por cada una que se coge.
         mision.steps = new QuestData.Step[MarcasDeTrompetillas.Length];
         for (int i = 0; i < mision.steps.Length; i++)
             mision.steps[i] = new QuestData.Step { descriptionId = "CHUCHE_TROMPETILLAS_STEP", description = "", conditionId = "" };
@@ -211,34 +212,34 @@ public static partial class ChuchelandiaBuilder
         int n = MarcasDeTrompetillas.Length;
         return new List<Paso>
         {
-            P("tromp-hablar", "6 · Opcional: hablar con el heraldo suplente", new WaitNpcInteractionNode { npcId = IdDelSuplente }),
+            P("tromp-hablar", "6 · Opcional: hablar con el heraldo suplente", new WaitNpcInteractionNode { NpcId = IdDelSuplente }),
             P("tromp-encargo", "6 · El suplente encarga las trompetillas",
-              new PlayDialogueNode { dialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_ENCARGO"), npcId = IdDelSuplente }),
+              new PlayDialogueNode { Dialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_ENCARGO"), NpcId = IdDelSuplente }),
             P("tromp-mision", "Misión opcional: las trompetillas perdidas", new StartQuestNode
             {
-                questId = IdMisionTrompetillas, giverId = IdDelSuplente, inProgressDialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_EN_CURSO"),
+                QuestId = IdMisionTrompetillas, GiverId = IdDelSuplente, InProgressDialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_EN_CURSO"),
             }),
             P("tromp-buscar", "6 · Aparecen las trompetillas por el reino", Emitir(Senal.TrompetillasBuscar)),
             P("tromp-recoger", $"6 · Coger las {n} trompetillas (marca un paso de la misión por cada una)",
-              new WaitSignalCountNode { eventKey = Senal.Trompetilla, count = n, questId = IdMisionTrompetillas }),
-            P("tromp-todas", "6 · «¡Ya están todas!»", new PlayDialogueNode { dialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_TODAS") }),
+              new WaitSignalCountNode { EventKey = Senal.Trompetilla, Count = n, QuestId = IdMisionTrompetillas }),
+            P("tromp-todas", "6 · «¡Ya están todas!»", new PlayDialogueNode { Dialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_TODAS") }),
             P("tromp-volver", "6 · Volver con el heraldo suplente (en el reino o, con la prueba superada, en el salón)",
-              new WaitNpcInteractionNode { npcId = IdDelSuplente }),
+              new WaitNpcInteractionNode { NpcId = IdDelSuplente }),
             P("tromp-entrega", "6 · La entrega: «¿Decidida? Me vale»",
-              new PlayDialogueNode { dialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_ENTREGA"), npcId = IdDelSuplente }),
+              new PlayDialogueNode { Dialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_ENTREGA"), NpcId = IdDelSuplente }),
             P("tromp-devolver", "6 · Las trompetillas salen del inventario", new RequireInventoryItemNode
             {
-                item = AssetDatabase.LoadAssetAtPath<ItemData>(RutaTrompetilla), requiredAmount = n, consumeOnSuccess = true,
-                useAlternateOutputOnMissing = false,
+                Item = AssetDatabase.LoadAssetAtPath<ItemData>(RutaTrompetilla), RequiredAmount = n, ConsumeOnSuccess = true,
+                UseAlternateOutputOnMissing = false,
             }),
             P("tromp-cierre", "Cierra la misión de las trompetillas (el suplente queda con su frase de después)", new CompleteQuestStepsNode
             {
-                questId = IdMisionTrompetillas, completeQuest = true,
-                standingActorId = IdDelSuplente, standingDialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_DESPUES"),
+                QuestId = IdMisionTrompetillas, CompleteQuest = true,
+                StandingActorId = IdDelSuplente, StandingDialogue = Dialogo("DLG_CHUCHE_TROMPETILLAS_DESPUES"),
             }),
             P("tromp-premio", $"Premio: {PremioDeEsencia} de Esencia", new GiveInventoryItemNode
             {
-                item = AssetDatabase.LoadAssetAtPath<ItemData>(RutaEsenciaDelPremio), amount = PremioDeEsencia, onlyOnce = true,
+                Item = AssetDatabase.LoadAssetAtPath<ItemData>(RutaEsenciaDelPremio), Amount = PremioDeEsencia, OnlyOnce = true,
             }),
         };
     }

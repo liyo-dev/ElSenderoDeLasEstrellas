@@ -37,6 +37,9 @@ namespace Game.NPC.Combate
         public float segundosDefendiendo;
         /// Devoluciones con la B a proyectiles del grupo en los últimos segundos.
         public int devolucionesRecientes;
+        /// De 0 a 1: cuánto ha leído que el jugador repite el mismo hechizo (ya multiplicado por
+        /// lo que aprende su perfil, <see cref="DefensasDeCombate.leerLaRepeticion"/>).
+        public float repeticionLeida;
 
         // Grupo
         public RolEnElGrupo rol;

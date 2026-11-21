@@ -1,0 +1,536 @@
+{
+    "marcas": [
+        {
+            "segundo": 23.39699935913086,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 23.812000274658203,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 24.229999542236328,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 24.6510009765625,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 25.06599998474121,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 25.474998474121094,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 25.895999908447266,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 26.317001342773438,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 26.726001739501953,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 27.13800048828125,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 27.55900001525879,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 27.9685001373291,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 32.14250183105469,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 32.98400115966797,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 35.44499969482422,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 36.284000396728516,
+            "voz": "GOLPE"
+        },
+        {
+            "segundo": 45.27899932861328,
+            "voz": "OS_PRESENTO"
+        },
+        {
+            "segundo": 46.93899917602539,
+            "voz": "PULMONES"
+        },
+        {
+            "segundo": 50.404998779296875,
+            "voz": "FOGONAZO"
+        },
+        {
+            "segundo": 51.0260009765625,
+            "voz": "FOGONAZO"
+        },
+        {
+            "segundo": 56.97600173950195,
+            "voz": "MUSICAL"
+        },
+        {
+            "segundo": 57.185001373291016,
+            "voz": "MUSICAL"
+        },
+        {
+            "segundo": 57.59700012207031,
+            "voz": "MUSICAL"
+        },
+        {
+            "segundo": 58.612998962402344,
+            "voz": "REGALITO"
+        },
+        {
+            "segundo": 60.22700119018555,
+            "voz": "REGALITO"
+        },
+        {
+            "segundo": 69.50299835205078,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 69.70599365234375,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 70.31600189208984,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 70.31600189208984,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 70.93099975585938,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 71.13999938964844,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 71.34300231933594,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 71.5459976196289,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 71.75250244140625,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 71.95899963378906,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 72.16200256347656,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 72.36499786376953,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 72.80000305175781,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 72.80000305175781,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 73.2239990234375,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 73.59600067138672,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 73.59600067138672,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 74.20800018310547,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 74.61700439453125,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 74.61700439453125,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 74.81999969482422,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 75.02650451660156,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 75.23300170898438,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 75.43899536132813,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 76.25450134277344,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 76.25450134277344,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 76.87000274658203,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 77.07600402832031,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 77.89399719238281,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 77.89399719238281,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 78.0999984741211,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 78.0999984741211,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 78.52400207519531,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 78.52400207519531,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 79.3479995727539,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 79.3479995727539,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 79.77799987792969,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 80.17900085449219,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 80.39350128173828,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 80.60800170898438,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 81.15399932861328,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 81.15399932861328,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 81.56599426269531,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 81.56599426269531,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 82.0009994506836,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 82.0009994506836,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 84.07099914550781,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 84.47450256347656,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 85.51300048828125,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 85.93099975585938,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 86.9469985961914,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 87.78900146484375,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 87.99800109863281,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 88.41600036621094,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 88.83399963378906,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 89.2750015258789,
+            "voz": "LANZA"
+        },
+        {
+            "segundo": 103.61599731445313,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 104.23400115966797,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 105.05899810791016,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 105.88899993896484,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 106.50700378417969,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 106.92500305175781,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 107.14299774169922,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 107.56099700927734,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 107.94999694824219,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 108.56199645996094,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 108.97100067138672,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 109.38300323486328,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 109.79550170898438,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 110.41100311279297,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 111.44100189208984,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 112.05999755859375,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 113.11900329589844,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 113.3479995727539,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 113.52799987792969,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 113.70800018310547,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 113.93450164794922,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 114.16100311279297,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 114.16100311279297,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 114.36700439453125,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 114.572998046875,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 114.79649353027344,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 115.0199966430664,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 115.24649810791016,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 115.4729995727539,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 115.69049835205078,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 115.90799713134766,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 116.13749694824219,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 116.13749694824219,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 118.02450561523438,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 118.40449523925781,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 118.77850341796875,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 119.58599853515625,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 120.01849365234375,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 120.43899536132813,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 123.47200012207031,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 124.44149780273438,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 125.50399780273438,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 125.94499969482422,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 127.21600341796875,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 127.62300109863281,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 128.0290069580078,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 128.85899353027344,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 129.69500732421875,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 130.52499389648438,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 130.9429931640625,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 131.3489990234375,
+            "voz": "METEORITO"
+        },
+        {
+            "segundo": 131.75599670410156,
+            "voz": "METEORITO"
+        }
+    ]
+}

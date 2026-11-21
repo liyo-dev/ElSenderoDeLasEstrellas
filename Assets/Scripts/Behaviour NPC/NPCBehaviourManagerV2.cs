@@ -4,6 +4,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using Game.NPC.Common;
 using Game.NPC.States;
+using Liyodev.NarrativeGraph;
 using Game.NPC.Modules; // Necesario para CombatLifecycleHandler
 
 namespace Game.NPC
@@ -30,7 +31,7 @@ namespace Game.NPC
         [Header("Physics")]
         [SerializeField] private bool forceKinematicRigidbody = true;
 
-        [Header("🌍 IA por Distancia (LOD)")]
+        [Header("IA por Distancia (LOD)")]
         [Tooltip("Distancia (m) más allá de la cual este NPC deja de ejecutar su FSM (Brain.Update) y desactiva su NavMeshAgent, mientras no haya ninguna razón para mantenerlo activo (combate, cinemática, interacción, refugio de lluvia o ser parte del party). Pensado para mundos grandes con muchos NPCs esparcidos lejos del jugador, que hasta ahora seguían corriendo su FSM completa aunque estuvieran a cientos de metros. 0 = desactivado (el NPC siempre está activo, comportamiento anterior a esta optimización).")]
         [Min(0f)]
         [SerializeField] private float aiUpdateDistance = 45f;
@@ -243,15 +244,13 @@ namespace Game.NPC
             PlayerService.OnPlayerUnregistered += OnPlayerUnregistered;
             ResolvePlayerReferences();
 
-            // 9. Refugio de lluvia: DESACTIVADO (31 ago 2026, a petición de diseño de Raúl —
-            // ya no quiere que los NPCs reaccionen a la lluvia sentándose/tiritando bajo un
-            // NPCShelterPoint). El sistema completo (SeekShelterState, ReturnFromShelterState,
-            // NPCShelterPoint, los chequeos en IdleState/WanderState/WalkToActivityState) se deja
-            // intacto en el código por si se retoma más adelante: basta con descomentar estas 3
-            // líneas para reactivarlo. Con ShouldSeekShelter siempre en su valor por defecto
-            // (false), esos 3 estados nunca disparan la transición a SeekShelterState.
-            // NPCWeatherAwareness.RainStarted += HandleRainStarted;
-            // NPCWeatherAwareness.RainStopped += HandleRainStopped;
+            // 9. Refugio de lluvia: DESACTIVADO. El sistema completo (SeekShelterState,
+            // ReturnFromShelterState, NPCShelterPoint, los chequeos en
+            // IdleState/WanderState/WalkToActivityState) se deja intacto en el código por si se
+            // retoma más adelante: basta con descomentar estas 3 líneas para reactivarlo. Con
+            // ShouldSeekShelter siempre en su valor por defecto (false), esos 3 estados nunca
+            // disparan la transición a SeekShelterState. NPCWeatherAwareness.RainStarted +=
+            // HandleRainStarted; NPCWeatherAwareness.RainStopped += HandleRainStopped;
             // _context.ShouldSeekShelter = NPCWeatherAwareness.IsRaining;
 
             // LOD de IA: offset aleatorio para no acumular las comprobaciones de distancia de
@@ -334,18 +333,18 @@ namespace Game.NPC
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // FIX (30 ago 2026, incidencia reportada por Raúl: NPC sentado pero hundido en el suelo —
-        // confirmado que NO estaba en un NPCShelterPoint, así que SeekShelterState queda descartado
-        // como causa): los NPCs con actividad ambiental FIJA (ambientConfig.enableWander = false +
-        // ambientActivity = Sit*, ver IdleState.OnEnter) se sientan exactamente en su posición de
-        // spawn — un Transform colocado a mano en la escena — sin ningún raycast de comprobación
-        // contra el suelo real, a diferencia de SeekShelterState, que sí avisa si su punto de
-        // refugio queda muy por encima/debajo del NavMesh (ver LogWarning en esa clase). Como estos
-        // NPCs nunca caminan (enableWander = false), si el Transform se colocó ligeramente por
-        // debajo de la malla de terreno al diseñar la escena, el NPC se sienta ahí hundido para
-        // siempre y nada lo corrige ni lo detecta solo. Este chequeo solo avisa por consola al
-        // arrancar — no mueve al NPC — para poder localizar rápido qué NPC/escena tiene el
-        // Transform mal colocado la próxima vez que se reporte este síntoma.
+        // NPC sentado pero hundido en el suelo — confirmado que NO estaba en un NPCShelterPoint,
+        // así que SeekShelterState queda descartado como causa): los NPCs con actividad ambiental
+        // FIJA (ambientConfig.enableWander = false + ambientActivity = Sit*, ver IdleState.OnEnter)
+        // se sientan exactamente en su posición de spawn — un Transform colocado a mano en la
+        // escena — sin ningún raycast de comprobación contra el suelo real, a diferencia de
+        // SeekShelterState, que sí avisa si su punto de refugio queda muy por encima/debajo del
+        // NavMesh (ver LogWarning en esa clase). Como estos NPCs nunca caminan (enableWander =
+        // false), si el Transform se colocó ligeramente por debajo de la malla de terreno al
+        // diseñar la escena, el NPC se sienta ahí hundido para siempre y nada lo corrige ni lo
+        // detecta solo. Este chequeo solo avisa por consola al arrancar — no mueve al NPC — para
+        // poder localizar rápido qué NPC/escena tiene el Transform mal colocado la próxima vez que
+        // se reporte este síntoma.
         private const float SitterGroundMismatchWarnThreshold = 0.15f;
 
         private void WarnIfFixedSitterMisplaced()
@@ -386,10 +385,7 @@ namespace Game.NPC
             {
                 _distanceCheckTimer -= Time.deltaTime;
 
-                // FIX (31 ago 2026, INC-129 — NPC "congelado" en la pose de reacción a la lluvia
-                // tras dejar de llover, aunque el causante concreto -el refugio de lluvia- se ha
-                // desactivado por diseño más abajo, esta carrera de condiciones es general): si
-                // el chequeo periódico de distancia duerme a este NPC en ESTE mismo frame
+                // Si el chequeo periódico de distancia duerme a este NPC en ESTE mismo frame
                 // (justEnteredFar), antes se saltaba _brain.Update() sin más — y si justo en ese
                 // instante una condición de exención (ver HasActiveAiExemption) acababa de pasar
                 // a false, el estado activo nunca llegaba a enterarse del cambio y se quedaba
@@ -460,25 +456,24 @@ namespace Game.NPC
                 return;
             }
 
-            // FIX 04 sep 2026 (Raúl: Eldran "da saltitos y a veces no anima las piernas" al
-            // guiar al jugador a un punto de guardado tras un boss, incluso siendo la MISMA
-            // secuencia -LeadPlayerToAnchorSequence, sin cambios de código- que "antes funcionaba").
-            // Este método dormía al NPC (EnterFarState desactiva agent.enabled) SOLO por distancia
-            // al jugador, sin comprobar HasActiveAiExemption() -combate/cinemática/interacción-.
-            // HasActiveAiExemption() solo se consultaba en Update(), UN FRAME DESPUÉS, para decidir
-            // si despertarlo de nuevo — es decir, con dos sistemas independientes tocando el mismo
-            // NavMeshAgent: este chequeo de distancia (ciego a la cinemática) y la secuencia de
-            // escolta (que asume el agente siempre habilitado). Durante una escolta como la de
-            // Eldran, si el jugador se queda un poco atrás (fácil cerca de las montañas, con más
-            // desnivel/rodeos), este método desactivaba el agente ese mismo frame -antes de que
-            // Update() llegara a comprobar la exención- y solo se reactivaba el frame siguiente:
-            // ese frame de agente desactivado es exactamente el "se mueve sin animar piernas"
-            // (velocity cae a 0 con el agente off) y el Warp de vuelta al reactivarlo es el
-            // "saltito". Si el jugador se quedaba atrás más de un frame, el NPC directamente
-            // dejaba de moverse del todo mientras la secuencia seguía llamando a un agente inerte.
-            // Con esta comprobación, un NPC con exención activa nunca llega a dormirse por
-            // distancia, y si ya estaba dormido al activarse la exención, se despierta aquí mismo
-            // en vez de esperar al chequeo de Update().
+            // Eldran "da saltitos y a veces no anima las piernas" al guiar al jugador a un punto de
+            // guardado tras un boss, incluso siendo la MISMA secuencia -LeadPlayerToAnchorSequence,
+            // sin cambios de código- que "antes funcionaba"). Este método dormía al NPC
+            // (EnterFarState desactiva agent.enabled) SOLO por distancia al jugador, sin comprobar
+            // HasActiveAiExemption() -combate/cinemática/interacción-. HasActiveAiExemption() solo
+            // se consultaba en Update(), UN FRAME DESPUÉS, para decidir si despertarlo de nuevo — es
+            // decir, con dos sistemas independientes tocando el mismo NavMeshAgent: este chequeo de
+            // distancia (ciego a la cinemática) y la secuencia de escolta (que asume el agente
+            // siempre habilitado). Durante una escolta como la de Eldran, si el jugador se queda un
+            // poco atrás (fácil cerca de las montañas, con más desnivel/rodeos), este método
+            // desactivaba el agente ese mismo frame -antes de que Update() llegara a comprobar la
+            // exención- y solo se reactivaba el frame siguiente: ese frame de agente desactivado es
+            // exactamente el "se mueve sin animar piernas" (velocity cae a 0 con el agente off) y el
+            // Warp de vuelta al reactivarlo es el "saltito". Si el jugador se quedaba atrás más de
+            // un frame, el NPC directamente dejaba de moverse del todo mientras la secuencia seguía
+            // llamando a un agente inerte. Con esta comprobación, un NPC con exención activa nunca
+            // llega a dormirse por distancia, y si ya estaba dormido al activarse la exención, se
+            // despierta aquí mismo en vez de esperar al chequeo de Update().
             if (HasActiveAiExemption())
             {
                 if (_isFarFromPlayer)
@@ -606,13 +601,8 @@ namespace Game.NPC
                 return;
 
             // SAFETY CHECK: Si está en IdleState pero el agente no está detenido, forzar detención
-            // Esto captura casos donde algo externo está activando el agente
-            // comparación por tipo en vez de por string
-            // (evita comparar StateName == "Idle" cada NPC/frame). No se ha unificado con la
-            // vigilancia equivalente de IdleState.OnUpdate — ambas llevan el comentario "FIX
-            // CRÍTICO" propio, señal de que cada una se añadió para tapar un caso real distinto;
-            // fusionarlas sin poder reproducir esos casos en el editor es más riesgo del que
-            // conviene asumir ahora mismo.
+            // Esto captura casos donde algo externo está activando el agente comparación por tipo
+            // en vez de por string (evita comparar StateName == "Idle" cada NPC/frame).
             if (_brain != null && _brain.CurrentState is IdleState &&
                 _agent != null && _agent.enabled && _agent.isOnNavMesh)
             {
@@ -691,11 +681,9 @@ namespace Game.NPC
                 if (!GetComponent<NPCCombatLifecycleHandler>())
                 {
                     gameObject.AddComponent<NPCCombatLifecycleHandler>();
-                    //if (debugMode) Debug.Log($"[NPCManager] ☠️ NPCCombatLifecycleHandler añadido (Pre-Combate) para {name}");
                 }
                 else
                 {
-                    //if (debugMode) Debug.Log($"[NPCManager] NPCCombatLifecycleHandler ya existe en {name}");
                 }
 
                 // C. Targetable (Para que el jugador pueda apuntarle antes de pelear)
@@ -782,6 +770,12 @@ namespace Game.NPC
             }
             
             // ENEMIGO: Lógica normal
+            // Con un combate cerrado en marcha (uno de la historia), solo entran sus participantes.
+            if (!ActiveCombatRegistry.PuedeEntrarEnCombate(gameObject))
+            {
+                _context.IsInCombat = false;
+                return;
+            }
             // Registrar NPC en el registro de combate activo
             ActiveCombatRegistry.RegisterNPC(gameObject);
             
@@ -836,6 +830,11 @@ namespace Game.NPC
             // combate se resolverá igualmente en cuanto la cinemática termine — el atacante no
             // pierde el registro, solo se evita interrumpir la secuencia en curso.
             if (_context != null && _context.IsInCinematic) return;
+
+            // Con un combate cerrado en marcha (uno de la historia), solo entran sus participantes;
+            // los aliados del grupo no pasan por aquí como enemigos.
+            bool esAliado = _cachedPartyMember != null && _cachedPartyMember.IsInParty;
+            if (!esAliado && !ActiveCombatRegistry.PuedeEntrarEnCombate(gameObject)) return;
 
             // Asignar el objetivo
             _context.Player = target;
@@ -1088,14 +1087,10 @@ namespace Game.NPC
         {
             if (!persistLastPosition || lastPosition == Vector3.zero || SentadoFijo) return;
 
-            // FIX INC-070: si el NavMesh se ha vuelto a bakear (o el terreno cambió) desde que se
-            // guardó lastPosition, esa altura guardada puede ya no coincidir con la superficie
-            // actual. Antes, si _agent.isOnNavMesh daba false en este punto (p.ej. porque la
-            // posición de editor del NPC quedó fuera del NavMesh rebakeado), se hacía un
-            // "transform.position = lastPosition" en crudo, sin comprobar el NavMesh actual — el
-            // NPC quedaba flotando/enterrado ahí para siempre, ya que es cinemático
-            // (forceKinematicRigidbody) y sin gravedad que lo corrija. Ahora buscamos primero el
-            // punto válido más cercano en el NavMesh vigente antes de colocar al NPC.
+            // Si el NavMesh se ha vuelto a bakear (o el terreno cambió) desde que se guardó
+            // lastPosition, esa altura guardada puede ya no coincidir con la superficie actual.
+            // Ahora buscamos primero el punto válido más cercano en el NavMesh vigente antes de
+            // colocar al NPC.
             if (NavMesh.SamplePosition(lastPosition, out var hit, 5f, NavMesh.AllAreas))
             {
                 if (_agent != null)

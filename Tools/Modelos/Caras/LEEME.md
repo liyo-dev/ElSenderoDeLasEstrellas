@@ -81,3 +81,12 @@ Reglas (`hinchar_casquete` de `caras_lib.txt`, usada por `pelo_archimago.py` y `
   de la cabeza. Sin él, desde abajo se ve su revés (Unity no lo pinta) y se ve el cielo a través del pelo.
 - Lo usa `pelo_archimago.py` (los cuatro mechones). Comprobar con `../Prendas/chequeo_huecos.py`.
 - Will (`Hair16_Heroe`) no pasa ese chequeo: pendiente.
+
+
+## Pelos de los jóvenes del recuerdo (19 nov 2026, INC-1338)
+- `pelo_del_pack.py` (args: modular.blend, HairNN.fbx del pack, salida; entorno `NOMBRE_PELO`, `PELO_COLOR`, `PELO_COLOR_CLARO`,
+  `SOLO_PELO=1`): un pelo del pack como pelo propio en otro color (sin las cejas, dos materiales lisos, grosor por dentro, pesado
+  a «head»). Después, `../Pelo/nuca.py`. Lo usa Eldran joven (`Hair23_EldranJoven`, el Hair13 en castaño oscuro).
+- `pelo_silas.py` → `Hair22_Silas` (ver `../Silas/LEEME.md`).
+- Caras: Eldran joven y Silas joven llevan juegos del kit (`h_almendra_ambar`, `h_almendra_verde`) con su propia clave en
+  `CarasDeLosNPCs` (`eldran_joven`, `silas_joven`) para que las cejas sean del color de su pelo.

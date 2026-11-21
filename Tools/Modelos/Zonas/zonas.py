@@ -728,14 +728,17 @@ def rosa_de_los_vientos(nombre="RosaDeLosVientos"):
     """Rosa de los vientos de 9,4 m sobre una tarima de piedra de dos peldaños bajos (z = 0 es el peldaño de fuera).
     El cuerpo baja 1,2 m para asentarse en una plaza que no es llana."""
     zr = 0.2
+    # Cada capa que se solapa con otra (rayos cortos, rayos largos, disco) tiene su cara de arriba a su propia altura,
+    # con 2,5-3 cm entre una y otra: a la distancia de la cámara de juego, menos separación parpadea (z-fighting).
     o = [cono(0, 0, -1.2, 0.0, 5.3, 5.3, "PiedraGris", 32), cono(0, 0, 0.0, zr - 0.03, 4.75, 4.75, "PiedraLila", 32),
          cono(0, 0, zr - 0.03, zr - 0.015, 4.7, 4.7, "Zocalo", 32), cono(0, 0, zr - 0.015, zr, 4.4, 4.4, "Cal", 32)]
     for k in range(8):
         ang, largo, mat_ = k * math.pi / 4, (4.2 if k % 2 == 0 else 2.7), ("Zocalo" if k % 2 == 0 else "RojoFaro")
+        arriba = zr + (0.045 if k % 2 == 0 else 0.02)
         d, p = (math.cos(ang), math.sin(ang)), (-math.sin(ang), math.cos(ang))
-        o.append(losa([(d[0] * largo, d[1] * largo), (p[0] * 0.55, p[1] * 0.55), (0, 0)], zr, zr + 0.015, mat_))
-        o.append(losa([(d[0] * largo, d[1] * largo), (0, 0), (-p[0] * 0.55, -p[1] * 0.55)], zr, zr + 0.015, "TejaTurquesa" if k % 2 == 0 else "TejaAmarilla"))
-    o.append(cono(0, 0, zr + 0.015, zr + 0.03, 0.7, 0.7, "Oro", 16))
+        o.append(losa([(d[0] * largo, d[1] * largo), (p[0] * 0.55, p[1] * 0.55), (0, 0)], zr, arriba, mat_))
+        o.append(losa([(d[0] * largo, d[1] * largo), (0, 0), (-p[0] * 0.55, -p[1] * 0.55)], zr, arriba, "TejaTurquesa" if k % 2 == 0 else "TejaAmarilla"))
+    o.append(cono(0, 0, zr, zr + 0.075, 0.7, 0.7, "Oro", 16))
     return juntar(o, nombre)
 
 def banderines(nombre="Banderines", luz=20.0):

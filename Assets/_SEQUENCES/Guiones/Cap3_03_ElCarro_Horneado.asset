@@ -17,7 +17,7 @@ MonoBehaviour:
   rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt
   duracion: 39.53668
   presentacion: 1
-  huella: "2026-11-18 15:25 \xB7 1784bfb1bd1f9333599202ec31e2740f"
+  huella: "2026-11-19 20:55 \xB7 d1f60178f2bb8e2ce84d2289c6d41ee7"
   actores:
   - id: Player
     prefab: Assets/Prefabs/_WILL.prefab
@@ -120,6 +120,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 1
       tipo: 0
@@ -127,6 +128,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 1.5
       tipo: 3
@@ -134,6 +136,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 1.58
       tipo: 2
@@ -141,6 +144,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 3.8899999
       tipo: 4
@@ -148,6 +152,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 20.459343
       tipo: 2
@@ -155,6 +160,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 31.041676
       tipo: 3
@@ -162,6 +168,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 31.121675
       tipo: 2
@@ -169,6 +176,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 33.921677
       tipo: 2
@@ -176,6 +184,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 35.706676
       tipo: 4
@@ -183,6 +192,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 35.906677
       tipo: 3
@@ -190,6 +200,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 35.98668
       tipo: 2
@@ -197,6 +208,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 38.686676
       tipo: 4
@@ -204,6 +216,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     caras:
     - t: 1
       emocion: decidido
@@ -223,7 +236,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Contrabandista1
-    prefab: Assets/_NPCs/Pueblo/Jorge.prefab
+    prefab: Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab
     alias: c1
     colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
     claveDelNombre: CHAR_CONTRABANDISTA
@@ -463,11 +476,6 @@ MonoBehaviour:
       rumbo: 0
       punto: {x: -99.5, y: 20.320442, z: -206.5}
       actor: 
-    - t: 24.161676
-      tipo: 2
-      rumbo: 0
-      punto: {x: 0, y: 0, z: 0}
-      actor: NPC_Contrabandista2
     cabezas:
     - t: 19.979343
       tipo: 1
@@ -487,6 +495,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 24.161676
       tipo: 3
@@ -494,6 +503,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 24.241676
       tipo: 2
@@ -501,6 +511,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 27.591675
       tipo: 4
@@ -508,6 +519,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     caras:
     - t: 24.161676
       emocion: molesto
@@ -785,6 +797,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 19.839342
       tipo: 2
@@ -792,6 +805,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 22.424343
       tipo: 2
@@ -799,6 +813,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: gasp
+      origen: 0
     - fundido: 0
       t: 22.474342
       tipo: 4
@@ -806,6 +821,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 22.761677
       tipo: 2
@@ -813,6 +829,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: gasp
+      origen: 0
     - fundido: 0
       t: 24.861677
       tipo: 2
@@ -820,6 +837,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     caras:
     - t: 19.759342
       emocion: molesto
@@ -833,7 +851,7 @@ MonoBehaviour:
     t1: 3.84
     actor: Player
     clave: CAP3_CARRO_01
-    linea: 57
+    linea: 59
     gesto: Decidido01
     sinPose: 0
     presentacion: -1
@@ -843,7 +861,7 @@ MonoBehaviour:
     t1: 22.424343
     actor: NPC_Contrabandista2
     clave: CAP3_CARRO_04
-    linea: 76
+    linea: 78
     gesto: Talk02
     sinPose: 0
     presentacion: -1
@@ -853,7 +871,7 @@ MonoBehaviour:
     t1: 27.541676
     actor: NPC_Contrabandista1
     clave: CAP3_CARRO_05
-    linea: 84
+    linea: 87
     gesto: Talk01
     sinPose: 0
     presentacion: -1
@@ -863,7 +881,7 @@ MonoBehaviour:
     t1: 35.656677
     actor: Player
     clave: CAP3_CARRO_02
-    linea: 92
+    linea: 95
     gesto: Dudar01
     sinPose: 0
     presentacion: -1
@@ -873,7 +891,7 @@ MonoBehaviour:
     t1: 38.636677
     actor: Player
     clave: CAP3_CARRO_03
-    linea: 93
+    linea: 96
     gesto: Decidido01
     sinPose: 0
     presentacion: -1
@@ -881,7 +899,7 @@ MonoBehaviour:
   - focos: []
     t0: 0
     t1: 10.125902
-    linea: 48
+    linea: 50
     tipo: 2
     descripcion: medio de will
     posiciones:
@@ -983,7 +1001,7 @@ MonoBehaviour:
   - focos: []
     t0: 10.125902
     t1: 19.759342
-    linea: 67
+    linea: 69
     tipo: 0
     descripcion: general de c1 y c2
     posiciones:
@@ -999,7 +1017,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.71611065
+    alturaDelFoco: 0.7517908
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -1007,7 +1025,7 @@ MonoBehaviour:
   - focos: []
     t0: 19.759342
     t1: 22.761677
-    linea: 75
+    linea: 77
     tipo: 2
     descripcion: medio de c2
     posiciones:
@@ -1029,7 +1047,7 @@ MonoBehaviour:
   - focos: []
     t0: 22.761677
     t1: 24.161676
-    linea: 80
+    linea: 82
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -1051,12 +1069,12 @@ MonoBehaviour:
   - focos: []
     t0: 24.161676
     t1: 27.541676
-    linea: 83
+    linea: 85
     tipo: 2
     descripcion: medio de c1
     posiciones:
     - t: 24.161676
-      p: {x: -94.9285, y: 21.330288, z: -207.94273}
+      p: {x: -94.563965, y: 21.457438, z: -206.72986}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1065,7 +1083,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0548182
+    alturaDelFoco: 1.1603
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -1073,40 +1091,40 @@ MonoBehaviour:
   - focos: []
     t0: 27.541676
     t1: 31.041676
-    linea: 89
+    linea: 92
     tipo: 5
     descripcion: 'dos: c1 y c2'
     posiciones:
     - t: 27.541676
-      p: {x: -104.29078, y: 21.090767, z: -208.47757}
+      p: {x: -104.29078, y: 21.139463, z: -208.47757}
     - t: 27.791676
-      p: {x: -104.36289, y: 21.087494, z: -208.57828}
+      p: {x: -104.36289, y: 21.13619, z: -208.57828}
     - t: 28.041676
-      p: {x: -104.43754, y: 21.084106, z: -208.68251}
+      p: {x: -104.43754, y: 21.132803, z: -208.68251}
     - t: 28.291676
-      p: {x: -104.51363, y: 21.080654, z: -208.78879}
+      p: {x: -104.51363, y: 21.129349, z: -208.78879}
     - t: 28.541676
-      p: {x: -104.659256, y: 21.074045, z: -208.99211}
+      p: {x: -104.659256, y: 21.122742, z: -208.99211}
     - t: 28.791676
-      p: {x: -104.81262, y: 21.067083, z: -209.20627}
+      p: {x: -104.81262, y: 21.115782, z: -209.20627}
     - t: 29.041676
-      p: {x: -104.97044, y: 21.059921, z: -209.42668}
+      p: {x: -104.97044, y: 21.108616, z: -209.42668}
     - t: 29.291676
-      p: {x: -105.12969, y: 21.052694, z: -209.64905}
+      p: {x: -105.12969, y: 21.10139, z: -209.64905}
     - t: 29.541676
-      p: {x: -105.28913, y: 21.045458, z: -209.8717}
+      p: {x: -105.28913, y: 21.094156, z: -209.8717}
     - t: 29.791676
-      p: {x: -105.448555, y: 21.03816, z: -210.09435}
+      p: {x: -105.448555, y: 21.086857, z: -210.09435}
     - t: 30.041676
-      p: {x: -105.607994, y: 21.030172, z: -210.317}
+      p: {x: -105.607994, y: 21.078869, z: -210.317}
     - t: 30.291676
-      p: {x: -105.76744, y: 21.0215, z: -210.53963}
+      p: {x: -105.76744, y: 21.070194, z: -210.53963}
     - t: 30.541676
-      p: {x: -105.84716, y: 21.017506, z: -210.65096}
+      p: {x: -105.84716, y: 21.066202, z: -210.65096}
     - t: 30.791676
-      p: {x: -105.926865, y: 21.013363, z: -210.76228}
+      p: {x: -105.926865, y: 21.06206, z: -210.76228}
     - t: 31.041676
-      p: {x: -106.0066, y: 21.008957, z: -210.87361}
+      p: {x: -106.0066, y: 21.057653, z: -210.87361}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -1117,7 +1135,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.87716246
+    alturaDelFoco: 0.92098963
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
@@ -1125,7 +1143,7 @@ MonoBehaviour:
   - focos: []
     t0: 31.041676
     t1: 39.53668
-    linea: 91
+    linea: 94
     tipo: 3
     descripcion: primer plano de will
     posiciones:
@@ -1149,25 +1167,25 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294704968237382
+      rid: 6540294727198835278
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 1
     beat:
-      rid: 6540294704968237383
-    linea: 52
+      rid: 6540294727198835279
+    linea: 54
   - onlyIfFlag: 
     skipIfFlag: 
     t: 10.125902
     beat:
-      rid: 6540294704968237384
-    linea: 68
+      rid: 6540294727198835280
+    linea: 70
   - onlyIfFlag: 
     skipIfFlag: 
     t: 39.53668
     beat:
-      rid: 6540294704968237385
+      rid: 6540294727198835281
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -1207,7 +1225,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294704968237382
+    - rid: 6540294727198835278
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1215,7 +1233,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294704968237383
+    - rid: 6540294727198835279
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1225,7 +1243,7 @@ MonoBehaviour:
         markName: 
         volume: 0.35
         tono: 1
-    - rid: 6540294704968237384
+    - rid: 6540294727198835280
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1235,7 +1253,7 @@ MonoBehaviour:
         markName: 
         volume: 0.5
         tono: 1
-    - rid: 6540294704968237385
+    - rid: 6540294727198835281
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

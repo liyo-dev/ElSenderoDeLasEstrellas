@@ -61,13 +61,12 @@ namespace Game.NPC.States
         // OPTIMIZACIÓN FASE 1: Buffer reutilizable para Physics queries (evita allocations)
         private Collider[] _physicsBuffer = new Collider[32];
 
-        // FIX #17: buffer reutilizable para
-        // ActiveCombatRegistry.GetAllInCombatNonAlloc (antes GetAllInCombat() alocaba una List
-        // nueva en cada llamada, incluida desde OnUpdate/FindNearestEnemy con cooldown de 0.3s).
+        // Buffer reutilizable para ActiveCombatRegistry.GetAllInCombatNonAlloc (antes
+        // GetAllInCombat() alocaba una List nueva en cada llamada, incluida desde
+        // OnUpdate/FindNearestEnemy con cooldown de 0.3s).
         private readonly List<GameObject> _combatNpcBuffer = new List<GameObject>(16);
 
-        // FIX #20: LayerMask.GetMask cacheado como static readonly
-        // (antes se recalculaba en FindNearestEnemy y en cada lanzamiento de hechizo).
+        // LayerMask.GetMask cacheado como static readonly.
         private static readonly int EnemyBossMask = LayerMask.GetMask("Enemy", "Boss");
         private static readonly int EnemyBossDefaultMask = LayerMask.GetMask("Enemy", "Boss", "Default");
 
@@ -198,9 +197,9 @@ namespace Game.NPC.States
             // PRIORIDAD 1: Si tenemos un target forzado que aún existe y está VIVO, mantenerlo
             if (_forcedTarget != null && _forcedTarget.gameObject != null && _forcedTarget.gameObject.activeInHierarchy)
             {
-                // FIX #9: reutiliza el cache de Damageable en vez
-                // de GetComponent<Damageable>() cada frame (IsTargetAlive() lo hacía sin cachear, y
-                // este chequeo se ejecuta todos los frames mientras hay target forzado).
+                // Reutiliza el cache de Damageable en vez de GetComponent<Damageable>() cada frame
+                // (IsTargetAlive() lo hacía sin cachear, y este chequeo se ejecuta todos los frames
+                // mientras hay target forzado).
                 if (_damageableCachedFor != _forcedTarget)
                 {
                     _currentTargetDamageable = _forcedTarget.GetComponent<Damageable>();
@@ -218,7 +217,7 @@ namespace Game.NPC.States
                     if (context.DebugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target forzado {_forcedTarget.name} está muerto, liberando target...");
+                        Debug.Log($"[AllyCombatState:{context.Transform.name}] Target forzado {_forcedTarget.name} está muerto, liberando target...");
                         #endif
                     }
                     _forcedTarget = null;
@@ -231,11 +230,11 @@ namespace Game.NPC.States
             // PRIORIDAD 1.5: Si perdimos el target forzado pero tenemos su nombre, re-buscarlo en registry
             else if (_forcedTarget == null && !string.IsNullOrEmpty(_forcedTargetName))
             {
-                // FIX #8: TryFindTargetByName cae a
-                // GameObject.Find(...) (recorre toda la escena) cuando no está en el registry. Sin
-                // cooldown esto se ejecutaba cada frame mientras el target forzado no reaparecía.
-                // Reutiliza _searchCooldown (se decrementa en la Prioridad 3 de más abajo, que se
-                // ejecuta en el mismo frame si seguimos sin target).
+                // TryFindTargetByName cae a GameObject.Find(...) (recorre toda la escena) cuando
+                // no está en el registry. Sin cooldown esto se ejecutaba cada frame mientras el
+                // target forzado no reaparecía. Reutiliza _searchCooldown (se decrementa en la
+                // Prioridad 3 de más abajo, que se ejecuta en el mismo frame si seguimos sin
+                // target).
                 if (_searchCooldown <= 0f)
                 {
                     var foundByName = TryFindTargetByName(_forcedTargetName);
@@ -261,7 +260,7 @@ namespace Game.NPC.States
                     if (context.DebugMode)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target {_currentTarget.name} murió, buscando otro...");
+                        Debug.Log($"[AllyCombatState:{context.Transform.name}] Target {_currentTarget.name} murió, buscando otro...");
                         #endif
                     }
                     _currentTarget = null;

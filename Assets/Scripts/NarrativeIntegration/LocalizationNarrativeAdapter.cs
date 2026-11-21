@@ -1,3 +1,4 @@
+using Liyodev.NarrativeGraph;
 /// <summary>Traduce los textos de los nodos con <see cref="LocalizationManager"/>.</summary>
 public sealed class LocalizationNarrativeAdapter : INarrativeTextLocalizer
 {

@@ -1,644 +1,446 @@
 using System;
+using System.Collections.Generic;
+using Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Linq;
 using UnityEngine.UI;
-using Core;
+using M = EstiloDePapelDelMenu;
 
+/// <summary>
+/// Ajustes del menú principal con la disposición de la maqueta «Menú principal: Ajustes»: una
+/// hoja grande con su etiqueta, pestañas a la izquierda (Sonido, Imagen, Idioma, Juego) y a la
+/// derecha las filas de la pestaña abierta (deslizadores con la estrella y su número, interruptores
+/// Sí/No). Se monta por código al despertar; los cambios se guardan en el acto en
+/// <see cref="PlayerSettings"/>. B, Esc o Start cierran.
+/// </summary>
 public class SettingsMenuController : MonoBehaviour
 {
-    [Header("Root")]
     [SerializeField] private GameObject root;
-    [SerializeField] private Selectable firstSelection;
-    [Tooltip("Botón visible \"Volver\" — además del mapeo compartido de Cancelar (Esc/mando), para que jugar con ratón no dependa solo del atajo de teclado.")]
-    [SerializeField] private Button backButton;
-
-    [Header("Language")]
-    [SerializeField] private Button spanishButton;
-    [SerializeField] private Button englishButton;
-
-    [Header("Audio")]
-    [SerializeField] private Slider masterVolumeSlider;
-    [SerializeField] private Slider sfxVolumeSlider;
-    [SerializeField] private Slider musicVolumeSlider;
-
-    [Header("Camera")]
-    [SerializeField] private Button invertLookYesButton;
-    [SerializeField] private Button invertLookNoButton;
-    [SerializeField] private Slider lookSensitivitySlider;
-
-    [Header("Accesibilidad / General")]
-    [SerializeField] private Button vibrationYesButton;
-    [SerializeField] private Button vibrationNoButton;
-    [SerializeField] private Button fullscreenYesButton;
-    [SerializeField] private Button fullscreenNoButton;
-    [Tooltip("Sí/No de los avisos de combate en el momento justo (INC-666).")]
-    [SerializeField] private Button combatHintsYesButton;
-    [SerializeField] private Button combatHintsNoButton;
-
-    private Action _onClosed;
-    private EventSystem _eventSystem;
-
-    // Opción elegida en dorado y la otra en papel apagado, como las fichas de la interfaz de papel.
-    private static Color ColorActivo => PaletaUI.Oro;
-    private static Color ColorInactivo => PaletaUI.PapelApagado;
-
-    [Header("Slider input")]
-    [SerializeField, Tooltip("Incremento aplicado al ajustar sliders con el gamepad.")]
-    private float sliderStep = 0.05f;
-
-    [Header("Visuals")]
-    [Tooltip("Auto-add UISelectVisual to selectables under this root to show navigation feedback.")]
-    [SerializeField] private bool autoAddSelectVisuals = true;
-
-    [Header("Navigation")]
+    [Tooltip("Fuentes de los menús de papel.")]
+    [SerializeField] private EstiloDeMenuSencillo estilo;
     [SerializeField, Min(0f), Tooltip("Tiempo mínimo tras abrir antes de aceptar una orden de cierre.")]
     private float cancelInputGracePeriod = 0.25f;
-    private bool _cancelRequested;
+
+    // Medidas de la maqueta (lienzo de 1920×1080).
+    const float XPestana = 366f, YPestana = 180f, PasoPestana = 92f;
+    const float XEtiqueta = 710f, YFila = 190f, PasoFila = 90f;
+    const float XPista = 980f, AnchoPista = 450f, XValor = 1450f, XInterruptor = 1430f;
+
+    private sealed class Fila
+    {
+        public Selectable control;
+        public TextMeshProUGUI etiqueta, valor, debajo;
+        public Image pista, bola;
+        public Func<bool> leer;
+        public Action<bool> escribir;
+        public Func<float> leerValor;
+    }
+
+    private sealed class Pestana
+    {
+        public string clave, porDefecto;
+        public Button boton;
+        public FichaElegible ficha;
+        public RectTransform cuerpo;
+        public readonly List<Fila> filas = new();
+    }
+
+    private readonly List<Pestana> _pestanas = new();
+    private readonly List<(TextMeshProUGUI texto, string clave, string porDefecto)> _traducibles = new();
+    private RectTransform _lienzo;
+    private Pestana _abierta;
+    private Action _onClosed;
     private float _openedAt = -999f;
-    private bool _sliderEditMode;
-    private Slider _activeSlider;
-    private bool _previousNavigationState = true;
-    private bool _navigationOverridden;
+    private bool _montado;
 
     public bool IsVisible => root != null && root.activeInHierarchy;
 
+    private TMP_FontAsset Titulos => estilo != null && estilo.fuenteTitulo != null ? estilo.fuenteTitulo : TMP_Settings.defaultFontAsset;
+    private TMP_FontAsset Letra => estilo != null && estilo.fuenteTexto != null ? estilo.fuenteTexto : TMP_Settings.defaultFontAsset;
+
     void Awake()
     {
-        if (!root)
-            root = gameObject;
-
-        _eventSystem = EventSystem.current;
-
-        // Además del mapeo compartido de Cancelar (Esc en teclado, botón B/East en mando), hay un
-        // botón "Volver" visible en el panel: con ratón no había ninguna forma cómoda de cerrar el
-        // menú sin depender del atajo de teclado.
-        VestirDePapel();
-        WireBinaryButton(backButton, () => Close());
-
-        if (spanishButton)
-            spanishButton.onClick.AddListener(() => SetLanguage("es"));
-        if (englishButton)
-            englishButton.onClick.AddListener(() => SetLanguage("en"));
-
-        if (masterVolumeSlider)
-            masterVolumeSlider.onValueChanged.AddListener(v => HandleSliderChanged(masterVolumeSlider, PlayerSettings.SetMasterVolume, v));
-        if (sfxVolumeSlider)
-            sfxVolumeSlider.onValueChanged.AddListener(v => HandleSliderChanged(sfxVolumeSlider, PlayerSettings.SetSfxVolume, v));
-        if (musicVolumeSlider)
-            musicVolumeSlider.onValueChanged.AddListener(v => HandleSliderChanged(musicVolumeSlider, PlayerSettings.SetMusicVolume, v));
-
-        WireBinaryButton(invertLookYesButton, () => OnInvertLookClicked(true));
-        WireBinaryButton(invertLookNoButton, () => OnInvertLookClicked(false));
-        if (lookSensitivitySlider)
-            lookSensitivitySlider.onValueChanged.AddListener(v => HandleSliderChanged(lookSensitivitySlider, PlayerSettings.SetLookSensitivity, v));
-        WireBinaryButton(vibrationYesButton, () => OnVibrationClicked(true));
-        WireBinaryButton(vibrationNoButton, () => OnVibrationClicked(false));
-        WireBinaryButton(fullscreenYesButton, () => OnFullscreenClicked(true));
-        WireBinaryButton(fullscreenNoButton, () => OnFullscreenClicked(false));
-        WireBinaryButton(combatHintsYesButton, () => OnCombatHintsClicked(true));
-        WireBinaryButton(combatHintsNoButton, () => OnCombatHintsClicked(false));
-
-        RefreshUI();
-
-        // Ensure select visuals exist on selectable controls so navigation shows DOTween highlight/pulse
-        if (autoAddSelectVisuals && root != null)
-        {
-            // OPTIMIZACIÓN: Cachear y evitar GetComponent repetido
-            var selects = GetComponentsInChildren<Selectable>(true);
-            foreach (var s in selects)
-            {
-                if (s == null) continue;
-                var go = s.gameObject;
-                
-                // UISelectVisual
-                if (!go.GetComponent<UISelectVisual>())
-                {
-                    var v = go.AddComponent<UISelectVisual>();
-                    v.normalColor = s is Slider ? PaletaUI.PapelClaro : ColorInactivo;
-                    v.highlightColor = ColorActivo;
-                    v.selectedScale = 1.06f;
-                    v.animDuration = 0.12f;
-                    v.enablePulse = true;
-                    v.enableShadowPunch = true;
-                }
-                
-                // UIButtonAudio - solo para botones
-                if (s is Button && !go.GetComponent<UIButtonAudio>())
-                {
-                    go.AddComponent<UIButtonAudio>();
-                }
-                
-                // UISliderAudio - solo para sliders
-                if (s is Slider && !go.GetComponent<UISliderAudio>())
-                {
-                    go.AddComponent<UISliderAudio>();
-                }
-            }
-        }
-
+        if (!root) root = gameObject;
+        Montar();
     }
 
     void OnEnable()
     {
-        RefreshUI();
-        // EventSystem maneja toda la navegación automáticamente
+        if (LocalizationManager.Instance != null) LocalizationManager.Instance.OnLocaleChanged += Traducir;
+        Refrescar();
     }
 
     void OnDisable()
     {
-        RestoreNavigationEvents();
-        _sliderEditMode = false;
-        _activeSlider = null;
+        if (LocalizationManager.Instance != null) LocalizationManager.Instance.OnLocaleChanged -= Traducir;
     }
 
-    void Update()
+    // ─── Montaje ───────────────────────────────────────────────────────────
+
+    private void Montar()
     {
-        if (root == null || !root.activeInHierarchy) return;
+        if (_montado) return;
+        _montado = true;
+        _lienzo = PiezasDeUI.LienzoDeMaqueta((RectTransform)root.transform, "Ajustes");
 
-        // Detectar botones del gamepad usando GamepadInputReader centralizado
-        bool submitPressed = GamepadInputReader.SubmitPressed;
-        bool startPressed = GamepadInputReader.StartPressed;
-        
-        if (submitPressed)
-        {
-            TryToggleSliderEditMode();
-        }
+        var noche = PiezasDeUI.Imagen("Fondo", _lienzo, null, new Color(M.NocheProfunda.r, M.NocheProfunda.g, M.NocheProfunda.b, 0.45f));
+        PiezasDeUI.ColocarArribaIzquierda(noche.rectTransform, 0f, 0f, 1920f, 1080f);
+        noche.raycastTarget = true; // tapa el menú de detrás
+        var izquierda = PiezasDeUI.Velo("VeloIzquierdo", _lienzo, M.NocheProfunda, 0.86f, 0.62f, 0.55f, false);
+        PiezasDeUI.ColocarArribaIzquierda(izquierda.rectTransform, 0f, 0f, 1000f, 1080f);
+        var abajo = PiezasDeUI.Velo("VeloDeAbajo", _lienzo, M.NocheProfunda, 0.95f, 0.6f, 0.5f, true);
+        PiezasDeUI.ColocarArribaIzquierda(abajo.rectTransform, 0f, 880f, 1920f, 200f);
 
-        // Start cierra el menú
-        if (startPressed && Time.unscaledTime - _openedAt >= cancelInputGracePeriod)
-        {
-            if (!_sliderEditMode)
-                Close();
-        }
+        var hoja = PiezasDeUI.NuevaCarta("Hoja", _lienzo, PaletaUI.Papel, 30f);
+        PiezasDeUI.ColocarArribaIzquierda(hoja.raiz, 330f, 110f, 1260f, 820f);
+        var etiqueta = PiezasDeUI.NuevaCarta("Etiqueta", _lienzo, PaletaUI.Oro, 18f);
+        PiezasDeUI.ColocarArribaIzquierda(etiqueta.raiz, 390f, 80f, 300f, 62f, -2f);
+        Traducible(Texto("Titulo", etiqueta.contenido, true, 40f, PaletaUI.TintaDeTexto, TextAlignmentOptions.Center), "SETTINGS_TITLE", "Ajustes");
 
-        if (_sliderEditMode)
-        {
-            MaintainSliderSelection();
-            HandleSliderInputFromControls();
-        }
+        var division = PiezasDeUI.Imagen("Division", _lienzo, null, new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.3f));
+        division.raycastTarget = false;
+        PiezasDeUI.ColocarArribaIzquierda(division.rectTransform, 662f, 160f, 3f, 630f);
 
-        if (WasCancelPressedThisFrame())
-        {
-            if (!_sliderEditMode)
-                Close();
-        }
+        var sonido = NuevaPestana("AJUSTES_PESTANA_SONIDO", "Sonido");
+        Deslizador(sonido, "AJUSTES_MUSICA", "Música", () => PlayerSettings.MusicVolume, PlayerSettings.SetMusicVolume);
+        Deslizador(sonido, "AJUSTES_EFECTOS", "Efectos", () => PlayerSettings.SfxVolume, PlayerSettings.SetSfxVolume);
+        Deslizador(sonido, "AJUSTES_VOCES", "Voces", () => PlayerSettings.DialogueVolume, PlayerSettings.SetDialogueVolume);
+        Deslizador(sonido, "SETTINGS_MASTER_VOLUME", "Volumen general", () => PlayerSettings.MasterVolume, PlayerSettings.SetMasterVolume);
+        Interruptor(sonido, "AJUSTES_SUBTITULOS", "Subtítulos en las charlas", () => PlayerSettings.Subtitles, PlayerSettings.SetSubtitles);
+        Interruptor(sonido, "AJUSTES_VIBRACION", "Vibración del mando", () => PlayerSettings.Vibration, PlayerSettings.SetVibration);
+
+        var imagen = NuevaPestana("AJUSTES_PESTANA_IMAGEN", "Imagen");
+        Interruptor(imagen, "SETTINGS_FULLSCREEN", "Pantalla completa", () => PlayerSettings.Fullscreen, PlayerSettings.SetFullscreen);
+
+        var idioma = NuevaPestana("AJUSTES_PESTANA_IDIOMA", "Idioma");
+        Interruptor(idioma, null, "Español", () => PlayerSettings.Language == "es", si => { if (si) PlayerSettings.SetLanguage("es"); });
+        Interruptor(idioma, null, "English", () => PlayerSettings.Language == "en", si => { if (si) PlayerSettings.SetLanguage("en"); });
+
+        var juego = NuevaPestana("AJUSTES_PESTANA_JUEGO", "Juego");
+        Deslizador(juego, "AJUSTES_SENSIBILIDAD", "Sensibilidad",
+                   () => Mathf.InverseLerp(0.1f, 3f, PlayerSettings.LookSensitivity),
+                   v => PlayerSettings.SetLookSensitivity(Mathf.Lerp(0.1f, 3f, v)));
+        Interruptor(juego, "AJUSTES_INVERTIR_Y", "Invertir la cámara (eje Y)", () => PlayerSettings.InvertLook, PlayerSettings.SetInvertLook);
+        Interruptor(juego, "SETTINGS_COMBAT_HINTS", "Avisos de combate", () => PlayerSettings.AvisosDeCombate, PlayerSettings.SetAvisosDeCombate);
+
+        var nota = Texto("Nota", Hueco("Nota", XEtiqueta, 810f, 830f, 30f), false, 22f, M.TextoSuave);
+        Traducible(nota, "AJUSTES_GUARDADO_SOLO", "Los cambios se guardan solos.");
+
+        Traducible(M.Ayuda(_lienzo, Titulos, 1528f, Core.InputGlyphs.InputGlyphNames.Confirm), "MENU_CAMBIAR", "Cambiar");
+        Traducible(M.Ayuda(_lienzo, Titulos, 1716f, Core.InputGlyphs.InputGlyphNames.Cancel), "MENU_VOLVER", "Volver");
+
+        Enlazar();
+        root.AddComponent<SeleccionConTeclado>().Configurar(_pestanas[0].boton);
+        AbrirPestana(_pestanas[0]);
+        Traducir();
     }
-    
-    void HandleSliderInputFromControls()
+
+    private RectTransform Hueco(string nombre, float x, float y, float ancho, float alto, Transform padre = null)
     {
-        if (_activeSlider == null) return;
-        
-        // Leer del gamepad usando GamepadInputReader centralizado
-        // Move incluye el joystick izquierdo
-        Vector2 nav = GamepadInputReader.Move;
-        
-        // DpadRaw lee solo el D-Pad (tiene prioridad sobre el joystick)
-        var dpad = GamepadInputReader.DpadRaw;
-        if (dpad.sqrMagnitude > 0.01f)
-        {
-            nav = dpad;
-        }
-        
-        if (nav.sqrMagnitude <= 0.01f) return;
-        
-        float axis = Mathf.Abs(nav.x) >= Mathf.Abs(nav.y) ? nav.x : nav.y;
-        if (Mathf.Abs(axis) < 0.1f) return;
-        
-        float step = _activeSlider.wholeNumbers
-            ? Mathf.Max(1f, sliderStep * (_activeSlider.maxValue - _activeSlider.minValue))
-            : Mathf.Max(0.001f, sliderStep * (_activeSlider.maxValue - _activeSlider.minValue));
-
-        _activeSlider.value = Mathf.Clamp(
-            _activeSlider.value + Mathf.Sign(axis) * step, 
-            _activeSlider.minValue, 
-            _activeSlider.maxValue
-        );
+        var rt = new GameObject(nombre, typeof(RectTransform)).transform as RectTransform;
+        rt.SetParent(padre != null ? padre : _lienzo, false);
+        PiezasDeUI.ColocarArribaIzquierda(rt, x, y, ancho, alto);
+        return rt;
     }
-    
-    bool TryToggleSliderEditMode()
+
+    private TextMeshProUGUI Texto(string nombre, Transform padre, bool titulo, float tamano, Color color,
+        TextAlignmentOptions alineacion = TextAlignmentOptions.MidlineLeft)
     {
-        if (_eventSystem == null)
-            _eventSystem = EventSystem.current;
-
-        var selected = _eventSystem != null ? _eventSystem.currentSelectedGameObject : null;
-        if (!selected)
-            return false;
-
-        var slider = selected.GetComponent<Slider>();
-        if (!IsEditableSlider(slider))
-            return false;
-
-        if (_sliderEditMode && _activeSlider == slider)
-        {
-            ExitSliderEditMode();
-        }
-        else
-        {
-            EnterSliderEditMode(slider);
-        }
-
-        return true;
+        var t = PiezasDeUI.Texto(nombre, padre, "", titulo ? Titulos : Letra, tamano, color);
+        t.alignment = alineacion;
+        t.textWrappingMode = TextWrappingModes.NoWrap;
+        PiezasDeUI.Estirar(t.rectTransform);
+        return t;
     }
 
-    void OnDestroy()
+    private TextMeshProUGUI Traducible(TextMeshProUGUI t, string clave, string porDefecto)
     {
-        RemoveBinaryListener(backButton);
-        if (spanishButton)
-            spanishButton.onClick.RemoveAllListeners();
-        if (englishButton)
-            englishButton.onClick.RemoveAllListeners();
-
-        if (masterVolumeSlider)
-            masterVolumeSlider.onValueChanged.RemoveAllListeners();
-        if (sfxVolumeSlider)
-            sfxVolumeSlider.onValueChanged.RemoveAllListeners();
-        if (musicVolumeSlider)
-            musicVolumeSlider.onValueChanged.RemoveAllListeners();
-
-        RemoveBinaryListener(invertLookYesButton);
-        RemoveBinaryListener(invertLookNoButton);
-        if (lookSensitivitySlider)
-            lookSensitivitySlider.onValueChanged.RemoveAllListeners();
-        RemoveBinaryListener(vibrationYesButton);
-        RemoveBinaryListener(vibrationNoButton);
-        RemoveBinaryListener(fullscreenYesButton);
-        RemoveBinaryListener(fullscreenNoButton);
-        RemoveBinaryListener(combatHintsYesButton);
-        RemoveBinaryListener(combatHintsNoButton);
+        if (string.IsNullOrEmpty(clave)) t.text = porDefecto;
+        else _traducibles.Add((t, clave, porDefecto));
+        return t;
     }
+
+    private void Traducir()
+    {
+        var loc = LocalizationManager.Instance;
+        foreach (var (t, clave, porDefecto) in _traducibles)
+            if (t != null) t.text = loc != null ? loc.Get(clave, porDefecto) : porDefecto;
+        Refrescar();
+    }
+
+    private Pestana NuevaPestana(string clave, string porDefecto)
+    {
+        int i = _pestanas.Count;
+        var p = new Pestana { clave = clave, porDefecto = porDefecto };
+        var hueco = Hueco("Pestaña " + porDefecto, XPestana, YPestana + i * PasoPestana, 260f, 72f);
+        var tapa = hueco.gameObject.AddComponent<Image>();
+        tapa.color = new Color(1f, 1f, 1f, 0f);
+        p.boton = hueco.gameObject.AddComponent<Button>();
+        p.boton.targetGraphic = tapa;
+        p.boton.transition = Selectable.Transition.None;
+        p.boton.onClick.AddListener(() => AbrirPestana(p));
+        hueco.gameObject.AddComponent<UIButtonAudio>();
+        hueco.gameObject.AddComponent<FocoAlPasarElRaton>();
+        var carta = PiezasDeUI.NuevaCarta("Carta", hueco, PaletaUI.PapelApagado, 18f, 5f);
+        PiezasDeUI.Estirar(carta.raiz);
+        var texto = Texto("Texto", carta.contenido, true, 30f, M.TextoSuave);
+        texto.margin = new Vector4(24f, -4f, 8f, 0f);
+        Traducible(texto, clave, porDefecto);
+        var estrella = PiezasDeUI.EstrellaEn("Estrella", carta.contenido, 0f, 24f, 36f, 12f);
+        p.ficha = hueco.gameObject.AddComponent<FichaElegible>();
+        p.ficha.Configurar(p.boton, carta, texto, new[] { estrella.gameObject });
+        p.ficha.Colores(PaletaUI.PapelApagado, PaletaUI.Oro, M.TextoSuave, PaletaUI.TintaDeTexto);
+        p.ficha.Movimiento(0.6f, -1.4f, Vector2.zero, 5f, 5f);
+        p.ficha.SigueElFoco = false;
+
+        p.cuerpo = Hueco("Filas " + porDefecto, 0f, 0f, 1920f, 1080f);
+        _pestanas.Add(p);
+        return p;
+    }
+
+    private float YSiguiente(Pestana p, bool interruptor)
+    {
+        // Deslizadores arriba, de 90 en 90; los interruptores, tras una raya si hay deslizadores encima.
+        int deslizadores = 0, interruptores = 0;
+        foreach (var f in p.filas) { if (f.control is Slider) deslizadores++; else interruptores++; }
+        if (!interruptor) return YFila + deslizadores * PasoFila;
+        if (deslizadores == 0) return YFila + interruptores * PasoFila;
+        return YRaya(deslizadores) + 40f + interruptores * PasoFila;
+    }
+
+    // La raya que separa los deslizadores de los interruptores (en la maqueta, 550 tras cuatro).
+    private static float YRaya(int deslizadores) => YFila + deslizadores * PasoFila;
+
+    private void Deslizador(Pestana p, string clave, string porDefecto, Func<float> leer, Action<float> escribir)
+    {
+        float y = YSiguiente(p, false);
+        var fila = new Fila { leerValor = leer };
+        Traducible(fila.etiqueta = Texto("Etiqueta", Hueco("Etiqueta " + porDefecto, XEtiqueta, y, 260f, 40f, p.cuerpo), true, 28f, PaletaUI.TintaDeTexto), clave, porDefecto);
+
+        var pista = PiezasDeUI.Redondeado("Pista " + porDefecto, p.cuerpo, PiezasDeUI.TintaOscura, 14f);
+        PiezasDeUI.ColocarArribaIzquierda(pista.rectTransform, XPista, y + 8f, AnchoPista, 24f);
+        var dentro = PiezasDeUI.Redondeado("Dentro", pista.transform, PaletaUI.PapelApagado, 11f);
+        PiezasDeUI.Margen(dentro.rectTransform, 3f);
+        var hundido = PiezasDeUI.Redondeado("Hundido", dentro.transform, new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.25f), 11f);
+        var rh = hundido.rectTransform;
+        rh.anchorMin = new Vector2(0f, 1f); rh.anchorMax = Vector2.one; rh.pivot = new Vector2(0.5f, 1f);
+        rh.offsetMin = new Vector2(0f, -3f); rh.offsetMax = Vector2.zero;
+        pista.raycastTarget = true;
+
+        var zona = new GameObject("Relleno", typeof(RectTransform)).transform as RectTransform;
+        zona.SetParent(pista.transform, false);
+        PiezasDeUI.Margen(zona, 3f);
+        var relleno = PiezasDeUI.Redondeado("Oro", zona, PaletaUI.Oro, 10f);
+        PiezasDeUI.Estirar(relleno.rectTransform);
+        var mango = new GameObject("Mango", typeof(RectTransform)).transform as RectTransform;
+        mango.SetParent(pista.transform, false);
+        PiezasDeUI.Margen(mango, 3f);
+        var estrella = PiezasDeUI.Imagen("Estrella", mango, PiezasDeUI.Estrella, PaletaUI.Oro);
+        estrella.raycastTarget = false;
+        // El deslizador estira el mango a lo alto de su zona (18): se le suma lo que falta para 52.
+        estrella.rectTransform.sizeDelta = new Vector2(52f, 52f - 18f);
+
+        var slider = pista.gameObject.AddComponent<Slider>();
+        slider.transition = Selectable.Transition.None;
+        slider.fillRect = relleno.rectTransform;
+        slider.handleRect = estrella.rectTransform;
+        slider.targetGraphic = estrella;
+        slider.minValue = 0f; slider.maxValue = 1f;
+        slider.direction = Slider.Direction.LeftToRight;
+        slider.SetValueWithoutNotify(leer());
+        slider.onValueChanged.AddListener(v =>
+        {
+            // Pasos de 5 en 5 con el mando y el teclado (el deslizador da pasos de una décima).
+            float redondeado = Mathf.Round(v * 20f) / 20f;
+            escribir(redondeado);
+            Refrescar();
+        });
+        pista.gameObject.AddComponent<UISliderAudio>();
+        fila.control = slider;
+
+        var caja = PiezasDeUI.Redondeado("Valor " + porDefecto, p.cuerpo, PiezasDeUI.TintaOscura, 14f);
+        PiezasDeUI.ColocarArribaIzquierda(caja.rectTransform, XValor, y - 2f, 90f, 42f);
+        var fondoCaja = PiezasDeUI.Redondeado("Dentro", caja.transform, PaletaUI.PapelClaro, 11f);
+        PiezasDeUI.Margen(fondoCaja.rectTransform, 3f);
+        fila.valor = Texto("Numero", caja.transform, true, 24f, PiezasDeUI.TintaOscura, TextAlignmentOptions.Center);
+
+        Foco(p, fila, y);
+        p.filas.Add(fila);
+    }
+
+    private void Interruptor(Pestana p, string clave, string porDefecto, Func<bool> leer, Action<bool> escribir)
+    {
+        float y = YSiguiente(p, true);
+        bool primeroTrasDeslizadores = p.filas.Count > 0 && p.filas[p.filas.Count - 1].control is Slider;
+        if (primeroTrasDeslizadores)
+        {
+            var raya = PiezasDeUI.Imagen("Raya", p.cuerpo, null, new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.25f));
+            raya.raycastTarget = false;
+            int deslizadores = p.filas.FindAll(f => f.control is Slider).Count;
+            PiezasDeUI.ColocarArribaIzquierda(raya.rectTransform, XEtiqueta, YRaya(deslizadores), 830f, 3f);
+        }
+        var fila = new Fila { leer = leer, escribir = escribir };
+        Traducible(fila.etiqueta = Texto("Etiqueta", Hueco("Etiqueta " + porDefecto, XEtiqueta, y, 700f, 40f, p.cuerpo), true, 28f, PaletaUI.TintaDeTexto), clave, porDefecto);
+
+        var pista = PiezasDeUI.Redondeado("Interruptor " + porDefecto, p.cuerpo, PiezasDeUI.TintaOscura, 22f);
+        PiezasDeUI.ColocarArribaIzquierda(pista.rectTransform, XInterruptor, y, 110f, 44f);
+        pista.raycastTarget = true;
+        fila.pista = PiezasDeUI.Redondeado("Dentro", pista.transform, PaletaUI.PapelApagado, 19f);
+        PiezasDeUI.Margen(fila.pista.rectTransform, 3f);
+        var hundido = PiezasDeUI.Redondeado("Hundido", fila.pista.transform, new Color(PiezasDeUI.TintaOscura.r, PiezasDeUI.TintaOscura.g, PiezasDeUI.TintaOscura.b, 0.18f), 19f);
+        var rh = hundido.rectTransform;
+        rh.anchorMin = new Vector2(0f, 1f); rh.anchorMax = Vector2.one; rh.pivot = new Vector2(0.5f, 1f);
+        rh.offsetMin = new Vector2(0f, -3f); rh.offsetMax = Vector2.zero;
+        fila.bola = PiezasDeUI.Imagen("Bola", pista.transform, PiezasDeUI.Circulo, PiezasDeUI.TintaOscura);
+        fila.bola.raycastTarget = false;
+        var dentroBola = PiezasDeUI.Imagen("Dentro", fila.bola.transform, PiezasDeUI.Circulo, PaletaUI.PapelClaro);
+        dentroBola.raycastTarget = false;
+        PiezasDeUI.Margen(dentroBola.rectTransform, 3f);
+        fila.debajo = Texto("SiNo", Hueco("SiNo " + porDefecto, XInterruptor, y + 46f, 110f, 24f, p.cuerpo), false, 18f, M.TextoSuave, TextAlignmentOptions.Center);
+
+        var boton = pista.gameObject.AddComponent<Button>();
+        boton.targetGraphic = pista;
+        boton.transition = Selectable.Transition.None;
+        boton.onClick.AddListener(() => { fila.escribir(!fila.leer()); Refrescar(); });
+        pista.gameObject.AddComponent<UIButtonAudio>();
+        fila.control = boton;
+
+        Foco(p, fila, y);
+        p.filas.Add(fila);
+    }
+
+    // Estrella a la izquierda de la fila con el foco: así se ve dónde está el mando.
+    private void Foco(Pestana p, Fila fila, float y)
+    {
+        fila.control.gameObject.AddComponent<FocoAlPasarElRaton>();
+        var estrella = PiezasDeUI.EstrellaEn("Foco", p.cuerpo, XEtiqueta - 24f, y + 20f, 30f, 12f);
+        var ficha = fila.control.gameObject.AddComponent<FichaElegible>();
+        ficha.Configurar(fila.control, new PiezasDeUI.Carta(), null, new[] { estrella.gameObject });
+        ficha.Movimiento(0f, 0f, Vector2.zero, 0f, 0f);
+    }
+
+    // Navegación con el mando: pestañas de arriba abajo; a la derecha, las filas de la pestaña; a
+    // la izquierda desde una fila, vuelta a su pestaña (los deslizadores usan izquierda y derecha).
+    private void Enlazar()
+    {
+        for (int i = 0; i < _pestanas.Count; i++)
+        {
+            var p = _pestanas[i];
+            for (int j = 0; j < p.filas.Count; j++)
+            {
+                var c = p.filas[j].control;
+                bool deslizador = c is Slider;
+                c.navigation = new Navigation
+                {
+                    mode = Navigation.Mode.Explicit,
+                    selectOnUp = j > 0 ? p.filas[j - 1].control : null,
+                    selectOnDown = j < p.filas.Count - 1 ? p.filas[j + 1].control : null,
+                    selectOnLeft = deslizador ? null : p.boton,
+                };
+            }
+        }
+        NavegacionDePestanas();
+    }
+
+    private void NavegacionDePestanas()
+    {
+        for (int i = 0; i < _pestanas.Count; i++)
+        {
+            var p = _pestanas[i];
+            p.boton.navigation = new Navigation
+            {
+                mode = Navigation.Mode.Explicit,
+                selectOnUp = i > 0 ? _pestanas[i - 1].boton : null,
+                selectOnDown = i < _pestanas.Count - 1 ? _pestanas[i + 1].boton : null,
+                selectOnRight = p.filas.Count > 0 ? p.filas[0].control : null,
+            };
+        }
+    }
+
+    private void AbrirPestana(Pestana p)
+    {
+        _abierta = p;
+        foreach (var q in _pestanas)
+        {
+            q.ficha.Marcada = q == p;
+            if (q.cuerpo.gameObject.activeSelf != (q == p)) q.cuerpo.gameObject.SetActive(q == p);
+        }
+        Refrescar();
+    }
+
+    // ─── Estado ────────────────────────────────────────────────────────────
+
+    private void Refrescar()
+    {
+        if (!_montado) return;
+        PlayerSettings.EnsureLoaded();
+        var loc = LocalizationManager.Instance;
+        string si = loc != null ? loc.Get("COMMON_YES", "Sí") : "Sí", no = loc != null ? loc.Get("COMMON_NO", "No") : "No";
+        foreach (var p in _pestanas)
+        foreach (var f in p.filas)
+        {
+            if (f.control is Slider s)
+            {
+                float v = f.leerValor();
+                s.SetValueWithoutNotify(v);
+                if (f.valor != null) f.valor.text = Mathf.RoundToInt(v * 100f).ToString();
+            }
+            else
+            {
+                bool encendido = f.leer();
+                f.pista.color = encendido ? new Color32(0x7E, 0xD0, 0x8A, 0xFF) : PaletaUI.PapelApagado;
+                PiezasDeUI.ColocarArribaIzquierda(f.bola.rectTransform, encendido ? 64f : 4f, 4f, 36f, 36f);
+                f.debajo.text = encendido ? si : no;
+            }
+        }
+    }
+
+    // ─── Abrir y cerrar ──────────────────────────────────────────────────
 
     public void Show(GameObject initialSelection = null, Action onClosed = null)
     {
         _onClosed = onClosed;
-        RefreshUI();
-        if (root && !root.activeSelf)
-            root.SetActive(true);
-
-        SelectInitial(initialSelection);
-        _cancelRequested = false;
+        Montar();
+        AbrirPestana(_pestanas[0]);
+        if (root && !root.activeSelf) root.SetActive(true);
+        var objetivo = initialSelection != null ? initialSelection : GetDefaultSelection();
+        if (EventSystem.current != null && objetivo != null) EventSystem.current.SetSelectedGameObject(objetivo);
         _openedAt = Time.unscaledTime;
     }
 
     public void Close(bool silent = false)
     {
-        // Solo reproducir sonido si el menú estaba visible y no es un cierre silencioso
-        bool wasVisible = root && root.activeSelf;
-
-        if (!silent && wasVisible && AudioService.Instance != null)
-        {
-            AudioService.Instance.PlaySFX("UI_Cancel", 1f);
-        }
-        
-        if (root && root.activeSelf)
-            root.SetActive(false);
-
+        bool estabaVisible = root && root.activeSelf;
+        if (!silent && estabaVisible) AudioService.Instance?.PlaySFX("UI_Cancel", 1f);
+        if (estabaVisible) root.SetActive(false);
         _onClosed?.Invoke();
         _onClosed = null;
     }
 
     public void ToggleVisibility()
     {
-        if (root && root.activeSelf)
-            Close();
-        else
-            Show();
+        if (root && root.activeSelf) Close();
+        else Show();
     }
 
-    public void SetLanguage(string locale)
+    public GameObject GetDefaultSelection()
     {
-        PlayerSettings.SetLanguage(locale);
-        UpdateLanguageButtons();
-        
-        // Restaurar selección después de cambiar idioma
-        // porque el botón presionado ahora está deshabilitado
-        StartCoroutine(RestoreSelectionAfterLanguageChange());
-    }
-    
-    System.Collections.IEnumerator RestoreSelectionAfterLanguageChange()
-    {
-        yield return null; // Esperar un frame
-        
-        // Buscar el primer botón interactable (el que NO está seleccionado)
-        if (spanishButton && spanishButton.interactable)
-        {
-            spanishButton.Select();
-            if (_eventSystem != null)
-                _eventSystem.SetSelectedGameObject(spanishButton.gameObject);
-        }
-        else if (englishButton && englishButton.interactable)
-        {
-            englishButton.Select();
-            if (_eventSystem != null)
-                _eventSystem.SetSelectedGameObject(englishButton.gameObject);
-        }
-        else
-        {
-            // Fallback: seleccionar el primer elemento interactable del menú
-            SelectInitial(null);
-        }
+        Montar();
+        return _pestanas.Count > 0 ? _pestanas[0].boton.gameObject : null;
     }
 
-    public void SetMasterVolume(float value) => PlayerSettings.SetMasterVolume(value);
-    public void SetSfxVolume(float value) => PlayerSettings.SetSfxVolume(value);
-    public void SetMusicVolume(float value) => PlayerSettings.SetMusicVolume(value);
-    public void SetInvertLook(bool invert) => PlayerSettings.SetInvertLook(invert);
-    public void SetLookSensitivity(float value) => PlayerSettings.SetLookSensitivity(value);
-    public void SetSubtitles(bool value) => PlayerSettings.SetSubtitles(value);
-    public void SetVibration(bool value) => PlayerSettings.SetVibration(value);
-    public void SetFullscreen(bool value) => PlayerSettings.SetFullscreen(value);
-
-    private void RefreshUI()
+    void Update()
     {
-        PlayerSettings.EnsureLoaded();
+        if (root == null || !root.activeInHierarchy) return;
 
-        UpdateLanguageButtons();
+        // La pestaña con el foco es la que se ve (como LB/RB en el menú de Start).
+        var elegido = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+        if (elegido != null && (_abierta == null || elegido != _abierta.boton.gameObject))
+            foreach (var p in _pestanas)
+                if (p.boton.gameObject == elegido) { AbrirPestana(p); break; }
 
-        if (masterVolumeSlider)
-            masterVolumeSlider.SetValueWithoutNotify(PlayerSettings.MasterVolume);
-        if (sfxVolumeSlider)
-            sfxVolumeSlider.SetValueWithoutNotify(PlayerSettings.SfxVolume);
-        if (musicVolumeSlider)
-            musicVolumeSlider.SetValueWithoutNotify(PlayerSettings.MusicVolume);
-
-        UpdateBinaryGroup(invertLookYesButton, invertLookNoButton, PlayerSettings.InvertLook);
-        if (lookSensitivitySlider)
-            lookSensitivitySlider.SetValueWithoutNotify(PlayerSettings.LookSensitivity);
-        UpdateBinaryGroup(vibrationYesButton, vibrationNoButton, PlayerSettings.Vibration);
-        UpdateBinaryGroup(fullscreenYesButton, fullscreenNoButton, PlayerSettings.Fullscreen);
-        UpdateBinaryGroup(combatHintsYesButton, combatHintsNoButton, PlayerSettings.AvisosDeCombate);
-    }
-
-    private void UpdateLanguageButtons()
-    {
-        string current = PlayerSettings.Language.ToLowerInvariant();
-        if (spanishButton)
-            spanishButton.interactable = current != "es";
-        if (englishButton)
-            englishButton.interactable = current != "en";
-    }
-
-    private void SelectInitial(GameObject initialSelection)
-    {
-        if (_eventSystem == null)
-            _eventSystem = EventSystem.current;
-
-        var target = ResolveInitialSelection(initialSelection);
-        if (_eventSystem != null && target != null)
-            _eventSystem.SetSelectedGameObject(target);
-    }
-
-    public GameObject GetDefaultSelection() => ResolveInitialSelection(null);
-
-    bool WasCancelPressedThisFrame()
-    {
-        if (Time.unscaledTime - _openedAt < cancelInputGracePeriod)
-            return false;
-
-        bool cancel = _cancelRequested;
-        _cancelRequested = false;
-
-        if (cancel)
-        {
-            if (_sliderEditMode)
-            {
-                ExitSliderEditMode();
-                return false;
-            }
-
-            return true;
-        }
-
-        // Leer usando GamepadInputReader centralizado
-        if (GamepadInputReader.CancelPressed)
-        {
-            if (_sliderEditMode)
-            {
-                ExitSliderEditMode();
-                return false;
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-
-    GameObject ResolveInitialSelection(GameObject requested)
-    {
-        if (requested != null)
-            return requested;
-
-        if (firstSelection)
-            return firstSelection.gameObject;
-
-        var firstSelectable = root != null
-            ? root.GetComponentsInChildren<Selectable>(true).FirstOrDefault(s => s != null && s.IsActive() && s.interactable)
-            : null;
-
-        return firstSelectable ? firstSelectable.gameObject : null;
-    }
-
-    void WireBinaryButton(Button btn, UnityEngine.Events.UnityAction action)
-    {
-        if (!btn) return;
-        btn.onClick.RemoveListener(action);
-        btn.onClick.AddListener(action);
-    }
-
-    void RemoveBinaryListener(Button btn)
-    {
-        if (!btn) return;
-        btn.onClick.RemoveAllListeners();
-    }
-
-    void OnInvertLookClicked(bool invert)
-    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[SettingsMenu] OnInvertLookClicked: {invert}");
-#endif
-        PlayerSettings.SetInvertLook(invert);
-        UpdateBinaryGroup(invertLookYesButton, invertLookNoButton, invert);
-    }
-
-    void OnVibrationClicked(bool enabled)
-    {
-        PlayerSettings.SetVibration(enabled);
-        UpdateBinaryGroup(vibrationYesButton, vibrationNoButton, enabled);
-    }
-
-    void OnCombatHintsClicked(bool enabled)
-    {
-        PlayerSettings.SetAvisosDeCombate(enabled);
-        UpdateBinaryGroup(combatHintsYesButton, combatHintsNoButton, enabled);
-    }
-
-    void OnFullscreenClicked(bool enabled)
-    {
-        PlayerSettings.SetFullscreen(enabled);
-        UpdateBinaryGroup(fullscreenYesButton, fullscreenNoButton, enabled);
-    }
-
-    /// <summary>
-    /// La ventana de ajustes con la interfaz de papel: fondo de noche, cada columna una hoja de
-    /// papel con su título en oro, botones y deslizadores en fichas con borde de tinta y todo el
-    /// texto en tinta. Se monta sobre lo que hay en la escena, sin tocarla.
-    /// </summary>
-    void VestirDePapel()
-    {
-        if (root == null) return;
-        var ventana = root.transform.Find("Window");
-        if (ventana != null && ventana.TryGetComponent<Image>(out var fondo))
-        {
-            fondo.sprite = null;
-            fondo.color = new Color(PaletaUI.Noche.r, PaletaUI.Noche.g, PaletaUI.Noche.b, 0.96f);
-        }
-
-        foreach (var columna in root.GetComponentsInChildren<VerticalLayoutGroup>(true))
-        {
-            if (columna.TryGetComponent<Image>(out var hoja)) PiezasDeUI.VestirHoja(hoja);
-            columna.padding = new RectOffset(Mathf.Max(columna.padding.left, 32), Mathf.Max(columna.padding.right, 32),
-                                             Mathf.Max(columna.padding.top, 28), Mathf.Max(columna.padding.bottom, 28));
-        }
-
-        foreach (var control in root.GetComponentsInChildren<Selectable>(true))
-        {
-            if (control is Slider deslizador)
-            {
-                if (deslizador.transform.Find("Background") is Transform pista && pista.TryGetComponent<Image>(out var imgPista))
-                    PiezasDeUI.VestirFicha(imgPista, PaletaUI.PapelApagado);
-                if (deslizador.fillRect != null && deslizador.fillRect.TryGetComponent<Image>(out var relleno))
-                    PiezasDeUI.VestirFicha(relleno, PaletaUI.Oro);
-                if (deslizador.handleRect != null && deslizador.handleRect.TryGetComponent<Image>(out var tirador))
-                    PiezasDeUI.VestirFicha(tirador, PaletaUI.PapelClaro);
-            }
-            else if (control.targetGraphic is Image imagen)
-            {
-                PiezasDeUI.VestirFicha(imagen, ColorInactivo);
-            }
-        }
-
-        foreach (var texto in root.GetComponentsInChildren<Text>(true)) PintarTexto(texto, texto.transform);
-        foreach (var texto in root.GetComponentsInChildren<TMPro.TMP_Text>(true)) PintarTexto(texto, texto.transform);
-    }
-
-    /// Los títulos de cada columna (hijos directos de la hoja) en oro y en negrita; el resto, en tinta.
-    static void PintarTexto(Graphic texto, Transform t)
-    {
-        bool titulo = t.parent != null && t.parent.GetComponent<VerticalLayoutGroup>() != null;
-        texto.color = titulo ? PaletaUI.OroSobrePapel : PaletaUI.TintaDeTexto;
-        if (!titulo) return;
-        if (texto is Text legado) legado.fontStyle = FontStyle.Bold;
-        else if (texto is TMPro.TMP_Text tmp) tmp.fontStyle |= TMPro.FontStyles.Bold;
-    }
-
-    void UpdateBinaryGroup(Button yesButton, Button noButton, bool yesActive)
-    {
-        ApplyStateToButton(yesButton, yesActive);
-        ApplyStateToButton(noButton, !yesActive);
-    }
-
-    void ApplyStateToButton(Button btn, bool active)
-    {
-        if (!btn)
-            return;
-
-        var graphic = btn.targetGraphic ?? btn.GetComponentInChildren<Graphic>();
-        var color = active ? ColorActivo : ColorInactivo;
-
-        var visual = btn.GetComponent<UISelectVisual>();
-        if (visual)
-        {
-            visual.normalColor = color;
-            visual.highlightColor = ColorActivo;
-            if (visual.targetGraphic)
-                visual.targetGraphic.color = color;
-        }
-        else if (graphic)
-        {
-            graphic.color = color;
-        }
-    }
-
-    bool IsEditableSlider(Slider slider)
-    {
-        return slider != null && (slider == masterVolumeSlider || slider == sfxVolumeSlider || slider == musicVolumeSlider || slider == lookSensitivitySlider);
-    }
-
-    void EnterSliderEditMode(Slider slider)
-    {
-        if (!_eventSystem)
-            _eventSystem = EventSystem.current;
-
-        if (_eventSystem != null)
-        {
-            _previousNavigationState = _eventSystem.sendNavigationEvents;
-            _navigationOverridden = true;
-            _eventSystem.sendNavigationEvents = false;
-        }
-
-        _sliderEditMode = true;
-        _activeSlider = slider;
-        MaintainSliderSelection();
-    }
-
-    void ExitSliderEditMode()
-    {
-        RestoreNavigationEvents();
-        _sliderEditMode = false;
-        _activeSlider = null;
-    }
-
-    void RestoreNavigationEvents()
-    {
-        if (!_navigationOverridden)
-            return;
-
-        if (!_eventSystem)
-            _eventSystem = EventSystem.current;
-
-        if (_eventSystem != null)
-            _eventSystem.sendNavigationEvents = _previousNavigationState;
-
-        _navigationOverridden = false;
-    }
-
-    void MaintainSliderSelection()
-    {
-        if (!_eventSystem)
-            _eventSystem = EventSystem.current;
-
-        if (_eventSystem == null || _activeSlider == null)
-        {
-            ExitSliderEditMode();
-            return;
-        }
-
-        if (_eventSystem.currentSelectedGameObject != _activeSlider.gameObject)
-            _eventSystem.SetSelectedGameObject(_activeSlider.gameObject);
-    }
-
-
-    void HandleSliderChanged(Slider slider, Action<float> setter, float value)
-    {
-        if (slider == null)
-            return;
-
-        if (_sliderEditMode && _activeSlider == slider)
-        {
-            setter?.Invoke(value);
-            return;
-        }
-
-        slider.SetValueWithoutNotify(GetSettingValueForSlider(slider));
-    }
-
-    float GetSettingValueForSlider(Slider slider)
-    {
-        if (slider == masterVolumeSlider) return PlayerSettings.MasterVolume;
-        if (slider == sfxVolumeSlider) return PlayerSettings.SfxVolume;
-        if (slider == musicVolumeSlider) return PlayerSettings.MusicVolume;
-        if (slider == lookSensitivitySlider) return PlayerSettings.LookSensitivity;
-        return slider != null ? slider.value : 0f;
+        if (Time.unscaledTime - _openedAt < cancelInputGracePeriod) return;
+        if (GamepadInputReader.CancelPressed || GamepadInputReader.StartPressed) Close();
     }
 }

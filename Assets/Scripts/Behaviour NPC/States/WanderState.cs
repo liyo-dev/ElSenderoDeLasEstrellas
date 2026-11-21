@@ -31,8 +31,8 @@ namespace Game.NPC.States
         // Punto de actividad elegido al entrar en el estado
         private NPCWorldPoint _pendingWorldPoint;
 
-        // FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
-        // (cada 0.2s por NPC vagando). Mismo patrón que AlertState (FIX #10) e IdleState.
+        // Cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection (cada 0.2s por
+        // NPC vagando). Mismo patrón que AlertState e IdleState.
         private NPCTeamMember _teamMember;
 
         public override void OnEnter(NPCStateContext context)
@@ -58,7 +58,7 @@ namespace Game.NPC.States
             _lastPosition       = context.Transform.position;
             _socialScanTimer    = 0f;
             _pendingWorldPoint  = null;
-            _teamMember         = context.Transform.GetComponent<NPCTeamMember>(); // FIX rendimiento: una vez por entrada al estado
+            _teamMember         = context.Transform.GetComponent<NPCTeamMember>(); // Una vez por entrada al estado
 
             float wanderSpeed = 2.0f;
             if (context.Config?.ambientConfig != null)
@@ -243,7 +243,7 @@ namespace Game.NPC.States
             
             // Si soy miembro de un equipo y ya notifiqué, no sigo detectando
             // Esto evita el bucle infinito de detección
-            var teamMember = _teamMember; // FIX rendimiento: cacheado en OnEnter, ver campo _teamMember arriba
+            var teamMember = _teamMember; // Cacheado en OnEnter, ver campo _teamMember arriba
             if (teamMember != null && teamMember.HasNotifiedTeam)
             {
                 return; // Ya se notificó al equipo, el NPCCombatTeam se encarga
@@ -280,9 +280,9 @@ namespace Game.NPC.States
                 // Si golpeamos algo que NO es el jugador, hay una pared
                 if (hit.transform != context.Player && !hit.transform.IsChildOf(context.Player))
                 {
-                    // FIX INC-073: ver mismo comentario en IdleState.CheckPlayerDetection — un
-                    // compañero del mismo equipo (dúo Lety/Vicky, etc.) no debe bloquear la
-                    // detección solo por estar de pie al lado.
+                    // Ver mismo comentario en IdleState.CheckPlayerDetection — un compañero
+                    // del mismo equipo (dúo Lety/Vicky, etc.) no debe bloquear la detección
+                    // solo por estar de pie al lado.
                     var hitTeamMember = hit.transform.GetComponentInParent<NPCTeamMember>();
                     bool isTeammate = hitTeamMember != null && teamMember != null && hitTeamMember.Team == teamMember.Team;
                     if (!isTeammate)

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Game.NPC.Common;
 using Game.NPC.Modules;
+using Sendero.Core.Feedback;
 
 namespace Game.NPC.Combate
 {
@@ -17,11 +18,14 @@ namespace Game.NPC.Combate
     /// <see cref="NPCAttackCoordinator"/> presiona y los demás rodean.
     /// Convive con <see cref="NPCCombatBrain"/>: lo usa el NPC cuya Combat Config dice
     /// <see cref="TipoDeCerebroDeCombate.PorPuntuacion"/>; su perfil, <see cref="PerfilDeCombate"/>.
+    /// Fases: si el perfil trae <see cref="PerfilDeCombate.fases"/>, al bajar la vida de cada umbral
+    /// hace su transición (quieto, invulnerable, frase y gesto) y sigue con lo que diga la fase. Como
+    /// regla de daño (<see cref="IFiltroDeDano"/>) deja el golpe que cruza el umbral en el umbral.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(NPCSimpleAnimator))]
-    public sealed class CerebroDeCombatePorPuntuacion : MonoBehaviour, ICerebroDeCombate, ICombatiente
+    public sealed class CerebroDeCombatePorPuntuacion : MonoBehaviour, ICerebroDeCombate, ICombatiente, IJefeConFases, IFiltroDeDano
     {
         private const int CapaDeMedioCuerpo = 1;
         private const float IntervaloDeSondeo = 0.1f;
@@ -71,12 +75,25 @@ namespace Game.NPC.Combate
         private float _siguienteSondeo;
         private float _defendiendoDesde = -1f;
 
+        // Fases
+        private int _fase;
+        private bool _cambioPendiente;
+        private bool _enTransicion;
+        private float _transicionHasta;
+        private bool _esperandoLaCaja;
+        private readonly List<float> _umbrales = new List<float>();
+
         private readonly List<Transform> _amenazas = new List<Transform>();
         private readonly List<Transform> _companerosT = new List<Transform>();
         private readonly List<CerebroDeCombatePorPuntuacion> _companeros = new List<CerebroDeCombatePorPuntuacion>();
         private readonly List<GameObject> _grupo = new List<GameObject>();
 
         public event Action<float> OnManaChanged;
+
+        // --- IJefeConFases ----------------------------------------------------------------------
+        public int Fase => _fase;
+        public IReadOnlyList<float> UmbralesDeFase => _umbrales;
+        public event Action<int> AlCambiarDeFase;
 
         // --- Para CoordinacionDeGrupo ---------------------------------------------------------
         public Transform Objetivo => _objetivo;
@@ -136,6 +153,13 @@ namespace Game.NPC.Combate
             if (_vida == null) { _vida = GetComponent<Damageable>(); if (_vida != null) _vida.OnDamaged += AlDanarse; }
 
             _memoria.Olvidar();
+            _fase = 0;
+            _cambioPendiente = false;
+            _enTransicion = false;
+            _umbrales.Clear();
+            for (int i = 0; i < _perfil.Fases.Count; i++) _umbrales.Add(_perfil.Fases[i].desdeVida);
+            // El cerebro se añade en juego: Damageable leyó sus reglas de daño antes.
+            if (_vida != null) _vida.RefrescarFiltros();
             _mana = _perfil.MaxMana;
             _ultimoGasto = -999f;
             _escudoListoEn = 0f;
@@ -166,6 +190,8 @@ namespace Game.NPC.Combate
         {
             if (!_activo) return;
             _activo = false;
+            _enTransicion = false;
+            _cambioPendiente = false;
             TerminarLaActual();
             _lanzador?.Cancelar();
             Parar();
@@ -264,8 +290,12 @@ namespace Game.NPC.Combate
         public void LevantarEscudo(float segundos)
         {
             if (_escudo == null) return;
+            var defensas = _perfil.Defensas;
+            _escudo.ConfigurarElemento(defensas.escudoElemental ? defensas.elementoDelEscudo : (MagicElement?)null);
             _escudo.StartDefending(segundos);
-            _escudoListoEn = Time.time + segundos + _perfil.Defensas.enfriamientoDelEscudo;
+            // Contra el hechizo que el jugador repite vuelve a tener el escudo antes.
+            float enfriamiento = _perfil.Defensas.enfriamientoDelEscudo * (1f - 0.5f * _s.repeticionLeida);
+            _escudoListoEn = Time.time + segundos + enfriamiento;
         }
 
         public void BajarEscudo()
@@ -309,8 +339,10 @@ namespace Game.NPC.Combate
         private void Update()
         {
             if (!_activo) return;
+            if (_enTransicion) { SeguirLaTransicion(); return; }
             ActualizarIncapacidad();
             if (_incapacitado) return;
+            if (_cambioPendiente) { EmpezarLaTransicion(); return; }
             if (_ciclo != null && _ciclo.IsStunned) return;
 
             // Con una charla abierta el jugador no puede moverse: se espera sin decidir nada.
@@ -336,7 +368,9 @@ namespace Game.NPC.Combate
                 Decidir();
             }
 
-            if (_objetivo != null && (!_moviendo || HaLlegado(0.2f)))
+            // Mientras prepara o suelta un ataque mira siempre al objetivo, aunque se esté moviendo:
+            // si no, dispara con el cuerpo hacia otro lado (INC-1406).
+            if (_objetivo != null && (_lanzador.Ocupado || !_moviendo || HaLlegado(0.2f)))
                 _animador.FaceTarget(_s.veAlObjetivo ? _objetivo.position : _memoria.UltimaPosicionVista);
         }
 
@@ -350,7 +384,7 @@ namespace Game.NPC.Combate
             Vector3 yo = transform.position;
             Vector3 hacia = _objetivo.position - yo;
             _s.distancia = hacia.magnitude;
-            _s.veAlObjetivo = _sondeo.Ve(yo, _objetivo);
+            _s.veAlObjetivo = !Invisibilidad.EsInvisible(_objetivo) && _sondeo.Ve(yo, _objetivo);
             if (_s.veAlObjetivo) _memoria.Visto(_objetivo.position);
             hacia.y = 0f;
             Vector3 boca = SondeoDelTerreno.Ojos(yo) + (hacia.sqrMagnitude > 0.01f ? hacia.normalized * 0.6f : Vector3.zero);
@@ -361,6 +395,9 @@ namespace Game.NPC.Combate
             if (_s.hechizoEntrante)
             {
                 float probabilidad = Mathf.Lerp(0.2f, 0.75f, _perfil.Dificultad) * (0.6f + 0.4f * _perfil.Caracter.movilidad);
+                // El hechizo que el jugador repite lo ve venir: lo esquiva más.
+                float repeticion = RepeticionLeida();
+                probabilidad += (1f - probabilidad) * 0.8f * repeticion;
                 _s.decideEsquivarlo = _memoria.DecideEsquivar(id, probabilidad);
             }
             else _s.decideEsquivarlo = false;
@@ -428,12 +465,15 @@ namespace Game.NPC.Combate
             _s.jugadorCargando = LecturaDelJugador.Cargando;
             _s.jugadorMeApunta = LecturaDelJugador.ApuntaA(transform);
             _s.segundosDesdeQueLanzo = LecturaDelJugador.SegundosDesdeQueLanzo;
-            _s.jugadorDefendiendo = LecturaDelJugador.Defendiendo;
+            // Quien no lee la defensa del jugador (lecciones) lanza igual aunque se proteja o le devuelva.
+            bool leeLaDefensa = _perfil.Caracter.leeLaDefensaDelJugador;
+            _s.jugadorDefendiendo = leeLaDefensa && LecturaDelJugador.Defendiendo;
             if (!_s.jugadorDefendiendo) _defendiendoDesde = -1f;
             else if (_defendiendoDesde < 0f) _defendiendoDesde = Time.time;
             _s.segundosDefendiendo = _defendiendoDesde < 0f ? 0f : Time.time - _defendiendoDesde;
             CoordinacionDeGrupo.TodosLosCuerpos(_grupo);
-            _s.devolucionesRecientes = LecturaDelJugador.DevolucionesRecientes(_grupo, SegundosDeDevoluciones);
+            _s.devolucionesRecientes = leeLaDefensa ? LecturaDelJugador.DevolucionesRecientes(_grupo, SegundosDeDevoluciones) : 0;
+            _s.repeticionLeida = RepeticionLeida();
 
             CoordinacionDeGrupo.CompanerosContra(_objetivo, this, _companeros);
             _companerosT.Clear();
@@ -511,6 +551,119 @@ namespace Game.NPC.Combate
 
         private void NotificarMana() => OnManaChanged?.Invoke(GetManaPercent());
 
+        /// De 0 a 1: cuánto ha leído que el jugador repite el mismo hechizo, según su perfil.
+        private float RepeticionLeida()
+        {
+            var d = _perfil.Defensas;
+            if (d.leerLaRepeticion <= 0f) return 0f;
+            int veces = LecturaDelJugador.RepeticionesDelUltimo(d.segundosDeRepeticion);
+            int desde = Mathf.Max(2, d.repeticionesParaLeerla);
+            if (veces < desde) return 0f;
+            // Al llegar al número, la mitad; dos más, del todo.
+            return d.leerLaRepeticion * Mathf.Clamp01((veces - desde + 1) / 2f);
+        }
+
+        // --- Fases ----------------------------------------------------------------------------
+
+        private bool HayOtraFase => _perfil != null && _fase < _perfil.Fases.Count;
+
+        /// Regla de daño: el golpe que cruzaría el umbral de la fase siguiente se queda en él (y la
+        /// transición empieza en el siguiente fotograma); durante la transición no entra nada.
+        public float Filtrar(float cantidad, GameObject instigador)
+        {
+            if (!_activo || !HayOtraFase || _vida == null || cantidad <= 0f) return cantidad;
+            if (_enTransicion || _cambioPendiente) return 0f;
+            float umbral = _perfil.Fases[_fase].desdeVida * _vida.Max;
+            if (_vida.Current - cantidad > umbral) return cantidad;
+            _cambioPendiente = true;
+            return Mathf.Max(0f, _vida.Current - umbral);
+        }
+
+        private void EmpezarLaTransicion()
+        {
+            var fase = _perfil.Fases[_fase];
+            _cambioPendiente = false;
+            _enTransicion = true;
+            TerminarLaActual();
+            _lanzador.Cancelar();
+            Parar();
+            BajarEscudo();
+            _aCubierto = false;
+            SoltarTurno();
+
+            float segundos = Mathf.Max(0.1f, fase.segundosDeTransicion);
+            _transicionHasta = Time.time + segundos;
+            if (_vida != null) _vida.GrantInvulnerability(segundos + 0.4f);
+            AnimarAtaque(fase.animacion);
+            bool enCaja = fase.fraseEnCaja && DecirEnCaja(fase.claveDeFrase, fase.frase);
+            if (!enCaja && (!string.IsNullOrEmpty(fase.frase) || !string.IsNullOrEmpty(fase.claveDeFrase)))
+            {
+                PresentadorDeLinea.Decir(new FraseADecir
+                {
+                    clave = fase.claveDeFrase,
+                    textoPorDefecto = fase.frase,
+                    ancla = transform,
+                    duracion = segundos,
+                });
+            }
+            decisionActual = "Cambio de fase: " + fase.nombre;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (registrarDecisiones) Debug.Log($"[Cerebro:{name}] Cambio de fase → {fase.nombre}");
+#endif
+        }
+
+        // Frase del cambio de fase en la caja de diálogo; la transición espera a que se cierre.
+        private bool DecirEnCaja(string clave, string texto)
+        {
+            var dialogos = DialogueManager.Instance;
+            if (dialogos == null) return false;
+            string frase = string.IsNullOrEmpty(clave) || LocalizationManager.Instance == null
+                ? texto : LocalizationManager.Instance.Get(clave, texto);
+            if (string.IsNullOrEmpty(frase)) return false;
+            if (dialogos.IsOpen) dialogos.Close();
+            var npc = GetComponent<NPCBehaviourManagerV2>();
+            var charla = ScriptableObject.CreateInstance<DialogueAsset>();
+            charla.lines = new[] { new DialogueLine { speakerNameId = npc != null ? npc.DialogueCharacterId : null, text = frase } };
+            _esperandoLaCaja = true;
+            dialogos.StartDialogue(charla, transform, () =>
+            {
+                _esperandoLaCaja = false;
+                Destroy(charla);
+            });
+            return true;
+        }
+
+        private void SeguirLaTransicion()
+        {
+            if (_objetivo != null) _animador.FaceTarget(_objetivo.position);
+            if (_esperandoLaCaja)
+            {
+                // Mientras se lee la caja, la transición no avanza y no se le puede dañar.
+                _transicionHasta = Time.time + 0.3f;
+                if (_vida != null) _vida.GrantInvulnerability(0.7f);
+                return;
+            }
+            if (Time.time < _transicionHasta) return;
+
+            var fase = _perfil.Fases[_fase];
+            _fase++;
+            _perfil.Aplicar(fase);
+            MontarOpciones();
+            if (_vida != null && fase.recuperaVidaHasta > 0f)
+            {
+                float hasta = fase.recuperaVidaHasta * _vida.Max;
+                if (_vida.Current < hasta) _vida.Heal(hasta - _vida.Current);
+            }
+            if (fase.sacudida)
+            {
+                FeedbackService.CameraShake(0.45f, 0.45f);
+                FeedbackService.ScreenFlash(new Color(1f, 0.95f, 0.8f, 0.25f), 0.25f);
+            }
+            _enTransicion = false;
+            _siguienteDecision = 0f;
+            AlCambiarDeFase?.Invoke(_fase);
+        }
+
         private void AnimarAtaque(string estado)
         {
             if (_animator == null || string.IsNullOrEmpty(estado)) return;
@@ -523,6 +676,7 @@ namespace Game.NPC.Combate
         private void AlDevolverleUnAtaque(GameObject lanzador)
         {
             if (!_activo || lanzador != gameObject || _lanzador == null) return;
+            if (!_perfil.Caracter.leeLaDefensaDelJugador) return;
             _memoria.Devuelta(_lanzador.UltimaAccionSalida);
         }
 

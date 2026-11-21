@@ -258,7 +258,7 @@
         },
         {
             "id": "EVT_LIAM_CRYSTAL_02",
-            "text": "Se ha quedado delante del demonio. Esta mañana ni sabía que tenía magia."
+            "text": "Se ha quedado delante del demonio. Tiene magia… y no lo sabía."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_03",
@@ -554,7 +554,7 @@
         },
         {
             "id": "RUPTURA_ESTELA_02",
-            "text": "Lo orquestaste todo. El demonio del bosque.\nEl peligro. Usaste a Will como cebo desde el primer día."
+            "text": "Lo orquestaste. El gólem, el peligro.\nUsaste a Will como cebo desde el primer día."
         },
         {
             "id": "RUPTURA_ESTELA_03",
@@ -2302,7 +2302,7 @@
         },
         {
             "id": "CAP3_POSADA_04",
-            "text": "Demonios por aquí, no. Pero animales con un aro como ese… unos cuantos."
+            "text": "Demonios por aquí, no. Pero cosas raras de noche… unas cuantas."
         },
         {
             "id": "CAP3_POSADA_05",
@@ -2371,62 +2371,6 @@
         {
             "id": "CAP3_CLARO_07",
             "text": "Eldran siempre lo dice: que puedas hacer algo no quiere decir que debas."
-        },
-        {
-            "id": "CAP3_PAJAROS_01",
-            "text": "¡Guardia del cruce! Que nadie se mueva."
-        },
-        {
-            "id": "CAP3_PAJAROS_02",
-            "text": "Solo son pájaros…"
-        },
-        {
-            "id": "CAP3_PAJAROS_03",
-            "text": "Pájaros que no se venden. Atadlos."
-        },
-        {
-            "id": "CAP3_PAJAROS_04",
-            "text": "Ya está. Volad."
-        },
-        {
-            "id": "CAP3_PAJAROS_05",
-            "text": "Avisaste en vez de liarte a golpes. Eso, chico, es lo difícil."
-        },
-        {
-            "id": "CAP3_PAJAROS_06",
-            "text": "Si vas al Bosque Prohibido, ve de día. Y no toques nada que brille."
-        },
-        {
-            "id": "CAP3_PAJAROS_07",
-            "text": "Gracias. Lo haré."
-        },
-        {
-            "id": "CAP3_JAULAS_01",
-            "text": "Se acabó…"
-        },
-        {
-            "id": "CAP3_JAULAS_02",
-            "text": "Las jaulas… no, no, no."
-        },
-        {
-            "id": "CAP3_JAULAS_03",
-            "text": "Hemos visto el humo desde el cruce."
-        },
-        {
-            "id": "CAP3_JAULAS_04",
-            "text": "Tres jaulas quemadas. Los demás pájaros se salvarán."
-        },
-        {
-            "id": "CAP3_JAULAS_05",
-            "text": "Habría bastado con avisar, chico."
-        },
-        {
-            "id": "CAP3_JAULAS_06",
-            "text": "Lo sé."
-        },
-        {
-            "id": "CAP3_JAULAS_07",
-            "text": "Ve de día al Bosque Prohibido. Y piensa antes de arder."
         },
         {
             "id": "CAP4_ESTELA_01",

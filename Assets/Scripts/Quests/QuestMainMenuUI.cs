@@ -60,15 +60,13 @@ public class QuestMainMenuUI : MonoBehaviour
     {
         get
         {
-            // Antes se exigía panelGroup.alpha > 0.001f, pero ShowMenu() deja alpha en
-            // 0f de forma síncrona y solo el tween de DOTween lo sube en frames
-            // posteriores. Como QuestMenuManager.RefreshMenuRegistration() lee IsOpen
-            // en el MISMO Update() en el que se llama a ShowMenu() (justo después),
-            // esta comprobación devolvía false ese primer frame y retrasaba
-            // EnsureUiScope()/PushUIMode() (que suprime el Action Map GamePlay, incluido
-            // Move con las flechas) al frame siguiente. blocksRaycasts/interactable ya
-            // se fijan de forma síncrona en ShowMenu()/HideMenu(), así que basta con
-            // ellos para saber si el menú está "abierto" sin depender del tween.
+            // Como QuestMenuManager.RefreshMenuRegistration() lee IsOpen en el MISMO
+            // Update() en el que se llama a ShowMenu() (justo después), esta comprobación
+            // devolvía false ese primer frame y retrasaba EnsureUiScope()/PushUIMode()
+            // (que suprime el Action Map GamePlay, incluido Move con las flechas) al
+            // frame siguiente. blocksRaycasts/interactable ya se fijan de forma síncrona
+            // en ShowMenu()/HideMenu(), así que basta con ellos para saber si el menú
+            // está "abierto" sin depender del tween.
             if (panelGroup != null)
                 return panelGroup.gameObject.activeSelf && panelGroup.blocksRaycasts;
             return panelRoot != null && panelRoot.activeSelf;
@@ -189,12 +187,12 @@ public class QuestMainMenuUI : MonoBehaviour
             return;
         }
 
-        // PERF (revision rendimiento 7 sept 2026): antes se hacia ClearContainer()
-        // (Destroy de todas las filas) + Instantiate() por mision en CADA apertura del
-        // menu -- pico medido de 1333ms en una captura F9 real con pocas misiones en la
-        // partida. Mismo patron de pool ya usado en ShopUI.RebuildItemList() /
-        // PlayerEquipmentMenuController: se reutilizan los GameObjects hijos ya existentes
-        // de cada contenedor (visible/oculto) en vez de destruir y recrear.
+        // PERF: antes se hacia ClearContainer() (Destroy de todas las filas) +
+        // Instantiate() por mision en CADA apertura del menu -- pico medido de 1333ms en
+        // una captura F9 real con pocas misiones en la partida. Mismo patron de pool ya
+        // usado en ShopUI.RebuildItemList() / PlayerEquipmentMenuController: se reutilizan
+        // los GameObjects hijos ya existentes de cada contenedor (visible/oculto) en vez
+        // de destruir y recrear.
         var quests = QuestManager.Instance.GetAll()
             .OrderBy(q => q.Data.GetLocalizedName());
 
@@ -253,7 +251,6 @@ public class QuestMainMenuUI : MonoBehaviour
             hiddenHeaderText.text = string.Format(fmt, hiddenCount);
         }
 
-        // Debug.Log($"QuestMainMenuUI: Rebuild complete. Visible={visibleCount}, Hidden={hiddenCount}");
         RefreshScrollViews();
         UpdateTabVisibility();
     }
@@ -413,7 +410,6 @@ public class QuestMainMenuUI : MonoBehaviour
         bool hasHiddenSection = hiddenContentRoot != null && hiddenTabRoot != null;
         bool showingHidden = _showingHidden && hasHiddenSection;
 
-        // Debug.Log($"QuestMainMenuUI: UpdateTabVisibility showingHidden={showingHidden}");
 
         // Actualizar headers
         if (visibleHeaderText)
@@ -426,13 +422,11 @@ public class QuestMainMenuUI : MonoBehaviour
         if (visibleTabRoot != null)
         {
             visibleTabRoot.SetActive(!showingHidden);
-            // Debug.Log($"QuestMainMenuUI: visibleTabRoot.SetActive({!showingHidden})");
         }
 
         if (hiddenTabRoot != null)
         {
             hiddenTabRoot.SetActive(showingHidden);
-            // Debug.Log($"QuestMainMenuUI: hiddenTabRoot.SetActive({showingHidden})");
         }
 
         // Force update del canvas y layouts SOLO en el tab activo
@@ -442,7 +436,6 @@ public class QuestMainMenuUI : MonoBehaviour
         if (activeContent != null && activeContent.gameObject.activeInHierarchy)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(activeContent);
-            // Debug.Log($"QuestMainMenuUI: LayoutRebuilder forzado en {activeContent.name} (height={activeContent.rect.height})");
         }
 
         // Actualizar visibilidad de los iconos de input (LB/RB)
@@ -506,14 +499,12 @@ public class QuestMainMenuUI : MonoBehaviour
                     if (targetButton != null && targetButton.gameObject.activeInHierarchy && targetButton.interactable)
                     {
                         targetButton.Select();
-                        // Debug.Log($"QuestMainMenuUI: EnsureSelection -> selected {targetButton.name} from {child.name}");
                         return;
                     }
                 }
             }
         }
 
-        // Debug.Log($"QuestMainMenuUI: EnsureSelection -> no hay botones disponibles para seleccionar");
     }
 
     void RefreshScrollViews()
@@ -632,7 +623,6 @@ public class QuestMainMenuUI : MonoBehaviour
     /// </summary>
     void ValidateScrollRectSetup()
     {
-        // Debug.Log("[QuestMainMenuUI] Validando configuración de ScrollRects...");
         
         // Validar ScrollRect de misiones visibles
         if (visibleScrollRect != null && visibleContentRoot != null)
@@ -642,7 +632,6 @@ public class QuestMainMenuUI : MonoBehaviour
             visibleScrollRect.vertical = true;
             visibleScrollRect.movementType = ScrollRect.MovementType.Clamped;
             visibleScrollRect.scrollSensitivity = 15f;
-            // Debug.Log($"[QuestMainMenuUI] ScrollRect visible configurado: content={visibleContentRoot.name}, viewport={visibleScrollRect.viewport?.name ?? "null"}");
         }
         else
         {
@@ -659,7 +648,6 @@ public class QuestMainMenuUI : MonoBehaviour
             hiddenScrollRect.vertical = true;
             hiddenScrollRect.movementType = ScrollRect.MovementType.Clamped;
             hiddenScrollRect.scrollSensitivity = 15f;
-            // Debug.Log($"[QuestMainMenuUI] ScrollRect oculto configurado: content={hiddenContentRoot.name}, viewport={hiddenScrollRect.viewport?.name ?? "null"}");
         }
         else
         {

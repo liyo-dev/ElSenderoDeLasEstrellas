@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -87,6 +87,103 @@ public static class PosesDeActuacion
             H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.25f, -0.55f, 0.8f),
             H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.2f, 0.32f, 1f),
         } },
+        // Asomado a la ventana (19 nov 2026, «buenos días» desde los miradores): los antebrazos apoyados
+        // en el alféizar, delante del pecho. El tronco no se inclina: con estas cabezas parecería mirar al suelo.
+        new Pose { Estado = "Asomado", Apuntes = new[]
+        {
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.3f, -0.7f, 0.65f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.45f, -0.15f, 0.88f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.3f, -0.7f, 0.65f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.45f, -0.15f, 0.88f),
+        } },
+        // Conjuro en alto (estilo Lina Inverse, 19 nov 2026): los dos brazos arriba y las manos juntas sobre
+        // la cabeza, cargando el hechizo; se suelta con MagicSpecial o Conjuro_Lanzar.
+        new Pose { Estado = "ConjuroEnAlto", Apuntes = new[]
+        {
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.35f, 0.9f, 0.15f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.55f, 0.8f, 0.1f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.35f, 0.9f, 0.15f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.55f, 0.8f, 0.1f),
+        } },
+        // Contraataque (B en el momento justo): sostener la bola devuelta sobre la cabeza con los brazos
+        // en V, abiertos y arriba, para que con la cabeza grande se vean las manos. Ver INC-1352.
+        new Pose { Estado = "Contraataque_Sostener", Apuntes = new[]
+        {
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.65f, 0.75f, 0.05f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, 0.2f, 0.98f, 0.05f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.65f, 0.75f, 0.05f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, -0.2f, 0.98f, 0.05f),
+        } },
+        // Esquiva, «salto del león»: en plancha hacia delante, el tronco volcado, los brazos por delante
+        // y las piernas estiradas atrás; al caer rueda. Cuerpo entero. Ver INC-1349.
+        new Pose { Estado = "Esquiva_Salto", Marco = HumanBodyBones.Hips, CuerpoEntero = true, Apuntes = new[]
+        {
+            H(HumanBodyBones.Spine, HumanBodyBones.Chest, 0f, 0.55f, 0.85f),
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.25f, 0.45f, 0.85f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, 0.05f, 0.5f, 0.85f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.25f, 0.45f, 0.85f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, -0.05f, 0.5f, 0.85f),
+            H(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, 0.1f, -0.6f, -0.8f),
+            H(HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, 0.05f, -0.3f, -0.95f),
+            H(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, -0.1f, -0.7f, -0.7f),
+            H(HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, -0.05f, -0.45f, -0.9f),
+        } },
+        // Esquiva con stick, en lo alto del salto (dibujo de Raúl, 20 nov 2026): los brazos abiertos en
+        // cruz y las piernas juntas y estiradas, preparando la voltereta. Cuerpo entero.
+        new Pose { Estado = "Esquiva_Preparar", Marco = HumanBodyBones.Hips, CuerpoEntero = true, Apuntes = new[]
+        {
+            H(HumanBodyBones.Spine, HumanBodyBones.Chest, 0f, 0.97f, -0.2f),
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.95f, 0.3f, 0f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, 0.95f, 0.3f, 0.05f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.95f, 0.3f, 0f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, -0.95f, 0.3f, 0.05f),
+            H(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, 0.03f, -1f, -0.1f),
+            H(HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, 0.02f, -1f, -0.15f),
+            H(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, -0.03f, -1f, -0.1f),
+            H(HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, -0.02f, -1f, -0.15f),
+        } },
+        // Contraataque, al parar el golpe: aguantando, las piernas abiertas y flexionadas (la de atrás
+        // empuja), el tronco hacia el golpe y las dos palmas al frente. Cuerpo entero. Ver INC-1352.
+        new Pose { Estado = "Contraataque_Parar", Marco = HumanBodyBones.Hips, CuerpoEntero = true, Apuntes = new[]
+        {
+            H(HumanBodyBones.Spine, HumanBodyBones.Chest, 0f, 1f, 0.18f),
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.35f, -0.05f, 1f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.1f, 0.45f, 1f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.35f, -0.05f, 1f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.1f, 0.45f, 1f),
+            H(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, 0.3f, -0.85f, 0.4f),
+            H(HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, 0.12f, -0.97f, -0.15f),
+            H(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, -0.25f, -0.85f, -0.4f),
+            H(HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, -0.1f, -0.97f, -0.2f),
+        } },
+        // Contraataque, en lo alto del salto, coger impulso: echado atrás, los brazos arriba y por detrás
+        // de la cabeza con la bola, las rodillas recogidas. Cuerpo entero. Ver INC-1352.
+        new Pose { Estado = "Contraataque_Impulso", Marco = HumanBodyBones.Hips, CuerpoEntero = true, Apuntes = new[]
+        {
+            H(HumanBodyBones.Spine, HumanBodyBones.Chest, 0f, 0.9f, -0.45f),
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.35f, 0.85f, -0.35f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.15f, 0.7f, -0.7f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.35f, 0.85f, -0.35f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.15f, 0.7f, -0.7f),
+            H(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, 0.15f, -0.35f, 0.9f),
+            H(HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, 0.05f, -0.95f, -0.25f),
+            H(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, -0.15f, -0.5f, 0.85f),
+            H(HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, -0.05f, -0.95f, -0.2f),
+        } },
+        // Contraataque, en lo alto del salto, lanzar: doblado hacia delante en plancha (el tronco y las
+        // piernas al frente) y las dos manos empujando la bola. Cuerpo entero. Ver INC-1352.
+        new Pose { Estado = "Contraataque_Lanzar", Marco = HumanBodyBones.Hips, CuerpoEntero = true, Apuntes = new[]
+        {
+            H(HumanBodyBones.Spine, HumanBodyBones.Chest, 0f, 0.75f, 0.65f),
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.18f, 0.05f, 1f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.05f, 0.05f, 1f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.18f, 0.05f, 1f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.05f, 0.05f, 1f),
+            H(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg, 0.12f, -0.15f, 1f),
+            H(HumanBodyBones.RightLowerLeg, HumanBodyBones.RightFoot, 0.08f, -0.25f, 1f),
+            H(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg, -0.12f, -0.3f, 0.95f),
+            H(HumanBodyBones.LeftLowerLeg, HumanBodyBones.LeftFoot, -0.08f, -0.4f, 0.9f),
+        } },
         // La cabeza caída y los hombros vencidos: pena, vergüenza, derrota.
         new Pose { Estado = "Cabizbajo", Marco = HumanBodyBones.Hips, Apuntes = new[]
         {
@@ -102,6 +199,16 @@ public static class PosesDeActuacion
             H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -1f, 0.6f, 0.3f),
             H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.3f, -0.6f, 0.75f),
             H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 1f, 0.5f, 0.15f),
+        } },
+        // Tirar de un carro metido entre las varas: inclinado hacia delante, los brazos abajo junto a
+        // las caderas y los antebrazos al frente, agarrando una vara con cada mano. Lo pone CargaArrastrada.
+        new Pose { Estado = "TirarDeLasVaras", Marco = HumanBodyBones.Hips, Apuntes = new[]
+        {
+            H(HumanBodyBones.Spine, HumanBodyBones.Chest, 0f, 1f, 0.22f),
+            H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.35f, -0.92f, 0.12f),
+            H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, 0.15f, -0.3f, 0.95f),
+            H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.35f, -0.92f, 0.12f),
+            H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, -0.15f, -0.3f, 0.95f),
         } },
         // Abrazarse de frío: los brazos pegados al cuerpo y cada mano al brazo contrario, el izquierdo por
         // debajo. Lo usa ClimaSobreElJugador con lluvia o nieve, quieto. Ver INC-959.
@@ -555,6 +662,38 @@ public static class PosesDeActuacion
                 ["Chest Front-Back"] = new[] { (0f, 0.1f), (1.5f, 0.18f), (3f, 0.1f) },
                 ["Left Arm Down-Up"] = new[] { (0f, 0f), (1.5f, 0.07f), (3f, 0f) },
                 ["Right Arm Down-Up"] = new[] { (0f, 0f), (1.5f, 0.07f), (3f, 0f) },
+            } },
+        // Abrir una puerta (19 nov 2026): la mano derecha va al pomo, tira hacia sí y el cuerpo acompaña.
+        // Con HojasConBisagraBeat a la vez y un paso fuera después.
+        new Gesto { Estado = "AbrirPuerta", Duracion = 1.4f,
+            Apuntes = new[]
+            {
+                H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.2f, -0.6f, 0.75f),
+                H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, 0.0f, 0.05f, 1.0f),
+            },
+            Musculos = new Dictionary<string, (float t, float delta)[]>
+            {
+                ["Right Forearm Stretch"] = new[] { (0f, -0.4f), (0.35f, 0.25f), (0.9f, -0.5f), (1.4f, -0.45f) },
+                ["Spine Front-Back"] = new[] { (0f, 0f), (0.35f, -0.06f), (0.9f, 0.08f), (1.4f, 0f) },
+                ["Right Shoulder Down-Up"] = new[] { (0f, 0f), (0.35f, 0.1f), (0.9f, 0f) },
+            } },
+        // Desperezarse por la mañana (19 nov 2026): los brazos arriba, el pecho hacia atrás, y vuelta.
+        new Gesto { Estado = "Desperezarse", Duracion = 2.6f,
+            Apuntes = new[]
+            {
+                H(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, 0.5f, 0.85f, 0.0f),
+                H(HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand, -0.2f, 0.95f, -0.1f),
+                H(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, -0.5f, 0.85f, 0.0f),
+                H(HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand, 0.2f, 0.95f, -0.1f),
+            },
+            Musculos = new Dictionary<string, (float t, float delta)[]>
+            {
+                ["Left Arm Down-Up"] = new[] { (0f, -0.5f), (0.7f, 0f), (1.8f, 0.05f), (2.6f, -0.5f) },
+                ["Right Arm Down-Up"] = new[] { (0f, -0.5f), (0.7f, 0f), (1.8f, 0.05f), (2.6f, -0.5f) },
+                ["Spine Front-Back"] = new[] { (0f, 0f), (0.7f, 0.12f), (1.8f, 0.14f), (2.6f, 0f) },
+                ["Head Nod Down-Up"] = new[] { (0f, 0f), (0.7f, -0.08f), (1.8f, -0.1f), (2.6f, 0f) },
+                ["Left Shoulder Down-Up"] = new[] { (0f, 0f), (0.7f, 0.3f), (1.8f, 0.3f), (2.6f, 0f) },
+                ["Right Shoulder Down-Up"] = new[] { (0f, 0f), (0.7f, 0.3f), (1.8f, 0.3f), (2.6f, 0f) },
             } },
         // Lanzar: de los brazos arriba a empujar al frente con las dos manos, con el cuerpo detrás.
         new Gesto { Estado = "Conjuro_Lanzar", Duracion = 1f,

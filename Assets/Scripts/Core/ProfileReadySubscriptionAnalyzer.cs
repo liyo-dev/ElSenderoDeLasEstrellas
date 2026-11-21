@@ -114,7 +114,7 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
             }
             else if (showAllSystems)
             {
-                safeSystems.Add($"✅ {mb.GetType().Name} ({mb.gameObject.name})");
+                safeSystems.Add($"{mb.GetType().Name} ({mb.gameObject.name})");
             }
         }
         
@@ -199,21 +199,21 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
         report.AppendLine("║  INFORME DE ANÁLISIS DE SUSCRIPCIONES A OnProfileReady                    ║");
         report.AppendLine("╚════════════════════════════════════════════════════════════════════════════╝\n");
         
-        report.AppendLine($"⏱️  Tiempo de análisis: {Time.time:F3}s desde inicio");
-        report.AppendLine($"📊  Total sistemas analizados: {suspiciousSystems.Count + safeSystems.Count}");
-        report.AppendLine($"⚠️  Sistemas sospechosos: {suspiciousSystems.Count}");
-        report.AppendLine($"✅  Sistemas seguros: {safeSystems.Count}\n");
+        report.AppendLine($" Tiempo de análisis: {Time.time:F3}s desde inicio");
+        report.AppendLine($" Total sistemas analizados: {suspiciousSystems.Count + safeSystems.Count}");
+        report.AppendLine($" Sistemas sospechosos: {suspiciousSystems.Count}");
+        report.AppendLine($" Sistemas seguros: {safeSystems.Count}\n");
         
         if (suspiciousSystems.Count > 0)
         {
             report.AppendLine("════════════════════════════════════════════════════════════════════════════");
-            report.AppendLine("⚠️  SISTEMAS SOSPECHOSOS (pueden necesitar suscribirse a OnProfileReady):");
+            report.AppendLine(" SISTEMAS SOSPECHOSOS (pueden necesitar suscribirse a OnProfileReady):");
             report.AppendLine("════════════════════════════════════════════════════════════════════════════\n");
             
             int index = 1;
             foreach (var system in suspiciousSystems.OrderByDescending(s => s.SuspiciousMethods.Count + s.SuspiciousFields.Count))
             {
-                report.AppendLine($"{index}. 🔴 {system.ClassName} (GameObject: '{system.GameObjectName}')");
+                report.AppendLine($"{index}. {system.ClassName} (GameObject: '{system.GameObjectName}')");
                 report.AppendLine($"   Estado: {(system.IsActive ? "ACTIVO" : "INACTIVO")}");
                 
                 if (system.SuspiciousMethods.Count > 0)
@@ -236,11 +236,11 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
                 
                 if (system.HasOnEnable)
                 {
-                    report.AppendLine("   ✅ Tiene método OnEnable() - revisar si se suscribe a OnProfileReady");
+                    report.AppendLine("   Tiene método OnEnable() - revisar si se suscribe a OnProfileReady");
                 }
                 else
                 {
-                    report.AppendLine("   ⚠️ NO tiene método OnEnable() - probablemente necesita agregar suscripción");
+                    report.AppendLine("   NO tiene método OnEnable() - probablemente necesita agregar suscripción");
                 }
                 
                 report.AppendLine();
@@ -249,13 +249,13 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
         }
         else
         {
-            report.AppendLine("✅ NO se encontraron sistemas sospechosos - Todos parecen estar correctamente configurados\n");
+            report.AppendLine("NO se encontraron sistemas sospechosos - Todos parecen estar correctamente configurados\n");
         }
         
         if (showAllSystems && safeSystems.Count > 0)
         {
             report.AppendLine("════════════════════════════════════════════════════════════════════════════");
-            report.AppendLine("✅ SISTEMAS SEGUROS (no requieren OnProfileReady):");
+            report.AppendLine("SISTEMAS SEGUROS (no requieren OnProfileReady):");
             report.AppendLine("════════════════════════════════════════════════════════════════════════════\n");
             
             foreach (var system in safeSystems)
@@ -266,7 +266,7 @@ public class ProfileReadySubscriptionAnalyzer : MonoBehaviour
         }
         
         report.AppendLine("════════════════════════════════════════════════════════════════════════════");
-        report.AppendLine("💡 RECOMENDACIONES:");
+        report.AppendLine("RECOMENDACIONES:");
         report.AppendLine("════════════════════════════════════════════════════════════════════════════");
         report.AppendLine("1. Revisa cada sistema marcado como sospechoso");
         report.AppendLine("2. Si accede a GameBootService.Profile, QuestManager, o datos de guardado:");

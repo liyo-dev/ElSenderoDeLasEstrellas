@@ -242,6 +242,7 @@ GameObject:
   - component: {fileID: 6699168778623959061}
   - component: {fileID: 7875443006652018189}
   - component: {fileID: 5900526055318148974}
+  - component: {fileID: 7903169915800923025}
   m_Layer: 8
   m_Name: Mimico
   m_TagString: Untagged
@@ -370,6 +371,7 @@ MonoBehaviour:
   hintAnimDuration: 0.25
   hintScale: 0.5
   iconSet: {fileID: 0}
+  iconoPorDefectoSiFalta: 1
   singleUse: 0
   initiallyEnabled: 1
   persistentIdOverride: 
@@ -437,6 +439,7 @@ MonoBehaviour:
   animacionDeMuerte: Die
   segundosHastaDesaparecer: 2.5
   vfxAlDesaparecer: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
+  puntosDeSintonia: 20
   alcanceDelTemblor: 5
   cadaCuantoTiembla: {x: 4, y: 7}
   zonaDeInteraccion: {fileID: 8198946018502056902}
@@ -472,6 +475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 6
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &7875443006652018189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,6 +490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: elite
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &5900526055318148974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,6 +511,21 @@ MonoBehaviour:
   soloConLaMision: 
   radioDeProximidad: 0
   debugLogs: 0
+--- !u!114 &7903169915800923025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3418753760393770794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_MIMICO
+  debilidades: 00000000i
+  resistencias: 
 --- !u!1 &3957061264448209999
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,205 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Domo de estrellas doradas hechas de GameObjects reales (no un truco de shader en el skybox ni
-/// un ParticleSystem): mallas de "estrella" (destello de 6 puntas, ver <see cref="GenerateStarMesh"/>)
-/// pequeñas repartidas sobre una esfera alrededor del jugador, concentradas hacia la parte alta del
-/// cielo (ver <see cref="topBiasExponent"/>), tema "Sendero de las Estrellas". Rejilla/reparto +
-/// pool — se construye UNA vez y se reutiliza sin volver a Instantiate en cada ciclo noche/día +
-/// fundido de alfa vía MaterialPropertyBlock + recentrado periódico, no por frame) para no
-/// introducir un patrón nuevo en el proyecto — ver ese script para el razonamiento completo de cada
-/// decisión de rendimiento.
+/// Domo de estrellas hecho de GameObjects reales (no un truco de shader del skybox ni un
+/// ParticleSystem): mallas de estrella (destello de 6 puntas, ver <see cref="GenerateStarMesh"/>)
+/// repartidas sobre una esfera alrededor del jugador y concentradas hacia la parte alta del cielo
+/// (ver <see cref="topBiasExponent"/>). Se construye una vez y se reutiliza: el ciclo noche/día solo
+/// funde el alfa con MaterialPropertyBlock y recentra el domo cada cierto tiempo, sin volver a
+/// instanciar.
 ///
-/// 20 ago 2026 — FIX "las estrellas no brillan y el color es muy apagado": antes de este fix cada
-/// estrella tenía un brillo FIJO sorteado una vez (brightnessVariance) y no había animación de
-/// parpadeo por diseño — el domo se veía como un cielo estrellado estático, sin vida. Ahora cada
-/// estrella SÍ parpadea de verdad (ver <see cref="twinkleIntensity"/>/<see cref="twinkleSpeedRange"/>,
-/// cada una con su propia fase y velocidad para que no parpadeen a la vez), recalculado cada
-/// <see cref="twinkleUpdateInterval"/> segundos (no cada frame). Además, <see cref="starColor"/> usa
-/// canales por encima de 1 — con el pipeline de este proyecto en HDR y Bloom activo (ver
-/// Assets/Settings/PC_RPAsset.asset / Assets/Settings/Volumenes/Volumen Profile.asset) un color por
-/// encima de 1 aporta brillo extra vía Bloom sin tocar el shader. Se añade también
-/// <see cref="starColorAlt"/> (unas pocas estrellas plateadas/azuladas sueltas, ver
-/// <see cref="altStarChance"/>) para romper la monotonía del domo completamente dorado.
+/// Parpadeo: cada estrella tiene su fase y velocidad (<see cref="twinkleIntensity"/>,
+/// <see cref="twinkleSpeedRange"/>) y se recalcula cada <see cref="twinkleUpdateInterval"/> segundos,
+/// no por frame. <see cref="starColor"/> usa canales por encima de 1: con el pipeline en HDR y Bloom
+/// activo aporta brillo extra sin tocar el shader. <see cref="starColorAlt"/> da unas pocas estrellas
+/// de blanco frío (<see cref="altStarChance"/>) para romper la monotonía. Opcionalmente hay una única
+/// estrella protagonista, más grande y con parpadeo sutil (<see cref="spawnHeroStar"/>).
 ///
-/// 23 ago 2026 — Raúl pidió: color más dorado, forma como el icono del cursor y que brillen. Se
-/// probaron varias pasadas con estrellas hechas de Quads planos con una textura de chispa de 4
-/// puntas generada en memoria, orientados hacia cámara (billboard) y con `domeRadius` recortado al
-/// `farClipPlane` de la cámara para intentar que quedaran detrás de las montañas. A pesar de 3
-/// pasadas ese mismo día, el problema de fondo (estrellas pintándose delante de las montañas) y la
-/// sensación de "cartón plano" seguían sin resolverse del todo — ver el historial completo de esas
-/// pasadas en el control de versiones si hace falta el detalle; se ha simplificado este comentario
-/// de clase el 24 de agosto (ver más abajo) porque el enfoque de Quads se sustituyó por completo.
+/// Estrellas 3D: cada estrella es una malla real (<see cref="SpawnStar"/>) que se ve igual de
+/// "3D" desde cualquier ángulo, sin billboard. El material es <c>Sprites/Default</c>
+/// (<see cref="BuildStarMaterial"/>), el shader ya probado como compatible con URP en el proyecto.
 ///
-/// 24 ago 2026 — Dos pasadas intermedias el mismo día (truco de cola de render "Background" tipo
-/// Skybox, luego un Raycast por estrella para medir la montaña real en cada dirección) tampoco
-/// resolvieron el problema de forma visible para Raúl ("yo lo sigo viendo igual"), y además seguían
-/// siendo Quads planos, lo cual Raúl rechazó explícitamente: **"no quiero na en 2D, que se generen
-/// objetos 3D mediante un pool de forma aleatoria por el cielo y que brillen, como si me pones
-/// esferas pequeñitas ya me da igual pero arreglamelo ya"** — bloqueando la subida de una build.
-/// Reescritura completa de la generación de estrellas con dos cambios de fondo:
+/// Oclusión sin Raycast: nada que dibuje la cámara está más lejos que su <c>farClipPlane</c>. El domo
+/// se coloca en ese límite (<see cref="ComputeActiveDomeRadius"/>, con un margen mínimo solo por
+/// precisión numérica), así que las estrellas quedan siempre más lejos que cualquier montaña o
+/// terreno visible. Sprites/Default no escribe profundidad pero la compara con la ya escrita por la
+/// geometría opaca, de modo que el fragmento se descarta donde haya algo delante, tenga o no collider.
+/// <see cref="domeRadius"/> solo se usa mientras no hay cámara; <see cref="CheckInitialStateDelayed"/>
+/// espera (<see cref="WaitForMainCamera"/>, hasta <see cref="MaxCameraWaitFrames"/> frames) a que
+/// exista <c>Camera.main</c> para que un arranque en frío no deje el domo fijado con el radio de
+/// último recurso. El domo sigue al jugador (<see cref="_followTransform"/>), no a la cámara, y se
+/// recentra solo si se aleja más de la mitad del radio (<see cref="CheckRecenter"/>, cada
+/// <see cref="recenterCheckInterval"/> segundos).
 ///
-/// 1) **Esferas 3D reales en vez de Quads con billboard**: cada estrella es ahora una malla
-///    <c>PrimitiveType.Sphere</c> real (ver <see cref="SpawnStar"/>), sin textura generada, sin
-///    billboard (ya no hace falta orientar nada hacia cámara: una esfera se ve igual de "3D" desde
-///    cualquier ángulo, a diferencia de un plano). Esto resuelve la queja "no quiero na en 2D" de
-///    raíz: no hay ángulo de cámara en el que una esfera real se vea "de canto" como sí le pasaba a
-///    un plano mal orientado. El material sigue siendo <c>Sprites/Default</c> (ver
-///    <see cref="BuildStarMaterial"/>) — a propósito, NO se cambia a otro shader: este proyecto usa
-///    URP y Sprites/Default es el único shader de este script ya confirmado compatible con URP en
-///    este proyecto (ver comentario del fix del 20 ago 2026); arriesgarse a un shader nuevo sin poder
-///    verificarlo en el Editor (esta sesión no tiene Unity) podría dejar las estrellas invisibles o
-///    en magenta de error en vez de solo "feas". Sin textura asignada, Sprites/Default usa su blanco
-///    opaco por defecto — con una malla de esfera real (no un Quad) eso ya es justo lo que hace
-///    falta, así que la generación de textura de la pasada anterior desaparece sin más.
-/// 2) **Oclusión correcta SIN Raycast — anclada al propio farClipPlane de la cámara**: nada que la
-///    cámara dibuje puede estar más lejos que su propio <c>farClipPlane</c> (si estuviera más lejos,
-///    ni siquiera se vería, se recortaría). Colocar el domo justo en ese límite
-///    (<see cref="ComputeActiveDomeRadius"/>, con un margen mínimo solo por precisión numérica, NO
-///    como "colchón" de seguridad) GARANTIZA que las estrellas queden más lejos que cualquier
-///    montaña o terreno visible. Sprites/Default no escribe profundidad propia (ZWrite Off, cola
-///    "Transparent") pero SÍ compara su profundidad contra la ya escrita por la geometría opaca
-///    (montañas, cola "Geometry", que se dibuja antes) — con las estrellas ancladas al borde mismo
-///    del farClipPlane, esa comparación falla siempre que haya algo opaco delante, sea lo que sea y
-///    esté a la distancia que esté, así que el fragmento de la estrella se descarta correctamente
-///    ahí. No depende de que el fondo tenga collider (a diferencia del intento anterior con Raycast,
-///    que si el fondo era un mesh puramente decorativo sin collider nunca lo detectaba — probable
-///    explicación real de por qué "seguía viendo igual"). Se elimina por completo la maquinaria de
-///    Raycast de la pasada anterior (<c>occlusionCheckLayers</c>, <c>occlusionSafetyMargin</c>,
-///    <c>minStarDistance</c>, <c>raycastOriginHeight</c>, <c>ComputeStarDistance</c>) — más simple y
-///    más fiable.
+/// Mallas y material se generan una vez en Awake y se comparten vía <c>MeshFilter.sharedMesh</c>.
 ///
-/// 25 ago 2026 — con la oclusión ya resuelta ("ahora ya esta mejor"), Raúl pidió tres afinados de
-/// diseño puramente estéticos (nada que ver con la oclusión, que no se toca en esta pasada):
-/// **(1)** menos estrellas en total (<see cref="starCount"/> baja de 220 a 120: el cielo se veía
-/// "todo lleno" y poco natural); **(2)** concentradas más hacia la parte alta del cielo en vez de
-/// repartidas uniformemente por todo el domo visible — se sustituye el muestreo por rechazo
-/// (generar candidatos y descartar los que caían bajo minElevationDegrees, que podía tardar varios
-/// intentos por estrella) por generación DIRECTA: la altura <c>y</c> de cada estrella en la esfera
-/// se sortea ya dentro de rango con <see cref="topBiasExponent"/> como exponente de sesgo — con
-/// exponente 1 el reparto en altura es uniforme (como antes), y cuanto más alto, más estrellas caen
-/// cerca del cenit y menos cerca del horizonte, igual que en un cielo real donde la vía láctea y la
-/// mayor densidad de estrellas visibles se perciben más arriba; **(3)** la esfera lisa se sustituye
-/// por una malla de "estrella"/destello real generada en código (ver <see cref="GenerateStarMesh"/>
-/// y <see cref="SpawnStar"/>): tres pares de puntas opuestas a lo largo de los ejes locales X/Y/Z
-/// que se cruzan en el centro (como un "pincho" de 6 puntas), con las puntas del eje Y algo más
-/// cortas que las de X/Z para que la silueta no sea un octaedro perfectamente simétrico — cada
-/// estrella recibe además una rotación aleatoria (<c>UnityEngine.Random.rotation</c>) para que el
-/// domo no se vea con todas las puntas alineadas. Esta malla se genera UNA sola vez en Awake (igual
-/// que el material, ver <see cref="_starMesh"/>) y se comparte vía <c>MeshFilter.sharedMesh</c> en
-/// las ~120 instancias, así que el coste de generarla no se repite por estrella. El nombre del juego
-/// es literalmente "El Sendero de las Estrellas", de ahí el cuidado en que las estrellas se lean
-/// como estrellas y no como bolas.
+/// Coordinación con las constelaciones: el sesgo hacia el cenit concentra polvo en la misma franja de
+/// elevación donde viven las constelaciones. <see cref="AvoidConstellationZones"/> consulta
+/// <c>NightSkyConstellationSpawner.ExclusionZones</c> (lista estática que publica ese script) y
+/// aparta cualquier estrella que caiga dentro del radio de una constelación, rotándola lo mínimo
+/// sobre el círculo máximo que la une con el centro de la zona. El acoplamiento es de un solo sentido
+/// y, si ese componente no está en la escena, la lista queda vacía y no hay efecto.
 ///
-/// 25 ago 2026 (mismo día, pasada siguiente) — Raúl preguntó si el nuevo script de constelaciones
-/// (<c>NightSkyConstellationSpawner</c>, ver su comentario de clase) se complementaba con este polvo
-/// de fondo o si corrían el riesgo de "pisarse". Respuesta corta: sin coordinación, sí — el sesgo
-/// hacia el cenit de este mismo fix (<see cref="topBiasExponent"/>) concentra polvo justo en la misma
-/// franja de elevación (50-60°) donde viven las constelaciones. Fix: <see cref="AvoidConstellationZones"/>
-/// consulta <c>NightSkyConstellationSpawner.ExclusionZones</c> (lista <c>static</c> publicada por ese
-/// script) y aparta cualquier estrella de polvo que caiga dentro del radio de una constelación,
-/// rotándola justo lo mínimo a lo largo del mismo círculo máximo que la une con el centro de la zona —
-/// conserva su rumbo original, no vuelve a sortear nada. Acoplamiento deliberado y de un solo sentido
-/// (este script SÍ referencia el tipo <c>NightSkyConstellationSpawner</c>; al revés no) y con caída
-/// elegante: si ese componente no está en la escena, la lista queda vacía y el comportamiento es
-/// idéntico al de antes de este fix.
-///
-/// **Nota importante sobre por qué los cambios de las pasadas anteriores no se notaban en el
-/// Editor**: varios de los campos que se estaban ajustando (tamaño en píxeles, forma, margen de
-/// seguridad del farClipPlane...) son campos serializados de un componente que ya existía en la
-/// escena de Raúl. Unity NO aplica retroactivamente un nuevo valor por defecto de C# a un campo que
-/// ya tiene un valor guardado en la escena/prefab (el mismo tipo de bug ya documentado en este
-/// proyecto en otros componentes montados a mano) — así que aunque el código cambiara, el
-/// Inspector podía seguir mostrando (y USANDO) los números viejos hasta que
-/// alguien los tocara a mano o el campo se borrara/renombrara. Varios campos de este fix se han
-/// renombrado o eliminado a propósito (<c>desiredScreenSizePixels</c> →
-/// <see cref="starScreenSizePixelsRange"/>; <c>farClipSafetyMargin</c> pasa de campo serializado a
-/// constante fija en código, ver <see cref="FarClipMarginFactor"/>; todos los campos de forma del
-/// Quad desaparecen del todo) precisamente para que el valor nuevo se aplique de verdad sin depender
-/// de que Raúl haga clic en "Reset" sobre el componente. Si en el futuro un ajuste de Inspector no
-/// parece tener ningún efecto, sospechar primero de esto.
-///
-/// 25 ago 2026 (pasada 5) — REGRESIÓN "vuelve a pasar lo de las montañas, y las estrellas no deben
-/// moverse con la cámara": Raúl reportó que la oclusión (ya dada por resuelta en la pasada 3) había
-/// vuelto a fallar. Esta sesión SÍ tiene acceso al repo Unity completo (incluida la escena
-/// `MainWorld.unity` en texto), a diferencia de las pasadas anteriores — eso permitió, por primera
-/// vez, leer los valores REALMENTE serializados en el GameObject de la escena de Raúl en vez de solo
-/// razonar sobre el código. Causa raíz confirmada por inspección directa de la escena: el
-/// `MonoBehaviour` de este componente en `MainWorld.unity` seguía con `starCount: 220`,
-/// `domeRadius: 220`, `minElevationDegrees: 8` y el `starColor` apagado de ANTES de las pasadas 1-4
-/// — exactamente el problema ya descrito arriba ("Unity no aplica retroactivamente un nuevo valor
-/// por defecto"), nunca corregido a mano en el Inspector porque ninguna sesión anterior podía abrir
-/// el Editor ni editar la escena directamente. El campo `domeRadius: 220` en concreto es el MISMO
-/// número que causaba el bug original del 23 ago (mountañas más lejos que el domo) — y aunque ya no
-/// se usa para el cálculo normal (ver <see cref="ComputeActiveDomeRadius"/>, anclado al
-/// farClipPlane), SÍ se usa como último recurso si <c>Camera.main</c> es null en el momento exacto
-/// de <see cref="BuildDomeIfNeeded"/>. En un arranque en frío (partida nueva o carga directa a una
-/// escena que empieza ya de noche) eso puede pasar durante el único frame de margen de
-/// <see cref="CheckInitialStateDelayed"/>, sobre todo si otros sistemas de arranque (ver
-/// `WorldBootstrap.cs`) tardan más de un frame en asignar la cámara real — y como
-/// <see cref="_built"/> pasa a <c>true</c> en el primer build y el domo nunca se reconstruye, un
-/// radio erróneo en ese primer build quedaba fijado el resto de la sesión, reintroduciendo
-/// exactamente el bug de las montañas de forma intermitente (más probable en partidas nuevas que en
-/// partidas cargadas, lo que encaja con que pareciera "iba bien" y luego "ha vuelto"). Dos arreglos:
-/// **(1)** los cuatro valores obsoletos de `MainWorld.unity` se han corregido directamente en el
-/// archivo de escena (starCount 120, domeRadius 900, minElevationDegrees 24, starColor dorado
-/// vivo) — ya no hace falta que Raúl toque nada a mano en el Inspector. **(2)**
-/// <see cref="CheckInitialStateDelayed"/> ahora espera activamente (<see cref="WaitForMainCamera"/>,
-/// hasta <see cref="MaxCameraWaitFrames"/> frames) a que <c>Camera.main</c> exista de verdad antes
-/// de construir el domo, en vez de asumir que un solo frame de margen basta — así el fallback de
-/// <see cref="domeRadius"/> queda reservado de verdad para el caso raro que su tooltip siempre dijo
-/// que era, no para una carrera de inicialización que podía perderse en cualquier arranque en frío.
-/// Sobre "las estrellas no deben moverse con la cámara": revisado — este script nunca ha atado el
-/// domo a la cámara (<see cref="_followTransform"/> sigue al jugador, con recentrado solo cada
-/// <see cref="recenterCheckInterval"/> segundos y solo si se aleja más de la mitad del radio activo,
-/// ver <see cref="CheckRecenter"/>); no se ha encontrado ningún código que lo ate a la cámara. Se
-/// deja constancia aquí por si Raúl lo seguía viendo tras esta pasada, para no perder el aviso.
-/// Además, a petición explícita ("las estrellas deben estar más altas"): <see cref="minElevationDegrees"/>
-/// sube de 16 a 24 y <see cref="topBiasExponent"/> de 2.4 a 3.2 (ver tooltips de cada campo).
-///
-/// 30 ago 2026 — Raúl compartió una imagen de referencia de otro artista (pueblo nocturno con vista
-/// de telescopio) con el cielo que quiere para el juego (ver
-/// `referencia-visual-cielo-estrellado-2026-08-30.md` en el proyecto). Dos diferencias claras con el
-/// domo tal y como estaba: (1) la imagen muestra un campo de estrellas en CAPAS de tamaño/brillo
-/// (muchas pequeñas y tenues de fondo + unas pocas medianas más brillantes), no un tamaño más o
-/// menos homogéneo; y (2) hay una única estrella "protagonista", claramente más grande/brillante que
-/// el resto, sin formar parte de ninguna figura conectada — un papel distinto al de las 3
-/// constelaciones con nombre propio de <see cref="NightSkyConstellationSpawner"/>. Dos cambios,
-/// ninguno toca la oclusión (que se deja intacta, ver más arriba): **(1)** más capas de tamaño en el
-/// polvo ambiental — <see cref="starScreenSizePixelsRange"/> se ensancha de (5,16) a (4,20) y
-/// <see cref="sizeBiasExponent"/> sube de 2.4 a 3 (más estrellas cerca del extremo pequeño, las
-/// grandes cada vez más excepcionales); **(2)** nueva estrella protagonista opcional (ver
-/// <see cref="spawnHeroStar"/> y <see cref="SpawnHeroStar"/>): una sola estrella, notablemente más
-/// grande que el rango normal (<see cref="heroStarScreenSizePixels"/>), blanco cálido brillante en
-/// vez de dorado saturado (<see cref="heroStarColor"/>) y con parpadeo mucho más sutil
-/// (<see cref="heroStarTwinkleIntensity"/>) para que se lea como un punto fijo y estable, no como
-/// una estrella normal que también titila fuerte. Se coloca en una elevación aleatoria dentro de
-/// <see cref="heroStarElevationRangeDegrees"/> con acimut aleatorio, y respeta las mismas zonas de
-/// exclusión de constelaciones que el polvo normal (<see cref="AvoidConstellationZones"/>) para no
-/// acabar pegada a ninguna de las 3 formas existentes. El parpadeo pasa a calcularse por estrella
-/// (<see cref="_twinkleIntensityPerStar"/>) en vez de con el único <see cref="twinkleIntensity"/>
-/// global de antes, precisamente para que la protagonista pueda tener el suyo propio sin afectar al
-/// resto del domo. Los cuatro valores existentes que cambian de default
-/// (<see cref="starScreenSizePixelsRange"/>, <see cref="sizeBiasExponent"/>) ya estaban serializados
-/// en `MainWorld.unity` con los valores viejos — corregidos también ahí directamente en el archivo de
-/// escena, mismo motivo de siempre (Unity no aplica retroactivamente un nuevo default de C# a un
-/// campo ya serializado). Los campos nuevos de la estrella protagonista no existían antes en la
-/// escena, así que no tienen ese problema — se han añadido igualmente al bloque del componente en
-/// `MainWorld.unity` por explicitud, pero habrían funcionado igual solo con el default de C#.
-///
-/// 30 ago 2026 (misma tarde, pasada siguiente) — Raúl pidió que el color de las estrellas fuera
-/// "el de la imagen" (la misma referencia de más arriba). En vez de estimarlo a ojo, se ha
-/// muestreado la imagen por código (los píxeles de las propias estrellas, en una franja de cielo
-/// limpio sin el resplandor de las montañas, para no contaminar la muestra con ese degradado):
-/// tanto el polvo de fondo como la estrella protagonista son, en la imagen, blanco casi puro con
-/// una pizca de calidez (algo como RGB 255,255,242 en los píxeles más brillantes) — NO el dorado
-/// saturado que tenía <see cref="starColor"/> hasta ahora, ni el azul saturado de
-/// <see cref="starColorAlt"/>. <see cref="starColor"/>, <see cref="starColorAlt"/> y
-/// <see cref="heroStarColor"/> se han ajustado a esa medición (manteniendo la magnitud por encima
-/// de 1 de siempre, para el mismo aprovechamiento de Bloom) — blanco cálido muy sutil como color
-/// dominante, con <see cref="starColorAlt"/> ahora un blanco frío igual de sutil en vez de un azul
-/// marcado, para que la variedad entre estrellas siga existiendo sin desviarse del blanco casi puro
-/// de la referencia.
+/// Los valores serializados en la escena mandan sobre los defaults de C#: si un ajuste de Inspector
+/// no parece tener efecto, comprobar el valor guardado en el componente de la escena.
 /// </summary>
 public class NightSkyStarSpawner : MonoBehaviour
 {
@@ -209,20 +51,20 @@ public class NightSkyStarSpawner : MonoBehaviour
     [Tooltip("DayNightCycle a escuchar. Si es null, se busca uno en la escena en Awake (una sola vez).")]
     [SerializeField] private DayNightCycle dayNightCycle;
 
-    [Header("Domo de estrellas (malla de estrella real — reescrito 25 ago 2026, ver comentario de clase)")]
-    [Tooltip("Número de estrellas del domo. Se construye UNA vez y queda fijo (igual que el techo de nubes), con recentrado periódico para seguir cubriendo el cielo según el jugador explora. Bajado de 220 a 120 el 25 ago 2026: con 220 el cielo se veía 'todo lleno' y poco natural.")]
+    [Header("Domo de estrellas")]
+    [Tooltip("Número de estrellas del domo. Se construye UNA vez y queda fijo (igual que el techo de nubes), con recentrado periódico para seguir cubriendo el cielo según el jugador explora. Con demasiadas estrellas el cielo se ve 'todo lleno' y poco natural.")]
     [SerializeField] private int starCount = 120;
     [Tooltip("Radio de la esfera de estrellas SOLO cuando no hay ninguna cámara activa todavía (caso raro, p.ej. el domo se construye antes de que Camera.main exista). Con cámara activa este valor NO se usa: el radio real se calcula siempre a partir del farClipPlane de la cámara — ver ComputeActiveDomeRadius y el comentario de clase.")]
     [SerializeField] private float domeRadius = 900f;
-    [Tooltip("Elevación mínima sobre el horizonte (grados) a la que se colocan estrellas. Puramente estético (evita amontonar estrellas justo donde es más probable que haya monte cerca) — la garantía real de que ninguna estrella quede delante de una montaña la da ComputeActiveDomeRadius, ver comentario de clase, no este valor. Subido de 16 a 24 el 25 ago 2026 (pasada 5): Raúl pidió explícitamente 'las estrellas deben estar más altas' tras la pasada 4.")]
+    [Tooltip("Elevación mínima sobre el horizonte (grados) a la que se colocan estrellas. Puramente estético (evita amontonar estrellas justo donde es más probable que haya monte cerca) — la garantía real de que ninguna estrella quede delante de una montaña la da ComputeActiveDomeRadius, ver comentario de clase, no este valor.")]
     [SerializeField, Range(0f, 40f)] private float minElevationDegrees = 24f;
-    [Tooltip("Sesga el reparto en ALTURA de las estrellas hacia la parte alta del cielo (cenit). 1 = reparto uniforme entre minElevationDegrees y el cenit (como antes del 25 ago 2026). Más alto = cada vez más estrellas se concentran cerca de la parte alta y menos cerca del horizonte, para que el domo no se lea como 'todo el cielo lleno por igual'. Se aplica en generación directa (sin descartar candidatos) en BuildDomeIfNeeded. Subido de 2.4 a 3.2 el 25 ago 2026 (pasada 5), junto con minElevationDegrees, para reforzar el mismo pedido ('más altas').")]
+    [Tooltip("Sesga el reparto en ALTURA de las estrellas hacia la parte alta del cielo (cenit). 1 = reparto uniforme entre minElevationDegrees y el cenit. Más alto = cada vez más estrellas se concentran cerca de la parte alta y menos cerca del horizonte, para que el domo no se lea como 'todo el cielo lleno por igual'. Se aplica en generación directa (sin descartar candidatos) en BuildDomeIfNeeded.")]
     [SerializeField, Range(1f, 6f)] private float topBiasExponent = 3.2f;
-    [Tooltip("Tamaño de cada estrella en PÍXELES DE PANTALLA aproximados (mín/máx, elegido al azar por estrella con sesgo hacia el mínimo — ver sizeBiasExponent) — NO en unidades de mundo. Se convierte a tamaño de mundo usando el FOV vertical de la cámara activa y el radio real del domo. Campo renombrado el 24 ago 2026 (antes 'desiredScreenSizePixels') a propósito para que este valor nuevo, más pequeño, se aplique de verdad en vez de quedar tapado por un valor antiguo ya serializado en la escena — ver comentario de clase.")]
+    [Tooltip("Tamaño de cada estrella en PÍXELES DE PANTALLA aproximados (mín/máx, elegido al azar por estrella con sesgo hacia el mínimo — ver sizeBiasExponent) — NO en unidades de mundo. Se convierte a tamaño de mundo usando el FOV vertical de la cámara activa y el radio real del domo.")]
     [SerializeField] private Vector2 starScreenSizePixelsRange = new Vector2(4f, 20f);
     [Tooltip("Sesga el sorteo del tamaño de cada estrella dentro de starScreenSizePixelsRange hacia el extremo pequeño. 1 = sorteo uniforme. Más alto = las estrellas grandes/brillantes son cada vez más excepcionales, como en un cielo real donde casi todas las estrellas son puntos pequeños y solo unas pocas destacan.")]
     [SerializeField, Range(1f, 6f)] private float sizeBiasExponent = 3f;
-    [Tooltip("Color base de las estrellas — blanco cálido muy sutil, medido directamente de los píxeles de estrella en la imagen de referencia de Raúl (30 ago 2026, ver comentario de clase) en vez de un dorado saturado inventado. Canales por encima de 1 a propósito: con Bloom activo en el Volume de la escena da un brillo extra. Cada estrella varía ligeramente su brillo (ver brightnessVariance) para que el domo no se vea uniforme.")]
+    [Tooltip("Color base de las estrellas — blanco cálido muy sutil, medido de una imagen de referencia en vez de un dorado saturado. Canales por encima de 1 a propósito: con Bloom activo en el Volume de la escena da un brillo extra. Cada estrella varía ligeramente su brillo (ver brightnessVariance) para que el domo no se vea uniforme.")]
     [SerializeField] private Color starColor = new Color(2f, 2f, 1.9f);
     [Tooltip("Color alternativo, un blanco frío igual de sutil que starColor (ya no un azul marcado) — ver altStarChance. Rompe la monotonía sin desviarse del blanco casi puro medido en la imagen de referencia.")]
     [SerializeField] private Color starColorAlt = new Color(1.85f, 1.9f, 2f);
@@ -231,19 +73,19 @@ public class NightSkyStarSpawner : MonoBehaviour
     [Tooltip("Cuánto varía el brillo BASE de estrella a estrella (0 = todas iguales, 1 = algunas casi blancas y otras muy tenues). Se combina multiplicando con el parpadeo animado (ver twinkleIntensity).")]
     [SerializeField, Range(0f, 1f)] private float brightnessVariance = 0.6f;
 
-    [Header("Estrella protagonista (30 ago 2026 — ref. imagen de otro artista, ver comentario de clase)")]
+    [Header("Estrella protagonista")]
     [Tooltip("Añade UNA estrella suelta notablemente más grande y brillante que el resto del polvo — el 'foco' que se ve en la imagen de referencia (una única estrella grande y brillante, sin conectar a ninguna constelación, distinta de las 3 constelaciones con nombre propio de NightSkyConstellationSpawner). Se coloca UNA vez al construir el domo, igual que el resto del polvo, y respeta las mismas zonas de exclusión de constelaciones.")]
     [SerializeField] private bool spawnHeroStar = true;
     [Tooltip("Tamaño en píxeles de pantalla de la estrella protagonista — deliberadamente muy por encima de starScreenSizePixelsRange para que destaque como un único punto focal, no como 'la estrella más grande que ha tocado por sorteo'.")]
     [SerializeField] private float heroStarScreenSizePixels = 34f;
     [Tooltip("Rango de elevación (grados) en el que se coloca la estrella protagonista — alto en el cielo, dentro de la misma franja general que las constelaciones, pero no atada a ninguna forma. El acimut siempre es aleatorio.")]
     [SerializeField] private Vector2 heroStarElevationRangeDegrees = new Vector2(55f, 78f);
-    [Tooltip("Color de la estrella protagonista — blanco casi puro con una pizca de calidez, medido directamente del píxel más brillante de la imagen de referencia (RGB ~255,255,242 — ver comentario de clase, 30 ago 2026). Canales por encima de 1 a propósito, igual que starColor, para aprovechar el Bloom del proyecto.")]
+    [Tooltip("Color de la estrella protagonista — blanco casi puro con una pizca de calidez, medido directamente del píxel más brillante de la imagen de referencia (RGB ~255,255,242). Canales por encima de 1 a propósito, igual que starColor, para aprovechar el Bloom del proyecto.")]
     [SerializeField] private Color heroStarColor = new Color(2.3f, 2.3f, 2.2f);
     [Tooltip("Parpadeo de la estrella protagonista — mucho más sutil que el del polvo normal (twinkleIntensity), para que se lea como un punto fijo y estable en vez de una estrella normal que también parpadea fuerte.")]
     [SerializeField, Range(0f, 1f)] private float heroStarTwinkleIntensity = 0.12f;
 
-    [Header("Parpadeo (fix 20 ago 2026 — antes las estrellas no brillaban, brillo fijo)")]
+    [Header("Parpadeo")]
     [Tooltip("Cuánto varía el brillo de cada estrella con el tiempo. 0 = sin parpadeo (brillo fijo). 1 = en el valle de su ciclo casi se apaga del todo. Cada estrella tiene su propia fase y velocidad (ver twinkleSpeedRange) para que no parpadeen todas a la vez ni en fase.")]
     [SerializeField, Range(0f, 1f)] private float twinkleIntensity = 0.55f;
     [Tooltip("Rango de velocidad de parpadeo (ciclos por segundo, aprox.) — cada estrella sortea su propia velocidad dentro de este rango UNA vez, en BuildDomeIfNeeded.")]
@@ -261,8 +103,7 @@ public class NightSkyStarSpawner : MonoBehaviour
 
     // Margen (0-1) aplicado al farClipPlane de la cámara para calcular el radio real del domo — ver
     // ComputeActiveDomeRadius y el comentario de clase. A propósito NO es un [SerializeField]: en la
-    // pasada anterior este mismo valor SÍ era un campo de Inspector (0.85 por defecto) y es
-    // precisamente el sospechoso número uno de por qué las estrellas seguían delante de las
+    // un margen configurable (p. ej. 0.85) llevaría las estrellas delante de las
     // montañas — un margen del 15% empuja el domo muy por dentro del farClipPlane, dejando una franja
     // ancha (justo donde suele estar el perfil de las montañas de fondo) en la que cualquier montaña
     // real queda MÁS LEJOS que las estrellas. Aquí solo hace falta un margen mínimo por precisión de
@@ -272,8 +113,8 @@ public class NightSkyStarSpawner : MonoBehaviour
 
     // Frames máximos que CheckInitialStateDelayed espera a que Camera.main exista antes de construir
     // el domo con el radio de último recurso (domeRadius) — ver WaitForMainCamera y el comentario de
-    // clase (25 ago 2026, pasada 5). 30 frames son medio segundo a 60fps, tiempo de sobra para que
-    // cualquier sistema de arranque normal (WorldBootstrap, etc.) asigne la cámara real.
+    // clase. 30 frames son medio segundo a 60fps, tiempo de sobra para que cualquier sistema de
+    // arranque normal (WorldBootstrap, etc.) asigne la cámara real.
     private const int MaxCameraWaitFrames = 30;
 
     private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -344,11 +185,10 @@ public class NightSkyStarSpawner : MonoBehaviour
         yield return null;
         if (dayNightCycle != null && dayNightCycle.CurrentTimeOfDay == DayNightCycle.TimeOfDay.Night)
         {
-            // FIX (25 ago 2026, pasada 5) — ver comentario de clase: en un arranque en frío
-            // Camera.main podía seguir sin existir en este único frame de margen, haciendo caer
-            // ComputeActiveDomeRadius() en el domeRadius de último recurso para SIEMPRE (el domo no
-            // se reconstruye una vez _built = true). Se espera aquí, unos pocos frames como mucho, a
-            // que Camera.main esté listo de verdad.
+            // En un arranque en frío Camera.main podía seguir sin existir en este único frame de
+            // margen, haciendo caer ComputeActiveDomeRadius() en el domeRadius de último recurso
+            // para SIEMPRE (el domo no se reconstruye una vez _built = true). Se espera aquí, unos
+            // pocos frames como mucho, a que Camera.main esté listo de verdad.
             yield return WaitForMainCamera();
             BuildDomeIfNeeded();
             StartFade(1f);
@@ -360,8 +200,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     /// null. Con la cámara ya asignada, <see cref="ComputeActiveDomeRadius"/> siempre calcula el
     /// radio real a partir de su <c>farClipPlane</c> — el <see cref="domeRadius"/> de último recurso
     /// deja de entrar en juego salvo en el caso verdaderamente raro de que ni tras medio segundo haya
-    /// ninguna cámara activa. Ver comentario de clase (25 ago 2026, pasada 5) para el porqué de este
-    /// arreglo.
+    /// ninguna cámara activa. Ver comentario de clase para el porqué de este arreglo.
     /// </summary>
     IEnumerator WaitForMainCamera()
     {
@@ -454,8 +293,8 @@ public class NightSkyStarSpawner : MonoBehaviour
         // Parpadeo: no hace falta todos los frames (ver tooltip de twinkleUpdateInterval). Durante
         // un fundido en curso, FadeRoutine ya llama a ApplyAlpha cada frame (el parpadeo se anima
         // ahí también, de propina). Ya no hace falta reorientar nada hacia cámara (billboard): con
-        // esferas 3D reales (ver comentario de clase, 24 ago 2026) se ven igual de "sólidas" desde
-        // cualquier ángulo sin ningún cálculo extra.
+        // esferas 3D reales se ven igual de "sólidas" desde cualquier ángulo sin ningún cálculo
+        // extra.
         _twinkleTimer += Time.deltaTime;
         if (_twinkleTimer >= twinkleUpdateInterval)
         {
@@ -493,14 +332,10 @@ public class NightSkyStarSpawner : MonoBehaviour
         _activeDomeRadius = ComputeActiveDomeRadius();
 
         // Reparto en la mitad superior de una esfera (espiral de Fibonacci, ángulo dorado) con un
-        // pequeño jitter aleatorio por estrella (a petición explícita de Raúl, "de forma aleatoria
-        // por el cielo") — el Fibonacci da una cobertura pareja sin huecos ni amontonamientos (lo
-        // que un muestreo puramente aleatorio SÍ produciría con solo ~120 puntos), y el jitter rompe
-        // la regularidad exacta del patrón matemático para que no se note como una rejilla
-        // geométrica. Fix 25 ago 2026: generación DIRECTA de la altura "y" ya dentro del rango
-        // válido [sin(minElevationDegrees), 1] con sesgo hacia el cenit (topBiasExponent) — ya no
-        // hay muestreo por rechazo ni bucle de "attempts": cada índice produce siempre una estrella
-        // válida, así que "placed" y "starCount" coinciden siempre.
+        // pequeño jitter aleatorio por estrella — el Fibonacci da una cobertura pareja sin huecos ni
+        // amontonamientos (lo que un muestreo puramente aleatorio SÍ produciría con solo ~120
+        // puntos), y el jitter rompe la regularidad exacta del patrón matemático para que no se note
+        // como una rejilla geométrica.
         float minElevationRad = minElevationDegrees * Mathf.Deg2Rad;
         float minY = Mathf.Sin(minElevationRad);
         float goldenAngle = Mathf.PI * (3f - Mathf.Sqrt(5f));
@@ -527,10 +362,9 @@ public class NightSkyStarSpawner : MonoBehaviour
             SpawnStar(dir, verticalFovDeg, screenHeight);
         }
 
-        // Estrella protagonista (30 ago 2026, ver comentario de clase y Header("Estrella
-        // protagonista") más arriba) — UNA sola, notablemente más grande/brillante que el polvo,
-        // colocada alto en el cielo con acimut aleatorio. Reutiliza AvoidConstellationZones para que
-        // tampoco quede pegada a ninguna de las 3 constelaciones con nombre propio.
+        // Estrella protagonista — UNA sola, notablemente más grande/brillante que el polvo, colocada
+        // alto en el cielo con acimut aleatorio. Reutiliza AvoidConstellationZones para que tampoco
+        // quede pegada a ninguna de las 3 constelaciones con nombre propio.
         if (spawnHeroStar)
             SpawnHeroStar(verticalFovDeg, screenHeight);
 
@@ -557,17 +391,14 @@ public class NightSkyStarSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Aparta <paramref name="dir"/> de cualquier zona de constelación registrada en
-    /// <see cref="NightSkyConstellationSpawner.ExclusionZones"/> (25 ago 2026 — ver el comentario de
-    /// clase de ese script para el porqué: sin esto, el sesgo hacia el cenit de este mismo domo podía
-    /// hacer que polvo de fondo cayera encima de una estrella guía o de una línea de constelación,
-    /// justo la misma franja alta del cielo donde viven ambas cosas). Si <paramref name="dir"/> cae
-    /// dentro de una zona, se rota a lo largo del mismo círculo máximo que la une con el centro de esa
-    /// zona hasta quedar justo fuera de su radio (con un margen extra de 1°) — así se conserva el
+    /// Aparta <paramref name="dir"/> de cualquier zona de constelación registrada en <see
+    /// cref="NightSkyConstellationSpawner.ExclusionZones"/>. Si <paramref name="dir"/> cae dentro de
+    /// una zona, se rota a lo largo del mismo círculo máximo que la une con el centro de esa zona
+    /// hasta quedar justo fuera de su radio (con un margen extra de 1°) — así se conserva el
     /// rumbo/dispersión original de la estrella, solo se la aleja lo mínimo imprescindible, sin volver
     /// a sortear nada ni perder ningún hueco en el reparto. Si <c>NightSkyConstellationSpawner</c> no
     /// está en la escena, la lista está vacía y esta función no cambia nada — comportamiento idéntico
-    /// al de antes de este fix.
+    /// a no aplicar ninguna exclusión.
     /// </summary>
     static Vector3 AvoidConstellationZones(Vector3 dir)
     {
@@ -605,9 +436,9 @@ public class NightSkyStarSpawner : MonoBehaviour
 
     void SpawnStar(Vector3 direction, float verticalFovDeg, float screenHeight, float? pixelSizeOverride = null, Color? colorOverride = null, float? twinkleIntensityOverride = null, float brightnessOverride = -1f)
     {
-        // Malla de "estrella" real compartida (fix 25 ago 2026, ver GenerateStarMesh y comentario de
-        // clase) — GameObject a pelo + MeshFilter/MeshRenderer en vez de CreatePrimitive: así nunca
-        // se crea ningún Collider que luego haya que destruir (CreatePrimitive siempre añade uno).
+        // Malla de "estrella" real compartida — GameObject a pelo + MeshFilter/MeshRenderer en vez
+        // de CreatePrimitive: así nunca se crea ningún Collider que luego haya que destruir
+        // (CreatePrimitive siempre añade uno).
         var instance = new GameObject("Star");
         instance.transform.SetParent(_root, false);
         instance.transform.localPosition = direction * _activeDomeRadius;
@@ -643,10 +474,9 @@ public class NightSkyStarSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Estrella protagonista (30 ago 2026, ver Header("Estrella protagonista") y comentario de clase)
-    /// — pedida tras ver una imagen de referencia de otro artista con una única estrella grande y
-    /// brillante como foco del cielo, distinta de las 3 constelaciones con nombre propio ya existentes
-    /// (NightSkyConstellationSpawner). Azimut aleatorio, elevación dentro de
+    /// Estrella protagonista — pedida tras ver una imagen de referencia de otro artista con una única
+    /// estrella grande y brillante como foco del cielo, distinta de las 3 constelaciones con nombre
+    /// propio ya existentes (NightSkyConstellationSpawner). Azimut aleatorio, elevación dentro de
     /// heroStarElevationRangeDegrees (alto en el cielo, misma franja general que las constelaciones) y
     /// respeta las mismas zonas de exclusión (AvoidConstellationZones) para no acabar pegada a una de
     /// ellas. Reutiliza SpawnStar con overrides en vez de duplicar la lógica de creación de GameObject.
@@ -670,7 +500,7 @@ public class NightSkyStarSpawner : MonoBehaviour
 
     /// <summary>
     /// Material compartido por todas las estrellas — <c>Sprites/Default</c>, el mismo shader que ya
-    /// usaba este script antes de este fix (built-in, alpha blend, sin cull, ya confirmado compatible
+    /// usa este script (built-in, alpha blend, sin cull, ya confirmado compatible
     /// con URP en este proyecto — ver comentario de clase). Sin <c>mainTexture</c> asignada usa su
     /// blanco opaco por defecto: con una malla de esfera real (no un Quad plano) eso ya da una
     /// estrella sólida sin necesitar ninguna textura generada. La oclusión contra montañas/terreno la
@@ -684,18 +514,16 @@ public class NightSkyStarSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Genera UNA sola vez (llamado desde Awake) la malla de "estrella" que comparten todas las
-    /// instancias vía <c>MeshFilter.sharedMesh</c> — fix 25 ago 2026 (ver comentario de clase), en
-    /// respuesta a "habría que cambiar la esfera por algo que sea más una estrella". Es una malla
-    /// muy barata (24 vértices, 24 triángulos): tres pares de puntas piramidales opuestas a lo largo
-    /// de los ejes locales X, Y y Z que comparten el centro, como un "pincho"/destello de 6 puntas.
-    /// Cada par de puntas es en realidad una bipirámide (dos pirámides de base cuadrada pegadas por
-    /// esa base, con la base encogida a un rombo diminuto en el centro) — así una sola figura ya
-    /// cubre las dos puntas opuestas de ese eje sin vértices duplicados en el centro. Las puntas del
-    /// eje Y se dejan más cortas que las de X/Z (ver <c>armShort</c> más abajo) para que la silueta no
-    /// sea un octaedro perfectamente simétrico, más parecida a un destello de 4 puntas con dos
-    /// puntas extra más discretas. La rotación aleatoria por estrella (ver <see cref="SpawnStar"/>)
-    /// hace que cuál de las puntas "se note más" desde cada ángulo varíe estrella a estrella.
+    /// Es una malla muy barata (24 vértices, 24 triángulos): tres pares de puntas piramidales opuestas
+    /// a lo largo de los ejes locales X, Y y Z que comparten el centro, como un "pincho"/destello de 6
+    /// puntas. Cada par de puntas es en realidad una bipirámide (dos pirámides de base cuadrada
+    /// pegadas por esa base, con la base encogida a un rombo diminuto en el centro) — así una sola
+    /// figura ya cubre las dos puntas opuestas de ese eje sin vértices duplicados en el centro. Las
+    /// puntas del eje Y se dejan más cortas que las de X/Z (ver <c>armShort</c> más abajo) para que la
+    /// silueta no sea un octaedro perfectamente simétrico, más parecida a un destello de 4 puntas con
+    /// dos puntas extra más discretas. La rotación aleatoria por estrella (ver <see
+    /// cref="SpawnStar"/>) hace que cuál de las puntas "se note más" desde cada ángulo varíe estrella
+    /// a estrella.
     /// </summary>
     void GenerateStarMesh()
     {

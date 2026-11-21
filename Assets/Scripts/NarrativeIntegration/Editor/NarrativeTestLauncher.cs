@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NarrativeGraphEditor;
+using Liyodev.NarrativeGraph.Editor;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {
@@ -234,7 +235,7 @@ namespace Sendero.Narrative.Editor
 
             var selectedNode = graph.FindNode(objetivo);
             string nodeDesc = selectedNode != null
-                ? $"{selectedNode.GetType().Name} \"{selectedNode.displayTitle}\""
+                ? $"{selectedNode.GetType().Name} \"{selectedNode.DisplayTitle}\""
                 : objetivo;
             status = $"Lanzando Play desde {nodeDesc} en {graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
 
@@ -432,7 +433,7 @@ namespace Sendero.Narrative.Editor
             if (objetivo != nodeGuid)
             {
                 var puente = graph.FindNode(objetivo);
-                preview.notes.Add($"Se empieza tras el puente del capítulo previo: '{puente?.displayTitle}'.");
+                preview.notes.Add($"Se empieza tras el puente del capítulo previo: '{puente?.DisplayTitle}'.");
             }
 
             var result = NarrativeStateProjector.Project(graph, objetivo, writer, elecciones);
@@ -440,7 +441,7 @@ namespace Sendero.Narrative.Editor
             preview.reachedTarget = result.ReachedTarget;
             preview.decisions.AddRange(result.Decisions);
             preview.warnings.AddRange(writer.Notes);
-            preview.objectiveTitle = graph.FindNode(objetivo)?.displayTitle ?? "";
+            preview.objectiveTitle = graph.FindNode(objetivo)?.DisplayTitle ?? "";
             return preview;
         }
 

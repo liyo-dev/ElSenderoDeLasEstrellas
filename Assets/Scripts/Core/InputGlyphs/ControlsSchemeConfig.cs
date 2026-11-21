@@ -25,7 +25,7 @@ namespace Core.InputGlyphs
     /// pre-rellena la lista con las acciones reales del juego (ver GamepadInputReader.cs) para no
     /// partir de cero. Combate (INC-485): X serie (PlayerCombatInput), B defensa
     /// (PlayerShieldController), Y combo (ComboCastController), LB siguiente básico
-    /// (PlayerCombatInput), RB siguiente objetivo (CombatCameraTargeting), LT+RT ataque de equipo
+    /// (PlayerCombatInput), RB esquiva (PlayerCombatInput), stick derecho siguiente objetivo (CombatCameraTargeting), LT+RT ataque de equipo
     /// (DuoSpecialAttackSystem). El asset del juego es _UI/ControlsSchemeConfig.asset: el menú que
     /// lo rehacía con esta lista ya no existe, así que una fila nueva se añade aquí Y en el asset.
     /// </summary>
@@ -76,11 +76,17 @@ namespace Core.InputGlyphs
                 // Flechas Unicode (←/→) sustituidas por texto: ni LiberationSans SDF ni Nunito-Bold
                 // SDF (las fuentes que usa el menú) tienen esos glifos, así que TMP los pintaba como
                 // "□" y llenaba la consola de avisos de fuente en cada refresco del ScrollRect.
-                Entry(InputGlyphNames.ShoulderRight, "CONTROLS_TARGET_NEXT", "Siguiente objetivo (enemigo o marcable)"),
-                // Nuevo (1 sep 2026, petición Raúl): fijar objetivo con R3/F; mantener pulsado
-                // activa/desactiva el lock-on automático de cámara/objetivo (INC-141). Sin glyph
-                // propio (botón sin icono de familia) — fila manual como la de Cámara, mismo
-                // patrón. Ver GamepadInputReader.InputEventType.ToggleTargetLock /
+                // RB esquiva (C en teclado); el objetivo se cambia con el stick derecho y, en
+                // teclado, con la rueda. Ver INC-1349.
+                Entry(InputGlyphNames.ShoulderRight, "CONTROLS_DODGE", "Esquivar (rueda hacia donde apuntas)",
+                      keyboardLabelKey: "GLYPH_KEY_C", keyboardOverride: "C"),
+                Manual("CONTROLS_TARGET_NEXT", "Cambiar de objetivo (con uno fijado)",
+                       "GLYPH_WHEEL_UP", "rueda arriba",
+                       "GLYPH_STICK_RIGHT", "Stick derecho"),
+                // Nuevo: fijar objetivo con R3/F; mantener pulsado activa/desactiva el lock-on
+                // automático de cámara/objetivo (INC-141). Sin glyph propio (botón sin icono de
+                // familia) — fila manual como la de Cámara, mismo patrón. Ver
+                // GamepadInputReader.InputEventType.ToggleTargetLock /
                 // CombatCameraTargeting.ProcesarPulsacionDeLock.
                 Manual("CONTROLS_TARGET_TOGGLE", "Fijar objetivo (mantener: activar/desactivar el autoapuntado)",
                        "GLYPH_KEY_F", "F",

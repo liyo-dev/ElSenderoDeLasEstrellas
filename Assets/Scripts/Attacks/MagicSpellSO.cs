@@ -258,15 +258,28 @@ public class MagicSpellSO : ScriptableObject
     [Tooltip("Metros que avanza el teletransporte (MagicKind.Teleport). Se queda antes si hay pared o no hay suelo.")]
     [Min(1f)] public float teleportDistance = 6f;
 
+    [Header("Invisibilidad (solo para MagicKind.Invisibility)")]
+    [Tooltip("Segundos que el lanzador es invisible. Se rompe antes si ataca.")]
+    [Min(0.5f)] public float invisibilidadSegundos = 6f;
+    [Tooltip("Material translúcido con el que se pinta al lanzador mientras es invisible. Vacío = solo pierde la sombra.")]
+    public Material materialDeInvisible;
+
     [Header("Abre la protección (INC-724)")]
     [Tooltip("Segundos que abre la protección de lo que alcanza (IProteccionQueSeAbre: el Mago Oscuro, sellos, guardianes). 0 = no abre nada.")]
     [Min(0f)] public float abreProteccionSegundos = 0f;
     [Tooltip("Efecto en bucle sobre el blanco mientras su protección sigue abierta (si el blanco no trae uno propio).")]
     public GameObject vfxProteccionAbierta;
 
+    [Header("Empujar en el aire")]
+    [Tooltip("Si el blanco está levitando o va por el aire (LevitationTarget), sale despedido con esta fuerza (impulso) en vez del empujón por el suelo. 0 = no. Lo usa Empujar.")]
+    [Min(0f)] public float empujeEnElAire = 0f;
+
     [Header("Grimorio")]
     [Tooltip("Falso para lo que no aprende ningún personaje: el arsenal de los enemigos (Mago Oscuro) y los efectos secundarios de otro hechizo. No aparece en el grimorio, en los menús ni en el LAB.")]
     public bool enGrimorio = true;
+
+    [Tooltip("Hechizo especial que se aprende con una misión: no ocupa hueco de rápido ni de combo; sale aparte en el menú y en el grimorio (Amanecer de Will).")]
+    public bool especialConMision = false;
 
     [Header("Quién lo lanza")]
     [Tooltip("Personaje al que pertenece el hechizo. Los combos solo salen con ese personaje al mando (Will: los desbloqueados en su preset; Estela y Liam: los de su ficha).")]

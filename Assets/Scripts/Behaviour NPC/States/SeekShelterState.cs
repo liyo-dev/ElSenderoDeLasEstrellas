@@ -240,22 +240,21 @@ namespace Game.NPC.States
 
             if (_manualApproachActive)
             {
-                // FIX INC-NPCS-EN-ARBOLES: NO llamar EndManualApproach aquí. El
-                // punto real está fuera del NavMesh a propósito (bajo la copa del árbol, ver
-                // cabecera de BeginManualApproach en NPCStateBase). EndManualApproach pone
-                // agent.updatePosition = true, y NavMeshAgentUtility.HardStop (llamado justo
-                // después por StopMovement) hacía además agent.nextPosition = transform.position
-                // incondicionalmente — con el NPC posicionado fuera del NavMesh, el propio
-                // NavMeshAgent reproyecta esa posición sobre la malla en cuanto puede y, al
-                // recuperar el control del transform, lo arrastra de vuelta a ese punto proyectado:
-                // visualmente, el NPC se "escupe" fuera del árbol justo al llegar (bug reportado
-                // por Raúl: "se hunden en el suelo y automáticamente se escupen hacia afuera").
-                // Mientras esté aquí sentado/de pie esperando a que pare de llover no hace falta
-                // el NavMeshAgent para nada — se deja el transform bajo control manual (congelado,
-                // sin más llamadas a ManualApproachStep ya que _arrived corta ese camino en
-                // OnUpdate) y solo se reactiva el agente en ReturnFromShelterState, que ya hace su
-                // propio BeginManualApproach antes de necesitarlo — sin hueco intermedio con
-                // updatePosition=true que pueda disparar el mismo salto.
+                // NO llamar EndManualApproach aquí. El punto real está fuera del NavMesh a
+                // propósito (bajo la copa del árbol, ver cabecera de BeginManualApproach en
+                // NPCStateBase). EndManualApproach pone agent.updatePosition = true, y
+                // NavMeshAgentUtility.HardStop (llamado justo después por StopMovement) hacía
+                // además agent.nextPosition = transform.position incondicionalmente — con el NPC
+                // posicionado fuera del NavMesh, el propio NavMeshAgent reproyecta esa posición
+                // sobre la malla en cuanto puede y, al recuperar el control del transform, lo
+                // arrastra de vuelta a ese punto proyectado: visualmente, el NPC se "escupe" fuera
+                // del árbol justo al llegar. Mientras esté aquí sentado/de pie esperando a que pare
+                // de llover no hace falta el NavMeshAgent para nada — se deja el transform bajo
+                // control manual (congelado, sin más llamadas a ManualApproachStep ya que _arrived
+                // corta ese camino en OnUpdate) y solo se reactiva el agente en
+                // ReturnFromShelterState, que ya hace su propio BeginManualApproach antes de
+                // necesitarlo — sin hueco intermedio con updatePosition=true que pueda disparar el
+                // mismo salto.
                 context.Animator?.ResetMovement();
             }
             else
@@ -283,11 +282,7 @@ namespace Game.NPC.States
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Diagnóstico añadido tras el aviso de Raúl de que ningún NPC del pueblo
-        // llegaba a los NPCShelterPoint recién recolocados bajo GO con techo: antes de este log,
-        // "no hay refugio libre en rango" era un fallo silencioso (se volvía a IdleState sin
-        // ningún rastro en consola), indistinguible de "no estaba lloviendo" o cualquier otro
-        // motivo. Recorre TODOS los puntos registrados (ignora maxDist/capacity, a diferencia de
+        // Recorre TODOS los puntos registrados (ignora maxDist/capacity, a diferencia de
         // TryFindNearest) para poder decir exactamente por qué ninguno sirvió: o no hay ninguno en
         // la escena, o el más cercano está fuera de MaxSearchDistance, o está lleno.
         private static void LogNoShelterFound(NPCStateContext context)

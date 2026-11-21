@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_REMEDIOS
     textId: DLG_ALDEA_REMEDIOS_C3_2_01
-    text: "Anoche un perro con un collar raro se pas\xF3 horas rasc\xE1ndose contra la casa de las nasas, la del tejado de paja. No me dej\xF3 pegar ojo."
+    text: "\xBFCarros de noche? Yo duermo como un tronco. La que no duerme es Candela, la del farol."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

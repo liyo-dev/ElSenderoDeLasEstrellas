@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Un rótulo dentro de una cinemática («Hace siglos…», «Siglos después.»): el mismo que pone el
 /// grafo con su paso de rótulo (TitleCardNode), dibujado por el presentador de rótulos del juego por

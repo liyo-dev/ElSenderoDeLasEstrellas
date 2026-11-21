@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// El editor de la historia: índice del capítulo a la izquierda, lienzo en el centro y, a la
     /// derecha, el paso elegido (Paso), cómo empieza la prueba desde él (Arranque) y cómo está el
@@ -27,7 +27,7 @@ namespace NarrativeGraphEditor.Story
         StoryOutline _outline;
         NarrativeInspectorPanel _inspector;
         VisualElement _stepTab;
-        StoryAssistantPanel _assistant;
+        VisualElement _assistant;
         VisualElement _stepWarnings;
         StoryWorldPanel _world;
         StoryStartPanel _start;
@@ -35,6 +35,7 @@ namespace NarrativeGraphEditor.Story
         Button _settingsButton;
         StoryTour _tour;
         double _lastLiveRefresh;
+        bool _liveDirty = true;
         VisualElement _shownTab;
         VisualElement _side;
         VisualElement _tabsBar;
@@ -86,6 +87,59 @@ namespace NarrativeGraphEditor.Story
 
         public static void OpenGraph(NarrativeGraph graph) => Open().Load(graph);
 
+        static StoryGraphWindow s_current;
+
+        /// Cambia el grafo o el paso con el que trabaja el editor (abrir otro, elegir otro paso).
+        public static event Action ActiveChanged;
+
+        /// El grafo con el que trabaja el editor: el de la ventana abierta o, con ella cerrada, el
+        /// último que se abrió. Lo usan el asistente y las herramientas externas.
+        public static NarrativeGraph ActiveGraph
+        {
+            get
+            {
+                if (s_current != null && s_current._graph != null) return s_current._graph;
+                var path = EditorPrefs.GetString(PrefLastGraph, string.Empty);
+                return string.IsNullOrEmpty(path) ? null : AssetDatabase.LoadAssetAtPath<NarrativeGraph>(path);
+            }
+        }
+
+        /// El paso elegido en el grafo activo: el de la ventana o, cerrada, el último que se eligió.
+        public static NarrativeNode ActiveStep
+        {
+            get
+            {
+                var graph = ActiveGraph;
+                if (graph == null) return null;
+                if (s_current != null && s_current._graph == graph && s_current._canvas != null) return s_current._canvas.Primary;
+                var guid = EditorPrefs.GetString(PrefLastStep + AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(graph)), string.Empty);
+                return string.IsNullOrEmpty(guid) ? null : graph.FindNode(guid);
+            }
+        }
+
+        /// Hace de <paramref name="graph"/> el grafo activo: lo abre en la ventana si está abierta y,
+        /// si no, lo deja apuntado para cuando se abra.
+        public static void SetActiveGraph(NarrativeGraph graph)
+        {
+            if (graph == null) return;
+            if (s_current != null && s_current._canvas != null) { if (s_current._graph != graph) s_current.Load(graph); return; }
+            EditorPrefs.SetString(PrefLastGraph, AssetDatabase.GetAssetPath(graph));
+            ActiveChanged?.Invoke();
+        }
+
+        /// Alguien ha cambiado <paramref name="graph"/> por fuera de la ventana (el asistente, una
+        /// herramienta externa): si está abierto, se vuelve a pintar y se guarda.
+        public static void GraphChangedOutside(NarrativeGraph graph)
+        {
+            StoryCache.Invalidate();
+            var w = s_current;
+            if (w == null || w._graph != graph || w._canvas == null) return;
+            w._so?.Update();
+            w._canvas.Rebuild();
+            w.OnSelectionChanged(w._canvas.Primary);
+            w.ScheduleSave();
+        }
+
         /// Opens <paramref name="graph"/> with <paramref name="stepGuid"/> selected and in view.
         public static StoryGraphWindow OpenAt(NarrativeGraph graph, string stepGuid)
         {
@@ -113,6 +167,7 @@ namespace NarrativeGraphEditor.Story
 
         void OnEnable()
         {
+            s_current = this;
             // Al dar a Play, Unity vuelve a montar todas las ventanas abiertas en mitad de la recarga
             // del código. Montar esta pide el índice del proyecto (varios segundos) y se los quita al
             // arranque de la partida, así que se monta cuando el juego ya está corriendo. Ver INC-1210.
@@ -186,6 +241,7 @@ namespace NarrativeGraphEditor.Story
 
             Undo.undoRedoPerformed += OnUndoRedo;
             TestPlayers.SelectionChanged += RefreshTestPlayerLabel;
+            WatchStory(true);
             root.schedule.Execute(Poll).Every(300);
 
             _rootBusy = new StoryBusy(cover: true);
@@ -332,10 +388,12 @@ namespace NarrativeGraphEditor.Story
             Undo.undoRedoPerformed -= OnUndoRedo;
             TestPlayers.SelectionChanged -= RefreshTestPlayerLabel;
             StoryBreakpoints.Hit -= OnBreakpointHit;
-            Liyodev.Assistant.AssistantSettings.Changed -= OnAssistantSettings;
+            if (NarrativeAssistant.Host != null) NarrativeAssistant.Host.SettingsChanged -= OnAssistantSettings;
+            WatchStory(false);
             StoryCardImages.Changed -= OnCardImages;
             StoryMapWindow.OpenChanged -= OnMapWindow;
             SaveNow();
+            if (s_current == this) s_current = null;
         }
 
         // ── Layout ───────────────────────────────────────────────────────────
@@ -509,17 +567,21 @@ namespace NarrativeGraphEditor.Story
             };
             AddTab(StoryText.T("En vivo", "Live"), _world);
 
-            // El asistente no es una pestaña: lo abre su botón de la barra y ocupa el panel.
-            _assistant = new StoryAssistantPanel { Graph = () => _graph, Step = () => _canvas.Primary };
-            _assistant.SettingsRequested += OpenSettings;
-            Liyodev.Assistant.AssistantSettings.Changed -= OnAssistantSettings;
-            Liyodev.Assistant.AssistantSettings.Changed += OnAssistantSettings;
             StoryCardImages.Changed -= OnCardImages;
             StoryCardImages.Changed += OnCardImages;
-            _assistant.Changed += () => { _canvas.Rebuild(); OnSelectionChanged(_canvas.Primary); ScheduleSave(); };
-            _assistant.AddToClassList("story-side__content");
-            _assistant.style.display = DisplayStyle.None;
-            _side.Add(_assistant);
+
+            // El asistente no es una pestaña: lo abre su botón de la barra y ocupa el panel. Solo
+            // existe si el paquete del asistente está instalado (NarrativeAssistant.Host).
+            var host = NarrativeAssistant.Host;
+            if (host != null)
+            {
+                _assistant = host.CreatePanel(OpenSettings);
+                _assistant.AddToClassList("story-side__content");
+                _assistant.style.display = DisplayStyle.None;
+                _side.Add(_assistant);
+                host.SettingsChanged -= OnAssistantSettings;
+                host.SettingsChanged += OnAssistantSettings;
+            }
             OnAssistantSettings();
 
             _gameTabs.Clear();
@@ -558,14 +620,15 @@ namespace NarrativeGraphEditor.Story
 
         void OnAssistantSettings()
         {
-            if (_assistant == null) return;
-            bool visible = Liyodev.Assistant.AssistantSettings.Visible;
+            if (_assistantButton == null) return;
+            bool visible = _assistant != null && NarrativeAssistant.Host != null && NarrativeAssistant.Host.ButtonVisible;
             _assistantButton.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
-            if (!visible && _assistant.style.display == DisplayStyle.Flex) ShowTab(_stepTab);
+            if (!visible && _assistant != null && _assistant.style.display == DisplayStyle.Flex) ShowTab(_stepTab);
         }
 
         void ToggleAssistant()
         {
+            if (_assistant == null) return;
             if (_assistant.style.display == DisplayStyle.Flex) { ShowTab(_shownTab ?? _stepTab); return; }
             foreach (var (button, c) in _tabs)
             {
@@ -581,7 +644,7 @@ namespace NarrativeGraphEditor.Story
             long start = StoryTiming.Now();
             using var medida = StoryTiming.Measure(StoryText.T("Pestaña: cambiar a ", "Tab: switch to ") + TabName(content));
             _shownTab = content;
-            _assistant.style.display = DisplayStyle.None;
+            if (_assistant != null) _assistant.style.display = DisplayStyle.None;
             _assistantButton?.RemoveFromClassList("is-on");
             for (int i = 0; i < _tabs.Count; i++)
             {
@@ -681,6 +744,7 @@ namespace NarrativeGraphEditor.Story
             _saved.text = string.Empty;
             ApplySearch();
             RestoreLastStep();
+            ActiveChanged?.Invoke();
         }
 
         /// The search dims the cards that do not match and filters the outline. With nothing
@@ -740,9 +804,9 @@ namespace NarrativeGraphEditor.Story
             var path = EditorUtility.SaveFilePanelInProject(StoryText.T("Nuevo grafo", "New graph"), "NewStory", "asset", string.Empty, "Assets");
             if (string.IsNullOrEmpty(path)) return;
             var g = CreateInstance<NarrativeGraph>();
-            var start = new StartNode { displayTitle = StoryText.T("Inicio", "Start") };
+            var start = new StartNode { DisplayTitle = StoryText.T("Inicio", "Start") };
             g.nodes.Add(start);
-            g.startNodeGuid = start.guid;
+            g.startNodeGuid = start.Guid;
             AssetDatabase.CreateAsset(g, path);
             AssetDatabase.SaveAssets();
             Load(g);
@@ -755,7 +819,7 @@ namespace NarrativeGraphEditor.Story
             {
                 // The inspector is the one editing: keep it as it is so the field keeps its focus.
                 RefreshShown();
-                _outline.Refresh(_graph, _canvas.Structure, _canvas.Primary, n => _pathNodes.Contains(n.guid));
+                _outline.Refresh(_graph, _canvas.Structure, _canvas.Primary, n => _pathNodes.Contains(n.Guid));
                 RefreshStatus();
             }
             else
@@ -813,11 +877,11 @@ namespace NarrativeGraphEditor.Story
             StoryTiming.UntilPainted(rootVisualElement, StoryText.T("Elegir paso", "Select step"), start);
             if (node != null && _graph != null)
             {
-                EditorPrefs.SetString(PrefLastStep + AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(_graph)), node.guid);
+                EditorPrefs.SetString(PrefLastStep + AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(_graph)), node.Guid);
                 var graph = _graph;
-                var result = StoryCache.Get($"path:{graph.GetEntityId()}:{node.guid}",
-                    () => NarrativeStateProjector.Project(graph, node.guid, new RecordingStateWriter()));
-                _pathNodes = new HashSet<string>(result.Order) { node.guid };
+                var result = StoryCache.Get($"path:{graph.GetEntityId()}:{node.Guid}",
+                    () => NarrativeStateProjector.Project(graph, node.Guid, new RecordingStateWriter()));
+                _pathNodes = new HashSet<string>(result.Order) { node.Guid };
                 _canvas.SetPath(_pathNodes, result.Edges);
             }
             else
@@ -826,6 +890,7 @@ namespace NarrativeGraphEditor.Story
                 _canvas.SetPath(null, null);
             }
             RefreshPanels();
+            ActiveChanged?.Invoke();
         }
 
         void RefreshPanels()
@@ -843,7 +908,7 @@ namespace NarrativeGraphEditor.Story
             }
             RefreshShown();
             foreach (var tab in _gameTabs) tab.SetSelectedNode(node);
-            using (StoryTiming.Measure(StoryText.T("índice", "outline"))) _outline.Refresh(_graph, _canvas.Structure, node, n => _pathNodes.Contains(n.guid));
+            using (StoryTiming.Measure(StoryText.T("índice", "outline"))) _outline.Refresh(_graph, _canvas.Structure, node, n => _pathNodes.Contains(n.Guid));
             using (StoryTiming.Measure(StoryText.T("avisos", "warnings"))) RefreshStatus();
             RefreshPlay();
         }
@@ -887,12 +952,12 @@ namespace NarrativeGraphEditor.Story
             SaveNow();
             foreach (var tab in _gameTabs)
             {
-                if (!tab.TryPlayFrom(_graph, node.guid)) continue;
+                if (!tab.TryPlayFrom(_graph, node.Guid)) continue;
                 ShowTab(tab);
                 return;
             }
             ShowTab(_start);
-            bool ok = NarrativePlayLaunchers.Current.Launch(_graph, node.guid, StoryRouteChoices.All(), out var message);
+            bool ok = NarrativePlayLaunchers.Current.Launch(_graph, node.Guid, StoryRouteChoices.All(), out var message);
             _start.SetStatus(message);
             if (!ok && !string.IsNullOrEmpty(message)) Debug.LogWarning("[Narrative Graph] " + message);
         }
@@ -903,7 +968,7 @@ namespace NarrativeGraphEditor.Story
         {
             if (graph != _graph) Load(graph);
             Focus();
-            Navigate(step.guid);
+            Navigate(step.Guid);
             ShowTab(_world);
         }
 
@@ -917,6 +982,26 @@ namespace NarrativeGraphEditor.Story
             ApplyToolbarFit();
         }
 
+        /// Lo que cambia la partida y se ve en «En vivo»: se marca y Poll lo rehace.
+        void WatchStory(bool on)
+        {
+            NarrativeRunner.StepEntered -= OnStoryStep;
+            NarrativeFlags.Changed -= OnStoryKey;
+            NarrativeCounters.Changed -= OnStoryKey;
+            NarrativeActorStates.Changed -= OnStoryKey;
+            DefaultNarrativeSignals.OnStateChanged -= OnStoryChanged;
+            if (!on) return;
+            NarrativeRunner.StepEntered += OnStoryStep;
+            NarrativeFlags.Changed += OnStoryKey;
+            NarrativeCounters.Changed += OnStoryKey;
+            NarrativeActorStates.Changed += OnStoryKey;
+            DefaultNarrativeSignals.OnStateChanged += OnStoryChanged;
+        }
+
+        void OnStoryStep(NarrativeRunner runner, NarrativeNode node) => _liveDirty = true;
+        void OnStoryKey(string key) => _liveDirty = true;
+        void OnStoryChanged() => _liveDirty = true;
+
         void Poll()
         {
             bool playing = EditorApplication.isPlaying;
@@ -926,17 +1011,21 @@ namespace NarrativeGraphEditor.Story
                 if (playing) _canvas.ClearVisited();
                 RefreshPlay();
             }
-            // En vivo se rehace cada segundo mientras se juega.
-            if (playing && _shownTab == _world && EditorApplication.timeSinceStartup - _lastLiveRefresh > 1.0)
+            // En vivo se rehace mientras se juega cuando la historia cambia (paso, señal, flag,
+            // contador, personaje), como mucho una vez por segundo; si nada avisa, cada cinco
+            // segundos (las misiones del juego no avisan).
+            double since = EditorApplication.timeSinceStartup - _lastLiveRefresh;
+            if (playing && _shownTab == _world && since > 1.0 && (_liveDirty || since > 5.0))
             {
                 _lastLiveRefresh = EditorApplication.timeSinceStartup;
-                using (StoryTiming.Measure(StoryText.T("En vivo en Play (cada segundo)", "Live in Play (every second)"))) _world.Rebuild();
+                _liveDirty = false;
+                using (StoryTiming.Measure(StoryText.T("En vivo en Play", "Live in Play"))) _world.Rebuild();
             }
             if (!playing || _graph == null || NarrativeGraphHub.Instance == null) { _canvas.SetCurrent(null); return; }
             NarrativeRunner runner = null;
             foreach (var r in NarrativeGraphHub.Instance.GetAllRunners())
                 if (r != null && r.graph == _graph) { runner = r; break; }
-            _canvas.SetCurrent(runner?.CurrentNode?.guid ?? runner?.Blackboard?.Get<string>(NarrativeRunner.CurrentNodeKey, null));
+            _canvas.SetCurrent(runner?.CurrentNode?.Guid ?? runner?.Blackboard?.Get<string>(NarrativeRunner.CurrentNodeKey, null));
         }
     }
 }

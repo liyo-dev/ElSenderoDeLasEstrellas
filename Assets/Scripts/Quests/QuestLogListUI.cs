@@ -169,9 +169,6 @@ public class QuestLogListUI : MonoBehaviour
 
     void OnQuestStarted(string questId)
     {
-        // FIX (21 sept 2026, Raul: "debe salir SOLO el pop up nuevo, no el menu de misiones" --
-        // INC-346). Antes este panel se auto-mostraba como "toast" cada vez que arrancaba una
-        // mision nueva (ver el resto de este comentario, que documentaba isAutoToast/INC-199).
         // Ahora el UNICO aviso automatico de "nueva mision" es QuestStartedBannerUI (el banner
         // centrado). Este panel (QuickQuestMenu) ya NO se abre solo -- solo lo abre el jugador a
         // mano (D-pad arriba, ver QuestMenuManager). Los datos se refrescan igual sin mostrarse:

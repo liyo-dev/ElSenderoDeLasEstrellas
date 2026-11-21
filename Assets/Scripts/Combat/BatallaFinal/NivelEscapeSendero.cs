@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Sendero.Core.Feedback;
 using Sendero.UI;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Controlador del nivel jugable de huida del Sendero de las Estrellas mientras colapsa.

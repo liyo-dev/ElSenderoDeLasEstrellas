@@ -14,12 +14,9 @@ public enum DramaticTextBackground
     SemiBlack,  // Alpha ~0.65
     FullBlack,  // Alpha 1.0
     Dream,      // Azul índigo profundo con pulso suave — para secuencias de sueño
-    // Añadido 30/08/2026 (visión de la Voz en MagoOscuroFinalBattleSequencer, Fase C): mismo
-    // concepto que Dream (nebulosa + chispas + degradado + shimmer en el texto) pero con un
-    // blanco cálido en vez del azul índigo oscuro — pedido explícito de Raúl ("el fondo es
-    // blanco"). El degradado de texto se sobreescribe automáticamente a un par de tonos oscuros
-    // legibles sobre blanco (ver DramaticTextOverlayUI._dreamGradientLeftOnWhite/RightOnWhite) —
-    // los tonos claros normales de Dream serían casi invisibles aquí.
+    // El degradado de texto se sobreescribe automáticamente a un par de tonos oscuros legibles
+    // sobre blanco (ver DramaticTextOverlayUI._dreamGradientLeftOnWhite/RightOnWhite) — los
+    // tonos claros normales de Dream serían casi invisibles aquí.
     DreamWhite
 }
 
@@ -32,16 +29,12 @@ public enum DramaticEntryAnimation
     SlideFromLeft,  // Entra deslizándose desde el borde izquierdo
     SlideFromRight, // Entra deslizándose desde el borde derecho
     KingdomHearts,  // Letra a letra: fade+escala por carácter, zoom suave del contenedor
-    // Añadido 11/09/2026: para "Will, ¡DESPIERTA!" — KingdomHearts se lee como el título de una
-    // novela/videojuego (pedido explícito de Raúl: no quiere ese efecto aquí). Shake aparece de
-    // golpe (fade casi instantáneo) y sacude el texto con un temblor que decae — más parecido a
-    // que alguien te esté zarandeando para despertarte que a una presentación épica.
-    // SUPERSEDIDO 12/09/2026: probado en juego, Raúl reporta que "no funciona" — se deja el valor
-    // por compatibilidad (no se borra ningún dato serializado) pero ya no se usa en "Will,
-    // ¡DESPIERTA!"; ver LetterFlyIn más abajo.
+    // Para "Will, ¡DESPIERTA!" — KingdomHearts se lee como el título de una novela/videojuego.
+    // Shake aparece de golpe (fade casi instantáneo) y sacude el texto con un temblor que decae —
+    // más parecido a que alguien te esté zarandeando para despertarte que a una presentación
+    // épica.
     Shake,
-    // Añadido 12/09/2026 (pedido explícito de Raúl, sustituye a Shake en "Will, ¡DESPIERTA!"):
-    // letra a letra, cada carácter "vuela" desde un punto de origen compartido (grande, como
+    // Letra a letra, cada carácter "vuela" desde un punto de origen compartido (grande, como
     // viniendo hacia el espectador desde el fondo de la pantalla) hasta su posición final en el
     // texto — ver DramaticTextOverlayUI.LetterFlyInRoutine / _letterFlyInOrigin.
     LetterFlyIn

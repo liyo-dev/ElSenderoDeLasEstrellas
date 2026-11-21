@@ -23,7 +23,7 @@ public static class VistaDelVigia
         Vector3 hacia = pecho - ojos;
         float distancia = hacia.magnitude;
         if (distancia < DistanciaDeTropiezo) return true;
-        if (distancia > alcance || Escondite.JugadorEscondido) return false;
+        if (distancia > alcance || Escondite.JugadorEscondido || Invisibilidad.EsInvisible(jugador)) return false;
 
         Vector3 enElSuelo = new Vector3(hacia.x, 0f, hacia.z);
         if (enElSuelo.sqrMagnitude > 0.0001f && Vector3.Angle(vigia.forward, enElSuelo) > anguloTotal * 0.5f)

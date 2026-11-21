@@ -91,18 +91,18 @@ namespace Game.NPC.States
         }
 
         /// <summary>
-        /// Petición de Raúl: "huir" de un combate de equipo (p.ej. Lety+Vicky)
-        /// alejándose lo suficiente. El corte por distancia (MAX_COMBAT_DISTANCE) ya existía y ya
-        /// dejaba al NPC "no derrotado" (WasDefeatedInCombat sigue en false, la vida con la que se
-        /// quedó se conserva para el próximo reenganche — ver InitializeCombatComponents más abajo,
-        /// isFirstCombatEngagement) — pero no avisaba al jugador, no devolvía la música a la
-        /// normalidad, y si el NPC formaba parte de un NPCCombatTeam (como Lety+Vicky) tampoco
-        /// reseteaba el estado DEL EQUIPO (_isTeamInCombat seguía en true para siempre, aunque cada
-        /// miembro hubiera salido de CombatState). Este método añade esas tres cosas, una sola vez,
-        /// justo cuando el ÚLTIMO miembro con combate activo del grupo (el propio NPC si va solo, o
-        /// todo el equipo si es un NPCCombatTeam) se aleja lo bastante. Enemigos menores (arañas,
-        /// ImpDemon, Golem) no pasan por CombatState — tienen su propia IA — así que no les afecta
-        /// este cambio, tal y como se pidió ("de las arañas no hace falta").
+        /// Lety+Vicky) alejándose lo suficiente. El corte por distancia (MAX_COMBAT_DISTANCE) ya
+        /// existía y ya dejaba al NPC "no derrotado" (WasDefeatedInCombat sigue en false, la vida
+        /// con la que se quedó se conserva para el próximo reenganche — ver
+        /// InitializeCombatComponents más abajo, isFirstCombatEngagement) — pero no avisaba al
+        /// jugador, no devolvía la música a la normalidad, y si el NPC formaba parte de un
+        /// NPCCombatTeam (como Lety+Vicky) tampoco reseteaba el estado DEL EQUIPO (_isTeamInCombat
+        /// seguía en true para siempre, aunque cada miembro hubiera salido de CombatState). Este
+        /// método añade esas tres cosas, una sola vez, justo cuando el ÚLTIMO miembro con combate
+        /// activo del grupo (el propio NPC si va solo, o todo el equipo si es un NPCCombatTeam) se
+        /// aleja lo bastante. Enemigos menores (arañas, ImpDemon, Golem) no pasan por CombatState —
+        /// tienen su propia IA — así que no les afecta este cambio, tal y como se pidió ("de las
+        /// arañas no hace falta").
         /// </summary>
         private void HandleFleeByDistance(NPCStateContext context)
         {

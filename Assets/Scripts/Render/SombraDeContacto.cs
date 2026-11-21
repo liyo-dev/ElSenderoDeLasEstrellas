@@ -22,12 +22,31 @@ public sealed class SombraDeContacto : MonoBehaviour
     private static Material s_material;
     private static readonly int OpacidadId = Shader.PropertyToID("_Opacidad");
     private static readonly RaycastHit[] s_impactos = new RaycastHit[4];
+    // Quien la pide fuerte (una prueba de saltos): se ve desde más alto, más grande y oscura y sin
+    // encogerse en el aire, para saber dónde se cae aunque la cámara esté lejos.
+    private static readonly System.Collections.Generic.HashSet<object> s_fuerte = new System.Collections.Generic.HashSet<object>();
+    private const float AlturaMaximaFuerte = 14f;
+    private const float OpacidadFuerte = 0.9f;
+    private const float TamanoFuerte = 1.6f;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() => s_fuerte.Clear();
+#endif
+
+    /// <summary>Sombras fuertes mientras <paramref name="quien"/> lo pida (cada sistema con su clave).</summary>
+    public static void Reforzar(object quien) { if (quien != null) s_fuerte.Add(quien); }
+
+    /// <summary>Deja de pedir sombras fuertes.</summary>
+    public static void SoltarRefuerzo(object quien) { if (quien != null) s_fuerte.Remove(quien); }
 
     private Transform _sombra;
     private MeshRenderer _renderer;
     private MaterialPropertyBlock _bloque;
     private float _radio;
     private float _opacidadAplicada = -1f;
+    private Transform _cabeza;
+    private float _alturaDePie;   // la mayor altura de la cabeza sobre el suelo que se ha visto
 
     /// Añade la sombra si el personaje aún no tiene una (activa o desactivada a propósito).
     public static void Asegurar(GameObject personaje)
@@ -75,6 +94,8 @@ public sealed class SombraDeContacto : MonoBehaviour
         _renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
         _bloque = new MaterialPropertyBlock();
         _radio = radio > 0f ? radio : RadioAutomatico();
+        var animador = GetComponentInChildren<Animator>(true);
+        if (animador != null && animador.isHuman) _cabeza = animador.GetBoneTransform(HumanBodyBones.Head);
         return true;
     }
 
@@ -101,7 +122,9 @@ public sealed class SombraDeContacto : MonoBehaviour
         if (_sombra.gameObject.activeSelf && !_renderer.isVisible && (Time.frameCount & 7) != 0) return;
 
         Vector3 origen = transform.position + Vector3.up * AlturaDelRayo;
-        int n = Physics.RaycastNonAlloc(origen, Vector3.down, s_impactos, AlturaDelRayo + alturaMaxima,
+        bool fuerte = s_fuerte.Count > 0;
+        float alcance = fuerte ? Mathf.Max(alturaMaxima, AlturaMaximaFuerte) : alturaMaxima;
+        int n = Physics.RaycastNonAlloc(origen, Vector3.down, s_impactos, AlturaDelRayo + alcance,
             Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
         int mejor = -1;
         for (int i = 0; i < n; i++)
@@ -116,17 +139,29 @@ public sealed class SombraDeContacto : MonoBehaviour
         }
 
         var impacto = s_impactos[mejor];
+        // Tumbado o sentado (cama, banco, columpio): la cabeza queda cerca de lo que tiene debajo y el
+        // disco temblaba sobre la manta con la respiración. Solo se ve de pie o en el aire.
+        if (_cabeza != null)
+        {
+            float cabeza = _cabeza.position.y - impacto.point.y;
+            if (cabeza > _alturaDePie) _alturaDePie = cabeza;
+            if (cabeza < _alturaDePie * 0.55f)
+            {
+                if (_sombra.gameObject.activeSelf) _sombra.gameObject.SetActive(false);
+                return;
+            }
+        }
         float altura = Mathf.Max(0f, impacto.distance - AlturaDelRayo);
-        float cercania = 1f - Mathf.Clamp01(altura / alturaMaxima);
+        float cercania = 1f - Mathf.Clamp01(altura / alcance);
         if (!_sombra.gameObject.activeSelf) _sombra.gameObject.SetActive(true);
 
         _sombra.SetPositionAndRotation(impacto.point + impacto.normal * 0.02f,
             Quaternion.FromToRotation(Vector3.up, impacto.normal));
-        float diametro = _radio * 2f * Mathf.Lerp(0.6f, 1f, cercania);
+        float diametro = fuerte ? _radio * 2f * TamanoFuerte : _radio * 2f * Mathf.Lerp(0.6f, 1f, cercania);
         Vector3 padre = transform.lossyScale;
         _sombra.localScale = new Vector3(diametro / Mathf.Max(padre.x, 1e-4f), 1f / Mathf.Max(padre.y, 1e-4f), diametro / Mathf.Max(padre.z, 1e-4f));
 
-        float valor = opacidad * cercania;
+        float valor = fuerte ? OpacidadFuerte : opacidad * cercania;
         if (Mathf.Abs(valor - _opacidadAplicada) > 0.01f)
         {
             _opacidadAplicada = valor;

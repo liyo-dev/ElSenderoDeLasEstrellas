@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Text;
 using System.Collections.Generic;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Debugger visual para GameBootProfile.
@@ -158,7 +159,7 @@ public class GameBootProfileDebugger : MonoBehaviour
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 
         // Header
-        GUILayout.Label($"🔍 GameBootProfile Debugger", headerStyle);
+        GUILayout.Label($"GameBootProfile Debugger", headerStyle);
         GUILayout.Label($"Presiona [{toggleKey}] para ocultar", labelStyle);
         GUILayout.Space(10);
 
@@ -166,16 +167,16 @@ public class GameBootProfileDebugger : MonoBehaviour
         DrawSection("Estado General", () =>
         {
             DrawKeyValue("Profile Name", profile.name);
-            DrawKeyValue("Use Preset Instead of Save", profile.usePresetInsteadOfSave ? "✅ SÍ" : "❌ NO");
-            DrawKeyValue("Allow Auto-Saves", profile.allowAutoSaves ? "✅ SÍ" : "❌ NO");
+            DrawKeyValue("Use Preset Instead of Save", profile.usePresetInsteadOfSave ? "SÍ" : "NO");
+            DrawKeyValue("Allow Auto-Saves", profile.allowAutoSaves ? "SÍ" : "NO");
             
             if (saveSystem)
             {
-                DrawKeyValue("Has Save File", saveSystem.HasSave() ? "✅ SÍ" : "❌ NO");
+                DrawKeyValue("Has Save File", saveSystem.HasSave() ? "SÍ" : "NO");
             }
             else
             {
-                GUILayout.Label("⚠️ SaveSystem no encontrado", warningStyle);
+                GUILayout.Label("SaveSystem no encontrado", warningStyle);
             }
         });
 
@@ -209,13 +210,13 @@ public class GameBootProfileDebugger : MonoBehaviour
                 GUILayout.Space(5);
                 if (p.abilities != null)
                 {
-                    DrawKeyValue("Can Swim", p.abilities.swim ? "✅" : "❌");
-                    DrawKeyValue("Can Jump", p.abilities.jump ? "✅" : "❌");
-                    DrawKeyValue("Can Fly", p.abilities.fly ? "✅" : "❌");
+                    DrawKeyValue("Can Swim", p.abilities.swim ? "sí" : "no");
+                    DrawKeyValue("Can Jump", p.abilities.jump ? "sí" : "no");
+                    DrawKeyValue("Can Fly", p.abilities.fly ? "sí" : "no");
                 }
                 else
                 {
-                    GUILayout.Label("⚠️ Abilities no inicializado", warningStyle);
+                    GUILayout.Label("Abilities no inicializado", warningStyle);
                 }
 
                 GUILayout.Space(5);
@@ -229,7 +230,7 @@ public class GameBootProfileDebugger : MonoBehaviour
                 if (p.flags != null && p.flags.Count > 0)
                 {
                     GUILayout.Space(5);
-                    GUILayout.Label("📋 Flags actuales:", labelStyle);
+                    GUILayout.Label("Flags actuales:", labelStyle);
                     int questFlags = 0;
                     int cinematicFlags = 0;
                     int otherFlags = 0;
@@ -268,8 +269,8 @@ public class GameBootProfileDebugger : MonoBehaviour
             if (actionManager)
             {
                 GUILayout.Label("PlayerActionManager (vivo):", labelStyle);
-                DrawKeyValue("  Swim", actionManager.AllowSwim ? "✅" : "❌");
-                DrawKeyValue("  Jump", actionManager.AllowJump ? "✅" : "❌");
+                DrawKeyValue("  Swim", actionManager.AllowSwim ? "sí" : "no");
+                DrawKeyValue("  Jump", actionManager.AllowJump ? "sí" : "no");
             }
 
             var spawnManager = SpawnManager.CurrentAnchorId;
@@ -280,7 +281,7 @@ public class GameBootProfileDebugger : MonoBehaviour
 
             if (QuestManager.Instance)
             {
-                DrawKeyValue("QuestManager", "✅ Activo");
+                DrawKeyValue("QuestManager", "Activo");
             }
 
             if (NarrativeGraphHub.Instance)
@@ -315,12 +316,12 @@ public class GameBootProfileDebugger : MonoBehaviour
         DrawSection("Acciones de Debug", () =>
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("🔄 Update Runtime from State"))
+            if (GUILayout.Button("Update Runtime from State"))
             {
                 Partida.VolcarEstadoDelJuego();
                 LogOperation("Update Runtime", "Sincronizado con sistemas vivos", LogType.Log);
             }
-            if (GUILayout.Button("💾 Force Save"))
+            if (GUILayout.Button("Force Save"))
             {
                 if (saveSystem && Partida.Guardar(saveSystem, SaveRequestContext.Manual))
                 {
@@ -334,7 +335,7 @@ public class GameBootProfileDebugger : MonoBehaviour
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("📂 Load Save"))
+            if (GUILayout.Button("Load Save"))
             {
                 if (saveSystem && Partida.Cargar(saveSystem))
                 {
@@ -345,7 +346,7 @@ public class GameBootProfileDebugger : MonoBehaviour
                     LogOperation("Load Save", "Error al cargar o sin save", LogType.Error);
                 }
             }
-            if (GUILayout.Button("🗑️ Clear History"))
+            if (GUILayout.Button("Clear History"))
             {
                 history.Clear();
             }
@@ -377,14 +378,14 @@ public class GameBootProfileDebugger : MonoBehaviour
         GUILayout.Space(5);
         if (preset)
         {
-            string status = isActive ? "🟢" : "⚪";
+            string status = isActive ? "activo" : "inactivo";
             GUILayout.Label($"{status} {label}: {preset.name}", isActive ? successStyle : labelStyle);
             GUILayout.Label($"  Anchor: {preset.spawnAnchorId ?? "(sin definir)"}", labelStyle);
             GUILayout.Label($"  HP: {preset.currentHP:F0}/{preset.maxHP:F0}, MP: {preset.currentMP:F0}/{preset.maxMP:F0}", labelStyle);
         }
         else
         {
-            GUILayout.Label($"❌ {label}: (no asignado)", warningStyle);
+            GUILayout.Label($"{label}: (no asignado)", warningStyle);
         }
     }
 

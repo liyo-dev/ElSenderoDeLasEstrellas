@@ -20,6 +20,12 @@ public class CombatCameraTargeting : MonoBehaviour
     [SerializeField, Min(0.2f)] private float holdToToggleAutotargetSeconds = 0.5f;
     [Tooltip("Ángulo máximo respecto al frente del jugador para fijar un objetivo que no está ya bajo el marcador.")]
     [SerializeField] private float lockConeDegrees = 140f;
+
+    [Header("Cambiar de objetivo con el stick derecho")]
+    [Tooltip("Inclinación lateral del stick derecho que cuenta como empujón para pasar al objetivo de ese lado (con uno fijado).")]
+    [SerializeField, Range(0.3f, 1f)] private float empujonDelStick = 0.6f;
+    [Tooltip("El stick tiene que volver por debajo de esta inclinación antes de contar otro empujón.")]
+    [SerializeField, Range(0f, 0.6f)] private float rearmeDelStick = 0.35f;
     
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = false;
@@ -52,11 +58,10 @@ public class CombatCameraTargeting : MonoBehaviour
     private float _lastAutoLockAttempt;
     private float _lastVisualResync;
     private float _lastShoulderSwitchAt = -999f;
+    private bool _stickArmado = true;
     private bool _isInDialogue;
     private bool _suppressedByLevitation;
-    // Petición de Raúl: permite al jugador apagar el lock-on de cámara/objetivo a
-    // voluntad (p.ej. para correr hacia un cofre sin que la cámara se empeñe en enfocar a un
-    // enemigo cercano). Ver ToggleTargetingSuppressed().
+    // Ver ToggleTargetingSuppressed().
     private bool _targetingSuppressedByPlayer;
     // Pulsación de R3/F en curso: corta = fijar/soltar objetivo; mantenida = autoapuntado on/off.
     private float _lockButtonDownAt = -1f;
@@ -116,8 +121,28 @@ public class CombatCameraTargeting : MonoBehaviour
     // como jugador. Ver INC-482.
     private void AlRegistrarJugador(GameObject jugador)
     {
+        var anterior = playerTargeting;
         playerTransform = jugador != null ? jugador.transform : null;
         playerTargeting = playerTransform != null ? playerTransform.GetComponentInChildren<PlayerTargeting>() : null;
+        if (anterior == playerTargeting) return;
+
+        // Al cambiar de personaje, el marcador del cuerpo anterior se apaga y el fijado pasa al nuevo
+        // en el acto: si no, quedaban dos marcadores o ninguno hasta el siguiente repaso.
+        if (anterior != null)
+        {
+            anterior.ClearManualTarget();
+            anterior.SetAutoScanSuppressed(false);
+        }
+        if (isLockActive && currentTarget != null && syncWithProjectileTargeting && playerTargeting != null)
+        {
+            playerTargeting.SetAutoScanSuppressed(true);
+            if (!DebeSuprimirMarcador())
+            {
+                playerTargeting.SetManualTarget(currentTarget.transform);
+                playerTargeting.ForceVisualRefresh();
+            }
+        }
+        _lastVisualResync = 0f;
     }
 
     private bool DebeSuprimirMarcador()
@@ -163,6 +188,7 @@ public class CombatCameraTargeting : MonoBehaviour
         }
 
         ProcesarPulsacionDeLock();
+        ProcesarEmpujonDelStick();
 
         bool isInCombat = Kits.Core.GameContext.Has(Situaciones.Combate);
         
@@ -190,7 +216,7 @@ public class CombatCameraTargeting : MonoBehaviour
         
         if (playerTransform == null) return;
         
-        GameObject closestEnemy = ActiveCombatRegistry.GetClosestCameraLockableCombatNPC(playerTransform.position, maxLockDistance);
+        GameObject closestEnemy = EnemigoMasCercano();
         
         if (closestEnemy != null)
         {
@@ -221,9 +247,10 @@ public class CombatCameraTargeting : MonoBehaviour
         
         switch (inputEvent.Type)
         {
-            // RB pasa al siguiente objetivo (enemigo en combate o pieza marcable); LB es de la
-            // rotación de hechizos básicos.
+            // La rueda del ratón (RB en teclado) pasa al siguiente objetivo; el RB del mando es la
+            // esquiva y en mando se cambia con el stick derecho (ProcesarEmpujonDelStick).
             case GamepadInputReader.InputEventType.RightShoulder:
+                if (GamepadInputReader.RightShoulderPressed) break;
                 _lastShoulderSwitchAt = Time.unscaledTime;
                 SwitchToNextTarget();
                 break;
@@ -231,13 +258,12 @@ public class CombatCameraTargeting : MonoBehaviour
     }
 
     /// <summary>
-    /// Petición de Raúl: alterna si el jugador quiere que la cámara/objetivo se
-    /// enganchen solos. Al activar la supresión: libera cualquier lock en marcha y apaga también
-    /// el auto-scan de PlayerTargeting (el marcador de apuntado libre), para que "desactivar
-    /// targets" sea de verdad completo — ni cámara ni marcador — mientras el jugador quiera, por
-    /// ejemplo, correr hacia un cofre sin que nada le distraiga hacia un enemigo o una pieza
-    /// cercana. Al desactivar la supresión, todo vuelve al comportamiento automático de siempre
-    /// en el siguiente Update().
+    /// Al activar la supresión: libera cualquier lock en marcha y apaga también el auto-scan de
+    /// PlayerTargeting (el marcador de apuntado libre), para que "desactivar targets" sea de
+    /// verdad completo — ni cámara ni marcador — mientras el jugador quiera, por ejemplo, correr
+    /// hacia un cofre sin que nada le distraiga hacia un enemigo o una pieza cercana. Al
+    /// desactivar la supresión, todo vuelve al comportamiento automático de siempre en el
+    /// siguiente Update().
     /// </summary>
     private void ToggleTargetingSuppressed()
     {
@@ -406,6 +432,7 @@ public class CombatCameraTargeting : MonoBehaviour
     private static bool EsFijable(GameObject candidato)
     {
         if (candidato == null || !candidato.activeInHierarchy) return false;
+        if (EsDelGrupo(candidato)) return false;
 
         var damageable = candidato.GetComponentInParent<Damageable>();
         if (damageable != null && !damageable.IsAlive) return false;
@@ -434,7 +461,7 @@ public class CombatCameraTargeting : MonoBehaviour
         if (isLockActive || _targetingSuppressedByPlayer || _suppressedByLevitation) return;
 
         Log($"Entrando en combate. Buscando objetivo...");
-        GameObject closestEnemy = ActiveCombatRegistry.GetClosestCameraLockableCombatNPC(playerTransform.position, maxLockDistance);
+        GameObject closestEnemy = EnemigoMasCercano();
         
         if (closestEnemy != null)
         {
@@ -469,11 +496,10 @@ public class CombatCameraTargeting : MonoBehaviour
     {
         if (DebeSuprimirMarcador() || _targetingSuppressedByPlayer || _suppressedByLevitation) return;
 
-        // Petición de Raúl: enemigos menores (arañas) no deben enganchar la cámara
-        // solos al entrar en combate — ver ActiveCombatRegistry.IsCameraLockExempt. Siguen
-        // registrados en ActiveCombatRegistry (Battle Mode, ciclo manual L1/R1), y el marcador de
-        // apuntado para hechizos lo sigue dando el auto-scan normal de PlayerTargeting.
-        if (currentTarget == null && playerTransform != null && !ActiveCombatRegistry.IsCameraLockExempt(npc))
+        // Siguen registrados en ActiveCombatRegistry (Battle Mode, ciclo manual L1/R1), y el
+        // marcador de apuntado para hechizos lo sigue dando el auto-scan normal de
+        // PlayerTargeting.
+        if (currentTarget == null && playerTransform != null && !ActiveCombatRegistry.IsCameraLockExempt(npc) && !EsDelGrupo(npc))
         {
             if (Vector3.Distance(npc.transform.position, playerTransform.position) <= maxLockDistance)
             {
@@ -545,12 +571,10 @@ public class CombatCameraTargeting : MonoBehaviour
         _lastVisualResync = 0f; // Forzar resync en el siguiente Update.
         Log($"Lock establecido en: {newTarget.name}");
 
-        // Petición de Raúl (1 sep 2026, revertido el mismo día): aquí se disparaba un popup
-        // explicativo ("MechanicId.TargetLockToggle", "pulsa F...") la primera vez que había 2+
-        // objetivos en combate — Raúl lo probó y pidió quitarlo. Aclarado después: se ha quitado
-        // TODO el sistema de popups de "nueva mecánica" (Teletransporte, Cambio de personaje,
-        // Unir/disolver equipo, Sígueme incluidos) — el popup de desbloqueo de habilidades/
-        // hechizos (AbilityUnlockPopupUI) queda tal y como estaba antes de esta sesión.
+        // Aclarado después: se ha quitado TODO el sistema de popups de "nueva mecánica"
+        // (Teletransporte, Cambio de personaje, Unir/disolver equipo, Sígueme incluidos) — el
+        // popup de desbloqueo de habilidades/ hechizos (AbilityUnlockPopupUI) queda tal y como
+        // estaba antes de esta sesión.
     }
     
     private readonly List<GameObject> _orderedTargetsCache = new();
@@ -602,6 +626,115 @@ public class CombatCameraTargeting : MonoBehaviour
         _orderedTargetsCache.Add(candidato);
     }
     
+    /// Con un objetivo fijado, un empujón lateral del stick derecho pasa al objetivo más cercano
+    /// (en ángulo) hacia ese lado, sin dar la vuelta. El stick se rearma al volver al centro.
+    private void ProcesarEmpujonDelStick()
+    {
+        Vector2 stick = GamepadInputReader.StickDerechoDelMando;
+        float x = Mathf.Abs(stick.x);
+        if (x < rearmeDelStick) { _stickArmado = true; return; }
+        if (!_stickArmado || x < empujonDelStick || x < Mathf.Abs(stick.y) * 0.8f) return;
+        _stickArmado = false;
+
+        if (playerTransform == null || _suppressedByLevitation || DebeSuprimirMarcador()) return;
+        if (Time.unscaledTime - _lastShoulderSwitchAt < shoulderSwitchDebounce) return;
+        int lado = stick.x > 0f ? 1 : -1;
+
+        // Sin nada fijado (soltado con R3, o el autoapuntado aún no ha enganchado), el empujón en
+        // combate fija al enemigo más a ese lado de la pantalla.
+        if (!isLockActive || currentTarget == null)
+        {
+            if (!Kits.Core.GameContext.Has(Situaciones.Combate)) return;
+            _lastShoulderSwitchAt = Time.unscaledTime;
+            FijarHaciaUnLado(lado);
+            return;
+        }
+
+        _lastShoulderSwitchAt = Time.unscaledTime;
+        CambiarHaciaUnLado(lado);
+    }
+
+    private void FijarHaciaUnLado(int lado)
+    {
+        var targets = GetOrderedTargets(incluirObjetos: false);
+        if (targets.Count == 0) return;
+        if (_camaraCache == null || !_camaraCache.isActiveAndEnabled) _camaraCache = Camera.main;
+        Transform vista = _camaraCache != null ? _camaraCache.transform : playerTransform;
+        Vector3 delante = vista.forward; delante.y = 0f;
+        if (delante.sqrMagnitude < 0.0001f) delante = playerTransform.forward;
+        Vector3 origen = playerTransform.position;
+
+        GameObject mejor = null;
+        float mejorAngulo = float.PositiveInfinity;
+        for (int i = 0; i < targets.Count; i++)
+        {
+            var candidato = targets[i];
+            if (candidato == null) continue;
+            Vector3 dir = candidato.transform.position - origen;
+            dir.y = 0f;
+            float angulo = Vector3.SignedAngle(delante, dir, Vector3.up) * lado;   // > 0: hacia el lado pedido
+            if (angulo < 0f) angulo = 360f + angulo;                               // los del otro lado, al final
+            if (angulo >= mejorAngulo) continue;
+            mejorAngulo = angulo;
+            mejor = candidato;
+        }
+        if (mejor == null) return;
+        Log($"Stick derecho: fijando {mejor.name}");
+        SetTarget(mejor);
+    }
+
+    private Camera _camaraCache;
+
+    /// El enemigo en combate más cercano al jugador que se puede fijar (nunca un cuerpo del grupo).
+    private GameObject EnemigoMasCercano()
+    {
+        if (playerTransform == null) return null;
+        ActiveCombatRegistry.GetAllInCombatNonAlloc(_combatBuffer);
+        GameObject mejor = null;
+        float mejorDist = maxLockDistance * maxLockDistance;
+        Vector3 origen = playerTransform.position;
+        for (int i = 0; i < _combatBuffer.Count; i++)
+        {
+            var npc = _combatBuffer[i];
+            if (npc == null || ActiveCombatRegistry.IsCameraLockExempt(npc) || !EsFijable(npc)) continue;
+            float d = (npc.transform.position - origen).sqrMagnitude;
+            if (d < mejorDist) { mejorDist = d; mejor = npc; }
+        }
+        return mejor;
+    }
+
+    /// Los cuerpos de los tres protagonistas (también los que lleva la IA) no se fijan nunca: un
+    /// compañero que entra en combate a su lado se apunta en el registro igual que un enemigo.
+    private static bool EsDelGrupo(GameObject candidato) =>
+        candidato != null && ControlDelJugador.PersonajeDe(candidato, out _);
+
+    private void CambiarHaciaUnLado(int lado)
+    {
+        var targets = GetOrderedTargets();
+        Vector3 origen = playerTransform.position;
+        Vector3 referencia = currentTarget.transform.position - origen;
+        referencia.y = 0f;
+        if (referencia.sqrMagnitude < 0.0001f) referencia = playerTransform.forward;
+
+        GameObject mejor = null;
+        float mejorAngulo = float.PositiveInfinity;
+        for (int i = 0; i < targets.Count; i++)
+        {
+            var candidato = targets[i];
+            if (candidato == null || candidato == currentTarget) continue;
+            Vector3 dir = candidato.transform.position - origen;
+            dir.y = 0f;
+            float angulo = Vector3.SignedAngle(referencia, dir, Vector3.up) * lado;   // > 0: hacia el lado pedido
+            if (angulo <= 0.5f || angulo >= mejorAngulo) continue;
+            mejorAngulo = angulo;
+            mejor = candidato;
+        }
+
+        if (mejor == null) return;
+        Log($"Stick derecho: cambiando target → {mejor.name}");
+        SetTarget(mejor);
+    }
+
     private void SwitchToNextTarget(bool incluirObjetos = true)
     {
         var targets = GetOrderedTargets(incluirObjetos);

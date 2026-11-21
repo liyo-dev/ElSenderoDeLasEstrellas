@@ -1,4 +1,4 @@
-namespace Core.InputGlyphs
+﻿namespace Core.InputGlyphs
 {
     /// <summary>
     /// Nombres de sprite EXACTOS que ya usa el contenido de diálogo (JSON de localización,
@@ -10,9 +10,8 @@ namespace Core.InputGlyphs
     ///
     /// También son los nombres de archivo (sin extensión) que espera
     /// Assets/Resources/InputGlyphs/&lt;Familia&gt;/&lt;nombre&gt;.png — la carpeta que rellenaba la
-    /// vieja herramienta de Editor "Generar Assets de Botones" (retirada agosto 2026, generaba
-    /// placeholders por código; ver Assets/_to_delete). El arte real ahora se arrastra a mano en los
-    /// 4 assets Assets/_UI/InputGlyphFamilySpriteSet_&lt;Familia&gt;.asset.
+    /// vieja herramienta de Editor "Generar Assets de Botones". El arte real ahora se arrastra a
+    /// mano en los 4 assets Assets/_UI/InputGlyphFamilySpriteSet_&lt;Familia&gt;.asset.
     /// </summary>
     public static class InputGlyphNames
     {
@@ -39,6 +38,11 @@ namespace Core.InputGlyphs
         // no Sprintar). Si en el futuro se encarga arte real para este botón, se le puede dar su propio
         // nombre de sprite aquí e incluirlo en `All` igual que el resto.
         public const string Sprint = "Sprint";
+
+        // Cambiar de objetivo con uno fijado: en mando, empujar el stick derecho hacia un lado
+        // (CombatCameraTargeting); en teclado, la rueda del ratón. Como Sprint, solo texto para
+        // {BOTON}: no tiene sprite propio y no va en `All`.
+        public const string SwitchTarget = "SwitchTarget";
 
         // Botón de "Confirmar" para prompts que esperan UI/Submit (PedirAvisoDeTutorial, SleepTrigger
         // despertando a Will, cualquier "pulsa para continuar" que aparezca con el mapa GamePlay
@@ -83,8 +87,8 @@ namespace Core.InputGlyphs
         // PlayerControls.cs mapea DPadUp/DPadDown a las teclas "J" y "G" — NO a flechas de teclado ni a
         // W/S de Move — así que, igual que con DpadLeft/DpadRight, el teclado necesita su propio sprite
         // por tecla en vez de un icono de flecha o el WideKeycap("WASD") que ya usa Dpad (genérico).
-        // Sin consumidor en HUD todavía a fecha de esta entrada (2026-08-12) — Dpad, DpadUp y DpadDown
-        // se añaden para completar el set; PartyControlManager solo escucha DpadDown/Left/Right hoy.
+        // Sin consumidor en HUD todavía a fecha de esta entrada — Dpad, DpadUp y DpadDown se añaden
+        // para completar el set; PartyControlManager solo escucha DpadDown/Left/Right hoy.
         public const string DpadUp = "interactable_dpad_up";
         public const string DpadDown = "interactable_dpad_down";
 
@@ -94,11 +98,31 @@ namespace Core.InputGlyphs
         // familias de mando, así que necesita su propio nombre e icono en vez de reutilizar Start.
         public const string Select = "interactable_select";
 
+        // Botón de "Atrás/Cerrar" de los menús y avisos que esperan UI/Cancel. En mando es el mismo
+        // botón físico que East (B en Xbox, Círculo en PlayStation); en teclado es Escape, que no es
+        // el clic derecho de East, así que reutiliza el dibujo de la tecla Esc de Start. Sin arte
+        // propio: lo resuelve InputGlyphService con los sprites de East y de Start de cada familia.
+        public const string Cancel = "interactable_cancel";
+
+        // Botones de los menús a pantalla completa (menú de Start) que en teclado no son la tecla
+        // del ataque del mismo botón del mando: X de menú (UI, «Controles»/«Quitar») es la C
+        // (GamepadInputReader.XButtonPressedUI), y LT/RT de menú (cambiar de personaje o de
+        // categoría) son Q y E (EntradaDelMenu.Gatillos). En mando son X, LT y RT de siempre.
+        // MenuX tiene arte propio de teclado (campo «menuX»); LT/RT de menú reutilizan las teclas
+        // Q (North) y E (South) del teclado.
+        public const string MenuX = "interactable_ui_x";
+        public const string MenuLT = "interactable_ui_lt";
+        public const string MenuRT = "interactable_ui_rt";
+
+        // Girar el modelo en un menú: el stick derecho en mando; con teclado y ratón, arrastrar con
+        // el botón derecho (el dibujo de East en teclado). Ver EntradaDelMenu.Giro.
+        public const string MenuGirar = "interactable_ui_girar";
+
         public static readonly string[] All =
         {
             South, East, West, North, ShoulderLeft, ShoulderRight,
             TriggerLeft, TriggerRight, Dpad, Stick, Start, Confirm, Teleport,
-            DpadLeft, DpadRight, DpadUp, DpadDown, Select
+            DpadLeft, DpadRight, DpadUp, DpadDown, Select, Cancel, MenuX, MenuLT, MenuRT, MenuGirar
         };
     }
 }

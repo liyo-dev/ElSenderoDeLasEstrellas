@@ -1,0 +1,5 @@
+Situaciones:
+timeScale=1 frame=1194 pausa=False
+jugador LAB_JUGADOR_WILL pos (0.2, 0.0, -7.7) combate=False aire=False
+LAB_Liam: FollowPlayerState dist=2,90 dy=0,10 agente=anda
+LAB_Estela: FollowPlayerState dist=2,79 dy=0,10 agente=anda

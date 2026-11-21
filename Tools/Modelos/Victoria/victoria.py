@@ -91,7 +91,11 @@ for lado, s in (("l", 1), ("r", -1)):
 # ── Moño (accesorio de cabeza) ──
 # Va por fuera del pelo (Hair06 llega a 0,38 por detrás): arriba y atrás, con su cinta en la base
 esfera("mono", "Mono", (0, 0.37, 1.2), (0.125, 0.12, 0.118), "Pelo", H)
-toro("mono", "CintaMono", (0, 0.3, 1.17), 0.085, 0.018, "Delantal", H, rot=(R(-70), 0, 0))
+# La cinta rodea la base del moño (donde sale del pelo), cortando la bola: antes iba por dentro del pelo y casi
+# tangente a la bola, a menos de 3 mm, y parpadeaba (chequeo, 19 nov 2026). Su eje, del centro de la cabeza al moño.
+_c, _m = Vector((0, -0.02, 0.99)), Vector((0, 0.37, 1.2)); _d = (_m - _c).normalized(); _k = 0.06
+toro("mono", "CintaMono", tuple(_m - _d * _k), math.sqrt(0.12 ** 2 - _k ** 2) + 0.002, 0.018, "Delantal", H,
+     rot=(-(math.pi / 2 - math.atan2(_d.z, _d.y)), 0, 0))
 # ── Pesos y unión ─────────────────────────────────────────────────────────────────────────
 def unir(lista, nombre, extra=None):
     bpy.ops.object.select_all(action='DESELECT')

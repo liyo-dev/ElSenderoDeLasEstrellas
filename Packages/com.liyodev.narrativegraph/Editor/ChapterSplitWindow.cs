@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// <summary>
     /// Divide un NarrativeGraph en dos assets según el campo 'chapter' de los nodos.
@@ -69,7 +69,7 @@ namespace NarrativeGraphEditor
             EditorGUILayout.LabelField("Capítulo a extraer", EditorStyles.boldLabel);
             foreach (var ch in chapters)
             {
-                int count = _source.nodes.Count(n => n != null && n.chapter == ch);
+                int count = _source.nodes.Count(n => n != null && n.Chapter == ch);
                 bool selected = _selectedChapter == ch;
                 bool newSelected = EditorGUILayout.ToggleLeft($"{ch}  ({count} nodos)", selected);
                 if (newSelected && !selected) _selectedChapter = ch;
@@ -107,8 +107,8 @@ namespace NarrativeGraphEditor
             var list = new List<string>();
             foreach (var n in graph.nodes)
             {
-                if (n == null || string.IsNullOrWhiteSpace(n.chapter)) continue;
-                if (!list.Contains(n.chapter)) list.Add(n.chapter);
+                if (n == null || string.IsNullOrWhiteSpace(n.Chapter)) continue;
+                if (!list.Contains(n.Chapter)) list.Add(n.Chapter);
             }
             list.Sort(StringComparer.OrdinalIgnoreCase);
             return list;
@@ -126,7 +126,7 @@ namespace NarrativeGraphEditor
             report.AppendLine($"Extrayendo capítulo '{chapter}' de '{source.name}'...");
             report.AppendLine();
 
-            var moving = source.nodes.Where(n => n != null && n.chapter == chapter).ToList();
+            var moving = source.nodes.Where(n => n != null && n.Chapter == chapter).ToList();
             if (moving.Count == 0)
             {
                 report.AppendLine("No hay nodos que mover. Cancelado.");
@@ -134,7 +134,7 @@ namespace NarrativeGraphEditor
                 return;
             }
 
-            var movingGuids = new HashSet<string>(moving.Select(n => n.guid));
+            var movingGuids = new HashSet<string>(moving.Select(n => n.Guid));
             string chapterKey = SanitizeForIdentifier(chapter);
 
             // Crear el nuevo asset junto al origen
@@ -158,25 +158,25 @@ namespace NarrativeGraphEditor
             //     insertar RaiseCustomEventNode en origen + WaitCustomEventNode en destino.
             foreach (var stayNode in source.nodes.ToList())
             {
-                if (stayNode?.outputs == null) continue;
-                for (int i = 0; i < stayNode.outputs.Count; i++)
+                if (stayNode?.Outputs == null) continue;
+                for (int i = 0; i < stayNode.Outputs.Count; i++)
                 {
-                    var targetGuid = stayNode.outputs[i];
+                    var targetGuid = stayNode.Outputs[i];
                     if (string.IsNullOrEmpty(targetGuid) || !movingGuids.Contains(targetGuid)) continue;
 
                     bridgeCount++;
                     string key = $"CH_{chapterKey}_{bridgeCount}";
 
-                    var raiser = new RaiseCustomEventNode { eventKey = key, chapter = stayNode.chapter };
-                    raiser.position = stayNode.position + new Vector2(260, 40 * i);
+                    var raiser = new RaiseCustomEventNode { EventKey = key, Chapter = stayNode.Chapter };
+                    raiser.Position = stayNode.Position + new Vector2(260, 40 * i);
                     source.nodes.Add(raiser);
 
-                    var waiter = new WaitCustomEventNode { eventKey = key, chapter = chapter };
-                    waiter.outputs.Add(targetGuid);
-                    waiter.position = new Vector2(-260, 40 * bridgeCount);
+                    var waiter = new WaitCustomEventNode { EventKey = key, Chapter = chapter };
+                    waiter.Outputs.Add(targetGuid);
+                    waiter.Position = new Vector2(-260, 40 * bridgeCount);
                     dest.nodes.Add(waiter);
 
-                    stayNode.outputs[i] = raiser.guid;
+                    stayNode.Outputs[i] = raiser.Guid;
 
                     report.AppendLine($"  Puente: '{stayNode.GetType().Name}' (queda) → evento '{key}' → '{FindNodeTypeName(moving, targetGuid)}' (nuevo grafo)");
                 }
@@ -184,29 +184,29 @@ namespace NarrativeGraphEditor
 
             // 2b. Caso simétrico inverso: un nodo movido apunta a uno que se queda (menos común,
             //     p.ej. la historia "vuelve" a un nodo de un capítulo anterior).
-            var stayingGuids = new HashSet<string>(source.nodes.Select(n => n.guid));
+            var stayingGuids = new HashSet<string>(source.nodes.Select(n => n.Guid));
             foreach (var movedNode in moving.ToList())
             {
-                if (movedNode?.outputs == null) continue;
-                for (int i = 0; i < movedNode.outputs.Count; i++)
+                if (movedNode?.Outputs == null) continue;
+                for (int i = 0; i < movedNode.Outputs.Count; i++)
                 {
-                    var targetGuid = movedNode.outputs[i];
+                    var targetGuid = movedNode.Outputs[i];
                     if (string.IsNullOrEmpty(targetGuid) || !stayingGuids.Contains(targetGuid)) continue;
 
                     bridgeCount++;
                     string key = $"CH_{chapterKey}_BACK_{bridgeCount}";
 
-                    var raiser = new RaiseCustomEventNode { eventKey = key, chapter = chapter };
-                    raiser.position = movedNode.position + new Vector2(260, 40 * i);
+                    var raiser = new RaiseCustomEventNode { EventKey = key, Chapter = chapter };
+                    raiser.Position = movedNode.Position + new Vector2(260, 40 * i);
                     dest.nodes.Add(raiser);
 
-                    var targetNode = source.nodes.FirstOrDefault(n => n != null && n.guid == targetGuid);
-                    var waiter = new WaitCustomEventNode { eventKey = key, chapter = targetNode?.chapter };
-                    waiter.outputs.Add(targetGuid);
-                    waiter.position = new Vector2(-260, 40 * bridgeCount);
+                    var targetNode = source.nodes.FirstOrDefault(n => n != null && n.Guid == targetGuid);
+                    var waiter = new WaitCustomEventNode { EventKey = key, Chapter = targetNode?.Chapter };
+                    waiter.Outputs.Add(targetGuid);
+                    waiter.Position = new Vector2(-260, 40 * bridgeCount);
                     source.nodes.Add(waiter);
 
-                    movedNode.outputs[i] = raiser.guid;
+                    movedNode.Outputs[i] = raiser.Guid;
 
                     report.AppendLine($"  Puente inverso: nodo movido → evento '{key}' → '{targetNode?.GetType().Name}' (vuelve al grafo origen)");
                 }
@@ -216,7 +216,7 @@ namespace NarrativeGraphEditor
             var entryNode = dest.nodes.FirstOrDefault(n => n != null && n.IsGraphEntry);
             if (entryNode != null)
             {
-                dest.startNodeGuid = entryNode.guid;
+                dest.startNodeGuid = entryNode.Guid;
             }
             else
             {
@@ -237,7 +237,7 @@ namespace NarrativeGraphEditor
 
                 if (entryPoints.Count == 1)
                 {
-                    dest.startNodeGuid = entryPoints[0].node.guid;
+                    dest.startNodeGuid = entryPoints[0].node.Guid;
                     report.AppendLine($"  Inicio del nuevo grafo: el nodo que espera la señal de entrada ('{entryPoints[0].key}').");
                 }
                 else
@@ -285,7 +285,7 @@ namespace NarrativeGraphEditor
 
         private static string FindNodeTypeName(List<NarrativeNode> moving, string guid)
         {
-            var n = moving.FirstOrDefault(x => x != null && x.guid == guid);
+            var n = moving.FirstOrDefault(x => x != null && x.Guid == guid);
             return n != null ? n.GetType().Name : "?";
         }
     }

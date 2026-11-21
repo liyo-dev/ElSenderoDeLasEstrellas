@@ -2,105 +2,111 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Espera a que una señal custom llegue N veces (p. ej. «derrota ocho enemigos de un tipo»).
-/// Solo cuenta las señales que llegan mientras el nodo está activo; la cuenta se guarda en el
-/// blackboard, así que sobrevive a guardar y cargar. Opcionalmente marca un paso de una quest
-/// por cada señal, para que el diario muestre el progreso (3/8).
-/// </summary>
-[Serializable]
-[NarrativeNodeInfo("Señales", "Esperar señal N veces", "Cuenta las veces que llega una señal y avanza al llegar al total. Puede marcar un paso de quest por cada una.")]
-[SavePoint("Seguro guardar mientras cuenta")]
-[UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Assembly-CSharp")]
-public sealed class WaitSignalCountNode : NarrativeNode, INarrativeStateEffect
+namespace Liyodev.NarrativeGraph
 {
-    [NarrativeKey(NarrativeKeyKind.Signal)]
-    [Tooltip("Señal que se cuenta. Quien la emite debe hacerlo en cada ocasión (no «una sola vez»).")]
-    public string eventKey;
-
-    [Min(1)]
-    [Tooltip("Veces que tiene que llegar la señal para avanzar.")]
-    public int count = 1;
-
-    [Header("Progreso en el diario (opcional)")]
-    [NarrativeKey(NarrativeKeyKind.Quest)]
-    [Tooltip("Si se indica, cada señal marca como hecho el siguiente paso de esta quest (paso 0, 1, 2…).")]
-    public string questId;
-
-    [NonSerialized] private Action _handler;
-    [NonSerialized] private NarrativeContext _ctx;
-
-    private string CountKey => $"__count_{guid}";
-
-    public override void Describe(INarrativeNodeDescriber d)
+    /// <summary>
+    /// Espera a que una señal custom llegue N veces (p. ej. «derrota ocho enemigos de un tipo»).
+    /// Solo cuenta las señales que llegan mientras el nodo está activo; la cuenta se guarda en el
+    /// blackboard, así que sobrevive a guardar y cargar. Opcionalmente marca un paso de una quest
+    /// por cada señal, para que el diario muestre el progreso (3/8).
+    /// </summary>
+    [Serializable]
+    [NarrativeNodeInfo("Señales", "Esperar señal N veces", "Cuenta las veces que llega una señal y avanza al llegar al total. Puede marcar un paso de quest por cada una.")]
+    [SavePoint("Seguro guardar mientras cuenta")]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceNamespace: "", sourceAssembly: "Liyodev.NarrativeGraph")]
+    public sealed class WaitSignalCountNode : NarrativeNode, INarrativeStateEffect
     {
-        d.Signal(eventKey, SignalRole.Escucha);
-        d.Field("veces", count.ToString());
-        if (!string.IsNullOrEmpty(questId)) d.Quest(questId, "Marca un paso por señal en");
-    }
+        [NarrativeKey(NarrativeKeyKind.Signal)]
+        [Tooltip("Señal que se cuenta. Quien la emite debe hacerlo en cada ocasión (no «una sola vez»).")]
+        [SerializeField] private string eventKey;
+        public string EventKey { get => eventKey; set => eventKey = value; }
 
-    /// Haber pasado de este nodo quiere decir que la señal llegó (las veces pedidas).
-    public void Project(INarrativeStateWriter state) => state.MarkSignalRaised(eventKey);
+        [Min(1)]
+        [Tooltip("Veces que tiene que llegar la señal para avanzar.")]
+        [SerializeField] private int count = 1;
+        public int Count { get => count; set => count = value; }
 
-    public override void CollectWarnings(List<string> warnings)
-    {
-        if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("No hay señal que contar");
-        if (count < 1) warnings.Add("El total debe ser al menos 1");
-    }
+        [Header("Progreso en el diario (opcional)")]
+        [NarrativeKey(NarrativeKeyKind.Quest)]
+        [Tooltip("Si se indica, cada señal marca como hecho el siguiente paso de esta quest (paso 0, 1, 2…).")]
+        [SerializeField] private string questId;
+        public string QuestId { get => questId; set => questId = value; }
 
-    public override void Enter(NarrativeContext ctx, Action ready)
-    {
-        _ctx = ctx;
-        if (string.IsNullOrWhiteSpace(eventKey) || ctx?.Signals == null)
+        [NonSerialized] private Action _handler;
+        [NonSerialized] private NarrativeContext _ctx;
+
+        private string CountKey => $"__count_{Guid}";
+
+        public override void Describe(INarrativeNodeDescriber d)
         {
-            Debug.LogWarning($"[WaitSignalCountNode:{guid}] Sin señal o sin sistema de señales: el nodo no puede contar.");
-            return;
+            d.Signal(eventKey, SignalRole.Escucha);
+            d.Field("veces", count.ToString());
+            if (!string.IsNullOrEmpty(questId)) d.Quest(questId, "Marca un paso por señal en");
         }
 
-        if (ctx.Blackboard.Get(CountKey, 0) >= count)
+        /// Haber pasado de este nodo quiere decir que la señal llegó (las veces pedidas).
+        public void Project(INarrativeStateWriter state) => state.MarkSignalRaised(eventKey);
+
+        public override void CollectWarnings(List<string> warnings)
         {
-            Terminar(ctx, ready);
-            return;
+            if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("No hay señal que contar");
+            if (count < 1) warnings.Add("El total debe ser al menos 1");
         }
 
-        Desuscribir();
-        _handler = () =>
+        public override void Enter(NarrativeContext ctx, Action ready)
         {
-            int actual = ctx.Blackboard.Get(CountKey, 0) + 1;
-            ctx.Blackboard.Set(CountKey, actual);
-            if (!string.IsNullOrWhiteSpace(questId)) ctx.Signals.CompleteQuestStep(questId, actual - 1);
-            if (actual >= count)
+            _ctx = ctx;
+            if (string.IsNullOrWhiteSpace(eventKey) || ctx?.Signals == null)
+            {
+                Debug.LogWarning($"[WaitSignalCountNode:{Guid}] Sin señal o sin sistema de señales: el nodo no puede contar.");
+                return;
+            }
+
+            if (ctx.Blackboard.Get(CountKey, 0) >= count)
             {
                 Terminar(ctx, ready);
                 return;
             }
-            // OnCustom no deja registrado el oyente si consume una señal pendiente al suscribirse;
-            // volver a suscribir garantiza que se siguen contando las siguientes.
+
+            Desuscribir();
+            _handler = () =>
+            {
+                int actual = ctx.Blackboard.Get(CountKey, 0) + 1;
+                ctx.Blackboard.Set(CountKey, actual);
+                if (!string.IsNullOrWhiteSpace(questId)) ctx.Signals.CompleteQuestStep(questId, actual - 1);
+                if (actual >= count)
+                {
+                    Terminar(ctx, ready);
+                    return;
+                }
+                // OnCustom no deja registrado el oyente si consume una señal pendiente al suscribirse;
+                // volver a suscribir garantiza que se siguen contando las siguientes.
+                Suscribir(ctx);
+            };
+            // Una señal que quedó pendiente antes de llegar aquí no cuenta: solo valen las de ahora.
+            ctx.Signals.ClearPendingCustom(eventKey);
             Suscribir(ctx);
-        };
-        // Una señal que quedó pendiente antes de llegar aquí no cuenta: solo valen las de ahora.
-        ctx.Signals.ClearPendingCustom(eventKey);
-        Suscribir(ctx);
-    }
+        }
 
-    public override void Exit(NarrativeContext ctx) => Desuscribir();
+        public override void Exit(NarrativeContext ctx) => Desuscribir();
 
-    private void Suscribir(NarrativeContext ctx)
-    {
-        ctx.Signals.OffCustom(eventKey, _handler);
-        ctx.Signals.OnCustom(eventKey, _handler);
-    }
+        private void Suscribir(NarrativeContext ctx)
+        {
+            ctx.Signals.OffCustom(eventKey, _handler);
+            ctx.Signals.OnCustom(eventKey, _handler);
+        }
 
-    private void Desuscribir()
-    {
-        if (_handler != null && _ctx?.Signals != null) _ctx.Signals.OffCustom(eventKey, _handler);
-    }
+        private void Desuscribir()
+        {
+            if (_handler != null && _ctx?.Signals != null) _ctx.Signals.OffCustom(eventKey, _handler);
+        }
 
-    private void Terminar(NarrativeContext ctx, Action ready)
-    {
-        Desuscribir();
-        _handler = null;
-        ctx.Blackboard.Set(CountKey, 0);
-        ready?.Invoke();
+        private void Terminar(NarrativeContext ctx, Action ready)
+        {
+            Desuscribir();
+            _handler = null;
+            ctx.Blackboard.Set(CountKey, 0);
+            ready?.Invoke();
+        }
     }
 }

@@ -7,7 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// <summary>
     /// Panel lateral derecho del editor: muestra y edita el nodo seleccionado.
@@ -114,7 +114,7 @@ namespace NarrativeGraphEditor
             // ── 4. Técnico ──────────────────────────────────────────────
             var tech = Section("Técnico", collapsed: true);
             tech.Add(new Label($"Tipo: {model.GetType().Name}") { name = "tech-type" });
-            tech.Add(new Label($"GUID: {model.guid}") { name = "tech-guid" });
+            tech.Add(new Label($"GUID: {model.Guid}") { name = "tech-guid" });
             var saveAttr = model.GetType().GetCustomAttributes(typeof(SavePointAttribute), false).FirstOrDefault() as SavePointAttribute;
             var unsafeAttr = model.GetType().GetCustomAttributes(typeof(UnsafeForSaveAttribute), false).FirstOrDefault() as UnsafeForSaveAttribute;
             if (saveAttr != null) tech.Add(new Label("Guardado: seguro" + (string.IsNullOrEmpty(saveAttr.Description) ? "" : " — " + saveAttr.Description)));
@@ -456,17 +456,17 @@ namespace NarrativeGraphEditor
             var incoming = new List<(NarrativeNode from, int port)>();
             foreach (var n in _graph.nodes)
             {
-                if (n == null || n.outputs == null) continue;
-                for (int i = 0; i < n.outputs.Count; i++)
-                    if (n.outputs[i] == model.guid) incoming.Add((n, i));
+                if (n == null || n.Outputs == null) continue;
+                for (int i = 0; i < n.Outputs.Count; i++)
+                    if (n.Outputs[i] == model.Guid) incoming.Add((n, i));
             }
 
-            root.Add(Muted(incoming.Count == 0 ? "Entradas: ninguna" + (model.guid == _graph.startNodeGuid ? " (es el inicio)" : " ⚠ nodo inalcanzable") : "Entradas:"));
+            root.Add(Muted(incoming.Count == 0 ? "Entradas: ninguna" + (model.Guid == _graph.startNodeGuid ? " (es el inicio)" : " ⚠ nodo inalcanzable") : "Entradas:"));
             foreach (var (from, port) in incoming)
             {
                 var ports = from.GetOutputPorts();
                 string via = ports != null && port < ports.Length ? $" (por '{ports[port]}')" : "";
-                root.Add(LinkButton("← " + Describe(from) + via, from.guid));
+                root.Add(LinkButton("← " + Describe(from) + via, from.Guid));
             }
 
             var names = model.GetOutputPorts();
@@ -477,18 +477,18 @@ namespace NarrativeGraphEditor
                 {
                     var g = model.GetOutputGuid(i);
                     var target = g != null ? _graph.FindNode(g) : null;
-                    if (target != null) root.Add(LinkButton($"{names[i]} → {Describe(target)}", target.guid));
+                    if (target != null) root.Add(LinkButton($"{names[i]} → {Describe(target)}", target.Guid));
                     else root.Add(Muted($"{names[i]} → (sin conectar)"));
                 }
             }
             else
             {
-                var outs = (model.outputs ?? new List<string>()).Where(g => !string.IsNullOrEmpty(g)).ToList();
+                var outs = (model.Outputs ?? new List<string>()).Where(g => !string.IsNullOrEmpty(g)).ToList();
                 root.Add(Muted(outs.Count == 0 ? "Salidas: ninguna (fin de flujo)" : outs.Count > 1 ? $"Salidas: {outs.Count} EN PARALELO (fork)" : "Salida:"));
                 foreach (var g in outs)
                 {
                     var target = _graph.FindNode(g);
-                    root.Add(target != null ? LinkButton("→ " + Describe(target), target.guid) : Error("→ nodo borrado " + g));
+                    root.Add(target != null ? LinkButton("→ " + Describe(target), target.Guid) : Error("→ nodo borrado " + g));
                 }
             }
         }
@@ -503,7 +503,7 @@ namespace NarrativeGraphEditor
         static string Describe(NarrativeNode n)
         {
             var t = NarrativeNodeCatalog.TitleOf(n);
-            return string.IsNullOrEmpty(n.displayTitle) ? t : $"{t} '{NodeSummary.Truncate(n.displayTitle, 40)}'";
+            return string.IsNullOrEmpty(n.DisplayTitle) ? t : $"{t} '{NodeSummary.Truncate(n.DisplayTitle, 40)}'";
         }
 
         static Label Muted(string text) { var l = new Label(text); l.AddToClassList("summary__muted"); return l; }

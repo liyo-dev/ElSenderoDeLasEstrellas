@@ -1,6 +1,7 @@
 using System.Collections;
 using Invector.vCharacterController;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Conecta el jugador de prueba a los servicios persistentes y aplica el preset activo sin

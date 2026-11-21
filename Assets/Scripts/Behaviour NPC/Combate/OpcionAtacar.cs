@@ -65,8 +65,8 @@ namespace Game.NPC.Combate
             {
                 int devueltas = Cuerpo.Memoria.DevueltasDe(_indice, SegundosDeMemoriaDeDevueltas);
                 if (devueltas > 0) p /= 1f + devueltas;
-                // Escudo arriba: con lo devolvible espera; si lo mantiene, mucho más (rodea o espera).
-                if (s.jugadorDefendiendo) p *= s.segundosDefendiendo > SegundosDeEscudoLargo ? 0.25f : 0.6f;
+                // Escudo arriba: lo devolvible pierde peso; si lo mantiene, no lo lanza (rodea o espera a que lo baje).
+                if (s.jugadorDefendiendo) p *= s.segundosDefendiendo > SegundosDeEscudoLargo ? 0f : 0.6f;
             }
 
             float manaDespues = s.mana - _accion.costeDeMana / Mathf.Max(1f, Cuerpo.Perfil.MaxMana);

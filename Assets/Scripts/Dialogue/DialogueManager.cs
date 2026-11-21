@@ -9,6 +9,7 @@ using Core;
 using Core.InputGlyphs;
 using DG.Tweening;
 using Sendero.Core.Feedback;
+using Liyodev.NarrativeGraph;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -102,16 +103,16 @@ public class DialogueManager : MonoBehaviour
     // cuando sí hay un NPC real con cámara cinemática.
     private bool _hudHiddenForNonCinematicDialogue;
     public bool IsOpen => _current != null;
+    /// El diálogo que está abierto en la caja (null si no hay ninguno). Lo leen quienes necesitan
+    /// saber quién toma parte en la charla, como <see cref="Game.NPC.TestigosDeCharla"/>.
+    public DialogueAsset DialogoAbierto => _current;
 
-    // el botón global "mantener para saltar" (HoldToSkipUI, vía NarrativeSkipHub)
-    // se registraba en TODO diálogo que pasara por StartDialogue — conversaciones normales con un
-    // NPC (Interactable.cs), diálogo de quest (NPCQuestConfig/NPCQuestActionExecutor/
+    // el botón global "mantener para saltar" (HoldToSkipUI, vía NarrativeSkipHub) se registraba
+    // en TODO diálogo que pasara por StartDialogue — conversaciones normales con un NPC
+    // (Interactable.cs), diálogo de quest (NPCQuestConfig/NPCQuestActionExecutor/
     // NPCInteractiveNarrativeExecutor), líneas de pre-combate (NPCCombatLifecycleHandler) y
-    // mensajes de bloqueo (RoomExitBlocker) incluidos. Raúl pidió que el botón de skip solo
-    // aparezca en secuencias reales, no en cualquier diálogo con un NPC — ver el nuevo parámetro
-    // isSequenceDialogue en StartDialogue(asset, onFinished, isSequenceDialogue) más abajo, que
-    // condiciona el registro en NarrativeSkipHub. No hace falta recordar el valor como campo:
-    // HandleSkipRequested/Close ya se comportan igual estén o no suscritos.
+    // mensajes de bloqueo (RoomExitBlocker) incluidos. No hace falta recordar el valor como
+    // campo: HandleSkipRequested/Close ya se comportan igual estén o no suscritos.
 
     // Expose a few internal state values to allow external callers
     // to react to line progress (e.g. open shop when last line finishes).
@@ -235,7 +236,6 @@ public class DialogueManager : MonoBehaviour
             letterSoundFrequency = 1;
         }
         
-        // Debug.Log($"[DialogueManager] Configuración validada - Typewriter: {useTypewriter}, Velocidad: {charsPerSecond} chars/s, Audio: {useLetterSound}, Frecuencia: {letterSoundFrequency}");
 
         if (group != null)
         {
@@ -289,8 +289,7 @@ public class DialogueManager : MonoBehaviour
         GamepadInputReader.OnInput += HandleGamepadInput;
     }
 
-    [Tooltip("Si suena el doblaje en los cuadros de diálogo que se pasan con A. Raúl (6 oct 2026, " +
-             "INC-603): no; la voz queda para las cinemáticas, los bocadillos y los comentarios de combate.")]
+    [Tooltip("Si suena el doblaje en los cuadros de diálogo que se pasan con A (INC-603): no; la voz queda para las cinemáticas, los bocadillos y los comentarios de combate.")]
     [SerializeField] private bool vocesEnCuadrosDeDialogo = false;
     private AudioClip _lineVoice;
 
@@ -328,8 +327,7 @@ public class DialogueManager : MonoBehaviour
     /// OnDialogueLineChanged, DialogueCinematicController.OnDialogueLineAdvanced con sus cambios
     /// de plano/visibilidad de NPCs...), solo que sin esperar su input entre una y otra. Cuando
     /// _index supera _current.lines.Length, Next() llama a Close() de verdad — el mismo Close()
-    /// del cierre normal: invoca _onEnd (crítico para que el nodo del grafo narrativo que esté
-    /// esperando no se quede colgado, ver FIX C1 más arriba), dispara OnDialogueClosed, restaura
+    /// del cierre normal: invoca _onEnd, dispara OnDialogueClosed, restaura
     /// cámara/HUD/party/bystanders vía DialogueCinematicController.EndCinematic(), y limpia las
     /// animaciones del último speaker con ClearActiveSpeakerAnimations(). Nada de esto hay que
     /// reimplementarlo aquí porque el bucle simplemente llega a ese mismo camino por sí solo.
@@ -502,13 +500,12 @@ public class DialogueManager : MonoBehaviour
 
         // Suscripción al botón global de "mantener para saltar" (ver NarrativeSkipHub y
         // HandleSkipRequested más abajo). Desregistrar antes de registrar es defensivo: si
-        // StartDialogue se llama de nuevo mientras ya había un diálogo abierto (rama FIX C1 justo
-        // arriba, que NO pasa por Close()), ya estaríamos suscritos desde la apertura anterior —
-        // sin este desregistro previo quedaríamos suscritos dos veces al mismo handler.
-        // solo nos suscribimos si isSequenceDialogue es true — ver comentario del
-        // parámetro arriba. Si el diálogo anterior sí era de secuencia y este nuevo no lo es (o
-        // viceversa), el Unregister incondicional de abajo limpia cualquier suscripción previa
-        // antes de decidir si hace falta una nueva.
+        // StartDialogue se llama de nuevo mientras ya había un diálogo abierto, ya estaríamos
+        // suscritos desde la apertura anterior — sin este desregistro previo quedaríamos
+        // suscritos dos veces al mismo handler. solo nos suscribimos si isSequenceDialogue es
+        // true — ver comentario del parámetro arriba. Si el diálogo anterior sí era de secuencia
+        // y este nuevo no lo es (o viceversa), el Unregister incondicional de abajo limpia
+        // cualquier suscripción previa antes de decidir si hace falta una nueva.
         NarrativeSkipHub.UnregisterSkipHandler(HandleSkipRequested);
         if (isSequenceDialogue)
             NarrativeSkipHub.RegisterSkipHandler(HandleSkipRequested);
@@ -1435,11 +1432,6 @@ public class DialogueManager : MonoBehaviour
     // interno de GenerateTextMesh). Sin fix oficial de Unity — solo mitigaciones. Documentado en
     // TDD.md § 13 (bug U1).
     //
-    // 2026-08-12 — CORRECCIÓN: la capa 0 (PinSpriteTagsToExplicitAsset, que reescribía
-    // <sprite name="X"> a <sprite="X" name="X">) se ha DESACTIVADO porque, revisando el código
-    // fuente real de TMP (Library/PackageCache/com.unity.ugui@.../Runtime/TMP/TMP_Text.cs, case
-    // MarkupTag.SPRITE, y TMP_SpriteAsset.cs), resulta que el <sprite="AssetName" ...> explícito y
-    // el <sprite name="X"> a secas NO usan la misma resolución:
     //   - <sprite name="X">  → TMP_SpriteAsset.SearchForSpriteByHashCode(), que SÍ recorre
     //     spriteAsset.fallbackSpriteAssets recursivamente buscando el CARÁCTER "X". Es la vía que
     //     funciona con DialogueIcons.asset tal y como está montado (start, algas, boots,
@@ -1467,10 +1459,8 @@ public class DialogueManager : MonoBehaviour
     // de fallbacks para encontrarlo. Requiere el Editor de Unity, no se puede hacer editando el
     // .asset a mano seguro.
     //
-    // 2026-08-12 — CIERRE DEL "LÍMITE CONOCIDO": hasta ahora TryForceMeshUpdate() solo protegía las
-    // llamadas explícitas a ForceMeshUpdate() (inicio de línea / CompleteCurrentLineInstant). Cada
-    // vez que TypeRoutine() tocaba bodyText.maxVisibleCharacters frame a frame (o ShowLine() cuando
-    // useTypewriter=false), el rebuild del mesh quedaba para el próximo pase automático de
+    // Cada vez que TypeRoutine() tocaba bodyText.maxVisibleCharacters frame a frame (o ShowLine()
+    // cuando useTypewriter=false), el rebuild del mesh quedaba para el próximo pase automático de
     // Canvas.SendWillRenderCanvases → TextMeshProUGUI.OnPreRenderCanvas, que NO pasa por nuestro
     // código y por tanto no captura el NRE si salta ahí (justo el stack trace real reportado:
     // Canvas:SendWillRenderCanvases() → ... → TMP_Text.SaveSpriteVertexInfo, sin ningún frame de
@@ -1490,22 +1480,20 @@ public class DialogueManager : MonoBehaviour
             "<sprite\\s+name\\s*=\\s*\"([^\"]+)\"",
             System.Text.RegularExpressions.RegexOptions.Compiled);
 
-    // No-op desde 2026-08-12 (ver comentario grande arriba): reescribir a <sprite="X" name="X">
-    // rompía la resolución del sprite en vez de arreglarla. Se deja el método (en vez de borrar la
-    // llamada en ShowLine) para que sea fácil de revertir/experimentar sin tocar más sitios.
+    // Se deja el método (en vez de borrar la llamada en ShowLine) para que sea fácil de
+    // revertir/experimentar sin tocar más sitios.
     private static string PinSpriteTagsToExplicitAsset(string text)
     {
         return text;
     }
 
-    // 2026-08-12 — Segmentos de contenido de diálogo que solo tienen sentido para MANDO, envueltos
-    // en el JSON de localización como "<gpadonly>...</gpadonly>". Caso que lo motiva: líneas tipo
-    // "puedes usar <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly>." — la
-    // palabra "ARRIBA" describe la dirección del D-Pad físico en un mando, pero en Teclado&Ratón el
-    // icono ya es la tecla concreta (p.ej. "J", ver InputGlyphNames.DpadUp/InputGlyphLabels), así
-    // que repetir "ARRIBA" al lado no aporta nada — "J" no es "arriba" para nadie que no conozca ese
-    // binding de memoria. En mando el tag se resuelve dejando el texto tal cual (sin las etiquetas);
-    // en teclado se elimina el segmento entero (etiquetas + contenido).
+    // Caso que lo motiva: líneas tipo "puedes usar <sprite name=\"interactable_dpad_up\">
+    // <gpadonly>ARRIBA</gpadonly>." — la palabra "ARRIBA" describe la dirección del D-Pad físico en
+    // un mando, pero en Teclado&Ratón el icono ya es la tecla concreta (p.ej. "J", ver
+    // InputGlyphNames.DpadUp/InputGlyphLabels), así que repetir "ARRIBA" al lado no aporta nada —
+    // "J" no es "arriba" para nadie que no conozca ese binding de memoria. En mando el tag se
+    // resuelve dejando el texto tal cual (sin las etiquetas); en teclado se elimina el segmento
+    // entero (etiquetas + contenido).
     //
     // LÍMITE CONOCIDO: el texto de la línea se resuelve una única vez, en el momento en que Next()
     // la muestra (ver _currentText más arriba) — a diferencia de los sprites, que sí se refrescan en
@@ -1519,17 +1507,16 @@ public class DialogueManager : MonoBehaviour
             "<gpadonly>(.*?)</gpadonly>",
             System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Singleline);
 
-    // 2026-08-12 — Complemento de <gpadonly> para el caso inverso: segmentos de contenido que solo
-    // tienen sentido en TECLADO&RATÓN, envueltos como "<kbonly>...</kbonly>". Caso que lo motiva:
-    // PROTECCIÓN (ver PlayerShieldController) pide mantener LT+RT a la vez en mando, pero en
-    // PlayerControls.inputactions ambas acciones comparten binding de teclado (<Keyboard>/leftCtrl,
-    // ver comentario en InputGlyphLabels.GetLabel) — con una sola frase para los dos dispositivos la
-    // línea salía "presionas CTRL y CTRL a la vez", que no tiene sentido para nadie con teclado (una
-    // sola tecla no se pulsa "a la vez" consigo misma). Con <kbonly>/<gpadonly> el JSON puede dar dos
-    // redacciones distintas para la misma línea: en teclado se resuelve dejando el texto de
-    // <kbonly> tal cual (sin las etiquetas) y se elimina el segmento <gpadonly> entero; en mando es
-    // al revés. Mismo límite conocido que <gpadonly> (ver comentario de arriba): no se refresca en
-    // caliente si cambias de dispositivo a mitad de una línea ya visible.
+    // Caso que lo motiva: PROTECCIÓN (ver PlayerShieldController) pide mantener LT+RT a la vez en
+    // mando, pero en PlayerControls.inputactions ambas acciones comparten binding de teclado
+    // (<Keyboard>/leftCtrl, ver comentario en InputGlyphLabels.GetLabel) — con una sola frase para
+    // los dos dispositivos la línea salía "presionas CTRL y CTRL a la vez", que no tiene sentido para
+    // nadie con teclado (una sola tecla no se pulsa "a la vez" consigo misma). Con
+    // <kbonly>/<gpadonly> el JSON puede dar dos redacciones distintas para la misma línea: en teclado
+    // se resuelve dejando el texto de <kbonly> tal cual (sin las etiquetas) y se elimina el segmento
+    // <gpadonly> entero; en mando es al revés. Mismo límite conocido que <gpadonly> (ver comentario
+    // de arriba): no se refresca en caliente si cambias de dispositivo a mitad de una línea ya
+    // visible.
     private static readonly System.Text.RegularExpressions.Regex _keyboardOnlyTagRegex =
         new System.Text.RegularExpressions.Regex(
             "<kbonly>(.*?)</kbonly>",
@@ -1630,6 +1617,10 @@ public class DialogueManager : MonoBehaviour
         if (activate && _dialogueModePushed) return;
         if (!activate && !_dialogueModePushed) return;
 
+        // La conversación es una situación de juego: lo que no debe salir mientras se habla (la
+        // presentación de un lugar) cede ante ella. Dura lo que el modo diálogo.
+        if (!activate) Kits.Core.GameContext.Exit(Situaciones.Dialogo, this);
+
         // Buscar el jugador usando PlayerService
         if (!PlayerService.TryGetPlayer(out var player, allowSceneLookup: true) || player == null)
         {
@@ -1656,6 +1647,7 @@ public class DialogueManager : MonoBehaviour
         {
             actionManager.PushMode(ActionMode.Cinematic);
             _dialogueModePushed = true;
+            Kits.Core.GameContext.Enter(Situaciones.Dialogo, this);
             if (verboseLogging)
             {
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

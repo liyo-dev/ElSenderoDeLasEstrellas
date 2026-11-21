@@ -14,6 +14,16 @@ public static partial class MontajeDeLosCapitulos
 
     private static Vector3 Llano(Vector3 p) => new Vector3(p.x, float.NaN, p.z);
 
+    /// <summary>
+    /// Sitios del reparto del pueblo que pone el montaje (el marcador puesto a mano en la escena se
+    /// retira). Aldona, la anciana que no pasea, en la puerta de su casa: estaba justo detrás del
+    /// puesto de Tomasa y salía en el plano de su charla. Ver INC-875.
+    /// </summary>
+    private static void TablasDelPuebloDeWill()
+    {
+        s_puntos.Add(new PuntoDeRoster { Cap = Cap1, SpawnId = "SPAWN_Aldona", Pos = new Vector3(6.69f, 29.4326f, -122.13f), Rumbo = 0f });
+    }
+
     private static void PonerExtrasPuebloDeWill(Transform raiz, StringBuilder informe)
     {
         var ambiente = Cargar<Game.NPC.Modules.NPCAmbientConfig>(AmbienteDeLaBoticaria);

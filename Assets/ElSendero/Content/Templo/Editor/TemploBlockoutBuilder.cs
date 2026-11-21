@@ -14,8 +14,7 @@ using UnityEngine.SceneManagement;
 /// construir el nivel entero: que el ritmo engancha (losas que laten y se hunden, rejilla de dos
 /// compases) y que el grupo repartido resuelve un puzle (plato de peso, ascensor, brasero).
 ///
-/// La medida del nivel en papel es el compás: 120 BPM en 4/4 son 2 s por compás y, a la velocidad de
-/// carrera del jugador (4 m/s), unos 8 m de carrera por compás. La marea avanza menos que eso.
+/// La marea avanza menos que eso.
 ///
 /// Se rehace entera cada vez (escena Templo.unity y sus materiales en Templo_data).
 /// Ver INC-1211.
@@ -110,7 +109,6 @@ public static partial class TemploBlockoutBuilder
         var go = new GameObject("Reloj del templo");
         go.transform.SetParent(raiz, false);
         var pulso = go.AddComponent<TempoClock>();
-        // 120 BPM en 4/4: un tiempo cada 0,5 s y un compás cada 2 s, que es la medida del nivel.
         Poner(pulso, "bpm", 120f);
         Poner(pulso, "beatsPerMeasure", 4);
         Poner(pulso, "startOnEnable", true);

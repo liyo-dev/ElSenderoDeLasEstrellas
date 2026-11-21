@@ -8,7 +8,7 @@ using UnityEngine;
 /// Detecta y arregla el mismo tipo de fallo que dejó "WILL_MISSION0" arrancando en silencio sin
 /// hacer nada (INC-344/345): el asset QuestData existe en el proyecto, pero nadie lo arrastró a
 /// la lista "questCatalog" del QuestManager de la escena, así que StartQuest(questId) no lo
-/// encuentra y no pasa nada (ahora, desde el fix del logging, al menos avisa por consola).
+/// encuentra y no pasa nada (al menos avisa por consola).
 ///
 /// Existe porque MainWorld.unity está guardada en formato binario y no se puede editar desde
 /// fuera del Editor -- mismo patrón que OliverSequenceWiring / DiscusionVentanaSequenceWiring.

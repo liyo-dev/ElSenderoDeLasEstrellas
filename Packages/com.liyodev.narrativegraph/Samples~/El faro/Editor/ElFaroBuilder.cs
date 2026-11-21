@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using NarrativeGraphEditor;
+using Liyodev.NarrativeGraph.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace NarrativeGraphSamples.ElFaro
+namespace Liyodev.NarrativeGraph.Samples.ElFaro
 {
     /// Monta el ejemplo «El faro» en «Assets/El faro (ejemplo)»: capítulo, diálogos, objeto, datos
     /// y ficha del jugador, y la escena (con el pipeline de render de tu proyecto). Se puede volver
@@ -98,61 +98,61 @@ namespace NarrativeGraphSamples.ElFaro
             const string Llegada = "La llegada", Muelle = "El muelle", Faro = "El faro";
             NarrativeNode Add(NarrativeNode n, string id, string title, string section, float x, float y)
             {
-                n.guid = "faro-" + id;
-                n.displayTitle = title;
-                n.section = section;
-                n.position = new Vector2(x, y);
-                n.outputs = new List<string>();
+                n.Guid = "faro-" + id;
+                n.DisplayTitle = title;
+                n.Section = section;
+                n.Position = new Vector2(x, y);
+                n.Outputs = new List<string>();
                 var ports = n.GetOutputPorts();
-                if (ports != null) for (int i = 0; i < ports.Length; i++) n.outputs.Add(string.Empty);
+                if (ports != null) for (int i = 0; i < ports.Length; i++) n.Outputs.Add(string.Empty);
                 g.nodes.Add(n);
                 return n;
             }
             void Link(NarrativeNode from, NarrativeNode to, int port = -1)
             {
-                if (port >= 0) from.outputs[port] = to.guid;
-                else from.outputs.Add(to.guid);
+                if (port >= 0) from.Outputs[port] = to.Guid;
+                else from.Outputs.Add(to.Guid);
             }
 
             var inicio = Add(new StartNode(), "inicio", "Inicio", Llegada, 0, 0);
-            Add(new GraphNoteNode { note = "Ejemplo «El faro». Elige cualquier paso, mira la pestaña Arranque y pulsa ▶: el juego empieza justo ahí. Los puntos ◆ dicen dónde aparece el jugador y si lleva el farol." },
+            Add(new GraphNoteNode { Note = "Ejemplo «El faro». Elige cualquier paso, mira la pestaña Arranque y pulsa ▶: el juego empieza justo ahí. Los puntos ◆ dicen dónde aparece el jugador y si lleva el farol." },
                 "nota", "Cómo usar este ejemplo", Llegada, 0, -170);
-            var plaza = Add(new CheckpointNode { checkpointId = "FARO_PLAZA" }, "plaza", "En la plaza", Llegada, 380, 0);
-            var hablaAna = Add(new WaitNpcInteractionNode { npcId = "ANA" }, "habla-ana", "Hablar con Ana", Llegada, 760, 0);
-            var llamada = Add(new PlayDialogueNode { dialogue = dLlamada, npcId = "ANA" }, "llamada", "Ana te llama", Llegada, 1140, 0);
-            var pregunta = Add(new DialogueChoiceNode { promptText = "¿Ayudas a Ana a buscar la llave?", optionAText = "Claro", optionBText = "Ahora no" }, "pregunta", "¿La ayudas?", Llegada, 1520, 0);
-            var dlgNo = Add(new PlayDialogueNode { dialogue = dNo, npcId = "ANA" }, "no", "Ana espera", Llegada, 1520, 220);
+            var plaza = Add(new CheckpointNode { CheckpointId = "FARO_PLAZA" }, "plaza", "En la plaza", Llegada, 380, 0);
+            var hablaAna = Add(new WaitNpcInteractionNode { NpcId = "ANA" }, "habla-ana", "Hablar con Ana", Llegada, 760, 0);
+            var llamada = Add(new PlayDialogueNode { Dialogue = dLlamada, NpcId = "ANA" }, "llamada", "Ana te llama", Llegada, 1140, 0);
+            var pregunta = Add(new DialogueChoiceNode { PromptText = "¿Ayudas a Ana a buscar la llave?", OptionAText = "Claro", OptionBText = "Ahora no" }, "pregunta", "¿La ayudas?", Llegada, 1520, 0);
+            var dlgNo = Add(new PlayDialogueNode { Dialogue = dNo, NpcId = "ANA" }, "no", "Ana espera", Llegada, 1520, 220);
 
-            var mision = Add(new StartQuestNode { questId = "LLAVE_PERDIDA", giverId = "ANA", inProgressDialogue = mientras }, "mision", "La llave perdida", Muelle, 0, 460);
-            var muelle = Add(new CheckpointNode { checkpointId = "FARO_MUELLE" }, "muelle", "En el muelle", Muelle, 380, 460);
-            var buscar = Add(new WaitNpcInteractionNode { npcId = "MUELLE" }, "buscar", "Buscar entre las cajas", Muelle, 760, 460);
-            var dar = Add(new GiveInventoryItemNode { item = llave, amount = 1 }, "dar", "Encuentras la llave", Muelle, 1140, 460);
-            var dato = Add(new SetFlagNode { flagKey = "TIENE_LA_LLAVE", value = true }, "dato", "Ya tienes la llave", Muelle, 1520, 460);
-            var bocadillo = Add(new ShowSpeechBubbleNode { text = "¡Aquí está! Vuelvo con Ana.", speakerName = "Tú", duration = 2.5f, waitForCompletion = true }, "bocadillo", "¡Aquí está!", Muelle, 1900, 460);
+            var mision = Add(new StartQuestNode { QuestId = "LLAVE_PERDIDA", GiverId = "ANA", InProgressDialogue = mientras }, "mision", "La llave perdida", Muelle, 0, 460);
+            var muelle = Add(new CheckpointNode { CheckpointId = "FARO_MUELLE" }, "muelle", "En el muelle", Muelle, 380, 460);
+            var buscar = Add(new WaitNpcInteractionNode { NpcId = "MUELLE" }, "buscar", "Buscar entre las cajas", Muelle, 760, 460);
+            var dar = Add(new GiveInventoryItemNode { Item = llave, Amount = 1 }, "dar", "Encuentras la llave", Muelle, 1140, 460);
+            var dato = Add(new SetFlagNode { FlagKey = "TIENE_LA_LLAVE", Value = true }, "dato", "Ya tienes la llave", Muelle, 1520, 460);
+            var bocadillo = Add(new ShowSpeechBubbleNode { Text = "¡Aquí está! Vuelvo con Ana.", SpeakerName = "Tú", Duration = 2.5f, WaitForCompletion = true }, "bocadillo", "¡Aquí está!", Muelle, 1900, 460);
 
-            var volver = Add(new WaitNpcInteractionNode { npcId = "ANA" }, "volver", "Volver con Ana", Faro, 0, 920);
-            var tiene = Add(new BranchFlagNode { flagKey = "TIENE_LA_LLAVE" }, "tiene", "¿Tienes la llave?", Faro, 380, 920);
-            var aunNo = Add(new PlayDialogueNode { dialogue = aun, npcId = "ANA" }, "aun-no", "Aún no la tienes", Faro, 380, 1140);
-            var gracias = Add(new PlayDialogueNode { dialogue = fin, npcId = "ANA" }, "gracias", "Ana da las gracias", Faro, 760, 920);
-            var cerrar = Add(new CompleteQuestStepsNode { questId = "LLAVE_PERDIDA", completeQuest = true }, "cerrar", "Misión cumplida", Faro, 1140, 920);
-            var senal = Add(new RaiseCustomEventNode { eventKey = "FARO_ABIERTO" }, "senal", "Se abre el faro", Faro, 1520, 920);
-            var fundido = Add(new ScreenFadeNode { color = Color.black, duration = 1.5f, fadeIn = true }, "fundido", "Fin: fundido a negro", Faro, 1900, 920);
+            var volver = Add(new WaitNpcInteractionNode { NpcId = "ANA" }, "volver", "Volver con Ana", Faro, 0, 920);
+            var tiene = Add(new BranchFlagNode { FlagKey = "TIENE_LA_LLAVE" }, "tiene", "¿Tienes la llave?", Faro, 380, 920);
+            var aunNo = Add(new PlayDialogueNode { Dialogue = aun, NpcId = "ANA" }, "aun-no", "Aún no la tienes", Faro, 380, 1140);
+            var gracias = Add(new PlayDialogueNode { Dialogue = fin, NpcId = "ANA" }, "gracias", "Ana da las gracias", Faro, 760, 920);
+            var cerrar = Add(new CompleteQuestStepsNode { QuestId = "LLAVE_PERDIDA", CompleteQuest = true }, "cerrar", "Misión cumplida", Faro, 1140, 920);
+            var senal = Add(new RaiseCustomEventNode { EventKey = "FARO_ABIERTO" }, "senal", "Se abre el faro", Faro, 1520, 920);
+            var fundido = Add(new ScreenFadeNode { FadeColor = Color.black, Duration = 1.5f, FadeIn = true }, "fundido", "Fin: fundido a negro", Faro, 1900, 920);
 
             Link(inicio, plaza); Link(plaza, hablaAna); Link(hablaAna, llamada); Link(llamada, pregunta);
             Link(pregunta, mision, 0); Link(pregunta, dlgNo, 1); Link(dlgNo, hablaAna);
             Link(mision, muelle); Link(muelle, buscar); Link(buscar, dar); Link(dar, dato); Link(dato, bocadillo); Link(bocadillo, volver);
             Link(volver, tiene); Link(tiene, gracias, 0); Link(tiene, aunNo, 1); Link(aunNo, volver);
             Link(gracias, cerrar); Link(cerrar, senal); Link(senal, fundido);
-            g.startNodeGuid = inicio.guid;
+            g.startNodeGuid = inicio.Guid;
 
             // Los dos puntos de arranque: en la plaza sin farol; en el muelle con el farol que da Ana.
             var tmp = ScriptableObject.CreateInstance<FaroJugadorDatos>();
             tmp.apareceEn = "Plaza"; tmp.llevaFarol = false;
-            ((CheckpointNode)plaza).player = new NarrativePlayerValues();
-            NarrativePlayerValuesEditor.Set(((CheckpointNode)plaza).player, tmp, new[] { nameof(FaroJugadorDatos.apareceEn), nameof(FaroJugadorDatos.llevaFarol) });
+            ((CheckpointNode)plaza).Player = new NarrativePlayerValues();
+            NarrativePlayerValuesEditor.Set(((CheckpointNode)plaza).Player, tmp, new[] { nameof(FaroJugadorDatos.apareceEn), nameof(FaroJugadorDatos.llevaFarol) });
             tmp.apareceEn = "Muelle"; tmp.llevaFarol = true;
-            ((CheckpointNode)muelle).player = new NarrativePlayerValues();
-            NarrativePlayerValuesEditor.Set(((CheckpointNode)muelle).player, tmp, new[] { nameof(FaroJugadorDatos.apareceEn), nameof(FaroJugadorDatos.llevaFarol) });
+            ((CheckpointNode)muelle).Player = new NarrativePlayerValues();
+            NarrativePlayerValuesEditor.Set(((CheckpointNode)muelle).Player, tmp, new[] { nameof(FaroJugadorDatos.apareceEn), nameof(FaroJugadorDatos.llevaFarol) });
             Object.DestroyImmediate(tmp);
 
             EditorUtility.SetDirty(g);

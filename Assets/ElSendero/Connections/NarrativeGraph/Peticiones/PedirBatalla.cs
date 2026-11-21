@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// Arranca una batalla de arena (BossArenaController) y espera a ganarla. Busca la arena por su
 /// id en las escenas cargadas; si no hay ninguna y hay encuentro, crea la arena alrededor del

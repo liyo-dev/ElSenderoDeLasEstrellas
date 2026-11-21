@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505b709263e653344a3fa268f29aa1a3, type: 3}
+  m_Name: PerfilDeCombate_ContrabandistaGrandote
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Combate.PerfilDeCombate
+  acciones:
+  - nombre: "Empuj\xF3n"
+    proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+    animacion: MagicRight
+    distanciaMinima: 0
+    distanciaMaxima: 5
+    segundosDeAviso: 0.6
+    segundosDeRecuperacion: 0.6
+    enfriamiento: 2.5
+    costeDeMana: 15
+    dano: 10
+    velocidad: 0
+    peso: 1.2
+    funcion: 1
+    sePuedeDevolver: 0
+    conElemento: 0
+    elemento: 0
+  - nombre: Golpe cargado
+    proyectil: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
+    animacion: MagicLeft
+    distanciaMinima: 1.5
+    distanciaMaxima: 7
+    segundosDeAviso: 0.9
+    segundosDeRecuperacion: 1.1
+    enfriamiento: 5
+    costeDeMana: 25
+    dano: 18
+    velocidad: 0
+    peso: 0.8
+    funcion: 0
+    sePuedeDevolver: 1
+    conElemento: 0
+    elemento: 0
+  - nombre: Embestida
+    proyectil: {fileID: 7541299261854152833, guid: 71b502122a0cfe640969b5a2538bcdc1, type: 3}
+    animacion: MagicSpecial
+    distanciaMinima: 0
+    distanciaMaxima: 6
+    segundosDeAviso: 1.2
+    segundosDeRecuperacion: 1.6
+    enfriamiento: 10
+    costeDeMana: 40
+    dano: 28
+    velocidad: 0
+    peso: 0.4
+    funcion: 2
+    sePuedeDevolver: 0
+    conElemento: 0
+    elemento: 0
+  defensas:
+    esquivar: 1
+    distanciaDeEsquiva: 2
+    recuperacionDeEsquiva: 3.5
+    escudo: 1
+    duracionDelEscudo: 2.5
+    enfriamientoDelEscudo: 9
+    escudoElemental: 0
+    elementoDelEscudo: 2
+    cubrirseParaRecargar: 1
+    radioDeCobertura: 12
+    recargaACubierto: 1.4
+    leerLaRepeticion: 0.3
+    repeticionesParaLeerla: 3
+    segundosDeRepeticion: 12
+  caracter:
+    agresividad: 0.65
+    cautela: 0.3
+    movilidad: 0.25
+    paciencia: 0.35
+    distanciaPreferida: 3.5
+    distanciaMinima: 1.5
+    distanciaMaxima: 7
+    velocidadAndando: 2
+    velocidadCorriendo: 4.2
+    atacantesALaVez: 1
+    umbralDeVueltasContinuas: 0.8
+    leeLaDefensaDelJugador: 1
+  dificultad: 0.45
+  fases: []
+  afinidades: []

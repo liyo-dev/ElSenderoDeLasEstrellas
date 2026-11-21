@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NarrativeGraphEditor;
+using Liyodev.NarrativeGraph.Editor;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {

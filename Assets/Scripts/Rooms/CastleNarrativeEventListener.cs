@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Escucha un evento narrativo custom y abre las puertas del castillo.

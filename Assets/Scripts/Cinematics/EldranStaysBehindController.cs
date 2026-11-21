@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Game.NPC;
+using Liyodev.NarrativeGraph;
 
 /// INC-062 (parte C): por canon (ver `novela/manuscrito-novela-completo.md`, Cap. X-XIII) Eldran
 /// no es arrestado — se queda fuera del castillo mientras Will, Estela y Liam entran con el
@@ -14,23 +15,17 @@ using Game.NPC;
 /// y ANTES del paso de escolta que mueve al grupo hacia el castillo.
 /// Añadir al GameObject de Eldran.
 ///
-/// INC-114: Eldran también se reposiciona aquí mismo al anchor `OutSideKingdom` —
-/// el mismo punto donde la novela lo sitúa esperando cuando el trío sale del castillo, Cap. XIII:
-/// "Eldran los esperaba fuera, y en cuanto los vio, no pudo evitar soltar una risa cargada de
-/// alivio". Antes de este fix, ese reposicionamiento lo hacía un paso legacy de
-/// `NPC_InteractiveNarrative_Config_Eldran.asset` (Move+disappear) disparado mucho más tarde, al
-/// arrancar la Misión 13 (justo tras hablar con el rey) — con un corte de cámara real
-/// (enfoque de cámara + bloqueo de input) que enseñaba a Eldran caminando
-/// desde su posición ANTERIOR. Eso tenía sentido cuando Eldran seguía cerca del grupo hasta ese
-/// punto, pero con este mismo fix (Eldran se separa mucho antes, en la escena del guardia) ese
-/// corte de cámara pasaría a enseñar a Eldran caminando desde un sitio arbitrario/lejano justo al
-/// terminar de hablar con el rey, dentro del castillo — antes incluso de que el jugador haya
-/// salido. Decisión de Raúl: reposicionar a Eldran ya, sin cinemática (el jugador no lo ve durante
-/// todo el tramo de celda/fuga/batalla/rey, así que no hace falta disimularlo con una transición).
-/// El paso legacy correspondiente en `NPC_InteractiveNarrative_Config_Eldran.asset` se ha
-/// eliminado (su `LeaveParty` ya era redundante con este script, y `OPEN_THE_DOORS` lo sigue
-/// lanzando el propio grafo — `MainNarrative.asset`, nodo `RaiseCustomEventNode` "Reabrir puertas
-/// del castillo (fin mision 13)" — al completarse la Misión 13, sin depender de este paso).
+/// INC-114: Eldran también se reposiciona aquí mismo al anchor `OutSideKingdom` — el mismo punto
+/// donde la novela lo sitúa esperando cuando el trío sale del castillo, Cap. XIII: "Eldran los
+/// esperaba fuera, y en cuanto los vio, no pudo evitar soltar una risa cargada de alivio". Eso
+/// tenía sentido cuando Eldran seguía cerca del grupo hasta ese punto, pero con este controlador
+/// (Eldran se separa mucho antes, en la escena del guardia) ese corte de cámara pasaría a enseñar
+/// a Eldran caminando desde un sitio arbitrario/lejano justo al terminar de hablar con el rey,
+/// dentro del castillo — antes incluso de que el jugador haya salido. El paso legacy
+/// correspondiente en `NPC_InteractiveNarrative_Config_Eldran.asset` se ha eliminado (su
+/// `LeaveParty` ya era redundante con este script, y `OPEN_THE_DOORS` lo sigue lanzando el propio
+/// grafo — `MainNarrative.asset`, nodo `RaiseCustomEventNode` "Reabrir puertas del castillo (fin
+/// mision 13)" — al completarse la Misión 13, sin depender de este paso).
 [DisallowMultipleComponent]
 public class EldranStaysBehindController : MonoBehaviour
 {

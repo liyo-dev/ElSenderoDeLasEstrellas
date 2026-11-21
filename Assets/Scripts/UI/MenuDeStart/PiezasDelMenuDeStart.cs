@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Core;
 using Core.InputGlyphs;
 using TMPro;
@@ -9,63 +9,31 @@ using UnityEngine.UI;
 namespace Sendero.UI
 {
     /// <summary>
-    /// Colores y piezas del menú de Start (<see cref="MenuDeStart"/>): paneles de papel sobre el
-    /// fondo de noche (colores de <see cref="PaletaUI"/>), cajas de esquinas redondas, textos,
-    /// botones sin navegación (el menú lleva la suya) y colocación desde la esquina de arriba a la
-    /// izquierda del padre, en unidades de un lienzo de 1920×1080. Los colores de texto son para
-    /// escribir sobre papel; lo que va directamente sobre el fondo usa <see cref="SobreNoche"/>.
+    /// Colores y piezas del menú de Start (<see cref="MenuDeStart"/>), las de su maqueta: hojas,
+    /// etiquetas, píldoras, casillas (llena, elegida, vacía con raya discontinua), textos en Nunito
+    /// y en Baloo 2, iconos del mando activo y botones sin navegación (el menú lleva la suya). Se
+    /// colocan con <see cref="PiezasDeUI.ColocarArribaIzquierda"/> y las medidas de la maqueta.
+    /// Lo que va directamente sobre el fondo de noche usa <see cref="SobreNoche"/>.
     /// </summary>
     public static class PiezasDelMenuDeStart
     {
-        public static readonly Color Fondo = new Color32(0x1B, 0x15, 0x30, 0xFF);
-        public static readonly Color FondoAlto = new Color32(0x3A, 0x2E, 0x63, 0xFF);
-        public static readonly Color Panel = PaletaUI.Papel;
-        public static readonly Color Borde = PaletaUI.Tinta;
-        public static readonly Color BordeApagado = new Color32(0xA0, 0x8C, 0x74, 0xFF);
         public static readonly Color Oro = PaletaUI.Oro;
         /// Dorado oscuro para escribir sobre papel (el dorado de <see cref="Oro"/> es para rellenos y bordes).
         public static readonly Color OroDeTexto = new Color32(0x8A, 0x5A, 0x00, 0xFF);
-        public static readonly Color Texto = PaletaUI.TintaDeTexto;
-        public static readonly Color TextoSuave = PaletaUI.Tinta;
-        public static readonly Color TextoApagado = new Color32(0x77, 0x64, 0x50, 0xFF);
         /// Texto escrito directamente sobre el fondo de noche (cabecera, pistas, notas).
         public static readonly Color SobreNoche = new Color32(0xEE, 0xE6, 0xD8, 0xFF);
-        public static readonly Color Ficha = PaletaUI.PapelClaro;
-        public static readonly Color FichaOscura = PaletaUI.PapelApagado;
-        public static readonly Color Hueco = new Color32(0x61, 0x4D, 0x3B, 0x26);
-        public static readonly Color Elegida = new Color32(0xFF, 0xE5, 0x96, 0xFF);
-        public static readonly Color OroOscuro = PaletaUI.TintaDeTexto;
-        public static readonly Color Verde = new Color32(0x25, 0x7A, 0x3A, 0xFF);
-        public static readonly Color Rojo = new Color32(0xB3, 0x26, 0x1E, 0xFF);
-        /// Pista vacía de una barra dibujada sobre papel.
-        public static readonly Color Pista = new Color32(0x3A, 0x2C, 0x22, 0xFF);
 
-        /// Versión oscura de un color claro (el de un elemento, por ejemplo) para escribir con él sobre papel.
-        public static Color SobrePapel(Color c) => new Color(c.r * 0.5f, c.g * 0.5f, c.b * 0.5f, c.a);
-
-        /// Fuente de los textos del menú (la de los menús del juego; la pone el menú al montarse).
+        /// Fuente de los textos del menú (Nunito; la pone el menú al montarse).
         public static TMP_FontAsset Fuente;
+        /// Fuente de los títulos, nombres y botones (Baloo 2; la pone el menú al montarse).
+        public static TMP_FontAsset FuenteTitulos;
 
-        /// Caja de color con esquinas de <paramref name="radio"/> unidades.
-        public static Image Caja(string nombre, Transform padre, Color color, float radio = 18f)
-        {
-            var img = PiezasDeUI.Imagen(nombre, padre, PiezasDeUI.RectanguloRedondeado, color);
-            img.type = Image.Type.Sliced;
-            img.pixelsPerUnitMultiplier = 30f / Mathf.Max(1f, radio);
-            img.raycastTarget = false;
-            return img;
-        }
-
-        /// Caja con borde: devuelve el interior (donde va el contenido); el borde es su padre.
-        public static Image CajaConBorde(string nombre, Transform padre, Color borde, Color relleno, float grosor = 3f, float radio = 24f)
-        {
-            var fuera = Caja(nombre, padre, borde, radio);
-            var dentro = Caja("Dentro", fuera.transform, relleno, Mathf.Max(1f, radio - grosor));
-            var rt = dentro.rectTransform;
-            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
-            rt.offsetMin = new Vector2(grosor, grosor); rt.offsetMax = new Vector2(-grosor, -grosor);
-            return dentro;
-        }
+        // Colores de las maquetas que no son de la paleta.
+        public static readonly Color TextoMaqueta = new Color32(0x6B, 0x58, 0x44, 0xFF);
+        public static readonly Color OroBorde = new Color32(0xE0, 0xA1, 0x00, 0xFF);
+        public static readonly Color FondoElegida = new Color32(0xFF, 0xF3, 0xC4, 0xFF);
+        public static readonly Color Discontinua = new Color32(0xA0, 0x8C, 0x74, 0xFF);
+        public static readonly Color FondoHueco = new Color32(0x61, 0x4D, 0x3B, 0x1A);
 
         public static TextMeshProUGUI Txt(string nombre, Transform padre, string texto, float tamano, Color color,
             bool negrita = false, TextAlignmentOptions alineacion = TextAlignmentOptions.TopLeft, bool envolver = false)
@@ -76,7 +44,9 @@ namespace Sendero.UI
             t.richText = true;
             t.raycastTarget = false;
             t.textWrappingMode = envolver ? TextWrappingModes.Normal : TextWrappingModes.NoWrap;
-            t.overflowMode = envolver ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
+            // Nunca recortado: la letra de los títulos tiene mucho interlineado y, en huecos justos de
+            // alto, el recorte se comería la línea entera.
+            t.overflowMode = TextOverflowModes.Overflow;
             return t;
         }
 
@@ -86,6 +56,7 @@ namespace Sendero.UI
         {
             var t = Txt(nombre, padre, texto, tamano, color, false, alineacion);
             InputGlyphService.UsarIconos(t);
+            t.gameObject.AddComponent<IconoDeBotonVivo>();
             return t;
         }
 
@@ -100,32 +71,13 @@ namespace Sendero.UI
         }
 
         /// Hace clicable una imagen sin cambiar su aspecto ni entrar en la navegación de Unity.
-        public static Button Clicable(Image imagen, Action alPulsar)
+        public static ClicSinFoco Clicable(Image imagen, Action alPulsar, Action alPasar = null)
         {
             imagen.raycastTarget = true;
-            var b = imagen.gameObject.AddComponent<Button>();
-            b.transition = Selectable.Transition.None;
-            b.navigation = new Navigation { mode = Navigation.Mode.None };
-            b.onClick.AddListener(() => alPulsar?.Invoke());
-            return b;
-        }
-
-        /// Coloca desde la esquina de arriba a la izquierda del padre.
-        public static void Colocar(RectTransform rt, float x, float y, float ancho, float alto)
-        {
-            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-            rt.pivot = new Vector2(0f, 1f);
-            rt.anchoredPosition = new Vector2(x, -y);
-            rt.sizeDelta = new Vector2(ancho, alto);
-        }
-
-        /// Coloca desde la esquina de arriba a la derecha del padre.
-        public static void ColocarDerecha(RectTransform rt, float x, float y, float ancho, float alto)
-        {
-            rt.anchorMin = rt.anchorMax = new Vector2(1f, 1f);
-            rt.pivot = new Vector2(1f, 1f);
-            rt.anchoredPosition = new Vector2(-x, -y);
-            rt.sizeDelta = new Vector2(ancho, alto);
+            var c = imagen.gameObject.AddComponent<ClicSinFoco>();
+            c.AlPulsar += alPulsar;
+            if (alPasar != null) c.AlPasar += alPasar;
+            return c;
         }
 
         /// Ocupa el padre dejando un margen por cada lado.
@@ -140,7 +92,155 @@ namespace Sendero.UI
             if (go != null && go.activeSelf != activo) go.SetActive(activo);
         }
 
-        public static string Hex(Color c) => "#" + ColorUtility.ToHtmlStringRGB(c);
+        // ─── Piezas de las maquetas nuevas (papel con borde, filo y sombra) ───────
+
+        /// Título, nombre o botón en Baloo 2.
+        public static TextMeshProUGUI Titulo(string nombre, Transform padre, string texto, float tamano, Color color,
+            TextAlignmentOptions alineacion = TextAlignmentOptions.MidlineLeft, bool envolver = false)
+        {
+            var t = Txt(nombre, padre, texto, tamano, color, false, alineacion, envolver);
+            if (FuenteTitulos != null) t.font = FuenteTitulos;
+            return t;
+        }
+
+        /// Hoja de papel grande (paneles de las pestañas): radio 22 y sombra de 7.
+        public static PiezasDeUI.Carta Hoja(string nombre, Transform padre, float x, float y, float ancho, float alto)
+        {
+            var c = PiezasDeUI.NuevaCarta(nombre, padre, PaletaUI.Papel, 22f);
+            PiezasDeUI.ColocarArribaIzquierda(c.raiz, x, y, ancho, alto);
+            return c;
+        }
+
+        /// Etiqueta dorada que cuelga sobre el borde de una hoja, con su título.
+        public static TextMeshProUGUI Etiqueta(string nombre, Transform padre, string texto, float x, float y, float ancho, float alto, float tamano, float giro = -2f)
+        {
+            var c = PiezasDeUI.NuevaCarta(nombre, padre, PaletaUI.Oro, 16f);
+            PiezasDeUI.ColocarArribaIzquierda(c.raiz, x, y, ancho, alto, giro);
+            var t = Titulo("Texto", c.contenido, texto, tamano, PaletaUI.TintaDeTexto, TextAlignmentOptions.Center);
+            Rellenar(t.rectTransform);
+            t.margin = new Vector4(6f, -3f, 6f, 0f);
+            return t;
+        }
+
+        /// Píldora con borde oscuro y texto centrado (elemento de un hechizo, maná, tipo de objeto).
+        public static TextMeshProUGUI Pastilla(string nombre, Transform padre, Color fondo, float x, float y, float ancho, float alto, float tamano, out Image relleno)
+        {
+            var borde = PiezasDeUI.Redondeado(nombre, padre, PiezasDeUI.TintaOscura, alto * 0.5f);
+            PiezasDeUI.ColocarArribaIzquierda(borde.rectTransform, x, y, ancho, alto);
+            relleno = PiezasDeUI.Redondeado("Relleno", borde.transform, fondo, alto * 0.5f - 3f);
+            PiezasDeUI.Margen(relleno.rectTransform, 3f);
+            var t = Txt("Texto", borde.transform, "", tamano, PiezasDeUI.TintaOscura, true, TextAlignmentOptions.Center);
+            Rellenar(t.rectTransform);
+            return t;
+        }
+
+        /// Icono del botón del mando o teclado activo, solo, de <paramref name="lado"/> unidades (cabeceras).
+        public static TextMeshProUGUI Glifo(string nombre, Transform padre, string glifo, float x, float y, float lado)
+        {
+            var t = TxtConIconos(nombre, padre, Boton(glifo), lado * 0.82f, SobreNoche, TextAlignmentOptions.Center);
+            PiezasDeUI.ColocarArribaIzquierda(t.rectTransform, x, y, lado, lado);
+            return t;
+        }
+
+        /// Marco de raya discontinua (los huecos vacíos de las maquetas): cuatro tiras de trazos.
+        public static RectTransform Discontinuo(string nombre, Transform padre)
+        {
+            var rt = Vacio(nombre, padre);
+            var fondo = PiezasDeUI.Redondeado("Fondo", rt, FondoHueco, 20f);
+            PiezasDeUI.Estirar(fondo.rectTransform);
+            for (int i = 0; i < 4; i++)
+            {
+                var tira = PiezasDeUI.Imagen("Tira", rt, Trazos, Discontinua);
+                tira.type = Image.Type.Tiled;
+                tira.raycastTarget = false;
+                var r = tira.rectTransform;
+                bool horizontal = i < 2;
+                r.anchorMin = horizontal ? new Vector2(0f, i == 0 ? 1f : 0f) : new Vector2(i == 2 ? 0f : 1f, 0f);
+                r.anchorMax = horizontal ? new Vector2(1f, i == 0 ? 1f : 0f) : new Vector2(i == 2 ? 0f : 1f, 1f);
+                r.pivot = new Vector2(horizontal ? 0.5f : (i == 2 ? 0f : 1f), horizontal ? (i == 0 ? 1f : 0f) : 0.5f);
+                r.anchoredPosition = Vector2.zero;
+                r.sizeDelta = horizontal ? new Vector2(-28f, 3f) : new Vector2(3f, -28f);
+                if (!horizontal) { tira.sprite = TrazosVerticales; }
+            }
+            return rt;
+        }
+
+        private static Sprite s_puntitos;
+
+        /// Puntos de 4 cada 18 (las líneas discontinuas de la constelación), para repetir en mosaico a lo largo.
+        public static Sprite Puntitos => s_puntitos != null ? s_puntitos : (s_puntitos = CrearTrazos(false, 4, 18, 4));
+
+        private static Sprite s_trazos, s_trazosV;
+        private static Sprite Trazos => s_trazos != null ? s_trazos : (s_trazos = CrearTrazos(false, 10, 18, 3));
+        private static Sprite TrazosVerticales => s_trazosV != null ? s_trazosV : (s_trazosV = CrearTrazos(true, 10, 18, 3));
+
+        private static Sprite CrearTrazos(bool vertical, int encendido, int largo, int grueso)
+        {
+            int w = vertical ? grueso : largo, h = vertical ? largo : grueso;
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Repeat, filterMode = FilterMode.Point, name = "Trazos" };
+            var px = new Color32[w * h];
+            for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                px[y * w + x] = (vertical ? y : x) < encendido ? new Color32(255, 255, 255, 255) : new Color32(255, 255, 255, 0);
+            tex.SetPixels32(px);
+            tex.Apply(false, true);
+            return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 1f, 0, SpriteMeshType.FullRect);
+        }
+
+        /// Aspecto de una casilla de las maquetas.
+        public enum EstadoDeCasilla { Vacia, Llena, Elegida, Apagada }
+
+        /// <summary>
+        /// Casilla de las maquetas (objetos, hechizos, ranuras, prendas): llena es papel claro con borde
+        /// de tinta y sombra; elegida, crema dorada con borde ancho de oro y una estrella en la esquina;
+        /// vacía, un hueco con raya discontinua.
+        /// </summary>
+        public sealed class Casilla
+        {
+            public RectTransform raiz;
+            public Image boton;
+            public PiezasDeUI.Carta carta;
+            public RectTransform discontinuo;
+            public GameObject estrella;
+            public RectTransform contenido;
+            public EstadoDeCasilla estado = (EstadoDeCasilla)(-1);
+
+            public static Casilla Crear(string nombre, Transform padre, float radio, float ladoEstrella, Action alPulsar, Action alPasar = null)
+            {
+                var c = new Casilla();
+                c.raiz = Vacio(nombre, padre);
+                c.boton = c.raiz.gameObject.AddComponent<Image>();
+                c.boton.color = new Color(1f, 1f, 1f, 0f);
+                if (alPulsar != null) Clicable(c.boton, alPulsar, alPasar);
+                c.discontinuo = Discontinuo("Vacía", c.raiz);
+                PiezasDeUI.Estirar(c.discontinuo);
+                c.carta = PiezasDeUI.NuevaCarta("Carta", c.raiz, PaletaUI.PapelClaro, radio, 5f);
+                PiezasDeUI.Estirar(c.carta.raiz);
+                c.contenido = c.carta.contenido;
+                c.estrella = PiezasDeUI.EstrellaEn("Estrella", c.raiz, 4f, 2f, ladoEstrella, 12f).gameObject;
+                c.Poner(EstadoDeCasilla.Llena);
+                return c;
+            }
+
+            public void Poner(EstadoDeCasilla e)
+            {
+                if (e == estado) return;
+                estado = e;
+                bool vacia = e == EstadoDeCasilla.Vacia;
+                Activar(discontinuo.gameObject, vacia);
+                Activar(carta.raiz.gameObject, !vacia);
+                Activar(estrella, e == EstadoDeCasilla.Elegida);
+                if (vacia) return;
+                bool elegida = e == EstadoDeCasilla.Elegida;
+                float grosor = elegida ? 5f : 3f;
+                carta.borde.color = elegida ? OroBorde : PaletaUI.Tinta;
+                carta.filo.color = PaletaUI.Papel;
+                PiezasDeUI.Margen(carta.filo.rectTransform, grosor);
+                PiezasDeUI.Margen(carta.relleno.rectTransform, grosor + 3f);
+                carta.relleno.color = elegida ? FondoElegida : e == EstadoDeCasilla.Apagada ? PaletaUI.PapelApagado : PaletaUI.PapelClaro;
+                carta.sombra.GetComponent<Image>().color = new Color(PiezasDeUI.SombraDeCarta.r, PiezasDeUI.SombraDeCarta.g, PiezasDeUI.SombraDeCarta.b, 0.55f);
+            }
+        }
     }
 
     /// <summary>

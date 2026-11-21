@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Comprobación del kit: que todos los pasos se presenten, que los puertos tengan
     /// implementación en este proyecto y que no queden rutas de menú viejas. Deja el informe en
@@ -153,7 +153,7 @@ namespace NarrativeGraphEditor
 
                 var graphActors = NarrativeProjectIndex.Graphs.Where(g => g?.nodes != null)
                     .SelectMany(g => g.nodes)
-                    .Select(n => n switch { ActorStateNode a => a.actorId, PlaceActorNode p => p.actorId, _ => null })
+                    .Select(n => n switch { ActorStateNode a => a.ActorId, PlaceActorNode p => p.ActorId, _ => null })
                     .Where(id => !string.IsNullOrEmpty(id))
                     .Distinct().OrderBy(id => id).ToList();
                 var missing = graphActors.Where(id => map.CharacterOf(id) == null).ToList();

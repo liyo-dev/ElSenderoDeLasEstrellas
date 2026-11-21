@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Piezas de texto comunes de los paneles del editor (títulos pequeños, notas, avisos).
     public static class StoryUI

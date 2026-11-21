@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// El mundo del juego en esquema: escenas, cada una con sus sitios (donde pueden estar los
     /// personajes u objetos) y los personajes que se quieren ver. Lo usa la ventana del mapa para

@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.IO;
 using UnityEditor;
@@ -40,6 +40,12 @@ using UnityEngine;
 ///   guardar                                 guarda las escenas abiertas con cambios
 ///   resolver                                vuelve a resolver los paquetes (p. ej. tras añadir uno embebido en Packages/)
 ///   ruta guid [guid…]                       la ruta del asset de cada GUID
+///   pantallazo nombre                       en Play, lo que se ve en el Game view (con la interfaz) → Guiones/_fotos/nombre.png
+///   pulsar texto                            en Play, pulsa el botón activo cuyo nombre o texto es ese
+///   elegir texto                            en Play, le da el foco (sin pulsarlo)
+///   raton x y [clic]                        en Play, lo que hay bajo el ratón en (x, y) de una pantalla de
+///                                           1920×1080 (de arriba abajo), y con «clic», le hace un clic de verdad
+///   invocar Tipo.Metodo                     en Play, llama a un método sin parámetros (u opcionales) del primer objeto de ese tipo
 ///
 /// El resultado queda en «Guiones/_ordenes/registro.log» y el fichero pasa a «*.hecha».
 ///
@@ -260,6 +266,120 @@ public static class OrdenesDelEditor
         return $"{ruta} en ({x:0.##}, {y:0.##}, {z:0.##})" + (conRumbo ? $" rumbo {p[n + 2]}" : "") + " · escena marcada (guardar con «guardar»)";
     }
 
+    /// Pone un objeto de una escena abierta en una posición y un rumbo exactos (sin buscar el suelo, a
+    /// diferencia de «mover»): para puntos que van a una altura concreta, como el sitio de sentarse
+    /// en el filo de una cama. Marca la escena; se guarda con «guardar».
+    private static string Colocar(string resto)
+    {
+        if (Application.isPlaying) return "no se puede en Play";
+        var p = resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (p.Length < 5) return "colocar Escena/ruta x y z rumbo";
+        var ci = System.Globalization.CultureInfo.InvariantCulture;
+        int n = p.Length - 4;
+        string ruta = string.Join(" ", p, 0, n);
+        float x = float.Parse(p[n], ci), y = float.Parse(p[n + 1], ci), z = float.Parse(p[n + 2], ci), rumbo = float.Parse(p[n + 3], ci);
+        int barra = ruta.IndexOf('/');
+        if (barra < 0) return "la ruta empieza por el nombre de la escena";
+        var esc = UnityEngine.SceneManagement.SceneManager.GetSceneByName(ruta.Substring(0, barra));
+        if (!esc.IsValid() || !esc.isLoaded) return "la escena no está abierta";
+        string dentro = ruta.Substring(barra + 1);
+        Transform t = null;
+        foreach (var raiz in esc.GetRootGameObjects())
+        {
+            if (dentro == raiz.name) { t = raiz.transform; break; }
+            if (dentro.StartsWith(raiz.name + "/")) { t = raiz.transform.Find(dentro.Substring(raiz.name.Length + 1)); if (t != null) break; }
+        }
+        if (t == null) return "no encuentro " + ruta;
+        Undo.RecordObject(t, "Colocar desde el buzón");
+        t.SetPositionAndRotation(new Vector3(x, y, z), Quaternion.Euler(0f, rumbo, 0f));
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(esc);
+        return $"{ruta} en ({x:0.###}, {y:0.###}, {z:0.###}) rumbo {rumbo:0.#} · escena marcada (guardar con «guardar»)";
+    }
+
+    private static void SeguirEnSegundoPlano(PlayModeStateChange cambio)
+    {
+        if (cambio != PlayModeStateChange.EnteredPlayMode) return;
+        EditorApplication.playModeStateChanged -= SeguirEnSegundoPlano;
+        Application.runInBackground = true;
+    }
+
+    private static string Pulsar(string texto, bool pulsar)
+    {
+        if (!Application.isPlaying) return "solo en Play";
+        foreach (var boton in UnityEngine.Object.FindObjectsByType<UnityEngine.UI.Selectable>())
+        {
+            if (!boton.isActiveAndEnabled) continue;
+            var etiqueta = boton.GetComponentInChildren<TMPro.TMP_Text>();
+            if (boton.name != texto && (etiqueta == null || etiqueta.text.Trim() != texto)) continue;
+            UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(boton.gameObject);
+            if (!pulsar) return "elegido " + boton.name;
+            if (boton is UnityEngine.UI.Button b) b.onClick.Invoke();
+            return "pulsado " + boton.name;
+        }
+        // Lo clicable que no es un Selectable (no se selecciona): se le manda el clic.
+        if (pulsar)
+            foreach (var c in UnityEngine.Object.FindObjectsByType<MonoBehaviour>())
+                if (c is UnityEngine.EventSystems.IPointerClickHandler clic && c.isActiveAndEnabled && c.name == texto)
+                {
+                    clic.OnPointerClick(new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current));
+                    return "clic en " + c.name;
+                }
+        return "no hay ningún botón activo «" + texto + "»";
+    }
+
+    private static string Raton(string resto)
+    {
+        if (!Application.isPlaying) return "solo en Play";
+        var p = resto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var ci = System.Globalization.CultureInfo.InvariantCulture;
+        var es = UnityEngine.EventSystems.EventSystem.current;
+        if (p.Length < 2 || es == null) return "raton x y [clic] (y hace falta un EventSystem)";
+        var pos = new Vector2(float.Parse(p[0], ci) / 1920f * Screen.width, (1f - float.Parse(p[1], ci) / 1080f) * Screen.height);
+        var datos = new UnityEngine.EventSystems.PointerEventData(es) { position = pos };
+        var hits = new System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult>();
+        es.RaycastAll(datos, hits);
+        var sb = new System.Text.StringBuilder($"{pos} → {hits.Count} cosas");
+        for (int i = 0; i < hits.Count && i < 6; i++)
+        {
+            var t = hits[i].gameObject.transform;
+            string ruta = t.name; for (var q = t.parent; q != null && q.parent != null; q = q.parent) ruta = q.name + "/" + ruta;
+            sb.Append("\n    ").Append(ruta);
+        }
+        if (p.Length > 2 && p[2] == "clic" && hits.Count > 0)
+        {
+            datos.pointerCurrentRaycast = datos.pointerPressRaycast = hits[0];
+            var objetivo = hits[0].gameObject;
+            UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(objetivo, datos, UnityEngine.EventSystems.ExecuteEvents.pointerEnterHandler);
+            var pulsado = UnityEngine.EventSystems.ExecuteEvents.ExecuteHierarchy(objetivo, datos, UnityEngine.EventSystems.ExecuteEvents.pointerDownHandler);
+            var receptor = UnityEngine.EventSystems.ExecuteEvents.GetEventHandler<UnityEngine.EventSystems.IPointerClickHandler>(objetivo);
+            if (receptor != null) UnityEngine.EventSystems.ExecuteEvents.Execute(receptor, datos, UnityEngine.EventSystems.ExecuteEvents.pointerClickHandler);
+            sb.Append("\n    clic → ").Append(receptor != null ? receptor.name : "nadie lo recoge");
+        }
+        return sb.ToString();
+    }
+
+    private static string Invocar(string resto)
+    {
+        if (!Application.isPlaying) return "solo en Play";
+        int punto = resto.LastIndexOf('.');
+        if (punto < 0) return "invocar Tipo.Metodo";
+        string nombreTipo = resto.Substring(0, punto), metodo = resto.Substring(punto + 1);
+        foreach (var c in UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
+        {
+            var tipo = c.GetType();
+            if (tipo.Name != nombreTipo && tipo.FullName != nombreTipo) continue;
+            // Sin parámetros o con todos opcionales (se llaman con sus valores por defecto).
+            System.Reflection.MethodInfo m = null;
+            foreach (var candidato in tipo.GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
+                if (candidato.Name == metodo && Array.TrueForAll(candidato.GetParameters(), q => q.IsOptional)) { m = candidato; break; }
+            if (m == null) return "el tipo " + tipo.Name + " no tiene un método " + metodo + " sin parámetros obligatorios";
+            var argumentos = Array.ConvertAll(m.GetParameters(), q => q.DefaultValue);
+            m.Invoke(c, argumentos);
+            return "invocado " + tipo.Name + "." + metodo + " en " + c.name;
+        }
+        return "no hay ningún " + nombreTipo + " en las escenas";
+    }
+
     private static string Ejecutar(string orden)
     {
         string linea = orden.Split('\n')[0].Trim();
@@ -347,6 +467,8 @@ public static class OrdenesDelEditor
                 return StoryboardAnotable.Generar(guion);
             }
             case "play":
+                // Desde el buzón nadie le da el foco al Editor: el juego sigue corriendo en segundo plano.
+                EditorApplication.playModeStateChanged += SeguirEnSegundoPlano;
                 EditorApplication.EnterPlaymode();
                 return "entrando en Play";
             case "stop":
@@ -405,6 +527,8 @@ public static class OrdenesDelEditor
             }
             case "mover":
                 return Mover(resto);
+            case "colocar":
+                return Colocar(resto);
             case "ruta":
             {
                 var sbRuta = new System.Text.StringBuilder();
@@ -417,6 +541,22 @@ public static class OrdenesDelEditor
                 if (Application.isPlaying) return "no se puede en Play";
                 return UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes() ? "escenas guardadas" : "no se pudieron guardar";
             }
+            case "pantallazo":
+            {
+                if (!Application.isPlaying) return "solo en Play";
+                string carpetaFotos = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, "_fotos");
+                Directory.CreateDirectory(carpetaFotos);
+                string destino = Path.Combine(carpetaFotos, (resto.Length > 0 ? resto : "pantallazo") + ".png");
+                return "pantallazo en " + PantallazoDeJuego.Capturar(destino);
+            }
+            case "pulsar":
+                return Pulsar(resto, true);
+            case "elegir":
+                return Pulsar(resto, false);
+            case "invocar":
+                return Invocar(resto);
+            case "raton":
+                return Raton(resto);
             case "camara_de_prueba":
             {
                 if (!Application.isPlaying) return "solo en Play";

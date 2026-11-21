@@ -81,7 +81,9 @@ namespace Game.NPC.Combate
     /// <summary>
     /// Mientras otro del grupo tiene el turno y presiona de frente, ir hacia un lado del objetivo
     /// (cada rodeador a uno distinto) para atacar desde ahí cuando le toque. También rodea, solo o
-    /// en grupo, al jugador que se queda tras el escudo un rato.
+    /// en grupo, al jugador que se queda tras el escudo un rato: los ágiles o difíciles (por encima de
+    /// <see cref="CaracterDeCombate.umbralDeVueltasContinuas"/>) le dan vueltas sin parar; los demás
+    /// se van a un lado una vez y esperan allí a que lo baje.
     /// </summary>
     public sealed class OpcionRodear : OpcionDeCombate
     {
@@ -89,6 +91,9 @@ namespace Game.NPC.Combate
 
         private float _hasta;
         private float _siguienteRumbo;
+        private bool _flanqueoUnico;
+        private bool _yaFlanqueo;
+        private Vector3 _punto;
 
         public OpcionRodear(ICombatiente cuerpo) : base(cuerpo) { }
 
@@ -99,7 +104,10 @@ namespace Game.NPC.Combate
 
         public override float Puntuar(in SituacionDeCombate s)
         {
+            // El flanqueo único vale para un escudo: al bajarlo, el siguiente se puede volver a flanquear.
+            if (!s.jugadorDefendiendo) _yaFlanqueo = false;
             if (!TocaRodear(s) || s.objetivo == null) return 0f;
+            if (_yaFlanqueo && s.rol != RolEnElGrupo.Rodea) return 0f;
             Vector3 punto = Cuerpo.PuntoDeRodeo();
             float falta = Vector3.Distance(Cuerpo.Transform.position, punto);
             if (falta < 1.5f) return 0.08f;
@@ -113,14 +121,35 @@ namespace Game.NPC.Combate
         {
             _hasta = Time.time + 3.5f;
             _siguienteRumbo = 0f;
+            _flanqueoUnico = s.rol != RolEnElGrupo.Rodea && !DaVueltas();
+            if (_flanqueoUnico)
+            {
+                // Punto fijo: no se recalcula desde donde va, que le haría girar sin fin.
+                if (!Cuerpo.PuntoAlcanzable(Cuerpo.PuntoDeRodeo(), out _punto)) { _hasta = Time.time; return; }
+                Cuerpo.MoverA(_punto, corriendo: Vector3.Distance(Cuerpo.Transform.position, _punto) > 4f);
+                return;
+            }
             Ir();
         }
 
         public override bool Actualizar(in SituacionDeCombate s)
         {
             if (!TocaRodear(s) || Time.time >= _hasta) return false;
+            if (_flanqueoUnico)
+            {
+                if (!Cuerpo.HaLlegado(0.6f)) return true;
+                _yaFlanqueo = true;
+                return false;
+            }
             if (Time.time >= _siguienteRumbo) Ir();
             return !Cuerpo.HaLlegado(0.6f);
+        }
+
+        private bool DaVueltas()
+        {
+            var perfil = Cuerpo.Perfil;
+            float umbral = perfil.Caracter.umbralDeVueltasContinuas;
+            return perfil.Caracter.movilidad >= umbral || perfil.Dificultad >= umbral;
         }
 
         public override void Terminar() => Cuerpo.Parar();

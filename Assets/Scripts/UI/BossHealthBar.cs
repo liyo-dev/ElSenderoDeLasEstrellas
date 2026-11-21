@@ -83,8 +83,6 @@ public class BossHealthBar : MonoBehaviour, IAvisoEnPantalla
         UpdateHealthBar();
         _currentFillAmount = _targetFillAmount;
         _barra.PonerRelleno(_currentFillAmount);
-        // BossArenaController puede haber llamado a Show() antes de este Start: si ya tiene el
-        // turno, la barra aparece ahora que existe.
         if (_aLaVista) Fundir(1f, fadeInDuration);
     }
 

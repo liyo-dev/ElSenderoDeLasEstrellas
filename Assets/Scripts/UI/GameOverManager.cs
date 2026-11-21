@@ -131,7 +131,6 @@ public class GameOverManager : MonoBehaviour
 
     private void Awake()
     {
-        // Debug.Log($"[GameOverManager] Awake - scene='{gameObject.scene.name}'");
         
         if (Instance != null && Instance != this)
         {
@@ -192,7 +191,6 @@ public class GameOverManager : MonoBehaviour
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Debug.Log($"[GameOverManager] Scene '{scene.name}' loaded -> reseteando estado");
         ForceResetState();
     }
 
@@ -283,6 +281,8 @@ public class GameOverManager : MonoBehaviour
         // sonaba porque la música de combate seguía en marcha y la de zona cede ante ella.
         AudioService.Instance?.ForceEndBattleState();
         ActiveCombatRegistry.ClearAll();
+        // Ni agachado ni frenado por un sigilo que no llegó a soltarse (INC-1331).
+        SigiloDelGrupo.TerminarTodos();
 
         // 2. Reproducir música/SFX de Game Over
         PlayGameOverAudio();
@@ -358,6 +358,7 @@ public class GameOverManager : MonoBehaviour
         SceneTransitionLoader.LoadWithOverlay(continueScene, loadingOverlayScene, () =>
         {
             GameBootService.ResetTransientSessionState();
+            SigiloDelGrupo.TerminarTodos();
             GameBootService.PrepararContinuar();
         });
     }

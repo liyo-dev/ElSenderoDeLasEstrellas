@@ -54,8 +54,8 @@ liam dice EVT_LIAM_CRYSTAL_01 mira=vision cara=sorpresa sin_pose
 espera 1.2
 plano medio vision liam desde=cam_bola altura=0.95 lente=50
 liam dice EVT_LIAM_CRYSTAL_02 mira=vision cara=pensativo sin_pose
-desde @mira+5.4 liam gesto Reverence01
-desde @mira+5.4 liam cara sorpresa
+desde @mira+4.7 liam gesto Reverence01
+desde @mira+4.7 liam cara sorpresa
 espera 1.2
 
 @cae

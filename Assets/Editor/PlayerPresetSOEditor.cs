@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using Liyodev.NarrativeGraph;
 
 [CustomEditor(typeof(PlayerPresetSO))]
 public class PlayerPresetSOEditor : UnityEditor.Editor

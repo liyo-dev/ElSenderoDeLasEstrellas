@@ -3159,6 +3159,10 @@ GameObject:
   - component: {fileID: 329523459173621930}
   - component: {fileID: 6151548870315637976}
   - component: {fileID: 1433535633459170155}
+  - component: {fileID: 1876860429938351727}
+  - component: {fileID: 24855182813484933}
+  - component: {fileID: 8301916214141315552}
+  - component: {fileID: 2123760851316409581}
   m_Layer: 7
   m_Name: Demon
   m_TagString: Boss
@@ -3287,7 +3291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Damageable
   maxHealth: 150
   destroyOnDeath: 1
-  deathVFX: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
+  deathVFX: {fileID: 0}
   deathVFXLifetime: 3
   invulnerabilitySeconds: 0.4
   debugLogs: 0
@@ -3372,6 +3376,18 @@ MonoBehaviour:
   - 1
   - 1.2
   - 1.5
+  vfxInvocacion: {fileID: 296761326492316060, guid: 7ff237ec212a8e04f9f8c73b56aba04c, type: 3}
+  preparacionDeLaLluvia: 1.2
+  distanciaParaInvocar: 9
+  maximoColocandose: 1.6
+  planoDeLaInvocacion: 1.4
+  sonidoInvocacion: Demonio_Invocacion
+  vfxTeleSalida: {fileID: 4965577802135400745, guid: 7c673d36ca968d84f8d0857f55b4b9fa, type: 3}
+  vfxTeleAviso: {fileID: 1103491626876810152, guid: 05b22c11e0183084695c3532baa25d58, type: 3}
+  vfxTeleLlegada: {fileID: 6933600256808260323, guid: a6b711f2bce7cce4fa265cc7896c1fcb, type: 3}
+  avisoDeLlegada: 0.75
+  sonidoTeleSalida: Demonio_TeleSalida
+  sonidoTeleLlegada: Demonio_TeleLlegada
   debugLogAnimator: 0
   canStartCombat: 0
   fallenDarkenFactor: 0.35
@@ -3498,6 +3514,93 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.8, b: 0.68, a: 1}
   - {r: 1, g: 0.55, b: 0.5, a: 1}
+--- !u!114 &1876860429938351727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543156170968106335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 316112a2810bba549b4a6379c40997bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReaccionAlGolpe
+  modelo: {fileID: 9174846601099342368}
+  destello: {r: 3.2, g: 2.8, b: 2.6, a: 1}
+  duracionDelDestello: 0.12
+  retroceso: 0.22
+  aplaste: 0.14
+  duracionDeLaSacudida: 0.22
+  vfxGolpe: {fileID: 1552089467091458479, guid: da35883787b44e649931631a2a8e42a6, type: 3}
+  vidaDelVfx: 1
+  alturaDelGolpe: 1.3
+  sonidoGolpe: Demonio_Golpe
+  volumen: 0.9
+  danoFuerte: 20
+  escalaDeTiempoEnLaPausa: 0.08
+  pausaDelGolpeFuerte: 0.06
+  temblorDeCamara: 0.25
+  vfxRechazo: {fileID: 1804731029035164751, guid: 8145d09762acd4f45b2ac9caf09f661c, type: 3}
+  sonidoRechazo: Demonio_Rechazo
+  separacionDeRechazos: 0.25
+--- !u!114 &24855182813484933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543156170968106335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54580e2c6ca53b644a4bee2e28d103e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EsfumarseAlCaer
+  alMorir: 1
+  esperaAntes: 0.8
+  duracion: 1.6
+  vfx: {fileID: 1194098212902632540, guid: 1d1a521c1a6eee24788f427489853c63, type: 3}
+  vidaDelVfx: 3.5
+  alturaDelVfx: 0.2
+  sonido: Demonio_Esfumarse
+  volumen: 1
+  hundirse: 0.5
+  escalaFinal: 0.3
+  colorFinal: {r: 0.18, g: 0.12, b: 0.22, a: 1}
+--- !u!114 &8301916214141315552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543156170968106335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c4888f835ecfd94c9f1049ff94540f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlanoDeAviso
+  distancia: 5.5
+  altura: 2.4
+  lado: 1.4
+  alturaDeMira: 1.4
+  pesoDelPersonaje: 0.7
+  campoDeVision: 50
+  mezcla: 0.35
+--- !u!114 &2123760851316409581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543156170968106335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_DEMONIO
+  debilidades: 03000000i
+  resistencias: 
 --- !u!1 &2900323067120920797
 GameObject:
   m_ObjectHideFlags: 0

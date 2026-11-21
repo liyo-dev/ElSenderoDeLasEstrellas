@@ -3,10 +3,10 @@ using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Importa los ejemplos del paquete (lo mismo que «Import» en el Package Manager). Para usarlo
-    /// desde la línea de órdenes: -executeMethod NarrativeGraphEditor.NarrativeSamples.ImportAll
+    /// desde la línea de órdenes: -executeMethod Liyodev.NarrativeGraph.Editor.NarrativeSamples.ImportAll
     public static class NarrativeSamples
     {
         public const string PackageName = "com.liyodev.narrativegraph";

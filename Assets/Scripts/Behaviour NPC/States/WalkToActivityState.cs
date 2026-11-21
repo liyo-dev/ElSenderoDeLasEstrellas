@@ -86,14 +86,14 @@ namespace Game.NPC.States
             // Restaurar control de posición del NavMeshAgent
             if (_agentPositionDisabled && context.Agent != null && context.Agent.enabled)
             {
-                // FIX INC-046: al sentarse, Arrive() coloca el transform EXACTAMENTE en la altura
-                // del asiento (InteractionPosition), que suele estar por encima del NavMesh real
-                // (bancos, sillas...), y desactiva updatePosition para no desviar esa altura.
-                // Si al levantarse restaurábamos el control del agente tomando esa misma posición
-                // elevada como "nextPosition", el NavMeshAgent quedaba pensando que esa altura de
-                // asiento ES el suelo: no hay gravedad que lo baje (los agentes no simulan
-                // físicas), así que el NPC se quedaba flotando ahí hasta el próximo Warp/teleport.
-                // Encajamos primero la posición real sobre el NavMesh antes de devolver el control.
+                // Al sentarse, Arrive() coloca el transform EXACTAMENTE en la altura del asiento
+                // (InteractionPosition), que suele estar por encima del NavMesh real (bancos,
+                // sillas...), y desactiva updatePosition para no desviar esa altura. Si al
+                // levantarse restaurábamos el control del agente tomando esa misma posición elevada
+                // como "nextPosition", el NavMeshAgent quedaba pensando que esa altura de asiento
+                // ES el suelo: no hay gravedad que lo baje (los agentes no simulan físicas), así
+                // que el NPC se quedaba flotando ahí hasta el próximo Warp/teleport. Encajamos
+                // primero la posición real sobre el NavMesh antes de devolver el control.
                 Vector3 groundedPos = context.Transform.position;
                 if (NavMesh.SamplePosition(context.Transform.position, out NavMeshHit navHit, 3f, NavMesh.AllAreas))
                 {

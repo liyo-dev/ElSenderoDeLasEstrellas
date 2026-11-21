@@ -1,3 +1,4 @@
+using Liyodev.NarrativeGraph;
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
@@ -122,13 +123,13 @@ public static class UmbralDelSendero
         // Puente con el capítulo anterior: así «Probar desde el nodo» da por terminados los capítulos
         // de antes (si no, arrancan desde su inicio y sale el prólogo). Hoy el último construido es el 4.
         Poner(g, "sendero-tras-capitulo", "Tras el capítulo anterior (" + SenalCapituloAnterior + ")", new Vector2(160, y - 160),
-            new WaitCustomEventNode { eventKey = SenalCapituloAnterior }, "sendero-requisitos");
+            new WaitCustomEventNode { EventKey = SenalCapituloAnterior }, "sendero-requisitos");
         Poner(g, "sendero-requisitos", "Espera: libro prohibido y ritual (lo emite el capítulo de la Piedra)", new Vector2(320, y),
-            new WaitCustomEventNode { eventKey = SenalRequisitos }, NodoRitualListo);
+            new WaitCustomEventNode { EventKey = SenalRequisitos }, NodoRitualListo);
         Poner(g, NodoRitualListo, "La Piedra admite el conjuro (probar desde aquí)", new Vector2(700, y),
-            new RaiseCustomEventNode { eventKey = SenalRitualListo }, "sendero-espera-conjuro");
+            new RaiseCustomEventNode { EventKey = SenalRitualListo }, "sendero-espera-conjuro");
         Poner(g, "sendero-espera-conjuro", "Will acepta leer el conjuro ante la Piedra", new Vector2(1080, y),
-            new WaitCustomEventNode { eventKey = SenalConjuroAceptado, acceptEarlierEvent = false }, "sendero-cinematica-conjuro");
+            new WaitCustomEventNode { EventKey = SenalConjuroAceptado, AcceptEarlierEvent = false }, "sendero-cinematica-conjuro");
         Poner(g, "sendero-cinematica-conjuro", "Cinemática: el conjuro abre el portal", new Vector2(1460, y),
             GameStepNode.For(new PedirCinematica
             {
@@ -139,7 +140,7 @@ public static class UmbralDelSendero
                 plantillaDeAjustes = PlantillaDeSecuencia
             }), "sendero-llegada");
         Poner(g, "sendero-llegada", "Llegada al Sendero", new Vector2(1840, y),
-            new WaitCustomEventNode { eventKey = SenalLlegada });
+            new WaitCustomEventNode { EventKey = SenalLlegada });
         g.startNodeGuid = "sendero-inicio";
         EditorUtility.SetDirty(g);
         return g;
@@ -148,10 +149,10 @@ public static class UmbralDelSendero
     static void Poner(NarrativeGraph g, string id, string titulo, Vector2 posicion, NarrativeNode n, params string[] salidas)
     {
         var anterior = g.FindNode(id);
-        if (anterior != null && anterior.outputs != null && salidas.Length == 0)
-            salidas = anterior.outputs.ToArray(); // lo que una tanda posterior colgó de aquí se conserva
-        n.guid = id; n.displayTitle = titulo; n.chapter = "Sendero"; n.position = posicion;
-        n.outputs = new List<string>(salidas);
+        if (anterior != null && anterior.Outputs != null && salidas.Length == 0)
+            salidas = anterior.Outputs.ToArray(); // lo que una tanda posterior colgó de aquí se conserva
+        n.Guid = id; n.DisplayTitle = titulo; n.Chapter = "Sendero"; n.Position = posicion;
+        n.Outputs = new List<string>(salidas);
         if (anterior == null) g.nodes.Add(n); else g.nodes[g.nodes.IndexOf(anterior)] = n;
     }
 

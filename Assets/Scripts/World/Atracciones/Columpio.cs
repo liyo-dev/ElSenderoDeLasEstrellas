@@ -4,6 +4,8 @@ using UnityEngine;
 /// Columpio: un asiento (<see cref="NPCWorldPoint"/>) que cuelga de una pieza con <see cref="BalanceoPendular"/>.
 /// Mientras alguien va sentado, el balanceo coge fuerza poco a poco y quien va sentado sigue al asiento; al
 /// bajarse, el columpio se va parando. Sentarse y levantarse son los de siempre (interactuar y cancelar).
+/// Quien va sentado lleva la cadera sobre la tabla (la mide el asiento en su pose) y el jugador, un plano
+/// de cámara quieto (ver <see cref="NPCWorldPoint.planoFijo"/>). Ver INC-1327.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class Columpio : MonoBehaviour
@@ -29,6 +31,13 @@ public sealed class Columpio : MonoBehaviour
     {
         if (balanceo != null) balanceo.Intensidad = 0f;
         if (asiento != null && string.IsNullOrEmpty(asiento.estadoDelBucle)) asiento.estadoDelBucle = postura;
+        // Un asiento que se balancea: la cámara pegada a quien va en él se balancearía con él, y el
+        // punto de sentarse no sabe dónde le queda la cadera a cada personaje.
+        if (asiento != null)
+        {
+            asiento.apoyarLaCadera = true;
+            asiento.planoFijo = true;
+        }
     }
 
     void OnDisable()
@@ -54,7 +63,7 @@ public sealed class Columpio : MonoBehaviour
 
         if (_ocupante == null) return;
         _desdeQueSeSento += Time.deltaTime;
-        Vector3 destino = asiento.InteractionPosition;
+        Vector3 destino = asiento.PosicionDelOcupante(_ocupante);
         Quaternion giro = asiento.InteractionRotation;
         if (_desdeQueSeSento < acercarse)
         {

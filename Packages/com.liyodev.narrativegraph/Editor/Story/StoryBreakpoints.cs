@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Steps where Play pauses when the story reaches them. Kept per user and per graph, never in
     /// the graph asset, so they do not end up in version control.
@@ -41,8 +41,8 @@ namespace NarrativeGraphEditor.Story
 
         static void OnStepEntered(NarrativeRunner runner, NarrativeNode step)
         {
-            if (runner == null || runner.graph == null || step == null || !Has(runner.graph, step.guid)) return;
-            Debug.Log(StoryText.T($"[Historia] Pausa en «{step.displayTitle}».", $"[Story] Paused at “{step.displayTitle}”."));
+            if (runner == null || runner.graph == null || step == null || !Has(runner.graph, step.Guid)) return;
+            Debug.Log(StoryText.T($"[Historia] Pausa en «{step.DisplayTitle}».", $"[Story] Paused at “{step.DisplayTitle}”."));
             Debug.Break();
             Hit?.Invoke(runner.graph, step);
         }

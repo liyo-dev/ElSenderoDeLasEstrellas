@@ -86,6 +86,11 @@ public class AudioGraphProfile : ScriptableObject
         attackSeconds = 0.08f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
     };
 
+    [Header("Memoria de la música")]
+    [Tooltip("Segundos que un tema recuerda por dónde iba al dejar de sonar. Si se vuelve a él antes, " +
+             "continúa donde iba; si ha pasado más, empieza desde el principio. 0 = siempre desde el principio.")]
+    [Min(0f)] public float segundosDeMemoriaDeMusica = 60f;
+
     public List<BattleRule> battles = new();
     public List<MinigameRule> minigames = new();
     public List<AmbientZoneRule> ambientZones = new();

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Draws every connection of the canvas (and the one being dragged) in world space.
     public sealed class StoryEdgeLayer : VisualElement
@@ -21,7 +21,7 @@ namespace NarrativeGraphEditor.Story
             generateVisualContent += Draw;
         }
 
-        public static string Key(NarrativeNode from, NarrativeNode to) => from.guid + ">" + to.guid;
+        public static string Key(NarrativeNode from, NarrativeNode to) => from.Guid + ">" + to.Guid;
 
         public void SetRoutes(List<StoryLayout.Route> routes) { _routes = routes ?? new List<StoryLayout.Route>(); MarkDirtyRepaint(); }
         public void SetPath(HashSet<string> edgeKeys) { _onPath = edgeKeys ?? new HashSet<string>(); MarkDirtyRepaint(); }

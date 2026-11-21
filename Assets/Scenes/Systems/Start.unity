@@ -1692,6 +1692,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -2954,6 +2955,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -3827,6 +3829,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -6384,6 +6387,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -10288,8 +10292,6 @@ MonoBehaviour:
   groupCameraProbeRadius: 0.4
   dialogueCameraSelfClearance: 0.5
   dialogueCameraMinDistance: 2.4
-  bystanderFreezeRadius: 9
-  bystanderRescanInterval: 0.6
   intruderCheckInterval: 0.12
   intruderProbeRadius: 0.3
   nonSpeakingPartyHideRadius: 10
@@ -14826,6 +14828,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -18154,6 +18157,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -24000,6 +24004,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
@@ -24963,6 +24968,7 @@ MonoBehaviour:
   - Cascaditas
   - TemploQueCanta
   - Templo
+  - TemploDelCoro
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1

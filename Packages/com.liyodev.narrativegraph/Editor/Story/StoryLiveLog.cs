@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Registro, con hora, de los pasos por los que pasa la partida (los más recientes primero).
     /// Se vacía al entrar en Play; fuera de Play se conserva el de la última partida. Lo enseña la
@@ -53,7 +53,7 @@ namespace NarrativeGraphEditor.Story
         {
             if (runner == null || node == null || node.IsAnnotation) return;
             string chapter = runner.graph != null ? runner.graph.name + " · " : string.Empty;
-            s_entries.Insert(0, new Entry(DateTime.Now.ToString("HH:mm:ss"), runner.graph, node.guid, chapter + NarrativeStartPlanner.Title(node)));
+            s_entries.Insert(0, new Entry(DateTime.Now.ToString("HH:mm:ss"), runner.graph, node.Guid, chapter + NarrativeStartPlanner.Title(node)));
             if (s_entries.Count > MaxEntries) s_entries.RemoveAt(s_entries.Count - 1);
             Changed?.Invoke();
         }

@@ -28,7 +28,6 @@ namespace Game.NPC.States
         private bool _isWanderingNearPlayer;
         private Vector3 _wanderTarget;
 
-        // FIX — "el party va a trompicones/tembloroso cuando el jugador va lento"
         // (nadando, o siguiendo a un guardia con la velocidad reducida por un lore pop-up).
         // _isFollowingSticky reemplaza la decisión "moverse si playerIsMoving || distance >
         // stopDist*1.2" por una histéresis persistente (igual que ya usa _isMovingSpecial más
@@ -42,17 +41,16 @@ namespace Game.NPC.States
         // parada de más abajo); una vez parado, no arranca hasta superar stopDist*1.2 de verdad.
         private bool _isFollowingSticky;
 
-        // FIX — "el party se queda atrás al esprintar y se teletransporta cerca,
-        // viéndose feo" + el mismo trompiqueo de arriba pero visto desde el otro lado (el
-        // compañero corriendo a una velocidad fija muy por encima del jugador cuando este va
-        // despacio, así que adelanta y frena en seco una y otra vez). Causa raíz común: la
-        // velocidad de seguimiento (walkSpeed/runSpeed del NPCPartyConfig, o SPECIAL_FOLLOW_SPEED
-        // en el seguimiento especial) era una CONSTANTE fija sin relación con la velocidad real del
-        // jugador — que va de ~5 caminando a 15 esprintando en _WILL.prefab, y baja mucho durante
-        // secciones controladas (nado, seguir a un NPC despacio, lore pop-ups). Se estima la
-        // velocidad real del jugador por posición (delta/deltaTime, suavizado) y se usa como suelo
-        // dinámico para la velocidad de seguimiento en ambos caminos (NavMesh normal y seguimiento
-        // especial), en vez de una constante pensada solo para el paso normal.
+        // + el mismo trompiqueo de arriba pero visto desde el otro lado (el compañero corriendo a
+        // una velocidad fija muy por encima del jugador cuando este va despacio, así que adelanta y
+        // frena en seco una y otra vez). Causa raíz común: la velocidad de seguimiento
+        // (walkSpeed/runSpeed del NPCPartyConfig, o SPECIAL_FOLLOW_SPEED en el seguimiento
+        // especial) era una CONSTANTE fija sin relación con la velocidad real del jugador — que va
+        // de ~5 caminando a 15 esprintando en _WILL.prefab, y baja mucho durante secciones
+        // controladas (nado, seguir a un NPC despacio, lore pop-ups). Se estima la velocidad real
+        // del jugador por posición (delta/deltaTime, suavizado) y se usa como suelo dinámico para
+        // la velocidad de seguimiento en ambos caminos (NavMesh normal y seguimiento especial), en
+        // vez de una constante pensada solo para el paso normal.
         private Vector3 _prevPlayerPosForSpeed;
         private float _smoothedPlayerSpeed;
         private bool _speedSampleInitialized;
@@ -68,14 +66,14 @@ namespace Game.NPC.States
         // que 30 deja margen de sobra sin colar teletransportes.
         private const float PLAYER_SPEED_TELEPORT_CUTOFF = 30f;
 
-        // FIX — continuación de INC-096: aunque Agent.speed sube dinámicamente hasta
-        // runSpeed*2.5 para alcanzar al jugador en sprint, Agent.acceleration se quedaba en el
-        // valor de fábrica del prefab (8 en Estela/Liam) sin relación con esa velocidad objetivo.
-        // Con el destino recalculándose cada PATH_UPDATE_INTERVAL mientras el jugador sigue en
-        // movimiento, el agente nunca llegaba a alcanzar de verdad la velocidad alta que se le
-        // pedía — seguía quedándose atrás hasta cruzar distanciaParaTeletransporte y disparar el
-        // teletransporte de emergencia ("de pronto aparecen" / pop-in en cámara). Escalamos la
-        // aceleración junto con la velocidad en vez de dejarla fija.
+        // Aunque Agent.speed sube dinámicamente hasta runSpeed*2.5 para alcanzar al jugador en
+        // sprint, Agent.acceleration se quedaba en el valor de fábrica del prefab (8 en
+        // Estela/Liam) sin relación con esa velocidad objetivo. Con el destino recalculándose
+        // cada PATH_UPDATE_INTERVAL mientras el jugador sigue en movimiento, el agente nunca
+        // llegaba a alcanzar de verdad la velocidad alta que se le pedía — seguía quedándose
+        // atrás hasta cruzar distanciaParaTeletransporte y disparar el teletransporte de
+        // emergencia ("de pronto aparecen" / pop-in en cámara). Escalamos la aceleración junto
+        // con la velocidad en vez de dejarla fija.
         private const float AGENT_ACCELERATION_MULTIPLIER = 2.5f;
         private const float AGENT_MIN_ACCELERATION = 8f;
 
@@ -165,7 +163,29 @@ namespace Game.NPC.States
         private Vector3 _formationTarget;
         private bool _tieneDestinoFormacion;
 
+        // Salto del rastro que se está estudiando: dónde cae, si ya se ha decidido cruzarlo, si se ha
+        // avisado al grupo de que está cruzado y desde cuándo se espera el turno.
+        private float _aterrizajeEstudiado;
+        private bool _cruzandoSalto;
+        private bool _saltoAvisado;
+        private float _esperandoTurnoDesde = -1f;
+        private float _holguraAlCaer;
+        private Vector3 _velRastroEnElMundo;
+        private float _quiereArrancarDesde = -1f;
+        private float _esperaEntreSaltos;
+        private float _timerCursorEnSuelo;
+
         private const float CAIDA_MAXIMA_DESDE_RASTRO = 1.2f;
+        // A pie por NavMesh: cuánto por delante de su punto del rastro apunta el compañero, a qué
+        // distancia de una muestra se considera que va por ella y a cuántos metros de un salto deja
+        // el NavMesh para ir al borde.
+        private const float RASTRO_SUELO_ADELANTO = 2.5f;
+        private const float RASTRO_SUELO_RADIO = 1.5f;
+        private const float RASTRO_SUELO_SALTO_CERCA = 4f;
+        private const float RASTRO_SUELO_PERDIDO = 6f;
+        private const float INTERVALO_CURSOR_SUELO = 0.1f;
+        // Si el de delante no salta (caído, anclado…), el siguiente no espera más que esto.
+        private const float ESPERA_MAXIMA_TURNO = 3f;
         private const float VELOCIDAD_MINIMA_SALTO_RASTRO = 6.5f;
         private const float INTERVALO_COMPROBAR_ISLA = 0.25f;
 
@@ -206,8 +226,6 @@ namespace Game.NPC.States
         private const float SWIM_INPUT_MAG_LERP_SPEED = 3f;
         private const float OFF_NAVMESH_THRESHOLD   = 1.5f;
         private const float WARP_SEARCH_RADIUS      = 12f;
-        // Valores reales usados por Will (_WILL.prefab), no los defaults de PlayerFlyingController:
-        // el campo del script vale 0.8/1.8, pero el prefab lo tiene afinado a 0.18/1.2.
         private const float DEFAULT_FLIGHT_BOB_AMPLITUDE = 0.18f;
         private const float DEFAULT_FLIGHT_BOB_FREQUENCY = 1.2f;
 
@@ -297,6 +315,10 @@ namespace Game.NPC.States
             _caminoNavMeshCortado = false;
             _tieneDestinoFormacion = false;
             _tiempoSiguientePuestoRastro = 0f;
+            _cruzandoSalto       = false;
+            _saltoAvisado        = false;
+            _esperandoTurnoDesde = -1f;
+            _timerCursorEnSuelo  = 0f;
             _party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
             ActualizarDatosDelRastro();
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
@@ -332,6 +354,9 @@ namespace Game.NPC.States
             }
 
             context.Animator?.SetMovementSpeed(0f);
+            // Puede entrar con el Animator en el aire: un salto cortado por otro estado o un cuerpo
+            // que deja el jugador a medio salto. Sin esto se quedaba en Falling andando por el suelo.
+            context.Animator?.ForzarEnElSuelo();
         }
 
         public override void OnUpdate(NPCStateContext context)
@@ -362,6 +387,16 @@ namespace Game.NPC.States
                 }
             }
 #endif
+
+            if (!_inSpecialFollow && playerMode == ActionMode.Default)
+            {
+                _timerCursorEnSuelo += Time.deltaTime;
+                if (_timerCursorEnSuelo >= INTERVALO_CURSOR_SUELO)
+                {
+                    _timerCursorEnSuelo = 0f;
+                    ActualizarCursorEnSuelo(context);
+                }
+            }
 
             bool needsSpecialFollow = playerMode == ActionMode.Flying
                                    || playerMode == ActionMode.Swimming
@@ -404,10 +439,10 @@ namespace Game.NPC.States
                 return;
             }
 
-            // FIX INC-028: margen de gracia tras restaurar posición/rotación persistida al
-            // cargar partida (ver GameBootProfile.ApplyNpcPositionsToScene y
-            // NPCStateContext.FollowGraceUntil). El jugador casi siempre se restaura solo a
-            // un ancla aproximada (no a su Vector3/Quaternion exacto), así que nada más cargar
+            // Margen de gracia tras restaurar posición/rotación persistida al cargar partida
+            // (ver GameBootProfile.ApplyNpcPositionsToScene y
+            // NPCStateContext.FollowGraceUntil). El jugador casi siempre se restaura solo a un
+            // ancla aproximada (no a su Vector3/Quaternion exacto), así que nada más cargar
             // este NPC suele estar a más de stopDist de él — sin esta comprobación arrancaría
             // a caminar de inmediato y NPCSimpleAnimator.SyncWithNavMeshAgent() sustituiría la
             // rotación recién restaurada por la de marcha antes de que se llegue a ver quieto.
@@ -441,7 +476,8 @@ namespace Game.NPC.States
                 // 2,6-3 m. Se deja una banda de carrera por encima de la parada.
                 float minimoDetras = _config != null && _config.distanciaMinimaFormacionDetras > 0.01f
                     ? _config.distanciaMinimaFormacionDetras : 2.5f;
-                stopDist = Mathf.Max(stopDist, minimoDetras);
+                // Su puesto queda fuera del espacio del jugador y abierto a un lado: se para entre el borde y algo más allá.
+                stopDist = Mathf.Max(stopDist, Mathf.Max(minimoDetras, EspacioDelJugador + 1.5f));
                 runDist  = Mathf.Max(runDist, stopDist + 1.4f);
             }
 
@@ -482,10 +518,15 @@ namespace Game.NPC.States
                 }
             }
 
+            // Detrás: llega a su punto del rastro, o el jugador está quieto y ya lo tiene cerca (si
+            // vuelve hacia el grupo no hace falta recorrer su vuelta entera).
             bool enSuPuesto = alLado
                 ? (jugadorQuieto && alPuesto <= PUESTO_LLEGADA)
                 : (preferBehind
-                    ? (_tieneDestinoFormacion && alPuesto <= PUESTO_LLEGADA && !playerIsMoving)
+                    ? ((_tieneDestinoFormacion && alPuesto <= PUESTO_LLEGADA && !playerIsMoving)
+                       || (jugadorQuieto && distance <= stopDist && distance >= EspacioDelJugador * 0.85f
+                          && EstaDetras(context.Transform.position, context.Player)
+                          && AbiertoDelJugador(context.Transform.position, context.Player)))
                     : distance <= stopDist);
 
             if (enSuPuesto)
@@ -515,13 +556,22 @@ namespace Game.NPC.States
             // decisión de moverse con histéresis persistente en vez de
             // "playerIsMoving || distance > stopDist*1.2" evaluado fresco cada frame — ver
             // comentario de _isFollowingSticky en la cabecera de la clase.
-            _isFollowingSticky = _isFollowingSticky
+            bool quiereSeguir = _isFollowingSticky
                 ? true // seguimos moviéndonos: la rama "enSuPuesto" de más arriba ya corta el
                        // movimiento en cuanto se alcanza el puesto
                 : (alLado ? (playerIsMoving || alPuesto > PUESTO_LLEGADA * 1.5f)
                           : (preferBehind
                               ? (playerIsMoving || !_tieneDestinoFormacion || alPuesto > PUESTO_LLEGADA * 1.5f)
                               : (playerIsMoving || distance > stopDist * 1.2f)));
+
+            // Cada uno arranca con su pequeño retraso (como quien reacciona), no todos a la vez.
+            if (!_isFollowingSticky && quiereSeguir)
+            {
+                if (_quiereArrancarDesde < 0f) _quiereArrancarDesde = Time.time;
+                quiereSeguir = Time.time - _quiereArrancarDesde >= RetrasoAlArrancar();
+            }
+            if (quiereSeguir) _quiereArrancarDesde = -1f;
+            _isFollowingSticky = quiereSeguir;
 
             if (_isFollowingSticky)
             {
@@ -535,15 +585,15 @@ namespace Game.NPC.States
 
                 context.Agent.isStopped = false;
                 // Suelo dinámico: nunca más lento que el ritmo real del jugador. El margen sobre
-                // esa velocidad ya NO es un 15% fijo (FIX 25 ago 2026 anterior, KO en juego): con
-                // un margen fijo, el NPC como mucho EMPATABA con el jugador en la práctica (el
-                // suavizado de _smoothedPlayerSpeed tarda en converger tras cada arranque de
-                // sprint, y el camino por NavMesh casi siempre rodea más que la línea recta que
-                // usa PlayerParty para medir distancia), así que el hueco no se cerraba de verdad:
-                // oscilaba justo alrededor del umbral de teletransporte de emergencia y disparaba
-                // el warp una y otra vez en vez de evitarlo (visto en juego: "Liam/Estela demasiado
-                // lejos" repetido cada pocos segundos durante un sprint sostenido). Ahora el margen
-                // crece con la propia distancia — igual que ya hacía HandleSpecialFollow más abajo
+                // esa velocidad ya NO es un 15% fijo: con un margen fijo, el NPC como mucho
+                // EMPATABA con el jugador en la práctica (el suavizado de _smoothedPlayerSpeed
+                // tarda en converger tras cada arranque de sprint, y el camino por NavMesh casi
+                // siempre rodea más que la línea recta que usa PlayerParty para medir distancia),
+                // así que el hueco no se cerraba de verdad: oscilaba justo alrededor del umbral de
+                // teletransporte de emergencia y disparaba el warp una y otra vez en vez de
+                // evitarlo (visto en juego: "Liam/Estela demasiado lejos" repetido cada pocos
+                // segundos durante un sprint sostenido). Ahora el margen crece con la propia
+                // distancia — igual que ya hacía HandleSpecialFollow más abajo
                 // (baseSpecialSpeed*1.5 cuando dist > STOP_DIST*3) para nado/vuelo, pero aquí nunca
                 // se había traído al seguimiento normal por NavMesh: cerca de distanciaParaCorrer
                 // el margen sigue siendo un 15% discreto, y crece hasta un 60% al acercarse al
@@ -564,7 +614,7 @@ namespace Game.NPC.States
                                       Common.NavMeshAgentUtility.VelocidadMinimaAndando,
                                       Mathf.Max(walkSpeed, dynamicRunSpeed));
                 }
-                SetAgentSpeed(context.Agent, targetAgentSpeed);
+                SetAgentSpeed(context.Agent, targetAgentSpeed * RitmoPropio());
 
                 // Al lado de Will el destino es un puesto que se mueve con él y está siempre a
                 // uno o dos metros: con el frenado automático del agente, iba frenando todo el
@@ -682,11 +732,11 @@ namespace Game.NPC.States
             }
 
             // Un salto del rastro en curso no se corta a mitad.
-            if (_inSpecialFollow && _enSaltoDeRastro) return true;
+            if (_inSpecialFollow && (_enSaltoDeRastro || _cruzandoSalto)) return true;
 
-            // El compañero ya está fuera de la malla (cruzando una plataforma): el rastro lo
-            // devuelve al suelo; no se le abandona a medio camino.
-            if (_inSpecialFollow && context.Agent != null && !context.Agent.isOnNavMesh) return true;
+            // El compañero pisa algo sin NavMesh (una plataforma, una caja): se queda en ella con el
+            // rastro. Se mira dónde está el cuerpo, no el agente, que no se mueve mientras tanto.
+            if (_inSpecialFollow && !PisaNavMesh(context.Transform.position)) return true;
 
             // En cuanto el jugador deja el suelo, el seguimiento normal deja de perseguirle: si
             // no, el NavMeshAgent apunta a su posición en el aire y el compañero se le mete
@@ -698,6 +748,14 @@ namespace Game.NPC.States
             if (_config != null && !_config.seguirRastroEnPlataformas) return false;
             if (_party == null || _party.TotalMuestrasRastro < 2) return false;
             if (_party.JugadorEnSaltoConfirmado) return true;
+
+            // Tiene un salto del jugador por delante: va al borde y lo repite, aunque por NavMesh
+            // haya otro camino.
+            if (_rastroInicializado
+                && _party.HaySaltoEnTramoDeRastro(_cursorDistanciaRastro - 0.05f, _party.DistanciaTotalRastro,
+                                                  out float despegueDelante, out _)
+                && despegueDelante - _cursorDistanciaRastro <= RASTRO_SUELO_SALTO_CERCA)
+                return true;
 
             // Islas de NavMesh separadas: el agente no tiene camino completo hasta el jugador,
             // pero el rastro tiene un salto reciente. Es un tramo de plataformas.
@@ -727,12 +785,17 @@ namespace Game.NPC.States
             // cero haría que el compañero siguiera el punto exacto del jugador.
             _distanciaBaseRastro = _config != null && _config.distanciaBaseEnRastro > 0.01f
                 ? _config.distanciaBaseEnRastro : 2.2f;
+            _distanciaBaseRastro = Mathf.Max(_distanciaBaseRastro, EspacioDelJugador);
             _separacionPorPuestoRastro = _config != null
                 ? Mathf.Max(0f, _config.separacionPorPuestoEnRastro) : 0f;
             _separacionLateralRastro = _config != null && _config.separacionLateralEnRastro > 0.001f
                 ? _config.separacionLateralEnRastro : 0.45f;
             _tiempoEstudioSalto = _config != null && _config.tiempoEstudioSalto > 0.001f
                 ? _config.tiempoEstudioSalto : 0.2f;
+            _holguraAlCaer = _config != null && _config.holguraAlCaer > 0.01f
+                ? _config.holguraAlCaer : 1.4f;
+            _holguraAlCaer = Mathf.Max(_holguraAlCaer, EspacioDelJugador);
+            _esperaEntreSaltos = _config != null ? Mathf.Max(0f, _config.esperaEntreSaltos) : 0.4f;
 
             if (_party != null)
                 _puestoRastro = _party.ObtenerPuestoDeFormacion(_partyMember, out _totalPuestosRastro);
@@ -759,6 +822,9 @@ namespace Game.NPC.States
             _rastroInicializado = true;
             _ultimoSaltoEstudiado = -1f;
             _tiempoFinEstudioSalto = 0f;
+            _cruzandoSalto = false;
+            _saltoAvisado = false;
+            _esperandoTurnoDesde = -1f;
             _enSaltoDeRastro = false;
             _estabaEnAireRastro = false;
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
@@ -865,55 +931,90 @@ namespace Game.NPC.States
                 float detras = Mathf.Max(0.5f, _distanciaBaseRastro + _puestoRastro * _separacionPorPuestoRastro);
                 float objetivo = Mathf.Max(0f, total - detras);
 
+                // Nadie se mete en el espacio del jugador: si ya está a esa distancia, no avanza más.
+                // Y mientras el jugador está en el aire nadie le sigue: se quedan donde están, mirando
+                // dónde cae; el salto lo repiten después (ver el bloque de abajo).
+                if (!_cruzandoSalto
+                    && (_party.JugadorEnElAire
+                        || DistanciaPlana(context.Transform.position, context.Player.position) < EspacioDelJugador))
+                    objetivo = Mathf.Min(objetivo, _cursorDistanciaRastro);
+
                 bool haySalto = _party.HaySaltoEnTramoDeRastro(
                     _cursorDistanciaRastro - 0.05f, total,
                     out float distanciaDespegue, out float distanciaAterrizaje);
 
-                float espacioTrasAterrizaje = _config != null && _config.espacioTrasAterrizaje > 0.01f
-                    ? _config.espacioTrasAterrizaje : 2.5f;
-                bool saltoCompleto = haySalto && !_party.JugadorEnSaltoConfirmado
+                // El jugador ya ha caído y no está en el aire otra vez.
+                bool saltoCompleto = haySalto && !_party.JugadorEnElAire
                                      && distanciaAterrizaje < total - 0.05f;
 
-                // Además del hueco que pida el diseño, el jugador tiene que haberse alejado lo
-                // suficiente para que el puesto de este compañero caiga YA en la plataforma de
-                // destino. Si no, cruzaría y volvería a caminar hacia atrás, hacia el hueco.
-                float distanciaMinima = Mathf.Max(espacioTrasAterrizaje, detras + 0.3f);
-                bool espacioLibre = saltoCompleto
-                                    && (total - distanciaAterrizaje) >= distanciaMinima;
-
-                if (haySalto)
+                // Quien ya está cruzando un salto lo termina: con el cursor dentro del arco, el
+                // rastro puede ver otro «salto» que empieza en él y no hay que volver a decidir.
+                if (_cruzandoSalto)
+                {
+                    objetivo = Mathf.Max(objetivo, Mathf.Min(total, _aterrizajeEstudiado + 0.25f));
+                }
+                else if (haySalto)
                 {
                     if (distanciaDespegue > _ultimoSaltoEstudiado + 0.3f)
                     {
                         _ultimoSaltoEstudiado = distanciaDespegue;
                         _saltoConEspacio = false;
                         _tiempoFinEstudioSalto = 0f;
+                        _cruzandoSalto = false;
+                        _saltoAvisado = false;
+                        _esperandoTurnoDesde = -1f;
                     }
+                    _aterrizajeEstudiado = distanciaAterrizaje;
 
+                    // Hay sitio cuando donde va a caer este compañero queda lejos del jugador.
+                    bool espacioLibre = saltoCompleto && HayHolguraAlCaer(context, distanciaAterrizaje);
                     if (espacioLibre && !_saltoConEspacio)
                     {
                         _saltoConEspacio = true;
-                        _tiempoFinEstudioSalto = Time.time + _tiempoEstudioSalto + _puestoRastro * 0.16f;
+                        _tiempoFinEstudioSalto = Time.time + _tiempoEstudioSalto;
+                    }
+                    else if (!espacioLibre && !_enSaltoDeRastro
+                             && _cursorDistanciaRastro < distanciaDespegue - 0.05f)
+                    {
+                        // Hasta despegar se mira cada frame: si el jugador vuelve hacia donde caería, espera.
+                        _saltoConEspacio = false;
+                        _cruzandoSalto = false;
                     }
 
                     // La caja espera en el borde: los dos a la misma distancia y separados de lado.
                     float esperaDetras = Mathf.Max(0f, distanciaDespegue - 0.3f);
 
-                    if (!_enSaltoDeRastro)
+                    if (!_enSaltoDeRastro && !_cruzandoSalto)
                     {
                         bool enElBorde = _cursorDistanciaRastro >= esperaDetras - 0.1f;
-                        if (!enElBorde || !espacioLibre || Time.time < _tiempoFinEstudioSalto)
+
+                        // De uno en uno: salta cuando los de delante en el grupo ya han caído.
+                        bool leToca = _party.LeTocaSaltar(_puestoRastro, distanciaDespegue, _esperaEntreSaltos);
+                        if (!leToca && enElBorde && espacioLibre)
+                        {
+                            if (_esperandoTurnoDesde < 0f) _esperandoTurnoDesde = Time.time;
+                            else if (Time.time - _esperandoTurnoDesde > ESPERA_MAXIMA_TURNO) leToca = true;
+                        }
+
+                        if (!enElBorde || !espacioLibre || !leToca || Time.time < _tiempoFinEstudioSalto)
                         {
                             // Se acerca al borde y espera en la caja, mirando el salto.
                             objetivo = Mathf.Min(objetivo, esperaDetras);
                         }
                         else
                         {
-                            // Ya hay sitio: cruza el arco entero, aunque el jugador se pare.
-                            objetivo = Mathf.Max(objetivo,
-                                Mathf.Min(total, distanciaAterrizaje + 0.25f));
+                            _cruzandoSalto = true;
                         }
                     }
+
+                    // Decidido el salto, cruza el arco entero aunque el jugador se pare cerca.
+                    if (_cruzandoSalto || _enSaltoDeRastro)
+                        objetivo = Mathf.Max(objetivo, Mathf.Min(total, distanciaAterrizaje + 0.25f));
+                }
+                else
+                {
+                    // Sin salto por delante nunca se vuelve atrás por el rastro (hacia el hueco).
+                    objetivo = Mathf.Max(objetivo, _cursorDistanciaRastro);
                 }
 
                 float velocidadCursor = _enSaltoDeRastro
@@ -923,6 +1024,16 @@ namespace Game.NPC.States
                         : GetWalkSpeed());
                 _cursorDistanciaRastro = Mathf.MoveTowards(_cursorDistanciaRastro, objetivo,
                     velocidadCursor * dt);
+
+                if (_ultimoSaltoEstudiado >= 0f && !_saltoAvisado
+                    && _aterrizajeEstudiado > _ultimoSaltoEstudiado
+                    && _cursorDistanciaRastro >= _aterrizajeEstudiado + 0.1f)
+                {
+                    _saltoAvisado = true;
+                    _cruzandoSalto = false;
+                    _esperandoTurnoDesde = -1f;
+                    _party.AvisarSaltoCruzado(_puestoRastro, _ultimoSaltoEstudiado);
+                }
 
                 if (_party.IntentarMuestrearRastroEnDistancia(_cursorDistanciaRastro, out PlayerParty.PuntoDeRastro muestra))
                 {
@@ -939,17 +1050,27 @@ namespace Game.NPC.States
                     Vector3 lateral = Vector3.Cross(Vector3.up, _direccionRastro) * (lado * separacion);
 
                     targetPos = muestra.posicion + lateral;
-                    rastroEnAire = muestra.enAire;
+                    // Solo va por el aire quien ha decidido cruzar el salto; los demás, por el suelo.
+                    // Si su punto del rastro cae en un tramo aéreo sin estar cruzando (dobles saltos,
+                    // runas), no se sube al arco: se queda donde está, en el suelo.
+                    rastroEnAire = muestra.enAire && _cruzandoSalto;
+                    if (muestra.enAire && !_cruzandoSalto)
+                        targetPos = prevPos;
                     usaAlturaDelRastro = true;
+
+                    // Con poco rastro detrás (salto en el sitio, recién llegados) su punto cae junto
+                    // al jugador: fuera de su espacio, salvo cruzando un salto (su caída ya lo respeta).
+                    if (!rastroEnAire && !_cruzandoSalto && !_enSaltoDeRastro)
+                        targetPos = FueraDelEspacioDelJugador(targetPos, playerPos, -context.Player.forward);
                 }
                 else
                 {
-                    targetPos = GetFormationTarget3D(context, playerMode);
+                    targetPos = PuestoSinRastro(context, playerMode, prevPos);
                 }
             }
             else
             {
-                targetPos = GetFormationTarget3D(context, playerMode);
+                targetPos = PuestoSinRastro(context, playerMode, prevPos);
             }
 
             float tiempoOffset = usaAlturaDelRastro
@@ -962,6 +1083,21 @@ namespace Game.NPC.States
                 ref _specialOffsetVel, tiempoOffset, maxSpeedOffset, dt);
             _specialSlotError = Vector3.Distance(_specialFollowOffset, targetPos - playerPos);
             _specialFollowPosition = playerPos + _specialFollowOffset;
+
+            // A pie por el rastro se va por el mundo, no en bloque con el jugador: si el jugador
+            // salta, el compañero no se desliza con él por encima del hueco; anda hasta su punto.
+            if (usaAlturaDelRastro)
+            {
+                Vector3 enElMundo = Vector3.SmoothDamp(prevPos, targetPos, ref _velRastroEnElMundo,
+                    tiempoOffset, maxSpeedOffset, dt);
+                _specialFollowPosition = enElMundo;
+                _specialFollowOffset = enElMundo - playerPos;
+                _specialOffsetVel = Vector3.zero;
+            }
+            else
+            {
+                _velRastroEnElMundo = Vector3.zero;
+            }
 
             // Sin volar ni nadar, la altura sale del rastro (o del suelo bajo el puesto en el
             // respaldo en V). Así no se sube y baja con el salto del jugador, pero sí se cruza
@@ -984,7 +1120,9 @@ namespace Game.NPC.States
                 {
                     float yReferencia = targetPos.y;
                     float yFinal = yReferencia;
-                    if (BuscarSuelo(_specialFollowPosition, yReferencia, yReferencia,
+                    // Suelo bajo su punto, como mucho un poco por debajo del rastro o de los pies del
+                    // jugador: así no se queda de pie en el aire si su punto quedó a la altura de un arco.
+                    if (BuscarSuelo(_specialFollowPosition, yReferencia, Mathf.Min(yReferencia, playerPos.y),
                                     out float ySuelo, CAIDA_MAXIMA_DESDE_RASTRO))
                         yFinal = ySuelo;
 
@@ -1194,6 +1332,7 @@ namespace Game.NPC.States
                         }
                         else if (!_enSaltoDeRastro && _estabaEnAireRastro)
                         {
+                            context.Animator?.ForzarEnElSuelo();
                             if (!TryCrossFade(anim, HashLanding, 0.08f, 0))
                                 TryCrossFade(anim, HashLocomotion, 0.1f, 0);
                         }
@@ -1233,10 +1372,12 @@ namespace Game.NPC.States
             _exitMode        = ActionMode.Default;
             _flightStateRequested = 0;
             _usandoRastro = false;
-            _rastroInicializado = false;
+            // El cursor del rastro se conserva: a pie sigue por el mismo recorrido. Solo el vuelo y el
+            // nado lo vacían (PlayerParty limpia el rastro y se vuelve a enganchar).
             _enSaltoDeRastro = false;
             _estabaEnAireRastro = false;
             _saltoConEspacio = false;
+            _cruzandoSalto = false;
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
 
             // Siempre limpiar isFlying al salir para que no quede el personaje en fly_idle
@@ -1260,9 +1401,8 @@ namespace Game.NPC.States
                         break;
 
                     default:
-                        // Plataforma/salto: restaurar estado grounded para no quedar en mid-air
-                        TrySetBool(anim, HashIsGrounded, true);
-                        TrySetFloat(anim, HashGroundDist, 0f);
+                        // Plataforma/salto: de vuelta al suelo, sin quedarse en Falling.
+                        context.Animator?.ForzarEnElSuelo();
                         break;
                 }
             }
@@ -1281,22 +1421,7 @@ namespace Game.NPC.States
             {
                 // Activar updatePosition ANTES del Warp para que éste actualice el transform
                 context.Agent.updatePosition = true;
-
-                if (!context.Agent.isOnNavMesh)
-                {
-                    if (NavMesh.SamplePosition(context.Transform.position, out NavMeshHit hit, WARP_SEARCH_RADIUS, NavMesh.AllAreas)
-                        && hit.position.y >= context.Transform.position.y - 1.5f)
-                    {
-                        // Mover el transform directamente además del Warp como garantía extra.
-                        // No se hace si la malla más cercana es el fondo de un foso.
-                        context.Transform.position = hit.position;
-                        context.Agent.Warp(hit.position);
-                    }
-                }
-                else
-                {
-                    context.Agent.nextPosition = context.Transform.position;
-                }
+                DevolverAgenteAlCuerpo(context);
 
                 if (context.Agent.isOnNavMesh) context.Agent.isStopped = true;
                 context.Agent.updateRotation = false;
@@ -1342,7 +1467,21 @@ namespace Game.NPC.States
                 ? _playerSwimming.AlturaDeFlote
                 : context.Player.position.y;
 
-            return new Vector3(context.Player.position.x + hueco.x, y, context.Player.position.z + hueco.z);
+            var puestoEnElMundo = new Vector3(context.Player.position.x + hueco.x, y, context.Player.position.z + hueco.z);
+            return aPie
+                ? PuestoDetrasDelJugador(puestoEnElMundo, context.Player, false)
+                : puestoEnElMundo;
+        }
+
+        /// <summary>
+        /// Puesto cuando no hay rastro que seguir. A pie, mientras el jugador está en el aire, se
+        /// queda donde está: la formación va pegada al jugador y le llevaría volando con él.
+        /// </summary>
+        private Vector3 PuestoSinRastro(NPCStateContext context, ActionMode mode, Vector3 dondeEsta)
+        {
+            if (mode == ActionMode.Default && _party != null && _party.JugadorEnElAire)
+                return dondeEsta;
+            return GetFormationTarget3D(context, mode);
         }
 
         /// <summary>Rumbo (grados) de una dirección en el plano; si es vertical, el de respaldo.</summary>
@@ -1576,7 +1715,43 @@ namespace Game.NPC.States
                 }
             }
 
-            // Detrás: el puesto de cada uno en la formación del grupo (abanico), no todos al mismo punto.
+            // Con el jugador quieto, a su lado y un poco por detrás: cerca, sin taparle ni quedarse
+            // entre él y la cámara (andando, en cambio, va por su rastro).
+            if (preferBehind && _smoothedPlayerSpeed < 0.3f && !HaySaltoCerca())
+            {
+                Vector3 adelante = context.Player.forward; adelante.y = 0f;
+                if (adelante.sqrMagnitude > 0.0001f)
+                {
+                    adelante.Normalize();
+                    Vector3 hombro = context.Player.position - adelante * (DETRAS_MINIMO + 0.2f);
+                    Vector3 puesto = PuestoDetrasDelJugador(hombro, context.Player, true);
+                    if (NavMesh.SamplePosition(puesto, out NavMeshHit hitHombro, 1.5f, NavMesh.AllAreas)
+                        && Mathf.Abs(hitHombro.position.y - context.Player.position.y) <= 1.5f)
+                    {
+                        _formationTarget = hitHombro.position;
+                        _tieneDestinoFormacion = true;
+                        if (Vector3.Distance(context.Agent.destination, hitHombro.position) > 0.3f)
+                            context.Agent.SetDestination(hitHombro.position);
+                        return;
+                    }
+                }
+            }
+
+            // Detrás: por donde ha ido el jugador (su rastro), no en línea recta hacia él.
+            if (preferBehind && DestinoPorElRastro(context, followDist, out Vector3 destinoRastro, out bool esSuPuesto))
+            {
+                // Junto a un salto manda el borde del salto, con los demás; si no, detrás y abierto a su lado.
+                if (!HaySaltoCerca()) destinoRastro = PuestoDetrasDelJugador(destinoRastro, context.Player, true);
+                else destinoRastro = FueraDelEspacioDelJugador(destinoRastro, context.Player.position, -context.Player.forward);
+                _formationTarget = destinoRastro;
+                _tieneDestinoFormacion = esSuPuesto;
+                if (Vector3.Distance(context.Agent.destination, destinoRastro) > 0.3f)
+                    context.Agent.SetDestination(destinoRastro);
+                return;
+            }
+
+            // Sin rastro (recién teletransportado, tras una cinemática…): el puesto de cada uno en
+            // la formación del grupo (abanico), no todos al mismo punto.
             Vector3 targetPos = preferBehind && _partyMember != null
                 ? _partyMember.GetFormationPosition()
                 : context.Player.position + (context.Transform.position - context.Player.position).normalized * followDist;
@@ -1606,10 +1781,257 @@ namespace Game.NPC.States
                 destino = context.Player.position;
             }
 
+            if (preferBehind)
+                destino = PuestoDetrasDelJugador(destino, context.Player, true);
+
             _formationTarget = destino;
             _tieneDestinoFormacion = preferBehind;
             if (Vector3.Distance(context.Agent.destination, destino) > 0.5f)
                 context.Agent.SetDestination(destino);
+        }
+
+        /// <summary>Radio alrededor del jugador en el que no se mete nadie del grupo. Ver INC-1394.</summary>
+        private float EspacioDelJugador =>
+            _config != null && _config.espacioDelJugador > 0.01f ? _config.espacioDelJugador : 3f;
+
+        /// <summary>
+        /// Abre a su lado un punto de detrás del jugador (izquierda o derecha según su puesto), para
+        /// que no quede entre la cámara y el jugador. Ver INC-1394.
+        /// </summary>
+        private Vector3 AbiertoASuLado(Vector3 punto, Transform jugador)
+        {
+            float apertura = _config != null ? Mathf.Max(0f, _config.aperturaLateralDetras) : 3f;
+            if (apertura < 0.01f) return punto;
+
+            Vector3 adelante = jugador.forward; adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.0001f) return punto;
+            adelante.Normalize();
+            Vector3 derecha = Vector3.Cross(Vector3.up, adelante);
+
+            float lateral = Vector3.Dot(punto - jugador.position, derecha);
+            if (Mathf.Abs(lateral) >= apertura) return punto;
+            float lado = _puestoRastro % 2 == 0 ? 1f : -1f;
+            return punto + derecha * (lado * apertura - lateral);
+        }
+
+        /// <summary>Segundos que tarda en arrancar cuando el jugador echa a andar: distinto para cada uno del grupo.</summary>
+        private float RetrasoAlArrancar()
+        {
+            int i = _partyMember != null && _partyMember.PartyIndex >= 0 ? _partyMember.PartyIndex : _puestoRastro;
+            return 0.12f + (i % 3) * 0.28f;
+        }
+
+        /// <summary>Un poco más rápido o más lento que el resto según su puesto, para que no anden al unísono.</summary>
+        private float RitmoPropio()
+        {
+            int i = _partyMember != null && _partyMember.PartyIndex >= 0 ? _partyMember.PartyIndex : _puestoRastro;
+            return i % 2 == 0 ? 1.05f : 0.95f;
+        }
+
+        /// <summary>¿Hay un salto del jugador por delante en el rastro, a poca distancia de este compañero?</summary>
+        private bool HaySaltoCerca()
+        {
+            return _party != null && _rastroInicializado
+                   && _party.HaySaltoEnTramoDeRastro(_cursorDistanciaRastro - 0.05f, _party.DistanciaTotalRastro,
+                                                     out float despegue, out _)
+                   && despegue - _cursorDistanciaRastro <= RASTRO_SUELO_SALTO_CERCA + 2f;
+        }
+
+        /// <summary>Distancia (m) hacia delante del jugador a partir de la que un punto ya no cuenta como detrás.</summary>
+        private const float DETRAS_MINIMO = 1f;
+
+        /// <summary>¿El punto queda detrás del jugador (según hacia dónde mira)?</summary>
+        private static bool EstaDetras(Vector3 punto, Transform jugador)
+        {
+            Vector3 adelante = jugador.forward; adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.0001f) return true;
+            return Vector3.Dot(punto - jugador.position, adelante.normalized) <= -DETRAS_MINIMO;
+        }
+
+        /// <summary>¿El punto queda apartado a un lado del jugador, cerca de sus hombros (fuera de la línea entre la cámara y él)?</summary>
+        private bool AbiertoDelJugador(Vector3 punto, Transform jugador)
+        {
+            float apertura = _config != null ? Mathf.Max(0f, _config.aperturaLateralDetras) : 3f;
+            Vector3 adelante = jugador.forward; adelante.y = 0f;
+            if (apertura < 0.01f || adelante.sqrMagnitude < 0.0001f) return true;
+            adelante.Normalize();
+            Vector3 derecha = Vector3.Cross(Vector3.up, adelante);
+            Vector3 rel = punto - jugador.position;
+            // A su lado y cerca de la línea de sus hombros: más atrás ya estaría junto a la cámara.
+            return Mathf.Abs(Vector3.Dot(rel, derecha)) >= apertura * 0.5f
+                   && Vector3.Dot(rel, adelante) >= -(DETRAS_MINIMO + 1.2f);
+        }
+
+        /// <summary>Lleva detrás del jugador un punto que le queda al lado o delante (conserva el lado).</summary>
+        private static Vector3 Detras(Vector3 punto, Transform jugador)
+        {
+            Vector3 adelante = jugador.forward; adelante.y = 0f;
+            if (adelante.sqrMagnitude < 0.0001f) return punto;
+            adelante.Normalize();
+            float haciaDelante = Vector3.Dot(punto - jugador.position, adelante);
+            if (haciaDelante <= -DETRAS_MINIMO) return punto;
+            return punto - adelante * (haciaDelante + DETRAS_MINIMO);
+        }
+
+        /// <summary>Puesto a pie respecto al jugador: detrás, abierto a su lado (si se pide) y fuera de su espacio.</summary>
+        private Vector3 PuestoDetrasDelJugador(Vector3 punto, Transform jugador, bool abrirASuLado)
+        {
+            punto = Detras(punto, jugador);
+            if (abrirASuLado) punto = AbiertoASuLado(punto, jugador);
+            return FueraDelEspacioDelJugador(punto, jugador.position, -jugador.forward);
+        }
+
+        /// <summary>Lleva un punto al borde del espacio del jugador si cae dentro.</summary>
+        private Vector3 FueraDelEspacioDelJugador(Vector3 punto, Vector3 jugador, Vector3 respaldo)
+        {
+            Vector3 desde = punto - jugador; desde.y = 0f;
+            float espacio = EspacioDelJugador;
+            if (desde.sqrMagnitude >= espacio * espacio) return punto;
+            if (desde.sqrMagnitude < 0.01f) { desde = respaldo; desde.y = 0f; }
+            if (desde.sqrMagnitude < 0.0001f) desde = Vector3.back;
+            // Un poco más allá del borde: el agente se para antes de su destino y debe quedar fuera.
+            Vector3 fuera = jugador + desde.normalized * (espacio + 0.5f);
+            fuera.y = punto.y;
+            return fuera;
+        }
+
+        /// <summary>
+        /// A pie por NavMesh: avanza el cursor del rastro hasta el punto más reciente del recorrido del
+        /// jugador que el compañero tiene al lado. No pasa de un salto: ese lo cruza el rastro.
+        /// </summary>
+        private void ActualizarCursorEnSuelo(NPCStateContext context)
+        {
+            if (_party == null && PlayerParty.HasInstance)
+            {
+                _party = PlayerParty.Instance;
+                ActualizarDatosDelRastro();
+            }
+            if (_party == null || _party.TotalMuestrasRastro < 2) { _rastroInicializado = false; return; }
+            if (_config != null && !_config.seguirRastroEnPlataformas) return;
+
+            if (_partyMember != null && _partyMember.ConsumirReinicioDeRastro()) _rastroInicializado = false;
+            float total = _party.DistanciaTotalRastro;
+            if (!_rastroInicializado || _cursorDistanciaRastro > total + 0.5f)
+            {
+                InicializarCursorRastro(context);
+                return;
+            }
+
+            float hasta = total;
+            if (_party.HaySaltoEnTramoDeRastro(_cursorDistanciaRastro - 0.05f, total, out float despegue, out _))
+                hasta = Mathf.Min(hasta, despegue);
+
+            // Va abierto a su lado del rastro: el radio de búsqueda cuenta con esa apertura.
+            float apertura = _config != null ? Mathf.Max(0f, _config.aperturaLateralDetras) : 3f;
+            if (_party.BuscarDistanciaMasAvanzadaCerca(context.Transform.position, _cursorDistanciaRastro - 1f,
+                                                       hasta, RASTRO_SUELO_RADIO + apertura, out float avanzada)
+                && avanzada > _cursorDistanciaRastro)
+            {
+                _cursorDistanciaRastro = avanzada;
+                return;
+            }
+
+            // Lejos de su punto del rastro (le han recolocado, ha rodeado algo): se vuelve a enganchar.
+            if (_party.IntentarMuestrearRastroEnDistancia(_cursorDistanciaRastro, out PlayerParty.PuntoDeRastro aqui)
+                && (aqui.posicion - context.Transform.position).sqrMagnitude
+                   > (RASTRO_SUELO_PERDIDO + apertura) * (RASTRO_SUELO_PERDIDO + apertura))
+                InicializarCursorRastro(context);
+        }
+
+        /// <summary>
+        /// Siguiente punto del rastro hacia el que andar: un poco por delante del suyo, sin pasar de su
+        /// sitio detrás del jugador ni del borde de un salto. <paramref name="esSuPuesto"/> dice si es ya
+        /// donde se tiene que parar.
+        /// </summary>
+        private bool DestinoPorElRastro(NPCStateContext context, float detrasMinimo, out Vector3 destino, out bool esSuPuesto)
+        {
+            destino = default;
+            esSuPuesto = false;
+            if (_config != null && !_config.seguirRastroEnPlataformas) return false;
+            if (_party == null || !_rastroInicializado || _party.TotalMuestrasRastro < 2) return false;
+
+            float total = _party.DistanciaTotalRastro;
+            float detras = Mathf.Max(_distanciaBaseRastro + _puestoRastro * _separacionPorPuestoRastro, detrasMinimo);
+            float tope = Mathf.Max(0f, total - detras);
+            if (_party.HaySaltoEnTramoDeRastro(_cursorDistanciaRastro - 0.05f, total, out float despegue, out _))
+                tope = Mathf.Min(tope, Mathf.Max(0f, despegue - 0.3f));
+
+            // El cursor ya está más cerca del jugador de lo que toca (el jugador ha vuelto hacia el
+            // grupo, o el cursor se enganchó a su último paso): ese punto del rastro está dentro de su
+            // espacio. Manda la formación, que queda detrás y fuera de él.
+            if (_cursorDistanciaRastro > tope + 0.1f) return false;
+
+            float objetivo = Mathf.Max(_cursorDistanciaRastro, Mathf.Min(_cursorDistanciaRastro + RASTRO_SUELO_ADELANTO, tope));
+            esSuPuesto = objetivo >= tope - 0.01f;
+
+            if (!_party.IntentarMuestrearRastroEnDistancia(objetivo, out PlayerParty.PuntoDeRastro punto)) return false;
+
+            Vector3 direccion = punto.direccion; direccion.y = 0f;
+            direccion = direccion.sqrMagnitude > 0.0001f ? direccion.normalized : Vector3.forward;
+            float separacion = _totalPuestosRastro > 1 ? _separacionLateralRastro : 0f;
+            float lado = _puestoRastro % 2 == 0 ? 1f : -1f;
+            Vector3 conLado = punto.posicion + Vector3.Cross(Vector3.up, direccion) * (lado * separacion);
+
+            if (NavMesh.SamplePosition(conLado, out NavMeshHit hit, 1f, NavMesh.AllAreas)
+                && Mathf.Abs(hit.position.y - punto.posicion.y) <= 1f)
+            {
+                destino = hit.position;
+                return true;
+            }
+            if (NavMesh.SamplePosition(punto.posicion, out hit, 1f, NavMesh.AllAreas)
+                && Mathf.Abs(hit.position.y - punto.posicion.y) <= 1f)
+            {
+                destino = hit.position;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>¿Donde caerá este compañero (su lado del rastro, tras el salto) queda lejos del jugador?</summary>
+        private bool HayHolguraAlCaer(NPCStateContext context, float distanciaAterrizaje)
+        {
+            if (context.Player == null) return false;
+            if (!_party.IntentarMuestrearRastroEnDistancia(distanciaAterrizaje + 0.25f, out PlayerParty.PuntoDeRastro caida))
+                return _party.DistanciaTotalRastro - distanciaAterrizaje >= _holguraAlCaer;
+
+            Vector3 direccion = caida.direccion; direccion.y = 0f;
+            direccion = direccion.sqrMagnitude > 0.0001f ? direccion.normalized : Vector3.forward;
+            float separacion = _totalPuestosRastro > 1 ? _separacionLateralRastro : 0f;
+            float lado = _puestoRastro % 2 == 0 ? 1f : -1f;
+            Vector3 donde = caida.posicion + Vector3.Cross(Vector3.up, direccion) * (lado * separacion);
+            return Vector3.Distance(donde, context.Player.position) >= _holguraAlCaer;
+        }
+
+        /// <summary>El cuerpo pisa NavMesh justo donde está (no un suelo de NavMesh que quede por debajo).</summary>
+        private static bool PisaNavMesh(Vector3 posicion)
+        {
+            return NavMesh.SamplePosition(posicion, out NavMeshHit hit, 0.6f, NavMesh.AllAreas)
+                   && Mathf.Abs(hit.position.y - posicion.y) < 0.4f;
+        }
+
+        /// <summary>
+        /// Al devolverle el mando al agente, lo pone donde está el cuerpo. El agente no se ha movido
+        /// mientras el rastro llevaba al compañero, y fijar nextPosition lo arrastraba por la malla
+        /// desde su sitio viejo (el compañero se caía de la plataforma o aparecía en otro lado).
+        /// </summary>
+        private static void DevolverAgenteAlCuerpo(NPCStateContext context)
+        {
+            Vector3 cuerpo = context.Transform.position;
+            if (NavMesh.SamplePosition(cuerpo, out NavMeshHit cerca, 1f, NavMesh.AllAreas)
+                && Mathf.Abs(cerca.position.y - cuerpo.y) <= 1f)
+            {
+                context.Transform.position = cerca.position;
+                context.Agent.Warp(cerca.position);
+                return;
+            }
+            if (!context.Agent.isOnNavMesh
+                && NavMesh.SamplePosition(cuerpo, out NavMeshHit lejos, WARP_SEARCH_RADIUS, NavMesh.AllAreas)
+                && lejos.position.y >= cuerpo.y - 1.5f)
+            {
+                // No se hace si la malla más cercana es el fondo de un foso.
+                context.Transform.position = lejos.position;
+                context.Agent.Warp(lejos.position);
+            }
         }
 
         private float GetWalkSpeed() => _config?.velocidadCaminando ?? DEFAULT_WALK_SPEED;
@@ -1662,7 +2084,10 @@ namespace Game.NPC.States
             _enSaltoDeRastro = false;
             _estabaEnAireRastro = false;
             _saltoConEspacio = false;
+            _cruzandoSalto = false;
             if (_partyMember != null) _partyMember.EnSaltoDeRastro = false;
+            // Si sale a medio salto (combate, cinemática, teletransporte), no se queda en Falling.
+            context.Animator?.ForzarEnElSuelo();
 
             if (_inSpecialFollow)
             {
@@ -1686,17 +2111,8 @@ namespace Game.NPC.States
             if (context.Agent != null && context.Agent.isActiveAndEnabled)
             {
                 context.Agent.updatePosition = true;
-                if (context.Agent.isOnNavMesh)
-                {
-                    context.Agent.isStopped = true;
-                    context.Agent.nextPosition = context.Transform.position;
-                }
-                else if (NavMesh.SamplePosition(context.Transform.position, out NavMeshHit hit, WARP_SEARCH_RADIUS, NavMesh.AllAreas)
-                         && hit.position.y >= context.Transform.position.y - 1.5f)
-                {
-                    context.Transform.position = hit.position;
-                    context.Agent.Warp(hit.position);
-                }
+                DevolverAgenteAlCuerpo(context);
+                if (context.Agent.isOnNavMesh) context.Agent.isStopped = true;
                 context.Agent.updateRotation = false;
             }
 

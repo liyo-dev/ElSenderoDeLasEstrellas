@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Portada del menú principal: elige qué escena de fondo y qué música se ven según hasta dónde

@@ -103,6 +103,8 @@ public static class CombatTargetProvider
         if (SaludDelGrupo.EstaCaido(p)) return null;
         var cuerpo = ControlDelJugador.CuerpoDe(p);
         if (cuerpo == null || !cuerpo.activeInHierarchy) return null;
+        // Invisible: no se elige mientras quede otro a la vista (ver Invisibilidad).
+        if (Invisibilidad.EsInvisible(cuerpo.transform)) return null;
         if (p != ControlDelJugador.Activo)
         {
             // Los compañeros solo son objetivo si tienen vida propia (CuerpoDelGrupo).

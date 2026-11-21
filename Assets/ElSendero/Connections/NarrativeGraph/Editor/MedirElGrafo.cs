@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NarrativeGraphEditor;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {
@@ -32,9 +33,9 @@ namespace Sendero.Narrative.Editor
                 sb.AppendLine($"Resumen de todas las tarjetas: {Tiempo(() => { foreach (var n in nodos) StepSummary.For(n); }, 5):0.00}");
                 sb.AppendLine($"Avisos de todas las tarjetas: {Tiempo(() => { foreach (var n in nodos) StepSummary.Warnings(n); }, 5):0.00}");
                 sb.AppendLine($"Referencias de todos los pasos: {Tiempo(() => { foreach (var n in nodos) NarrativeNodeReferences.Of(n); }, 5):0.00}");
-                sb.AppendLine($"Camino hasta un paso (por clic): {Media(muestra, n => NarrativeStateProjector.Project(g, n.guid, new RecordingStateWriter())):0.00}");
-                sb.AppendLine($"Capítulos anteriores: {Media(muestra, n => NarrativeChapterChain.Before(g, n.guid)):0.00}");
-                sb.AppendLine($"Plan de arranque (sin caché): {Media(muestra, n => NarrativeStartPlanner.Plan(g, n.guid, new Dictionary<string, int>())):0.00}");
+                sb.AppendLine($"Camino hasta un paso (por clic): {Media(muestra, n => NarrativeStateProjector.Project(g, n.Guid, new RecordingStateWriter())):0.00}");
+                sb.AppendLine($"Capítulos anteriores: {Media(muestra, n => NarrativeChapterChain.Before(g, n.Guid)):0.00}");
+                sb.AppendLine($"Plan de arranque (sin caché): {Media(muestra, n => NarrativeStartPlanner.Plan(g, n.Guid, new Dictionary<string, int>())):0.00}");
                 sb.AppendLine($"Informe En vivo (sin caché): {Media(muestra, n => { StoryCache.Invalidate(); StoryLiveReport.Build(g, n); }):0.00}");
                 sb.AppendLine($"Informe En vivo (con caché): {Media(muestra, n => StoryLiveReport.Build(g, n)):0.00}");
             }
@@ -54,17 +55,23 @@ namespace Sendero.Narrative.Editor
             var sinDeclarar = NarrativeEffectContract.FindUndeclared(TypeCache.GetTypesDerivedFrom<NarrativeNode>()
                 .Concat(TypeCache.GetTypesDerivedFrom<NarrativeRequest>()));
             sb.AppendLine(sinDeclarar.Count == 0 ? "Todos los tipos declaran lo que dejan hecho." : "Sin declarar lo que dejan hecho: " + string.Join(", ", sinDeclarar.Select(t => t.Name)));
+            var contexto = Liyodev.Assistant.AssistantContexts.Find("narrative-graph");
+            sb.AppendLine($"Asistente en el editor del grafo: {(NarrativeAssistant.Host != null ? "sí" : "no")}; contexto narrative-graph registrado: {(contexto != null ? "sí" : "no")}" +
+                          (contexto is Liyodev.Assistant.IAssistantContextSelection sel ? $" ({sel.Targets().Count} capítulos elegibles)" : string.Empty));
+            using (var caja = Liyodev.Cinematics.DirectorAssistant.Create())
+                sb.AppendLine($"Caja de la IA del Director: {(caja != null ? "sí" : "no")}");
             int fallos = 0;
             foreach (var g in AssetDatabase.FindAssets("t:NarrativeGraph").Select(x => AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(x))).Where(x => x != null))
             {
                 var nodos = g.nodes.Where(n => n != null).ToList();
-                sb.AppendLine($"\n## {g.name}: {nodos.Count} pasos ({nodos.OfType<GameStepNode>().Count()} «Pedir al juego»), {g.nodes.Count(n => n == null)} nulos");
+                sb.AppendLine($"\n## {g.name}: {nodos.Count} pasos ({nodos.OfType<GameStepNode>().Count()} «Pedir al juego»), {g.nodes.Count(n => n == null)} nulos" +
+                              (SerializationUtility.HasManagedReferencesWithMissingTypes(g) ? " · TIPOS PERDIDOS" : " · sin tipos perdidos"));
                 StoryFlowCheck.Run(g, StoryStructure.Build(g));
                 var v = NarrativeGraphValidator.ValidateGraph(g);
                 foreach (var e in v.Errors) sb.AppendLine("  ERROR " + e);
                 foreach (var n in nodos)
                 {
-                    string quien = $"{NarrativeNodeCatalog.TitleOf(n)} «{n.displayTitle}» ({n.guid})";
+                    string quien = $"{NarrativeNodeCatalog.TitleOf(n)} «{n.DisplayTitle}» ({n.Guid})";
                     try
                     {
                         StepSummary.For(n);
@@ -72,11 +79,11 @@ namespace Sendero.Narrative.Editor
                         NarrativeNodeReferences.Of(n);
                         if (!n.IsAnnotation)
                         {
-                            NarrativeStateProjector.Project(g, n.guid, new RecordingStateWriter());
-                            NarrativeStartPlanner.Plan(g, n.guid, new Dictionary<string, int>());
+                            NarrativeStateProjector.Project(g, n.Guid, new RecordingStateWriter());
+                            NarrativeStartPlanner.Plan(g, n.Guid, new Dictionary<string, int>());
                         }
-                        if (n is GameStepNode paso && paso.HasNamedOutputs && paso.outputs.Count != paso.GetOutputPorts().Length)
-                            sb.AppendLine($"  aviso {quien}: {paso.outputs.Count} conexiones para {paso.GetOutputPorts().Length} salidas");
+                        if (n is GameStepNode paso && paso.HasNamedOutputs && paso.Outputs.Count != paso.GetOutputPorts().Length)
+                            sb.AppendLine($"  aviso {quien}: {paso.Outputs.Count} conexiones para {paso.GetOutputPorts().Length} salidas");
                     }
                     catch (Exception ex)
                     {

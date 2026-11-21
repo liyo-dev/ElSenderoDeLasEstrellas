@@ -2594,6 +2594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VentanaDeVision
   camaraDeLaVision: {fileID: 0}
+  grabacion: {fileID: 32900000, guid: d1cb0ac787cabc3499098030c5cc08ef, type: 3}
   imagenFija: {fileID: 2800000, guid: 536c32f5071fa5a43a86378416347031, type: 3}
   ventana: {fileID: 863859342}
   luz: {fileID: 829848090}
@@ -2737,6 +2738,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VentanaDeVision
   camaraDeLaVision: {fileID: 2006523448}
+  grabacion: {fileID: 0}
   imagenFija: {fileID: 0}
   ventana: {fileID: 799602774}
   luz: {fileID: 755824992}

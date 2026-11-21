@@ -9,18 +9,49 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public sealed class Escondite : MonoBehaviour
 {
-    private static readonly HashSet<Escondite> s_conElJugador = new();
+    private static readonly List<Escondite> s_activos = new();
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() => s_conElJugador.Clear();
+    private static void ResetStatics() => s_activos.Clear();
 #endif
 
-    /// El jugador está dentro de algún escondite activo.
-    public static bool JugadorEscondido => s_conElJugador.Count > 0;
+    // Margen para dar por dentro a quien roza el borde del hueco.
+    private const float Margen = 0.15f;
 
-    // Colliders del jugador dentro: su cuerpo puede tener más de uno.
-    private int _dentro;
+    private Collider _collider;
+
+    /// El jugador está dentro de algún escondite activo. Se mira dónde está ahora, no se cuentan
+    /// entradas y salidas del trigger: un collider que se apaga o un jugador movido por una
+    /// cinemática no avisan al salir, y el jugador se quedaba «escondido» para siempre (INC-1406).
+    public static bool JugadorEscondido
+    {
+        get
+        {
+            var jugador = PlayerService.PlayerTransform;
+            if (jugador == null) return false;
+            Vector3 pecho = jugador.position + Vector3.up * 0.6f;
+            for (int i = 0; i < s_activos.Count; i++)
+                if (s_activos[i] != null && s_activos[i].Contiene(pecho)) return true;
+            return false;
+        }
+    }
+
+    private bool Contiene(Vector3 punto)
+    {
+        if (_collider == null || !_collider.enabled) return false;
+        if ((_collider.bounds.ClosestPoint(punto) - punto).sqrMagnitude > Margen * Margen) return false;
+        // ClosestPoint no vale con mallas cóncavas: ahí basta la caja.
+        if (_collider is MeshCollider malla && !malla.convex) return true;
+        return (_collider.ClosestPoint(punto) - punto).sqrMagnitude <= Margen * Margen;
+    }
+
+    private void Awake() => _collider = GetComponent<Collider>();
+
+    private void OnEnable()
+    {
+        if (!s_activos.Contains(this)) s_activos.Add(this);
+    }
 
     private void Reset()
     {
@@ -28,31 +59,7 @@ public sealed class Escondite : MonoBehaviour
         if (col != null) col.isTrigger = true;
     }
 
-    private void OnTriggerEnter(Collider otro)
-    {
-        if (!EsDelJugador(otro)) return;
-        _dentro++;
-        s_conElJugador.Add(this);
-    }
-
-    private void OnTriggerExit(Collider otro)
-    {
-        if (!EsDelJugador(otro)) return;
-        _dentro = Mathf.Max(0, _dentro - 1);
-        if (_dentro == 0) s_conElJugador.Remove(this);
-    }
-
-    private void OnDisable()
-    {
-        _dentro = 0;
-        s_conElJugador.Remove(this);
-    }
-
-    private static bool EsDelJugador(Collider otro)
-    {
-        var jugador = PlayerService.PlayerTransform;
-        return jugador != null && otro != null && otro.transform.IsChildOf(jugador);
-    }
+    private void OnDisable() => s_activos.Remove(this);
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

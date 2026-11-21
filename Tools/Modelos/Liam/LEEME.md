@@ -10,3 +10,12 @@
 
 ## 13 nov 2026 — chequeo de choques (INC-1138)
 Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PASA. Informe y fotos en `chequeo/`. FBX nuevo copiado a Assets; el anterior, en `Versiones antiguas/Antes del chequeo de choques (2026-11-13)/`.
+
+## 19 nov 2026 — los pelillos ya no salen por la capucha (INC-1340)
+Raúl: «en el modelo 3D de Liam sigo viendo un pincho salir por encima del gorro». Eran los dos pelillos de punta de la
+coronilla de `Hair15_Flequillo`, que atravesaban `AC12_Capucha`. `liam.py` acerca ahora lo que del pelo queda más allá de
+la cara de dentro de la capucha a 1,2 cm por dentro de ella (27 puntos: las puntas de los pelillos y algún mechón). El
+FBX del juego se arregló igual con `../Pelo/pelo_bajo_el_gorro.py` (sobre el de Assets, que lleva la nuca de INC-1061)
+y está en Assets. Sin capucha los pelillos quedan algo más cortos. `chequeo_choques.py` lo mide ahora («Pelo que sale
+por fuera del gorro»): PASA. Foto: `pelo_bajo_la_capucha_antes_despues.png`. Lo anterior, en
+`Versiones antiguas/Pelillos por encima de la capucha (2026-11-19)/`.

@@ -42,15 +42,15 @@ public class LocalizedText : MonoBehaviour
     // `go.AddComponent<LocalizedText>().key = "Mi_Clave"`, usado en varios paneles de UI —
     // PatchNotesFlyoutPanel, BugReportFlyoutPanel), Awake() siempre veía key == null. Eso hacía que
     // LocalizationManager.Get() reventara con ArgumentNullException al llamar
-    // Dictionary.TryGetValue(null) (Dictionary no admite claves null). Y como la excepción
-    // interrumpía Bind() antes de llegar a Subscribe(), la etiqueta se quedaba para siempre sin
-    // suscribirse a OnLocaleChanged aunque la clave se asignara justo después — no solo reventaba el
-    // log, el texto tampoco se volvía a traducir nunca al cambiar de idioma. Ahora `key` es una
-    // propiedad: si se asigna después de Awake(), relanza el bind/subscribe con la clave ya
-    // disponible; si Awake() corre con la clave todavía vacía, simplemente no hace nada hasta que
-    // llegue una clave válida. El backing field sigue siendo [SerializeField] (ver FIX de arriba) para
-    // que una clave asignada por un builder de Editor sobreviva al guardado de la escena — la
-    // propiedad sigue haciendo falta tal cual para el caso de AddComponent<T>() en runtime.
+    // Dictionary.TryGetValue(null) (Dictionary no admite claves null). Y como la excepción interrumpía
+    // Bind() antes de llegar a Subscribe(), la etiqueta se quedaba para siempre sin suscribirse a
+    // OnLocaleChanged aunque la clave se asignara justo después — no solo reventaba el log, el texto
+    // tampoco se volvía a traducir nunca al cambiar de idioma. Ahora `key` es una propiedad: si se
+    // asigna después de Awake(), relanza el bind/subscribe con la clave ya disponible; si Awake()
+    // corre con la clave todavía vacía, simplemente no hace nada hasta que llegue una clave válida. El
+    // backing field sigue siendo [SerializeField] para que una clave asignada por un builder de Editor
+    // sobreviva al guardado de la escena — la propiedad sigue haciendo falta tal cual para el caso de
+    // AddComponent<T>() en runtime.
     public string key
     {
         get => _key;

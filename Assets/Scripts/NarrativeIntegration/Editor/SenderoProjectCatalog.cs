@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NarrativeGraphEditor;
+using Liyodev.NarrativeGraph.Editor;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {
@@ -31,6 +32,8 @@ namespace Sendero.Narrative.Editor
             into.ExcludePaths("/EldoriaCodex_", "/CatalogoAssets_", "/_to_delete/", "/Versiones antiguas/");
             into.ScanScriptsIn("Assets/Scripts");
             into.WatchFiles(".json");   // textos de Resources/Localization
+            // Los ScriptableObject que lee: solo un cambio en ellos rehace el índice entero.
+            into.WatchAssetTypes(typeof(QuestData), typeof(SequenceDefinition));
 
             into.SceneField("_signalIn", NarrativeKeyKind.Signal, SignalRole.Escucha, "Sequencer en");
             into.SceneField("_signalOut", NarrativeKeyKind.Signal, SignalRole.Emite, "Sequencer en");

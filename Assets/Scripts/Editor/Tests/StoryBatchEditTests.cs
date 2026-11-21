@@ -1,6 +1,8 @@
-using NarrativeGraphEditor;
+using System.Linq;
+using Liyodev.NarrativeGraph.Editor;
 using NUnit.Framework;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Tests de EditMode de StoryBatchEdit: los cambios por lotes se aplican todos o ninguno.
 public class StoryBatchEditTests
@@ -11,7 +13,7 @@ public class StoryBatchEditTests
     public void SetUp()
     {
         _grafo = ScriptableObject.CreateInstance<NarrativeGraph>();
-        var inicio = new StartNode { guid = "S", displayTitle = "Inicio" };
+        var inicio = new StartNode { Guid = "S", DisplayTitle = "Inicio" };
         _grafo.nodes.Add(inicio);
         _grafo.startNodeGuid = "S";
     }
@@ -31,8 +33,8 @@ public class StoryBatchEditTests
         Assert.IsTrue(r.Applied, r.ToString());
         Assert.AreEqual(3, _grafo.nodes.Count);
         var flag = (SetFlagNode)_grafo.nodes[1];
-        Assert.AreEqual("SALUDO", flag.flagKey);
-        Assert.Contains(flag.guid, _grafo.nodes[0].outputs);
+        Assert.AreEqual("SALUDO", flag.FlagKey);
+        Assert.Contains(flag.Guid, _grafo.nodes[0].Outputs);
     }
 
     [Test]
@@ -60,28 +62,25 @@ public class StoryBatchEditTests
     }
 }
 
-/// Tests de EditMode del puente local: lo que contesta a cada ruta.
-public class StoryBridgeTests
+/// Tests de EditMode del contexto del grafo en el asistente compartido: está registrado aunque el
+/// editor del grafo esté cerrado y es el que atiende a las herramientas externas (MCP).
+public class StoryAssistantContextTests
 {
     [Test]
-    public void ListaLosGrafosYElManual()
+    public void EstaRegistrado_ListaLosGrafosYElManual()
     {
-        var grafos = StoryBridge.Handle("GET", "/graphs", null, null, out var s1);
-        var manual = StoryBridge.Handle("GET", "/manual", null, null, out var s2);
-
-        Assert.AreEqual(200, s1);
-        StringAssert.Contains("Cap3", grafos);
-        Assert.AreEqual(200, s2);
-        StringAssert.Contains("ChooseByMomentNode", manual);
+        var contexto = Liyodev.Assistant.AssistantContexts.Find("narrative-graph");
+        Assert.IsNotNull(contexto);
+        var seleccion = contexto as Liyodev.Assistant.IAssistantContextSelection;
+        Assert.IsNotNull(seleccion);
+        Assert.IsTrue(seleccion.Targets().Any(t => t.id == "Cap3"));
+        StringAssert.Contains("ChooseByMomentNode", contexto.Manual());
     }
 
     [Test]
-    public void EditarSinGET_YGrafoDesconocido_Fallan()
+    public void ElegirUnGrafoDesconocido_Falla()
     {
-        StoryBridge.Handle("GET", "/edit", "Cap3", "{}", out var s1);
-        StoryBridge.Handle("GET", "/chapter", "NO_EXISTE", null, out var s2);
-
-        Assert.AreEqual(405, s1);
-        Assert.AreEqual(404, s2);
+        var seleccion = (Liyodev.Assistant.IAssistantContextSelection)Liyodev.Assistant.AssistantContexts.Find("narrative-graph");
+        Assert.IsFalse(seleccion.Select("NO_EXISTE"));
     }
 }

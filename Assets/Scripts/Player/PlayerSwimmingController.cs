@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using Invector.vCharacterController;
 using UnityEngine;
 using Core;
+using Sendero.Core.Feedback;
 
 /// <summary>
 /// Nado del jugador: detecta el agua, gestiona la entrada y mantiene la línea de agua a la
@@ -49,6 +51,13 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     // Sin saber nadar, solo se devuelve al jugador a la orilla si la tiene así de cerca (m): más
     // lejos es que ha llegado al agua de otra forma (una caída) y no se le arrastra.
     private const float DistanciaMaximaALaOrilla = 2f;
+    // Sitios secos recordados para el rescate: uno cada cuarto de segundo, los dos últimos segundos.
+    private const int SitiosRecordados = 8;
+    private const float IntervaloDeSitioSeguro = 0.25f;
+    // El rescate vuelve al sitio de hace un segundo (no al del mismo borde por el que se cayó).
+    private const int SitiosAtrasAlRescatar = 4;
+    // Agua que tiene que cubrirle los pies para contar como «ha caído al agua» (m).
+    private const float AguaParaContarComoCaida = 0.15f;
 
     [Header("Animación")]
     [SerializeField] private int locomotionLayerIndex = 0;
@@ -84,6 +93,12 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     [Header("Sin saber nadar")]
     [SerializeField, Tooltip("Sin la habilidad de nadar, el jugador no entra en agua con más fondo que esto (m): se queda en la orilla.")]
     private float fondoMaximoSinNadar = 0.6f;
+    [SerializeField, Tooltip("Sin saber nadar, si cae al agua desde más alto que esto (m) —de un puente, de un borde— no podría volver a subir: vuelve a tierra firme tras un fundido.")]
+    private float alturaParaRescatar = 1.2f;
+    [SerializeField, Tooltip("Duración de cada mitad del fundido a negro al volver a tierra firme (s).")]
+    private float fundidoDelRescate = 0.3f;
+    [SerializeField, Tooltip("Al volver a tierra firme se le deja al menos a esta distancia del borde del NavMesh (m), si cabe.")]
+    private float margenDelBordeAlRescatar = 1f;
 
     [Header("Ondas al nadar")]
     [SerializeField, Tooltip("Segundos entre ondas mientras nada.")]
@@ -145,8 +160,15 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     private Vector3 _posicionEnLaOrilla;
     private bool _hayPosicionEnLaOrilla;
     private bool _frenadoEnLaOrilla;
-    // Sin saber nadar y con el agua ya por el pecho (se ha caído o se ha metido en lo hondo).
-    private bool _rescatarSinNadar;
+    // Tierra seca por la que ha pasado (para el rescate sin saber nadar). Ver INC-1331.
+    private readonly Vector3[] _sitiosSeguros = new Vector3[SitiosRecordados];
+    private int _ultimoSitioSeguro = -1;
+    private int _sitiosSegurosApuntados;
+    private float _siguienteSitioSeguro;
+    private Vector3 _ultimoSeco;
+    private bool _hayUltimoSeco;
+    private Coroutine _rescate;
+    private bool _rescateTapaLaPantalla;
 
     /// <summary>True mientras está en el agua (zambulléndose o flotando).</summary>
     public bool EstaEnElAgua => _fase != Fase.Fuera;
@@ -210,6 +232,16 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     {
         if (_ownsControls)
             _controls?.Disable();
+        if (_rescate != null)
+        {
+            StopCoroutine(_rescate);
+            _rescate = null;
+        }
+        if (_rescateTapaLaPantalla)
+        {
+            _rescateTapaLaPantalla = false;
+            FeedbackService.ScreenFade(Color.black, fundidoDelRescate, fadeIn: false);
+        }
         if (_fase != Fase.Fuera)
             ExitSwimming(force: true);
     }
@@ -224,6 +256,12 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         float surfaceY = 0f;
 
         if (hasWater && TryGetWaterSurface(out surfaceY))
+        {
+            hasSurface = true;
+            _rememberedSurfaceY = surfaceY;
+            _lastSurfaceSeenTime = Time.time;
+        }
+        else if (TryGetEndlessSeaSurface(out surfaceY))
         {
             hasSurface = true;
             _rememberedSurfaceY = surfaceY;
@@ -253,9 +291,16 @@ public sealed class PlayerSwimmingController : MonoBehaviour
                 _posicionEnLaOrilla = transform.position;
                 _hayPosicionEnLaOrilla = true;
             }
-            // Sin la habilidad, el agua honda no se nada: si ya le cubre el pecho, vuelve a donde
-            // hacía pie, esté lo lejos que esté. Ver INC-1157.
-            if (hundido && _hayPosicionEnLaOrilla) _rescatarSinNadar = true;
+            // Tierra seca: el agua, si la hay, no le llega a los pies.
+            bool seco = !hasSurface || surfaceY <= transform.position.y + 0.05f;
+            if (seco && pisando && _rescate == null) ApuntarSitioSeguro();
+            // Sin la habilidad, el agua honda no se nada: si ya le cubre el pecho (INC-1157), o si ha
+            // caído al agua desde un sitio del que no podría volver a subir (un puente, un borde),
+            // vuelve a tierra firme tras un fundido, sin perder nada. Ver INC-1331.
+            if (!puedeNadar && hasSurface && _rescate == null
+                && (_actionManager == null || !_actionManager.IsInMode(ActionMode.Flying))
+                && (hundido || HaCaidoAlAgua(surfaceY)))
+                Rescatar();
 
             if (hasSurface && puedeNadar && ShouldEnter(surfaceY))
                 EnterSwimming(surfaceY);
@@ -301,7 +346,6 @@ public sealed class PlayerSwimmingController : MonoBehaviour
             return;
         if (_fase == Fase.Fuera)
         {
-            if (_rescatarSinNadar) VolverADondeHaciaPie();
             QuedarseEnLaOrilla();
             return;
         }
@@ -687,14 +731,73 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         return TryGetSueloBajo(out float sueloY) && surfaceY - sueloY > fondoMaximoSinNadar;
     }
 
-    // Sin saber nadar y dentro del agua honda: vuelve entero (también en altura) al último sitio
-    // donde hacía pie, parado.
-    void VolverADondeHaciaPie()
+    void ApuntarSitioSeguro()
     {
-        _rescatarSinNadar = false;
-        _rigidbody.position = _posicionEnLaOrilla;
-        _rigidbody.linearVelocity = Vector3.zero;
-        transform.position = _posicionEnLaOrilla;
+        _ultimoSeco = transform.position;
+        _hayUltimoSeco = true;
+        if (Time.time < _siguienteSitioSeguro) return;
+        _siguienteSitioSeguro = Time.time + IntervaloDeSitioSeguro;
+        _ultimoSitioSeguro = (_ultimoSitioSeguro + 1) % SitiosRecordados;
+        _sitiosSeguros[_ultimoSitioSeguro] = _ultimoSeco;
+        if (_sitiosSegurosApuntados < SitiosRecordados) _sitiosSegurosApuntados++;
+    }
+
+    // Con el agua por encima de los pies y bastante más abajo que la última tierra seca: ha caído
+    // desde arriba y andando no podría volver.
+    bool HaCaidoAlAgua(float surfaceY)
+    {
+        if (!_hayUltimoSeco) return false;
+        float pies = transform.position.y;
+        return surfaceY - pies > AguaParaContarComoCaida && _ultimoSeco.y - pies > alturaParaRescatar;
+    }
+
+    // Tierra firme a la que volver: la de hace un segundo (lejos del borde por el que ha caído),
+    // apartada del borde del NavMesh si cabe. Sin ninguna apuntada, donde hacía pie en la orilla.
+    bool SitioDeRescate(out Vector3 sitio)
+    {
+        sitio = default;
+        if (_sitiosSegurosApuntados > 0)
+        {
+            int atras = Mathf.Min(SitiosAtrasAlRescatar, _sitiosSegurosApuntados - 1);
+            sitio = _sitiosSeguros[(_ultimoSitioSeguro - atras + SitiosRecordados) % SitiosRecordados];
+        }
+        else if (_hayUltimoSeco) sitio = _ultimoSeco;
+        else if (_hayPosicionEnLaOrilla) sitio = _posicionEnLaOrilla;
+        else return false;
+        sitio = Kits.Core.GroundProbe.AwayFromNavMeshEdge(sitio, margenDelBordeAlRescatar);
+        return true;
+    }
+
+    void Rescatar()
+    {
+        if (!SitioDeRescate(out Vector3 sitio)) return;
+        _rescate = StartCoroutine(Co_Rescatar(sitio));
+    }
+
+    // Fundido breve, a tierra firme y de vuelta: el combate, la vida y la historia siguen igual.
+    IEnumerator Co_Rescatar(Vector3 sitio)
+    {
+        Log("Sin saber nadar: vuelve a tierra firme en " + sitio);
+        _rescateTapaLaPantalla = !FeedbackService.IsScreenFaded;
+        if (_rescateTapaLaPantalla)
+            yield return FeedbackService.ScreenFadeAsync(Color.black, fundidoDelRescate, fadeIn: true);
+
+        if (_rigidbody != null)
+        {
+            _rigidbody.position = sitio;
+            _rigidbody.linearVelocity = Vector3.zero;
+        }
+        transform.position = sitio;
+        if (_thirdPersonController != null) _thirdPersonController.ForzarEnElSuelo();
+        _ultimoSeco = sitio;
+        yield return null;
+
+        if (_rescateTapaLaPantalla)
+        {
+            _rescateTapaLaPantalla = false;
+            yield return FeedbackService.ScreenFadeAsync(Color.black, fundidoDelRescate, fadeIn: false);
+        }
+        _rescate = null;
     }
 
     // Sin saber nadar, el agua honda hace de pared: el jugador vuelve al último sitio donde
@@ -931,6 +1034,16 @@ public sealed class PlayerSwimmingController : MonoBehaviour
             }
         }
         return found;
+    }
+
+    // El mar sin borde (Kits.WorldWrap.EndlessSea) cuenta como agua aunque no haya un volumen
+    // debajo: el plano sigue a la cámara y no lleva collider, así que fuera de los volúmenes
+    // colocados a mano el jugador se iba al fondo. Solo cuenta con los pies bajo su superficie;
+    // si el agua es poco honda, ShouldEnter lo deja andando. Ver INC-1398.
+    bool TryGetEndlessSeaSurface(out float surfaceY)
+    {
+        if (!Kits.WorldWrap.EndlessSea.TryGetSurface(out surfaceY)) return false;
+        return transform.position.y < surfaceY;
     }
 
     bool TrySampleSurfaceWithRay(out float surfaceY)

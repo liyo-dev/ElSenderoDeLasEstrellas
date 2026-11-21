@@ -26,7 +26,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 5630202821400330500
-      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: StartNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio del Sendero
         chapter: Sendero
@@ -41,7 +41,7 @@ MonoBehaviour:
         outputs:
         - sendero-tras-capitulo
     - rid: 5630202821400330501
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Espera: libro prohibido y ritual (lo emite el cap\xEDtulo de la Piedra)"
         chapter: Sendero
@@ -60,7 +60,7 @@ MonoBehaviour:
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
     - rid: 5630202821400330502
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "La Piedra admite el conjuro (probar desde aqu\xED)"
         chapter: Sendero
@@ -76,7 +76,7 @@ MonoBehaviour:
         - sendero-espera-conjuro
         eventKey: SENDERO_RITUAL_LISTO
     - rid: 5630202821400330503
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Will acepta leer el conjuro ante la Piedra
         chapter: Sendero
@@ -95,7 +95,7 @@ MonoBehaviour:
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
     - rid: 5630202821400330505
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Llegada al Sendero
         chapter: Sendero
@@ -113,7 +113,7 @@ MonoBehaviour:
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
     - rid: 5630202821400330506
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Tras el cap\xEDtulo anterior (CH_Cap4_BACK_1)"
         chapter: Sendero
@@ -132,7 +132,7 @@ MonoBehaviour:
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
     - rid: 6540294618706084397
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Cinem\xE1tica: el conjuro abre el portal"
         chapter: Sendero

@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Pestaña «Arranque»: cómo va a empezar la prueba desde el paso elegido, fila a fila y con de
     /// dónde sale cada cosa (partida nueva, historia, punto de arranque o jugador de prueba), y el
@@ -106,7 +106,7 @@ namespace NarrativeGraphEditor.Story
                 return;
             }
 
-            var plan = NarrativeStartPlanner.Plan(_graph, _node.guid);
+            var plan = NarrativeStartPlanner.Plan(_graph, _node.Guid);
             using var jugador = plan.Build(story: false, points: false, testPlayer: true);
             if (jugador?.Data == null)
             {
@@ -129,7 +129,7 @@ namespace NarrativeGraphEditor.Story
                 return;
             }
 
-            var plan = NarrativeStartPlanner.Plan(_graph, _node.guid);
+            var plan = NarrativeStartPlanner.Plan(_graph, _node.Guid);
             var sheet = plan.Sheet;
 
             var head = new VisualElement();

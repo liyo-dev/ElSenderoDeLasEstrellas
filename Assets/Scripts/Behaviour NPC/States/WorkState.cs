@@ -31,6 +31,8 @@ namespace Game.NPC.States
 
         // Lo que tardan en verse los gestos de ponerse y levantarse de la faena.
         private const float SegundosDeGestoDeFaena = 0.9f;
+        // Tope de espera al gesto de levantarse, por si no llega a avisar de que ha acabado.
+        private const float SegundosMaximosDeGestoDeFaena = 4f;
 
         private readonly NPCWorkRoute _ruta;
 
@@ -42,6 +44,7 @@ namespace Game.NPC.States
         private Transform _cajaEnMano;
         private Transform _manoIzquierda;
         private Transform _manoDerecha;
+        private Animator _animador;
         private const float VelocidadDeLaCaja = 18f;
         private const float SeparacionMaximaDeLasManos = 0.8f;
         private const float DelanteMinimoDeLasManos = 0.12f;
@@ -51,6 +54,7 @@ namespace Game.NPC.States
         private Transform _puntoDeFaena;
         private float _duracionDeFaena;
         private int _faenasHechas;
+        private bool _gestoDeFaenaAcabado;
 
         public WorkState(NPCWorkRoute ruta)
         {
@@ -180,8 +184,13 @@ namespace Game.NPC.States
                     _temporizador += Time.deltaTime;
                     if (_temporizador >= _duracionDeFaena)
                     {
-                        context.Animator?.ReleasePose(false);
-                        if (!string.IsNullOrEmpty(_ruta.animacionFaenaAcabar)) context.Animator?.PlaySocialGesture(_ruta.animacionFaenaAcabar);
+                        // Con gesto de levantarse, el gesto releva a la pose; sin él, la pose se suelta
+                        // a su reposo de pie. Soltarla sin más dejaba la capa base en la pose de la faena
+                        // y el NPC se iba deslizando hasta la siguiente mata. Ver INC-1329.
+                        bool hayGesto = !string.IsNullOrEmpty(_ruta.animacionFaenaAcabar) && context.Animator != null;
+                        _gestoDeFaenaAcabado = !hayGesto;
+                        context.Animator?.ReleasePose(!hayGesto);
+                        if (hayGesto) context.Animator.PlaySocialGesture(_ruta.animacionFaenaAcabar, () => _gestoDeFaenaAcabado = true);
                         _temporizador = 0f;
                         _fase = Fase.AcabarFaena;
                     }
@@ -189,7 +198,9 @@ namespace Game.NPC.States
 
                 case Fase.AcabarFaena:
                     _temporizador += Time.deltaTime;
-                    if (_temporizador >= SegundosDeGestoDeFaena) TrasLaFaena(context);
+                    // Se echa a andar cuando el gesto de levantarse ha acabado, no a mitad de él.
+                    if ((_temporizador >= SegundosDeGestoDeFaena && _gestoDeFaenaAcabado) || _temporizador >= SegundosMaximosDeGestoDeFaena)
+                        TrasLaFaena(context);
                     break;
             }
         }
@@ -433,12 +444,15 @@ namespace Game.NPC.States
         private void ActivarPoseDeCarga(NPCStateContext context)
         {
             if (_ruta == null || string.IsNullOrEmpty(_ruta.poseDeCarga)) return;
+            // Llevar la caja manda sobre las poses de ambiente y los gestos de reposo.
+            PosesDeMedioCuerpo.Reclamar(_animador, this, PosesDeMedioCuerpo.Llevar);
             context.Animator?.HoldPose(_ruta.poseDeCarga);
         }
 
         /// <summary>Suelta la pose de carga sin devolver todo el personaje a idle.</summary>
         private void SoltarPoseDeCarga(NPCStateContext context)
         {
+            PosesDeMedioCuerpo.Soltar(_animador, this);
             context.Animator?.SoltarPoseDeCarga();
         }
 
@@ -500,6 +514,7 @@ namespace Game.NPC.States
         {
             _manoIzquierda = _manoDerecha = null;
             var animator = context.Transform != null ? context.Transform.GetComponentInChildren<Animator>() : null;
+            _animador = animator;
             if (animator == null || !animator.isHuman) return;
             _manoIzquierda = animator.GetBoneTransform(HumanBodyBones.LeftHand);
             _manoDerecha = animator.GetBoneTransform(HumanBodyBones.RightHand);

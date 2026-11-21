@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505b709263e653344a3fa268f29aa1a3, type: 3}
+  m_Name: PerfilDeCombate_Erika_Lecciones
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Combate.PerfilDeCombate
+  acciones:
+  - nombre: "Bolita de pr\xE1ctica"
+    proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+    animacion: MagicLeft
+    distanciaMinima: 0
+    distanciaMaxima: 14
+    segundosDeAviso: 1
+    segundosDeRecuperacion: 1
+    enfriamiento: 3.5
+    costeDeMana: 0
+    dano: 0
+    velocidad: 0
+    peso: 1
+    funcion: 1
+    sePuedeDevolver: 1
+  defensas:
+    esquivar: 0
+    distanciaDeEsquiva: 3
+    recuperacionDeEsquiva: 1.2
+    escudo: 0
+    duracionDelEscudo: 2.5
+    enfriamientoDelEscudo: 8
+    cubrirseParaRecargar: 0
+    radioDeCobertura: 14
+    recargaACubierto: 1.5
+    leerLaRepeticion: 0
+    repeticionesParaLeerla: 3
+    segundosDeRepeticion: 12
+  caracter:
+    agresividad: 0.6
+    cautela: 0.1
+    movilidad: 0.25
+    paciencia: 0.3
+    distanciaPreferida: 6
+    distanciaMinima: 3
+    distanciaMaxima: 10
+    velocidadAndando: 2
+    velocidadCorriendo: 4
+    atacantesALaVez: 1
+    umbralDeVueltasContinuas: 0.8
+    leeLaDefensaDelJugador: 0
+  dificultad: 0.2
+  fases: []
+  afinidades: []

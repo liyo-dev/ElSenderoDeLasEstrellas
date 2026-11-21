@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 using EasyTransition;
 using Sendero.Core.Feedback;
 using Sendero.UI;
+using Liyodev.NarrativeGraph;
 
 /// Ciclo de vida común de una cinemática: escucha su señal de entrada, bloquea al jugador y
 /// esconde el HUD, hace las transiciones de entrada y salida (o recoge el telón), activa la
@@ -90,9 +91,9 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected string ResolvedSignalOut =>
         string.IsNullOrEmpty(SignalOutOverride) ? _signalOut : SignalOutOverride;
 
-    // FIX INC-059: contador estático de cinemáticas activas (puede haber más de un sequencer
-    // encadenado). Otros sistemas (ej: NPCQuestIconManager) lo consultan para ocultar iconos de
-    // quest sobre la cabeza de NPCs ajenos a la propia cinemática mientras esta se reproduce.
+    // Contador estático de cinemáticas activas (puede haber más de un sequencer encadenado).
+    // Otros sistemas (ej: NPCQuestIconManager) lo consultan para ocultar iconos de quest sobre
+    // la cabeza de NPCs ajenos a la propia cinemática mientras esta se reproduce.
     private static int s_activeSequenceCount;
     public static bool AnySequenceActive => s_activeSequenceCount > 0;
 
@@ -131,11 +132,11 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     }
 #endif
 
-    // FIX INC-052: si Co_Sequence() lanza una excepción o el objeto se destruye a mitad de la
-    // cinemática (ej: cambio de escena, referencia nula puntual de un prefab concreto), el HUD y
-    // el minimapa se quedaban ocultos para siempre y el ActionMode.Cinematic nunca se hacía Pop.
-    // Como la cinemática de Liam invocando al gólem se ejecuta justo antes de la batalla, un fallo
-    // aislado aquí dejaba el HUD desaparecido durante todo el combate. Mismo patrón de fix que
+    // Si Co_Sequence() lanza una excepción o el objeto se destruye a mitad de la cinemática (ej:
+    // cambio de escena, referencia nula puntual de un prefab concreto), el HUD y el minimapa se
+    // quedaban ocultos para siempre y el ActionMode.Cinematic nunca se hacía Pop. Como la
+    // cinemática de Liam invocando al gólem se ejecuta justo antes de la batalla, un fallo aislado
+    // aquí dejaba el HUD desaparecido durante todo el combate. Mismo patrón de fix que
     // BossIntroPresentation.PlayIntroduction() (try/finally que garantiza la restauración).
     private bool _cinematicLocked;
 
@@ -200,13 +201,11 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
     /// Se engancha a la señal de entrada, y se vuelve a enganchar si hace falta (INC-387).
     ///
-    /// «La misión de Eldran sigue sin empezar»: en el log del 23 sep se ve PERAS_START emitida con
-    /// oyentes (Oliver se va del grupo) y SEQ_PerasEldran sin enterarse. Este sequencer se
-    /// suscribe en Awake, y ahí `DefaultNarrativeSignals.EnsureInstance()` puede crear una
-    /// instancia automática (en el log sale un objeto llamado «DefaultNarrativeSignals (Auto)»)
-    /// que más tarde es sustituida por la de la escena: el handler se queda colgado de la vieja y
-    /// no lo llama nadie nunca más. Por eso ahora se comprueba en cada OnEnable y en Start que se
-    /// sigue estando enganchado a la instancia VIVA, y si no, se vuelve a enganchar.
+    /// Este sequencer se suscribe en Awake, y ahí `DefaultNarrativeSignals.EnsureInstance()` puede
+    /// crear una instancia automática (en el log sale un objeto llamado «DefaultNarrativeSignals
+    /// (Auto)») que más tarde es sustituida por la de la escena: el handler se queda colgado de la
+    /// vieja y no lo llama nadie nunca más. Por eso ahora se comprueba en cada OnEnable y en Start
+    /// que se sigue estando enganchado a la instancia VIVA, y si no, se vuelve a enganchar.
     private void Suscribir()
     {
         if (string.IsNullOrEmpty(_resolvedSignalIn)) return;
@@ -638,20 +637,18 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// Perfil de audio efectivo: el del Inspector de este sequencer si lo tiene, y si no el que ya
     /// usa el propio AudioService.
     ///
-    /// FIX 16 sep 2026: _audioProfile
-    /// es un campo de Inspector que hay que arrastrar a mano en CADA sequencer, aunque siempre
-    /// acabe siendo el mismo asset global — el que AudioService ya tiene puesto y expone como
-    /// público. Olvidarlo (o, como aquí, que se copie vacío al montar un componente nuevo) deja la
-    /// música muda sin ningún error. No tiene sentido que una referencia global dependa de que
-    /// alguien se acuerde: si el campo está vacío, se usa el del AudioService.
+    /// _audioProfile es un campo de Inspector que hay que arrastrar a mano en CADA sequencer,
+    /// aunque siempre acabe siendo el mismo asset global — el que AudioService ya tiene puesto y
+    /// expone como público. Olvidarlo (o, como aquí, que se copie vacío al montar un componente
+    /// nuevo) deja la música muda sin ningún error. No tiene sentido que una referencia global
+    /// dependa de que alguien se acuerde: si el campo está vacío, se usa el del AudioService.
     protected AudioGraphProfile ResolveAudioProfile()
         => _audioProfile != null ? _audioProfile
          : (AudioService.Instance != null ? AudioService.Instance.profile : null);
 
     /// Reproduce la música de una regla de secuencia del AudioGraphProfile.
     ///
-    /// Antes fallaba EN SILENCIO de tres formas distintas (sin perfil, sin regla con ese id, sin
-    /// AudioService) y las tres se veían igual desde fuera: no suena nada. Ahora cada una lo dice.
+    /// Ahora cada una lo dice.
     protected void PlaySequenceMusic(string sequenceId)
     {
         if (string.IsNullOrEmpty(sequenceId)) return;

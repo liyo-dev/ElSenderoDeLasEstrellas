@@ -1,8 +1,12 @@
 {
     "texts": [
         {
-            "key": "AUTOGUARDADO",
-            "value": "Partida guardada"
+            "key": "AVISO_AUTOGUARDADO",
+            "value": "Este juego guarda automáticamente. Cuando veas este símbolo, no apagues ni cierres el juego."
+        },
+        {
+            "key": "AVISO_AUTOGUARDADO_PASAR",
+            "value": "Continuar"
         },
         {
             "key": "STAT_EFECTO_ATAQUE_MAS",
@@ -318,7 +322,11 @@
         },
         {
             "key": "CONTROLS_TARGET_NEXT",
-            "value": "Siguiente objetivo (enemigo o marcable)"
+            "value": "Cambiar de objetivo (con uno fijado)"
+        },
+        {
+            "key": "CONTROLS_DODGE",
+            "value": "Esquivar (rueda hacia donde apuntas)"
         },
         {
             "key": "CONTROLS_TEAM_ATTACK",
@@ -409,6 +417,10 @@
             "value": "F"
         },
         {
+            "key": "GLYPH_KEY_C",
+            "value": "C"
+        },
+        {
             "key": "GLYPH_KEY_SHIFT",
             "value": "Mayús"
         },
@@ -445,8 +457,16 @@
             "value": "Clic stick derecho (R3)"
         },
         {
+            "key": "GLYPH_STICK_RIGHT_SIDE",
+            "value": "el stick derecho hacia un lado"
+        },
+        {
             "key": "GLYPH_VIEW",
             "value": "View"
+        },
+        {
+            "key": "GLYPH_WHEEL",
+            "value": "la rueda del ratón"
         },
         {
             "key": "GLYPH_WHEEL_DOWN",
@@ -958,7 +978,7 @@
         },
         {
             "key": "MainMenu_BugReport",
-            "value": "Reportar un Fallo"
+            "value": "Reportar un fallo"
         },
         {
             "key": "MainMenu_Continue",
@@ -982,15 +1002,15 @@
         },
         {
             "key": "MainMenu_NewGame",
-            "value": "Nueva Partida"
+            "value": "Nueva partida"
         },
         {
             "key": "MainMenu_PatchNotes",
-            "value": "Notas del Parche"
+            "value": "Notas de versión"
         },
         {
             "key": "MainMenu_Settings",
-            "value": "Configuración"
+            "value": "Ajustes"
         },
         {
             "key": "NPC_REQUIRES_WILL",
@@ -1221,8 +1241,32 @@
             "value": "Coste de maná: {0}"
         },
         {
+            "key": "SHIELD_BROKEN_SAME_COLOR",
+            "value": "¡Escudo roto! Era de {0}: lo rompe la magia de su mismo color. Cambia de personaje o de rápido."
+        },
+        {
+            "key": "GRIMOIRE_SPECIAL_QUEST",
+            "value": "Especial · se aprende con una misión"
+        },
+        {
+            "key": "GRIMOIRE_QUICK_ORDER",
+            "value": "Rápido {0} de 4"
+        },
+        {
+            "key": "GRIMOIRE_QUICK_UNKNOWN",
+            "value": "Rápido · aún no lo sabe"
+        },
+        {
+            "key": "GRIMOIRE_KIND_SPECIAL",
+            "value": "Especial"
+        },
+        {
+            "key": "SPELL_EMPUJAR_NAME",
+            "value": "Empujar"
+        },
+        {
             "key": "SPELL_TORNADO_NAME",
-            "value": "Tornado"
+            "value": "Ciclón"
         },
         {
             "key": "SPELL_UNASSIGNED_SHORT",
@@ -1870,7 +1914,7 @@
         },
         {
             "key": "GRIMOIRE_STEP_ROTATE",
-            "value": "Cambiar de básico"
+            "value": "Pasar al siguiente rápido"
         },
         {
             "key": "GRIMOIRE_STEP_HOLD",
@@ -1918,7 +1962,7 @@
         },
         {
             "key": "GRIMOIRE_COMBO_ALWAYS",
-            "value": "No ocupa ranura · siempre a mano"
+            "value": "Combo · siempre a mano"
         },
         {
             "key": "GRIMOIRE_LOCKED_TITLE",
@@ -1963,6 +2007,10 @@
         {
             "key": "ELEMENT_MIND",
             "value": "Mente"
+        },
+        {
+            "key": "ELEMENT_DARK",
+            "value": "Oscuro"
         },
         {
             "key": "SPELL_FX_KNOCKBACK",
@@ -2144,7 +2192,10 @@
             "key": "JEFES_DEMONIO2_RECUERDA",
             "value": "Mira de qué color es la runa que queda y cambia a quien le toca."
         },
-        {"key":"CAP2_PUENTE_FALTAN_PIEZAS","value":"La tabla está rota. Hace falta una cuerda y unos clavos para arreglarla."},
+        {
+            "key": "CAP2_PUENTE_FALTAN_PIEZAS",
+            "value": "La tabla está rota. Hace falta una cuerda y unos clavos para arreglarla."
+        },
         {
             "key": "REQUISITO_FALTA_OBJETO",
             "value": "Te falta algo para esto: {0}."
@@ -2255,11 +2306,7 @@
         },
         {
             "key": "CAP3_TUTO_SEGUIR",
-            "value": "Síguelos sin que te vean. Cuando se paren a mirar atrás, escóndete en un matorral o detrás de una pared."
-        },
-        {
-            "key": "CAP3_ROTULO_MANANA",
-            "value": "A la mañana siguiente…"
+            "value": "Síguelos sin que te vean. Cuando se paren a mirar atrás, o si a uno le sale un «?» sobre la cabeza, escóndete en un matorral o detrás de una pared antes de que se apague."
         },
         {
             "key": "DEMO_FIN_ROTULO",
@@ -2347,11 +2394,119 @@
         },
         {
             "key": "CAP3_TUTO_DOS",
-            "value": "Varios enemigos. Pulsa {BOTON} para cambiar de objetivo."
+            "value": "Son dos. Cambia de objetivo con {BOTON}."
         },
         {
             "key": "LUGAR_VALLE",
             "value": "El Valle"
+        },
+        {
+            "key": "AJUSTES_PESTANA_SONIDO",
+            "value": "Sonido"
+        },
+        {
+            "key": "AJUSTES_PESTANA_IMAGEN",
+            "value": "Imagen"
+        },
+        {
+            "key": "AJUSTES_PESTANA_IDIOMA",
+            "value": "Idioma"
+        },
+        {
+            "key": "AJUSTES_PESTANA_JUEGO",
+            "value": "Juego"
+        },
+        {
+            "key": "AJUSTES_MUSICA",
+            "value": "Música"
+        },
+        {
+            "key": "AJUSTES_EFECTOS",
+            "value": "Efectos"
+        },
+        {
+            "key": "AJUSTES_VOCES",
+            "value": "Voces"
+        },
+        {
+            "key": "AJUSTES_SUBTITULOS",
+            "value": "Subtítulos en las charlas"
+        },
+        {
+            "key": "AJUSTES_VIBRACION",
+            "value": "Vibración del mando"
+        },
+        {
+            "key": "AJUSTES_INVERTIR_Y",
+            "value": "Invertir la cámara (eje Y)"
+        },
+        {
+            "key": "AJUSTES_GUARDADO_SOLO",
+            "value": "Los cambios se guardan solos."
+        },
+        {
+            "key": "MENU_ELEGIR",
+            "value": "Elegir"
+        },
+        {
+            "key": "MENU_ATRAS",
+            "value": "Atrás"
+        },
+        {
+            "key": "MENU_CAMBIAR",
+            "value": "Cambiar"
+        },
+        {
+            "key": "MENU_VOLVER",
+            "value": "Volver"
+        },
+        {
+            "key": "MENU_TU_PARTIDA",
+            "value": "Tu partida"
+        },
+        {
+            "key": "MENU_CAPITULO",
+            "value": "Capítulo {0}"
+        },
+        {
+            "key": "MENU_GUARDADA_AHORA",
+            "value": "guardada hace un momento"
+        },
+        {
+            "key": "MENU_GUARDADA_MINUTOS",
+            "value": "guardada hace {0} min"
+        },
+        {
+            "key": "MENU_GUARDADA_HORAS",
+            "value": "guardada hace {0} h"
+        },
+        {
+            "key": "MENU_GUARDADA_AYER",
+            "value": "guardada ayer"
+        },
+        {
+            "key": "MENU_GUARDADA_DIAS",
+            "value": "guardada hace {0} días"
+        },
+        {
+            "key": "AJUSTES_SENSIBILIDAD",
+            "value": "Sensibilidad"
+        },
+        {
+            "key": "RASGO_NOMBRE_VIENTOMASBARATO",
+            "value": "Viento ligero"
+        },
+        {
+            "key": "RASGO_NOMBRE_CONTRAATAQUEMASAMPLIO",
+            "value": "Buen reflejo"
+        },
+        {
+            "key": "RASGO_NOMBRE_PLANEAR",
+            "value": "Planear"
+        },
+        {
+            "key": "RASGO_NOMBRE_REBOTEEXTRA",
+            "value": "Rebote extra"
         }
     ]
 }

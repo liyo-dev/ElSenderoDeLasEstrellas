@@ -39,16 +39,14 @@ public static partial class ChuchelandiaBuilder
         public float ReboteExtra;
     }
 
-    // ── Tabla de atuendos ───────────────────────────────────────────────────────────────────
-    // Estela: debajo, su ropa de antes (Body09, más fina que el traje de hechicera, que no cabe bajo el
-    // vestido), y encima el vestido de candidata (siete volantes, mangas de
-    // farol, lazo gigante a la espalda, que deja planear, y zapatos de caramelo); en la victoria, además,
-    // la tiara (AC06_Crown02) en lugar del lazo de la cabeza. Will y Liam conservan su ropa y llevan encima
-    // su disfraz (1 nov: con el cuerpo fino de antes debajo —Body05 / Body12—, que es sobre el que se
-    // hicieron los disfraces: la chaqueta de Will y la túnica y la capucha de Liam nuevas asomaban por encima): Will la armadura de gominola con orejitas de osito (rebota de más), Liam el traje de paje
-    // con el corazón en el pecho, boina y cuerno de unicornio.
-    // La tabla manda en las prendas, las prendas sueltas y los tintes (ninguno) de cada personaje; los
-    // rasgos se ponen al crear el atuendo y después se retocan en el Inspector.
+    // ── Tabla de atuendos ─────────────────────────────────────────────────────────────────── Estela: debajo, su ropa
+    // de antes (Body09, más fina que el traje de hechicera, que no cabe bajo el vestido), y encima el vestido de
+    // candidata (siete volantes, mangas de farol, lazo gigante a la espalda, que deja planear, y zapatos de caramelo);
+    // en la victoria, además, la tiara (AC06_Crown02) en lugar del lazo de la cabeza. Will y Liam conservan su ropa y
+    // llevan encima su disfraz: Will la armadura de gominola con orejitas de osito (rebota de más), Liam el traje de
+    // paje con el corazón en el pecho, boina y cuerno de unicornio. La tabla manda en las prendas, las prendas sueltas
+    // y los tintes (ninguno) de cada personaje; los rasgos se ponen al crear el atuendo y después se retocan en el
+    // Inspector.
     private const string CarpetaPrendas = "Assets/Art/Characters/Chuchelandia/Prendas";
     private const string VestidoDeCandidata = CarpetaPrendas + "/Vestido_Candidata.fbx";
     private const string ArmaduraDeGominolaDeWill = CarpetaPrendas + "/Armadura_Gominola.fbx";

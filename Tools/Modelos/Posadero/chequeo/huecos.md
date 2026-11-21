@@ -6,19 +6,15 @@ Poses: reposo, WalkFWD_InPlace_NoWeapon@1.0, WalkFWD_InPlace_NoWeapon@10.3, Walk
 Peor vista: WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 88°, giro 0°: 0.2 % de lo que se ve del muñeco es hueco.
 
 ## Piezas por las que se ve hueco: el fondo o el interior vacío (peor parte de una vista)
-- Vuelta_l: 0.17 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 135°)
-- Head01_Male: 0.17 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 88°, giro 0°)
-- Vuelta_r: 0.12 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 15°, giro 315°)
-- Cuerpo: 0.04 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 88°, giro 0°)
-- Manga_l: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 0°)
-- Pernera_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 40°, giro 90°)
-- Delantal: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 15°, giro 270°)
-- Hombro_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 40°, giro 315°)
-- Zapato_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 15°, giro 225°)
-- Hombro_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 180°)
-- Brazo_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 180°)
-- Manga_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 15°, giro 0°)
-- Chaleco: 0.01 % (peor en reposo, desde abajo a 40°, giro 180°)
+- Head01_Male: 0.19 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 88°, giro 0°)
+- Cuerpo: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 65°, giro 135°)
+- Chaleco: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 0°)
+- Delantal: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 270°)
+- Brazo_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 90°)
+- Manga_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 225°)
+- Vuelta_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 15°, giro 225°)
+- Cuello: 0.01 % (peor en reposo, desde abajo a 40°, giro 225°)
+- Manga_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 15°, giro 135°)
 
 ## Manos con los brazos caídos (idle): parte que se ve desde algún lado
 - mano izquierda: 84 % (mínimo 35 %)
@@ -29,5 +25,4 @@ Peor vista: WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 88°, giro 0°: 0.2 % d
 - muslo derecho: 60 % (mínimo 15 %)
 
 ## Revés con algo pintado justo detrás (aviso menor: se ve lo de debajo por el borde)
-- Vuelta_l: 0.94 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 90°)
-- Vuelta_r: 0.67 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 15°, giro 270°)
+- Cuello: 0.17 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 90°)

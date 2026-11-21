@@ -27,3 +27,20 @@ Pesos con `../Prendas/ropa_lib.py` (`completar_zonas`): antes NO PASA, ahora PAS
   `will.py`. Se le ha dado grosor por dentro con `../Caras/grosor_pelo.py` (6 mm) y ya no deja ver huecos desde abajo.
   Ojo: el `Hair16_Heroe` que hay dentro de `will.blend` es el que genera el script, no el del juego.
 - Lo anterior, en `Versiones antiguas/Antes del faldón para sentarse (2026-11-14)/`.
+
+## 19 nov 2026 — pelo original, axila blanda y fondo más pequeño (INC-1340)
+- **Pelo**: Raúl, «el pelo de Will es un horror; prefiero el original pero con este color». `will.py` hace ahora el
+  `Hair16_Heroe` con el `Hair01` del pack tal cual (su pelo de antes del 1 nov: misma forma, caras planas y normales del
+  pack), sin las cejas y con los materiales `Pelo`/`PeloClaro` de siempre (el color lo ponen los materiales de Unity, no
+  cambian). `WILL_PELO=picos` vuelve a los picos levantados. Exportado y con grosor por dentro (`../Caras/grosor_pelo.py`).
+  Foto: `pelo_original_antes_despues.png` (arriba el de picos, abajo el original). Historial de los pelos que ha tenido
+  (pack, 7 nov, 14 nov, 15 nov, propuesta C): `_ClaudeBackups/modelos-2026-11-19/historial_pelo_will/pelos_del_historial.png`.
+- **Axila blanda** (INC-1309): con el brazo caído la parte de abajo de la manga, su ribete y el arranque del brazo giraban
+  alrededor del hombro y se metían 2–3 cm en el costado de la camiseta. Esa parte sigue también a `spine_03`
+  (`WILL_AXILA_BLANDA`, 0,3), el ribete es algo más fino (0,009) y la camiseta un poco más estrecha bajo la axila
+  (`WILL_AXILA`, 0,10).
+- **Fondo** bajo la camiseta: radio 0,174 → 0,155 (tumbado o sentado, su borde salía por la camiseta).
+- Chequeos (`chequeo/`): choques PASA con `--solo Body23_Aventurero` (antes NO PASA: ribetes en la camiseta y fondo);
+  huecos PASA. `Body24_AventureroChaqueta` (chaqueta, del armario) da 2 graves nuevos: el brazo de piel dentro de la boca
+  de la manga de la chaqueta al gesticular (`chequeo/chequeo_body24.md`); pendiente.
+- Lo anterior, en `Versiones antiguas/Pelo de picos y axila sin arreglar (2026-11-19)/`.

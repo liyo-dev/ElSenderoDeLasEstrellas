@@ -151,6 +151,7 @@ Material:
     - _LightContribution: 1
     - _LightmapDirectionPitch: 0
     - _LightmapDirectionYaw: 0
+    - _LuzDePersonaje: 0
     - _Metallic: 0
     - _Mode: 1
     - _OcclusionStrength: 1
@@ -178,6 +179,9 @@ Material:
     - _SpecularEnabled: 0
     - _SpecularNoiseSize: 1
     - _SrcBlend: 1
+    - _StencilComp: 8
+    - _StencilPass: 0
+    - _StencilRef: 0
     - _StrongRimStrength: 1
     - _Surface: 0
     - _TextureBlendingMode: 0

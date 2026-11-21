@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Una fila del resumen de arranque que aporta el juego (escena, cómo se entra, avisos).
     public sealed class StartLine

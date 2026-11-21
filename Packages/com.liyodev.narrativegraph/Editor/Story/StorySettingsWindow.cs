@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Settings and tools of the story editor, in one place (the button).
     public sealed class StorySettingsWindow : EditorWindow
@@ -119,35 +119,22 @@ namespace NarrativeGraphEditor.Story
             Hint(assistant, StoryText.T(
                 "Un chat dentro del editor que lee el capítulo y te propone cambios. Funciona con tu cuenta de ChatGPT, Google o Claude (sin clave de API) o con una clave; todo se guarda solo en este ordenador.",
                 "A chat inside the editor that reads the chapter and proposes changes. It works with your ChatGPT, Google or Claude account (no API key) or with a key; everything is stored only on this computer."));
-            var visible = new Toggle(StoryText.T("Mostrar el botón del asistente", "Show the assistant button")) { value = Liyodev.Assistant.AssistantSettings.Visible };
-            visible.RegisterValueChangedCallback(e => Liyodev.Assistant.AssistantSettings.Visible = e.newValue);
-            assistant.Add(visible);
-
-            var conectar = new Button(Liyodev.Assistant.AssistantConnectWindow.Open)
-                { text = StoryText.T("Conectar mi IA…", "Connect my AI…") };
-            conectar.AddToClassList("story-button");
-            conectar.style.alignSelf = Align.FlexStart;
-            conectar.style.marginLeft = 0;
-            conectar.style.marginBottom = 6;
-            assistant.Add(conectar);
-
-            // Otras formas (clave de API, Ollama): los mismos controles que «Conectar mi IA».
-            Liyodev.Assistant.AssistantSettingsUI.BuildSection(assistant);
+            var host = NarrativeAssistant.Host;
+            if (host == null)
+            {
+                Hint(assistant, StoryText.T(
+                    "Para usarlo, instala el paquete Liyodev Assistant (com.liyodev.assistant). El grafo funciona entero sin él.",
+                    "To use it, install the Liyodev Assistant package (com.liyodev.assistant). The graph works fully without it."));
+                return;
+            }
+            host.BuildAssistantSettings(assistant);
 
             // Outside tools
             var outside = Section(scroll, StoryText.T("Herramientas externas", "Outside tools"));
             Hint(outside, StoryText.T(
-                $"Deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto (servidor MCP en la carpeta Tools/mcp del grafo). Solo se escucha en este ordenador, puerto {StoryBridge.Port}.",
-                $"Lets assistants such as Claude Desktop or Claude Code, or other programs, read and change graphs while Unity is open (MCP server in the graph's Tools/mcp folder). It only listens on this computer, port {StoryBridge.Port}."));
-            var bridge = new Toggle(StoryText.T("Permitir herramientas externas", "Allow outside tools")) { value = StoryBridge.Enabled };
-            bridge.RegisterValueChangedCallback(e => StoryBridge.Enabled = e.newValue);
-            outside.Add(bridge);
-            var readme = new Button(() => EditorUtility.RevealInFinder(System.IO.Path.GetFullPath(NarrativeGraphPaths.McpReadme)))
-                { text = StoryText.T("Ver cómo conectarlo", "How to connect it") };
-            readme.AddToClassList("story-button");
-            readme.style.alignSelf = Align.FlexStart;
-            readme.style.marginLeft = 0;
-            outside.Add(readme);
+                "Deja que asistentes como Claude Desktop o Claude Code, u otros programas, lean y cambien los grafos mientras Unity está abierto, con el servidor MCP del asistente (contexto «narrative-graph»). Funciona aunque el editor del grafo esté cerrado. Solo se escucha en este ordenador.",
+                "Lets assistants such as Claude Desktop or Claude Code, or other programs, read and change graphs while Unity is open, through the assistant's MCP server (context “narrative-graph”). It works even with the graph editor closed. It only listens on this computer."));
+            host.BuildOutsideToolsSettings(outside);
         }
 
         /// Qué datos del jugador puede fijar el grafo: la plantilla de partida nueva y los campos.

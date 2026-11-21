@@ -11,11 +11,11 @@ using UnityEngine.Rendering;
 namespace ElSendero.EditorTools
 {
     /// <summary>
-    /// Auditoría de assets sin usar (1 sep 2026). Genera un informe de solo lectura — NUNCA borra
-    /// nada por su cuenta. Calcula el cierre transitivo real de dependencias desde todas las
-    /// escenas del proyecto (más Resources/, StreamingAssets/ y la cadena del Render Pipeline
-    /// activo) y reporta qué queda fuera de ese conjunto como candidato a "basura":
-    /// scripts, materiales, prefabs, sprites, audio, paquetes de plugins enteros, etc.
+    /// Auditoría de assets sin usar. Genera un informe de solo lectura — NUNCA borra nada por su
+    /// cuenta. Calcula el cierre transitivo real de dependencias desde todas las escenas del
+    /// proyecto (más Resources/, StreamingAssets/ y la cadena del Render Pipeline activo) y
+    /// reporta qué queda fuera de ese conjunto como candidato a "basura": scripts, materiales,
+    /// prefabs, sprites, audio, paquetes de plugins enteros, etc.
     ///
     /// LIMITACIÓN CONOCIDA: un script que solo se usa desde código (AddComponent&lt;T&gt;() / new T(),
     /// nunca serializado en una escena o prefab) puede aparecer aquí como "sin usar" aunque sí se

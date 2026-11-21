@@ -1,14 +1,12 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
-/// Muestra/oculta el botón global de "saltar secuencia" (HoldToSkipUI, con
-/// SkipAction = SkipNarrativeSequence) según NarrativeSkipHub.AnySkippable /
-/// OnAnySkippableChanged — es decir, según haya o no AL MENOS UN sistema registrado ahora mismo en
-/// el hub como "tengo algo activo que se puede saltar" — Y TAMBIÉN según
-/// CinematicSequencerBase.AnySequenceActive (ver FIX 16/08/2026 más abajo).
+/// Muestra/oculta el botón global de "saltar secuencia" (HoldToSkipUI, con SkipAction =
+/// SkipNarrativeSequence) según NarrativeSkipHub.AnySkippable / OnAnySkippableChanged — es decir,
+/// según haya o no AL MENOS UN sistema registrado ahora mismo en el hub como "tengo algo activo
+/// que se puede saltar" — Y TAMBIÉN según CinematicSequencerBase.AnySequenceActive.
 ///
-/// la primera versión de este fix escuchaba
-/// PlayerActionManager.IsInMode(ActionMode.Cinematic) — mejor que el CinematicSequencerBase
-/// original (ver historial), pero seguía dejando fuera cualquier secuencia que NO bloquee el
+/// Escuchar solo PlayerActionManager.IsInMode(ActionMode.Cinematic) dejaría fuera cualquier secuencia que NO bloquee el
 /// movimiento del jugador. Caso real que lo destapó: un bocadillo de villano (ShowSpeechBubbleNode
 /// en NarrativeGraph) sin LockPlayerNode emparejado — el grafo se queda esperando la duración del
 /// bocadillo igualmente, pero como nadie empuja ActionMode.Cinematic, el botón nunca aparecía
@@ -43,7 +41,7 @@ using UnityEngine;
 /// escuchaba). Resultado: en esas 6 cinemáticas el botón de skip dejó de aparecer aunque
 /// HoldToSkipUI.ExecuteSkipAction() siga llamando correctamente a
 /// CinematicSequencerBase.RequestSkipAll() (la ACCIÓN de saltar nunca se rompió, solo la
-/// VISIBILIDAD del botón). En vez de revertir el fix de NarrativeSkipHub (que sí soluciona el
+/// VISIBILIDAD del botón). Sin tocar NarrativeSkipHub (que sí soluciona el
 /// caso real de bocadillos sin LockPlayerNode), este controlador ahora escucha AMBAS fuentes y
 /// muestra el botón si cualquiera de las dos tiene algo activo.
 ///
@@ -74,19 +72,19 @@ public class GlobalCinematicSkipController : MonoBehaviour
     private static GlobalCinematicSkipController _instance;
 
     /// Acceso publico de solo lectura a la instancia persistente, para que otros sistemas
-    /// (InputPromptBeat, 17 sep 2026) puedan pedir Suppress()/Unsuppress() sin tener que
-    /// arrastrar una referencia de Inspector hasta este objeto DontDestroyOnLoad. Null hasta
-    /// que Awake() corre (o si el controlador no esta en la escena, p.ej. tests aislados) --
-    /// quien lo use debe usar el operador ?. igual que ya hace el resto del proyecto con
-    /// otros singletons (ver DefaultNarrativeSignals.Instance).
+    /// puedan pedir Suppress()/Unsuppress() sin tener que arrastrar una referencia de
+    /// Inspector hasta este objeto DontDestroyOnLoad. Null hasta que Awake() corre (o si el
+    /// controlador no esta en la escena, p.ej. tests aislados) -- quien lo use debe usar el
+    /// operador ?. igual que ya hace el resto del proyecto con otros singletons (ver
+    /// DefaultNarrativeSignals.Instance).
     public static GlobalCinematicSkipController Instance => _instance;
 
     private void Awake()
     {
         // Mismo patrón que CoreSystems.cs: instancia única persistente. Necesario porque este
         // objeto (y el HoldToSkipUI que cuelga de él) debe sobrevivir a la transición Start →
-        // MainWorld (ver FIX 24/08/2026 más arriba) — sin esto, BootLoader lo destruye al cargar
-        // MainWorld en modo Single y el botón de skip deja de funcionar en el flujo real de juego.
+        // MainWorld — sin esto, BootLoader lo destruye al cargar MainWorld en modo Single y el
+        // botón de skip deja de funcionar en el flujo real de juego.
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);

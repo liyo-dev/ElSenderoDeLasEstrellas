@@ -30,6 +30,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
     [SerializeField] private int upperBodyLayer = 1;
 
     private NPCWorldPoint _currentWorldPoint;
+    private vThirdPersonCamera _camaraConPlano;
     private int _currentActivityLayer;
     private Coroutine _activityCoroutine;
     private Coroutine _snapCoroutine;
@@ -164,6 +165,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         // Snap al interactionPoint y desactivar CC durante toda la actividad
         // (si se re-activa antes de levantarse, Invector detecta "en el aire" y activa caída)
         SnapToSeat(worldPoint);
+        FijarPlanoDelAsiento(worldPoint);
 
         // Adjuntar prop a la mano (si el WorldPoint tiene uno configurado)
         worldPoint.AttachPropToOccupant(_animator);
@@ -200,6 +202,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         if (_snapCoroutine != null) { StopCoroutine(_snapCoroutine); _snapCoroutine = null; }
         var leaving = _currentWorldPoint;
         _currentWorldPoint = null;
+        SoltarPlanoDelAsiento();
         leaving.Release(transform);
         leaving.DetachProp();
         RestoreCC();
@@ -230,6 +233,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
 
         var leaving = _currentWorldPoint;
         _currentWorldPoint = null;
+        SoltarPlanoDelAsiento();
 
         leaving.Release(transform);
         leaving.DetachProp();
@@ -276,9 +280,9 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
             _invectorInput.MoveInput();
         }
 
-        // FIX INC-014: un teletransporte instantáneo aquí hace que la cámara (que sigue al
-        // player cada frame) dé un salto/golpe seco visible al sentarse o tumbarse a dormir.
-        // Se suaviza con el mismo lerp corto que ya se usa al levantarse (ReturnToGroundAndUnlock).
+        // Un teletransporte instantáneo aquí hace que la cámara (que sigue al player cada frame) dé
+        // un salto/golpe seco visible al sentarse o tumbarse a dormir. Se suaviza con el mismo lerp
+        // corto que ya se usa al levantarse (ReturnToGroundAndUnlock).
         if (_snapCoroutine != null) StopCoroutine(_snapCoroutine);
         _snapCoroutine = StartCoroutine(LerpToSeatPosition(worldPoint.InteractionPosition));
     }
@@ -296,6 +300,22 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         }
         transform.position = target;
         _snapCoroutine = null;
+    }
+
+    /// Un asiento con plano fijo (un columpio) encuadra la cámara quieta mientras se está sentado. Ver INC-1327.
+    private void FijarPlanoDelAsiento(NPCWorldPoint asiento)
+    {
+        var camara = _invectorInput != null ? _invectorInput.tpCamera : null;
+        if (camara == null || !asiento.TryPlanoDeCamara(transform, out Vector3 pivote, out float giro, out float inclinacion, out float distancia)) return;
+        camara.FijarPlano(pivote, giro, inclinacion, distancia);
+        _camaraConPlano = camara;
+    }
+
+    private void SoltarPlanoDelAsiento()
+    {
+        if (_camaraConPlano == null) return;
+        _camaraConPlano.SoltarPlano();
+        _camaraConPlano = null;
     }
 
     private void RestoreCC()
@@ -390,8 +410,8 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         // restauraba el CharacterController y el modo de acción pero jamás le decía al Animator
         // que saliera de "Sleeping_NoWeapon"/"Eat_Loop"/etc. — el CrossFade que entró en ese loop
         // (ActivityRoutine) es el último que se ejecuta, así que el Animator se queda ahí para
-        // siempre aunque el jugador ya pueda moverse con normalidad. Mismo fix que ya tenía
-        // ForceStopActivityImmediate(): forzar la vuelta a locomoción explícitamente. Para
+        // siempre aunque el jugador ya pueda moverse con normalidad. Igual que
+        // ForceStopActivityImmediate(), se fuerza la vuelta a locomoción explícitamente. Para
         // actividades CON exit state (Sit*), esto se ejecuta después de que PlayExitAndUnlock ya
         // reprodujo el clip de salida completo, así que es un refuerzo inofensivo, no un cambio
         // de comportamiento.
@@ -433,6 +453,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
     {
         if (_activityCoroutine != null) { StopCoroutine(_activityCoroutine); _activityCoroutine = null; }
         if (_snapCoroutine != null) { StopCoroutine(_snapCoroutine); _snapCoroutine = null; }
+        SoltarPlanoDelAsiento();
         _currentWorldPoint?.Release(transform);
         _currentWorldPoint?.DetachProp();
         _currentWorldPoint = null;

@@ -26,6 +26,15 @@ Tools: `list_contexts`, `context_targets`, `context_select`, `context_manual`, `
 
 `apply_ops` writes and bakes. Read `context_state` first and use `match` on the lines you change.
 
-The narrative graph keeps its own MCP server in `Packages/com.liyodev.narrativegraph/Tools/mcp` for
-graph editing without the graph window open. When the graph editor is open, its context also appears
-here.
+## Narrative graph
+
+The `narrative-graph` context is always there, also with the graph editor closed (it works on the
+chapter last opened, or the one you select).
+
+1. `context_targets` with `context: "narrative-graph"` → the graphs (chapters) in the project.
+2. `context_select` with `id: "Cap3"` → makes it the active chapter (it opens in the editor if the
+   editor is open).
+3. `context_manual` → every step type and its fields. `context_state` → the chapter as text, with its
+   numbered steps, and the story state at the selected step.
+4. `apply_ops` with `ops: [...]` → add, set, connect, disconnect, section, delete. All or nothing; it
+   is saved at once and can be undone in Unity with Ctrl+Z.

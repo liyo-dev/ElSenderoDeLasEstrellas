@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// La partida en curso: el preset en memoria que todos los sistemas leen y escriben mientras se
@@ -17,7 +18,7 @@ public static partial class Partida
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() { s_preset = null; }
+    private static void ResetStatics() { s_preset = null; s_ultimaPosicionSegura = default; GuardadoEmpieza = null; GuardadoAcaba = null; }
 #endif
 
     private static GameBootProfile Config => GameBootService.Profile;
@@ -69,6 +70,7 @@ public static partial class Partida
         var p = AsegurarPreset();
         if (plantilla) CopiarPreset(plantilla, p);
         else VaciarPreset(p);
+        s_ultimaPosicionSegura = default;
     }
 
     /// <summary>

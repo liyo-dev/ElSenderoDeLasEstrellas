@@ -134,7 +134,9 @@ public sealed class PosturaDeSentado : MonoBehaviour
     /// horizontal (si está sentado al lado del asiento, sobre el aire) y luego en altura.
     private void Asentar()
     {
-        if (_npc == null || _cadera == null || _npc.IsInCinematic) return;
+        // En una cinemática coloca el guion: el cuerpo del jugador no entra en el estado de cinemática de los NPC,
+        // así que se mira la situación global. Si no, se recoloca un fotograma y el plano salta (INC-1337).
+        if (_npc == null || _cadera == null || _npc.IsInCinematic || Kits.Core.GameContext.Has(Situaciones.Cinematica)) return;
         bool enElSuelo = _animador.GetCurrentAnimatorStateInfo(0).shortNameHash == SentadoEnElSuelo;
         var raiz = Raiz;
         Vector3 cadera = _cadera.position;

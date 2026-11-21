@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NarrativeGraphSamples.ElFaro
+namespace Liyodev.NarrativeGraph.Samples.ElFaro
 {
     /// Datos del jugador del ejemplo: con qué empieza una partida nueva. Es la plantilla de la
     /// ficha del jugador del ejemplo, así que los puntos de arranque (◆) pueden fijar estos campos.

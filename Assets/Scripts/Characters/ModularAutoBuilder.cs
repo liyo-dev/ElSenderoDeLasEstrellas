@@ -328,12 +328,11 @@ public class ModularAutoBuilder : MonoBehaviour
     }
 
     /// <summary>
-    /// FIX AABB de culling atascado tras un cambio de apariencia. Encender/apagar
-    /// categorías aquí (SetActive en los SkinnedMeshRenderer de cada parte) dejaba el bounds de
-    /// culling de cada renderer calculado con la pose/posición ANTERIOR — o sin calcular nunca, si
-    /// la parte estaba desactivada — hasta que ALGO forzara su recálculo. En el editor eso "se
-    /// curaba" solo con seleccionar el objeto en la Hierarchy (fuerza una lectura de
-    /// Renderer.bounds); en runtime nunca pasa solo. Síntoma reportado: el personaje se ve
+    /// Encender/apagar categorías aquí (SetActive en los SkinnedMeshRenderer de cada parte) dejaba
+    /// el bounds de culling de cada renderer calculado con la pose/posición ANTERIOR — o sin
+    /// calcular nunca, si la parte estaba desactivada — hasta que ALGO forzara su recálculo. En el
+    /// editor eso "se curaba" solo con seleccionar el objeto en la Hierarchy (fuerza una lectura
+    /// de Renderer.bounds); en runtime nunca pasa solo. Síntoma reportado: el personaje se ve
     /// "flotando"/desencajado justo tras aplicar una apariencia nueva (bug del prólogo — "Estela/
     /// Will vuela sobre la cama" nada más arrancar Nueva Partida, coincidiendo con el instante en
     /// que WorldBootstrap aplica la apariencia de Will y, un frame después, SleepTrigger
@@ -341,7 +340,7 @@ public class ModularAutoBuilder : MonoBehaviour
     ///
     /// Se llama SIEMPRE desde CharacterAppearanceRegistry.ApplyAppearance() justo después de
     /// ApplySelection()/RestoreInitialSelection() — así CUALQUIER cambio de apariencia queda
-    /// cubierto de una vez, sin depender de que cada llamador nuevo recuerde replicar el fix.
+    /// cubierto de una vez, sin depender de que cada llamador nuevo recuerde replicar este paso.
     ///
     /// IMPORTANTE: aquí NO se fuerza `Animator.Update(0f)` — el cuerpo ya está activo y animándose
     /// cada frame, así que sus huesos ya están en una pose válida. Confirmado por build real

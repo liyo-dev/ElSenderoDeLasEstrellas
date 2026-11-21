@@ -68,7 +68,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _allowSprint = abilities.sprint;
         _allowShield = abilities.shield;
 
-        //if (debugLogs) Debug.Log($"[PlayerActionManager] Abilities applied: Swim={_allowSwim} Jump={_allowJump} Fly={_allowFly} Magic={_allowMagic}");
         //else Debug.Log($"[PlayerActionManager] Abilities applied: Fly={_allowFly}");
     }
 
@@ -414,7 +413,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
             //case PlayerAbility.Attack:
             //    if (!_allowPhysical)
             //    {
-            // if (debugLogs) Debug.Log("[PlayerActionManager] Attack deshabilitado por preset");
             //        return false;
             //    }
             //    break;

@@ -65,7 +65,6 @@ public class MainMenuFlyingCompanion : MonoBehaviour
             Debug.LogWarning($"[MainMenuFlyingCompanion] {name}: no se ha asignado menuCamera y no hay Camera.main disponible en la escena.");
 #endif
 
-        // Antes de la pose de vuelo: NPCSimpleAnimator.Start() la desharía si siguiera activo.
         DecoradoDeMenu.ApagarSistemasDeJuego(gameObject);
 
         if (driveFlyAnimator) TryEnterFlyPose();

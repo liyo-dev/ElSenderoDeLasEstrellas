@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Oficio ambiental de un NPC: dos pilas de cajas y el recorrido de ida y vuelta entre ellas.

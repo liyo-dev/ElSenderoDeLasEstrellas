@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe7cf6bc994462ea97722caabeee749, type: 3}
+  m_Name: Estilo_MenusDePapel
+  m_EditorClassIdentifier: Assembly-CSharp::EstiloDeMenuSencillo
+  fondo: {fileID: 0}
+  panel: {fileID: 0}
+  tarjeta: {fileID: 0}
+  chip: {fileID: 0}
+  boton: {fileID: 0}
+  fuenteTitulo: {fileID: 11400000, guid: c6e3ef084ae5e00499afa1f908b15a74, type: 2}
+  fuenteTexto: {fileID: 11400000, guid: 21a67e0dff06da94d848f1cf0d0074f8, type: 2}
+  colorTexto: {r: 0.14, g: 0.12, b: 0.1, a: 1}
+  colorTextoSuave: {r: 0.41960785, g: 0.34509805, b: 0.26666668, a: 1}
+  colorResalte: {r: 0.54, g: 0.35, b: 0, a: 1}

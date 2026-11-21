@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// La historia no arranca hasta que el mundo está montado: reparto instanciado y jugador en su
 /// ancla. Sin esto, al probar desde un paso a mitad de capítulo el grafo lanza la cinemática de

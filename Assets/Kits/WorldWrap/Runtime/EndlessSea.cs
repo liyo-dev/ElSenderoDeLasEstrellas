@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -19,23 +20,55 @@ namespace Kits.WorldWrap
         [Tooltip("Paso de la rejilla a la que se encaja el plano al seguir a la cámara, en metros. 0 = sin encajar.")]
         [SerializeField, Min(0f)] private float snap = 10f;
 
+        [Tooltip("Se puede nadar en este mar: quien nada lo consulta con TryGetSurface aunque no haya un volumen de agua debajo.")]
+        [SerializeField] private bool swimmable = true;
+
+        private static readonly List<EndlessSea> s_active = new List<EndlessSea>();
+
         private Vector3 _home;
         private bool _subscribed;
 
         public float Size => size;
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => s_active.Clear();
+#endif
+
+        /// <summary>
+        /// Altura de la superficie del mar más alto en el que se puede nadar, si hay alguno
+        /// encendido. El mar no tiene borde, así que vale para cualquier punto en X y Z: quien
+        /// pregunta decide con el fondo que tiene debajo si de verdad hay agua honda.
+        /// </summary>
+        public static bool TryGetSurface(out float surfaceY)
+        {
+            surfaceY = 0f;
+            bool found = false;
+            for (int i = 0; i < s_active.Count; i++)
+            {
+                var sea = s_active[i];
+                if (sea == null || !sea.swimmable) continue;
+                float y = sea._home.y;
+                if (!found || y > surfaceY) { surfaceY = y; found = true; }
+            }
+            return found;
+        }
 
         private void Awake() => ApplySize();
 
         private void OnEnable()
         {
             _home = transform.position;
-            if (!Application.isPlaying || _subscribed) return;
+            if (!Application.isPlaying) return;
+            if (!s_active.Contains(this)) s_active.Add(this);
+            if (_subscribed) return;
             RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
             _subscribed = true;
         }
 
         private void OnDisable()
         {
+            s_active.Remove(this);
             if (_subscribed)
             {
                 RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;

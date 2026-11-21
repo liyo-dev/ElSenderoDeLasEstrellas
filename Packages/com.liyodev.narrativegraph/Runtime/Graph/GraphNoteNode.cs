@@ -1,22 +1,28 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-[NarrativeNodeInfo("Notas", "Nota", "Comentario libre en el grafo. No se ejecuta.")]
-[NarrativeNoWorldEffect]
-[UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Assembly-CSharp")]
-public class GraphNoteNode : NarrativeNode
+namespace Liyodev.NarrativeGraph
 {
-    [TextArea(3, 12)] public string note;
-    public Color accent = new Color(1f, 0.93f, 0.55f);
-
-    public override bool IsAnnotation => true;
-
-    public override void Describe(INarrativeNodeDescriber d) => d.Line(note ?? "", NarrativeTextTone.Note);
-
-    public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
+    [Serializable]
+    [NarrativeNodeInfo("Notas", "Nota", "Comentario libre en el grafo. No se ejecuta.")]
+    [NarrativeNoWorldEffect]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceNamespace: "", sourceAssembly: "Liyodev.NarrativeGraph")]
+    public class GraphNoteNode : NarrativeNode
     {
-        // Las notas no bloquean la ejecución narrativa.
-        onReadyToAdvance?.Invoke();
+        [TextArea(3, 12)] [SerializeField] private string note;
+        public string Note { get => note; set => note = value; }
+#pragma warning disable 0414 // solo los usa el editor por SerializedProperty o se conservan por los grafos guardados
+        [SerializeField] private Color accent = new Color(1f, 0.93f, 0.55f);
+#pragma warning restore 0414
+
+        public override bool IsAnnotation => true;
+
+        public override void Describe(INarrativeNodeDescriber d) => d.Line(note ?? "", NarrativeTextTone.Note);
+
+        public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
+        {
+            // Las notas no bloquean la ejecución narrativa.
+            onReadyToAdvance?.Invoke();
+        }
     }
 }

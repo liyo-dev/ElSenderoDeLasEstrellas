@@ -1,7 +1,8 @@
 ﻿# Cap. 3 · La posada de la aldea del mar. Es la hora de comer en la terraza: Benito y Rosario comen en
 # la mesa de al lado y Lucía, en su mesita, mira fijamente su
 # cuchara. Will llega, pregunta por el trozo del aro, le suenan las tripas y pide una sopa.
-# Lucía hace subir la cuchara de verdad (un palmo, temblando) hasta que se le cae: «Casi».
+# Lucía, mirando a la cuchara, se concentra con las manos alzadas y la hace subir de verdad (un palmo,
+# con el brillo de la Levitación), tiembla y se le cae con un «puf»: «Casi».
 GUION Cap3_02_LaPosada
 ESCENA MainWorld
 ZONA Cap3Posada 280 -427 24
@@ -76,42 +77,65 @@ posadero dice CAP3_POSADA_07 gesto=HeadNod01 cara=alegre
 # Lucía habla en cuanto se va (antes había un rato largo sin que pasara nada).
 posadero anda a paso_a paso_b puerta ritmo=prisa sin_esperar
 & will mira lucia
-& plano dos will lucia
+# Plano y contraplano por encima del hombro: quien habla, siempre de cara (en «dos» Lucía salía de espaldas).
+& plano hombro will lucia
 
 @cuchara
-# Lucía le enseña su magia: la cuchara sube de verdad, tiembla y se cae en la mesa.
+# Lucía le enseña su magia (la Levitación que Will aprenderá en el Cap. 4: mismo efecto y mismo sonido).
 lucia dice CAP3_POSADA_08 cara=alegre mira=will
+# Preparación, a lo Lina Inverse: se vuelve hacia la cuchara, se pone seria y alza las manos hacia
+# ella. Will también mira la cuchara.
 lucia mira cuchara
 & lucia cara decidido
+& will mira cuchara
+& will cara ilusionado
+# Plano bajo, a la altura de la mesita: la cuchara delante y Lucía detrás, de frente; la cámara se
+# acerca despacio mientras se concentra. El foco, entre la cuchara y su cara (con el foco en la
+# cuchara se le cortaba la cabeza).
+& plano detalle PROP_Cuchara desde=cam_cuchara altura=0.8 altura_foco=0.72 lente=48 zoom=40
 & lucia gesto CastingEnter01
 & sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Musical Instruments(16)/Chimes_Harp-012.wav" volume=0.45
-espera 0.5
-# Plano bajo, a la altura de la mesita: la cuchara en primer término y Lucía detrás.
-plano detalle PROP_Cuchara desde=cam_cuchara altura=0.85 lente=40
-prop PROP_BrilloCuchara
+espera 0.9
+# Suelta la carga hacia la cuchara: destello pequeño en ella y la cuchara empieza a brillar y a subir.
+efecto VfxBeat vfxPrefab=Assets/_VFX/Hechizos/VFX_Hechizo_Destello_Mente.prefab markName=PROP_Cuchara offset=0;0.05;0 escala=0.3 lifetime=1
+& prop PROP_BrilloCuchara
 & lucia bucle Conjuro_Esfuerzo fundido=0.3
+& sonido clip="Assets/Audio/SFX_Hechizos/SFX_Hechizo_Levitation.wav" volume=0.5
+& efecto VfxBeat vfxPrefab=Assets/_VFX/Hechizos/VFX_Hechizo_Levitation_Dibujo_Mantener.prefab atActorId=PROP_Cuchara seguirAlActor=true escala=0.3 lifetime=12 registrarComo=LEVITA_CUCHARA
 # Sube un palmo despacio (de fondo, mientras ella habla). Cada movimiento cuenta en el reloj del
 # guion con «dura»: los efectos no esperan solos.
-efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,0.2,0 deltaRotacion=0,0,8 segundos=2.4 desdeDondeEstaba=true dura=0
-lucia dice CAP3_POSADA_09 cara=decidido
-espera 0.3
-# Tiembla, cada vez más…
+& efecto PropMoveBeat propId=PROP_Cuchara deltaPosicion=0,0.2,0 deltaRotacion=0,0,8 segundos=2.4 desdeDondeEstaba=true dura=0
+# Habla a la cuchara, no a Will (sin «mira=» la cabeza se le iba hacia él mientras conjuraba).
+lucia dice CAP3_POSADA_09 cara=decidido mira=cuchara
+# Contraplano corto: a Will se le escapa la sorpresa. La cuchara sigue arriba.
+plano medio will solo lente=34
+& will cara sorpresa
+espera 0.8
+# De vuelta a la cuchara, más cerca: tiembla, cada vez más…
+plano detalle PROP_Cuchara desde=cam_cuchara altura=0.8 altura_foco=0.72 lente=36
+& lucia cara enfado dura=1.2
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_rattle(6).wav" volume=0.3
 efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-14 segundos=0.14 dura=0.14
 efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,22 segundos=0.14 dura=0.14
 efecto PropMoveBeat propId=PROP_Cuchara deltaRotacion=0,0,-24 segundos=0.12 dura=0.12
-# …y cae en su sitio de la mesa (su pose inicial: no puede quedarse en el aire).
+# …y cae en su sitio de la mesa (su pose inicial: no puede quedarse en el aire). La magia se apaga
+# con un «puf» y Lucía suelta los brazos.
 efecto PropMoveBeat propId=PROP_Cuchara segundos=0.2 suavizar=false desdeDondeEstaba=true dura=0.2
 & prop PROP_BrilloCuchara oculto
+& efecto RecogerVfxBeat ids=LEVITA_CUCHARA
+& efecto VfxBeat vfxPrefab=Assets/_VFX/Hechizos/VFX_Hechizo_Fallido.prefab markName=PROP_Cuchara offset=0;0.05;0 escala=0.4 lifetime=1.5
 & lucia reposo
 sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Misc(58)/Metal_Hit-013.wav" volume=0.4
+& sonido clip="Assets/Audio/FREE SOUND PACK_TM(355)/Cartoon(15)/cartoon_whistle_down(4).wav" volume=0.25
 espera 0.4
 plano medio lucia
 # El posadero vuelve con la sopa mientras hablan (llega para el consejo).
 & posadero anda a paso_b paso_a p_posadero ritmo=prisa sin_esperar
 lucia dice CAP3_POSADA_10 cara=triste gesto=HeadShake01
-plano dos will lucia
+plano hombro lucia will
 will dice CAP3_POSADA_11 mira=lucia cara=alegre
-lucia dice CAP3_POSADA_13 cara=alegre gesto=Cheer01
+plano hombro will lucia
+lucia dice CAP3_POSADA_13 cara=alegre gesto=Cheer01 mira=will
 
 @sopa
 # El posadero ya ha vuelto con la sopa de Will y le da el consejo.

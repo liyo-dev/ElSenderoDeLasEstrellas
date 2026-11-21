@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Cambia la franja del día en la escena. Sigue en el acto; la luz y el cielo cambian en paralelo.
 [Serializable]
@@ -56,7 +57,7 @@ public sealed class PedirSegunHoraDelDia : NarrativeRequest, INarrativeRouteEffe
     }
 
     public override string DescribeDecision(NarrativeNode step)
-        => $"Según la hora \"{step?.displayTitle}\" (guid {step?.guid}): ¿es {franja}? Salidas: Sí / No.";
+        => $"Según la hora \"{step?.DisplayTitle}\" (guid {step?.Guid}): ¿es {franja}? Salidas: Sí / No.";
 
     /// Si ahora es esa franja del día (con Noche también cuenta la medianoche). Sin ciclo, sí.
     public static bool EsLaFranja(DayNightCycle.TimeOfDay franja)

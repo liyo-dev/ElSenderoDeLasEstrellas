@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Language of the story editor (per user). Every visible string goes through T.
     public static class StoryText

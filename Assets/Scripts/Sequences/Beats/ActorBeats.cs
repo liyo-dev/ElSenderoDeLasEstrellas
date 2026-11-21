@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.AI;
+using Liyodev.NarrativeGraph;
 
 // Beats que actúan sobre un actor: gesto, cara, hacia dónde mira, movimiento y el candado que lo
 // saca de su comportamiento ambiental.

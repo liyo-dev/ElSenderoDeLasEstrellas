@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// <summary>
     /// Dibuja un campo string marcado con [NarrativeKey] como "texto + desplegable con búsqueda"

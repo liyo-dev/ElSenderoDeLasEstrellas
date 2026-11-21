@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sendero.Core.Feedback;
+using Liyodev.NarrativeGraph;
 
 // Beats de puesta en escena: cámara, efectos, tiempo y control de flujo.
 
@@ -77,8 +78,7 @@ public class VfxBeat : SequenceBeat
             yield break;
 
         // A quién acompaña, si es que acompaña a alguien. El pool acepta un padre: al devolver la
-        // instancia la vuelve a colgar del servicio, así que el padre puede morir cuando quiera
-        // (ver VfxPoolService.ReturnInternal y su FIX A3 para el caso de morir estando activa).
+        // instancia la vuelve a colgar del servicio, así que el padre puede morir cuando quiera.
         Transform aQuienSigue = null;
         if (seguirAlActor && !string.IsNullOrEmpty(atActorId))
             aQuienSigue = ctx.GetActor(atActorId)?.Transform;
@@ -466,6 +466,10 @@ public class TimeOfDayBeat : SequenceBeat
              "la transición del propio ciclo (para que el atardecer entre mientras la escena sigue).")]
     public bool immediate = false;
 
+    [Tooltip("Segundos que tarda el cambio (luz, niebla y cielo a la vez; «hora X duracion=6»). 0 = la del " +
+             "ciclo (16 s la luz, 45 s el cielo). OJO: 'transitionSeconds' NO es la duración, solo lo que se espera.")]
+    public float duracion = 0f;
+
     [Tooltip("Esperar a que termine la transición antes de seguir con el siguiente beat. Lo normal " +
              "es NO esperar: la luz cambia por debajo mientras los personajes siguen hablando, que " +
              "es justo el efecto que se busca.")]
@@ -489,7 +493,7 @@ public class TimeOfDayBeat : SequenceBeat
     public override IEnumerator Run(SequenceContext ctx)
     {
         if (esLaHoraDeVolver) CinematicTimeOfDay.HoraAlVolver = timeOfDay;
-        CinematicTimeOfDay.Apply(timeOfDay, immediate);
+        CinematicTimeOfDay.Apply(timeOfDay, immediate, immediate ? 0f : duracion);
 
         // El cielo se vuelve a contar despues de cada cambio de hora: la franja horaria y el clima
         // se MULTIPLICAN sobre el material, y es esa multiplicacion la que puede dejarlo negro.
@@ -552,8 +556,6 @@ public class SetPropActiveBeat : SequenceBeat
 
 /// Mueve y/o gira un objeto del decorado, en relativo a donde esté.
 ///
-/// ── Por qué hace falta ────────────────────────────────────────────────────────────────────────
-/// Raúl, cuarta grabación del prólogo: «se ve como hace la magia pero no se ve lo que arregla».
 /// Y era literal: la carreta volcada estaba modelada DE PIE, y el globo enganchado en el
 /// campanario se quedaba enganchado. El Archimago lanzaba un hechizo, salía un destello, y el
 /// mundo seguía exactamente igual. Un favor que no cambia nada no es un favor, es un efecto.

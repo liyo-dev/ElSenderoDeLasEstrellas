@@ -1,5 +1,25 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2481865779693801288
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2358594f6bb17ad428aac58cd526dae5, type: 3}
+  m_Name: InkOutline
+  m_EditorClassIdentifier: Kits.InkOutline::Kits.InkOutline.InkOutlineFeature
+  m_Active: 1
+  shader: {fileID: 4800000, guid: f49aa8bcab0028d4bae06a1fd4834c11, type: 3}
+  color: {r: 0.3, g: 0.18, b: 0.13, a: 1}
+  widthPixels: 2.5
+  thinFrom: 8
+  thinTo: 25
+  farWidthFraction: 0.4
+  depthPush: 0.06
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24,8 +44,9 @@ MonoBehaviour:
     probeSamplingDebugMesh: {fileID: -3555484719484374845, guid: 57d7c4c16e2765b47a4d2069b311bffe, type: 3}
     probeSamplingDebugTexture: {fileID: 2800000, guid: 24ec0e140fb444a44ab96ee80844e18e, type: 3}
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
-  m_RendererFeatures: []
-  m_RendererFeatureMap: 
+  m_RendererFeatures:
+  - {fileID: -2481865779693801288}
+  m_RendererFeatureMap: b830270d39a48eddl
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 3

@@ -16,7 +16,7 @@ MonoBehaviour:
   displayNameId: SPELL_SELLO_PACTO_NAME
   displayName: Sello del Pacto
   kind: 3
-  element: 4
+  element: 5
   lore: "Un c\xEDrculo en el suelo que recuerda a todos las condiciones del pacto."
   loreId: 
   prefab: {fileID: 3083376353465680284, guid: e602f0eee944e944ab747f66328e39be, type: 3}
@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 25
@@ -106,8 +107,12 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  invisibilidadSegundos: 6
+  materialDeInvisible: {fileID: 0}
   abreProteccionSegundos: 0
   vfxProteccionAbierta: {fileID: 0}
-  enGrimorio: 1
+  empujeEnElAire: 0
+  enGrimorio: 0
+  especialConMision: 0
   caster: 0
   comboSequence: 010000000000000002000000i

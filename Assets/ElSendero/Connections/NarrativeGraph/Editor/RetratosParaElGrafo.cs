@@ -1,4 +1,4 @@
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEngine;
 

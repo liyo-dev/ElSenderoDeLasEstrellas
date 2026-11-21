@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NarrativeGraphSamples.ElFaro
+namespace Liyodev.NarrativeGraph.Samples.ElFaro
 {
     /// El jugador del ejemplo: al empezar se coloca donde dicen sus datos y los enseña en una
     /// esquina. Así se ve qué ha puesto la pestaña Arranque al probar desde un paso.

@@ -140,7 +140,6 @@ public partial class ModuloCinematicaFinal
 
     private static int ZonaDe(Vector3 p) => p.x < 100f ? 1 : (p.x < 300f ? 2 : 3);
 
-    /// Antes de dibujar el fotograma: coloca la cámara del otro lado del portal que se está viendo.
     private void AntesDeRenderizar(ScriptableRenderContext contexto, List<Camera> camaras)
     {
         _lunaDeEsteFotograma = Shader.GetGlobalColor(ColorLunaId);

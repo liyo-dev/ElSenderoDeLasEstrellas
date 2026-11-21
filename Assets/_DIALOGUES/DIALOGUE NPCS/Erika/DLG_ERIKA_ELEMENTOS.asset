@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d8708fd0f936346bad26dff04672db, type: 3}
+  m_Name: DLG_ERIKA_ELEMENTOS
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
+  lines:
+  - speakerNameId: CHAR_ERIKA
+    textId: DLG_ERIKA_ELEMENTOS_01
+    text: "Una cosa m\xE1s. En este mundo la magia tiene elementos: Fuego, Viento, Luz, Mente y Oscuro."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_ERIKA
+    textId: DLG_ERIKA_ELEMENTOS_02
+    text: "Contra la gente da igual el elemento: lo que cuenta es la fuerza del hechizo. Pero si le devuelves el suyo, le pasa algo: el de luz aturde, el de mente duerme\u2026"
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 6
+  - speakerNameId: CHAR_ERIKA
+    textId: DLG_ERIKA_ELEMENTOS_03
+    text: "Con las criaturas del camino es otra historia. Ya lo ir\xE1s viendo."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 8
+  - speakerNameId: CHAR_ERIKA
+    textId: DLG_ERIKA_ELEMENTOS_04
+    text: "Y esto es para ti: Eldran me pidi\xF3 que te lo diera. Tu grimorio. Ah\xED viene todo explicado."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 1
+  - speakerNameId: CHAR_ERIKA
+    textId: DLG_ERIKA_ELEMENTOS_05
+    text: "Mira: se acaba de despertar una p\xE1gina nueva, la Bola Prisma. Pru\xE9bala conmigo."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_WILL
+    textId: DLG_ERIKA_ELEMENTOS_06
+    text: "\xA1Mi propio grimorio! Vale, Erika. Cuando quieras."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 1
+  - speakerNameId: CHAR_ERIKA
+    textId: DLG_ERIKA_ELEMENTOS_07
+    text: "\xA1En guardia, entonces! Ahora s\xED, de verdad."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 8
+  maxLinesPerPage: 3
+  isGroupConversation: 0

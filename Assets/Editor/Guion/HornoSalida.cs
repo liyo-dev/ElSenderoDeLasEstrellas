@@ -361,6 +361,7 @@ internal sealed partial class Horno
             sb.AppendLine($"\n## Silencios largos entre frases ({_huecos.Count})\n");
             foreach (var h in _huecos) sb.AppendLine("- " + h);
         }
+        InformeDeVida(sb);
 
         if (_salida != null)
         {

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Diálogos del grafo, en la caja de <see cref="DialogueManager"/>; sus preguntas de dos respuestas,

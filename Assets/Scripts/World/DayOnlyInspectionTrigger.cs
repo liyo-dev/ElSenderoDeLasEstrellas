@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Zona de inspección que solo se activa durante el día y, opcionalmente, cuando una misión concreta está activa.

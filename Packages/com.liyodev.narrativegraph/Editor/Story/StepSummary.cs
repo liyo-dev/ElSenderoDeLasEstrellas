@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// One line, in plain words, of what a step does: built from what the node describes about
     /// itself (NarrativeNode.Describe), so no step type has to be known here.

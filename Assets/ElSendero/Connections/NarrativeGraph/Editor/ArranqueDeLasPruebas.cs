@@ -3,9 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NarrativeGraphEditor;
+using Liyodev.NarrativeGraph.Editor;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {
@@ -33,8 +34,8 @@ namespace Sendero.Narrative.Editor
         public static void FijarAncla(CheckpointNode punto, string ancla)
         {
             if (punto == null || string.IsNullOrEmpty(ancla)) return;
-            punto.player ??= new NarrativePlayerValues();
-            NarrativePlayerValuesEditor.SetValue(punto.player, typeof(PlayerPresetSO), CampoDelAncla, p => p.stringValue = ancla);
+            punto.Player ??= new NarrativePlayerValues();
+            NarrativePlayerValuesEditor.SetValue(punto.Player, typeof(PlayerPresetSO), CampoDelAncla, p => p.stringValue = ancla);
         }
     }
 

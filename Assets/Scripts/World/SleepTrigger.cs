@@ -4,6 +4,7 @@ using Core;
 using System.Collections;
 using Invector.vCharacterController;
 using Sendero.Core.Feedback;
+using Liyodev.NarrativeGraph;
 
 // Después de las cámaras (INC-426): mientras Will duerme, el plano lo pone este LateUpdate.
 [DefaultExecutionOrder(500)]
@@ -134,20 +135,6 @@ public class SleepTrigger : MonoBehaviour
             try { playerAnimator.SetBool(vAnimatorParameters.IsGrounded, true); } catch { }
             try { playerAnimator.SetFloat(vAnimatorParameters.GroundDistance, 0f); } catch { }
 
-            // "Will sigue de pie en la cama" — reportado con sleepOnStart (Will
-            // ya duerme al cargar la escena, antes de que arranque el sueño del prólogo) y, a
-            // diferencia del bug del 15 ago (Animator sin el estado — eso ya deja su propio
-            // Debug.LogError si vuelve a pasar), esta vez SetupSleep() sí consigue reproducir
-            // 'sleepAnimationState' sin error. Hipótesis de Raúl: "es por temas de tiempos" — y
-            // encaja con el propio comentario de más abajo en SetupSleep() sobre WorldBootstrap
-            // pudiendo aplicar la apariencia del personaje activo DESPUÉS del Play() de aquí (mismo
-            // orden de ejecución que ya causó el bug de "cae encima de la cama" con IsGrounded, ver
-            // el FIX del 15 ago un poco más arriba en este archivo): un Rebind/reasignación de
-            // Animator Controller en ese punto devuelve al Animator a su estado de entrada por
-            // defecto (de pie), pisando el Play() que ya se había hecho. playerAnimator.Play() es
-            // un one-shot, no algo que se reafirme solo — así que, igual que ya hacemos con
-            // IsGrounded arriba, se vigila aquí CADA FRAME mientras isSleeping siga activo y se
-            // fuerza de vuelta si algo externo lo saca del estado de dormir.
             if (_sleepStateHash != -1)
             {
                 var stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
@@ -320,14 +307,13 @@ public class SleepTrigger : MonoBehaviour
         if (sleepEmotion != NPCEmotion.None)
             _playerEmotion?.SetEmotion(sleepEmotion);
 
-        // FIX "personaje flotando/desencajado en la cama" (bug reportado en el prólogo — Estela/
-        // Will apareciendo flotando sobre la cama en vez de Will dormido normalmente): mismo AABB
-        // de culling atascado que documenta ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange.
-        // Aquí el teleport a bedPosition + el Play() forzado de la animación de dormir cambian de
-        // golpe la posición Y la pose del rig, justo después de que WorldBootstrap haya podido
-        // aplicar la apariencia del personaje activo — sin este refresco, el bounds de culling de
-        // cada SkinnedMeshRenderer puede quedarse calculado con la pose/posición ANTERIOR hasta que
-        // algo más lo fuerce, dando la sensación de que el personaje "vuela" sobre la cama.
+        // Mismo AABB de culling atascado que documenta
+        // ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange. Aquí el teleport a bedPosition +
+        // el Play() forzado de la animación de dormir cambian de golpe la posición Y la pose del rig,
+        // justo después de que WorldBootstrap haya podido aplicar la apariencia del personaje activo — sin
+        // este refresco, el bounds de culling de cada SkinnedMeshRenderer puede quedarse calculado con la
+        // pose/posición ANTERIOR hasta que algo más lo fuerce, dando la sensación de que el personaje
+        // "vuela" sobre la cama.
         RefreshPlayerRendererBounds(playerGO);
 
         MoveCameraToSleepAnchor();
@@ -376,8 +362,8 @@ public class SleepTrigger : MonoBehaviour
             player.transform.rotation = wakeUpPosition.rotation;
         }
 
-        // Mismo fix que en SetupSleep(): otro teleport brusco del rig, misma necesidad de refrescar
-        // el bounds de culling después.
+        // Como en SetupSleep(): tras otro teleport brusco del rig hay que refrescar
+        // el bounds de culling.
         RefreshPlayerRendererBounds(player);
 
         _playerEmotion?.ForceReset();
@@ -525,14 +511,14 @@ public class SleepTrigger : MonoBehaviour
 
         if (_cameraCoroutine != null) StopCoroutine(_cameraCoroutine);
 
-        // FIX INC-397: el mismo choque que el del LateUpdate, pero por la
-        // otra puerta. Con el prólogo, WillHouse se carga DESPUÉS de que la cinemática haya
-        // empezado y puesto su primer plano: este viaje de medio segundo cogía la cámara desde
-        // el cielo del valle y la dejaba clavada en el plano cenital de la cama. Mientras la
-        // secuencia usaba un travelling largo (que reescribe la cámara cada frame) no se notaba;
-        // con un corte seco se quedaba ahí hasta el plano siguiente — «lo de las nubes sale en la
-        // habitación de Will». Si alguien tiene la cámara reclamada, no se toca: el LateUpdate ya
-        // pone el plano de la cama en cuanto la suelte.
+        // El mismo choque que el del LateUpdate, pero por la otra puerta. Con el prólogo,
+        // WillHouse se carga DESPUÉS de que la cinemática haya empezado y puesto su primer plano:
+        // este viaje de medio segundo cogía la cámara desde el cielo del valle y la dejaba
+        // clavada en el plano cenital de la cama. Mientras la secuencia usaba un travelling largo
+        // (que reescribe la cámara cada frame) no se notaba; con un corte seco se quedaba ahí
+        // hasta el plano siguiente — «lo de las nubes sale en la habitación de Will». Si alguien
+        // tiene la cámara reclamada, no se toca: el LateUpdate ya pone el plano de la cama en
+        // cuanto la suelte.
         if (CameraDirectorService.HasOwner) return;
 
         _cameraCoroutine = StartCoroutine(TransitionCamera(

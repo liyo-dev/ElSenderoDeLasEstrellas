@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using DG.Tweening;
 using Core.InputGlyphs;
+using Liyodev.NarrativeGraph;
 
 [DisallowMultipleComponent]
 public class Interactable : MonoBehaviour
@@ -86,8 +87,8 @@ public class Interactable : MonoBehaviour
     // la asunción de arriba ("el hint ya está a la altura de la cabeza") no
     // se cumple para todos los prefabs de NPC — p.ej. Patricia tiene el Canvas del hint colgando
     // directamente de la raíz del prefab con offset local (0,0,0), así que hint.transform.position
-    // queda prácticamente a la misma altura que transform.position (por eso el mostrador de su
-    // tienda seguía bloqueando el hint incluso después del fix anterior). En vez de depender de
+    // queda prácticamente a la misma altura que transform.position (por eso el mostrador de una
+    // tienda podía bloquear el hint). En vez de depender de
     // que cada prefab tenga el Canvas bien posicionado, se garantiza aquí una altura mínima
     // (defaultSightHeight) sobre la base del NPC: si el hint ya está más alto que eso (el caso
     // "bien configurado"), se usa su posición tal cual; si no, se eleva hasta el mínimo.
@@ -680,9 +681,9 @@ public class Interactable : MonoBehaviour
     }
 
     /// <summary>
-    /// FIX INC-048: variante de StartDialogueWithOptions() que usa el popup de confirmación
-    /// unificado (ConfirmationPopupUI) en vez del cuadro de diálogo con opciones. Reutiliza los
-    /// mismos campos serializados (dialogue = mensaje, confirmFollowUp/cancelFollowUp = diálogo
+    /// Variante de StartDialogueWithOptions() que usa el popup de confirmación unificado
+    /// (ConfirmationPopupUI) en vez del cuadro de diálogo con opciones. Reutiliza los mismos
+    /// campos serializados (dialogue = mensaje, confirmFollowUp/cancelFollowUp = diálogo
     /// opcional posterior, OnConfirm = evento al confirmar) para no duplicar configuración en el
     /// Inspector ni romper los Interactables existentes en modo OpenDialogueWithOptions.
     /// </summary>
@@ -844,8 +845,8 @@ public class Interactable : MonoBehaviour
 
         // si el propio interactor ya está ocupando este punto (durmiendo/sentado
         // aquí), pulsar Interactuar otra vez debe despertarlo/levantarlo, no intentar TryOccupy() de
-        // nuevo — eso siempre devuelve false porque ya está ocupado, y antes de este fix el botón A
-        // simplemente no hacía nada mientras el jugador dormía (ver CanInteract más arriba).
+        // nuevo — eso siempre devuelve false porque ya está ocupado, y el botón A
+        // no haría nada mientras el jugador duerme (ver CanInteract más arriba).
         if (_worldPoint.IsOccupiedBy(interactor.transform))
         {
             handler.StopActivity();

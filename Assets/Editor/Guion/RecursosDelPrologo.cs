@@ -70,7 +70,9 @@ public static class RecursosDelPrologo
         ("SFX_Prologo_SilencioBlanco", "Assets/Audio/SFX_Prologo/Disenados/SFX_Silencio_Blanco.wav"),
         // El pueblo (vestido del prólogo): contraventanas y puertas.
         ("SFX_Pueblo_Contraventana_Abre", CarpetaPack + "Misc(58)/Wood_Scratching-009.wav"),
-        ("SFX_Pueblo_Contraventana_Golpe", CarpetaPack + "Misc(58)/Wood_Hit-023.wav"),
+        // 19 nov 2026: golpe de contraventana de verdad (crujido, golpe, pestillo y ráfaga), no un golpe
+        // seco de madera que en el vídeo sonaba a pisadas; variantes _2 y _3 en la misma carpeta.
+        ("SFX_Pueblo_Contraventana_Golpe", "Assets/Audio/SFX_Prologo/Disenados/SFX_Contraventana_Golpe_1.wav"),
     };
 
     /// Músicas propias de cinemáticas (reglas de secuencia del perfil de audio; suenan una vez).
@@ -78,6 +80,9 @@ public static class RecursosDelPrologo
     private static readonly (string id, string ruta, float fadeIn, float fadeOut)[] Musicas =
     {
         ("PROLOGO_CLIMAX", "Assets/Audio/Music/Cinematicas/Protegelos a todos (climax del prologo).mp3", 0.3f, 2f),
+        // PROLOGO_CLIMAX_CRESCENDO: otra toma del clímax, un crescendo continuo de 3 min sin golpes fijos;
+        // suena desde la plegaria hasta que la cinemática la apaga.
+        ("PROLOGO_CLIMAX_CRESCENDO", "Assets/Audio/Music/Cinematicas/Protegelos a todos (crescendo epico).mp3", 0.3f, 2f),
         // SENDERO_CONJURO: «La puerta de las estrellas», el conjuro de Will ante la Piedra (Sendero_01_ElConjuro),
         // compuesta a medida: el grito cae en su segundo 28,0 y el portal en el 30,8. Ver INC-1055.
         ("SENDERO_CONJURO", "Assets/Audio/Music/Cinematicas/La puerta de las estrellas (conjuro de la Piedra).mp3", 0.3f, 2.5f),

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Mapa de la historia: el mundo en esquema con un muñeco por personaje, colocado según el
     /// paso elegido en el editor de la historia. Solo enseña lo que el grafo sabe: al pulsar un
@@ -336,7 +336,7 @@ namespace NarrativeGraphEditor
             var placements = new Dictionary<string, Placement>();
             if (_map == null) return placements;
             var facts = _graph != null && step != null
-                ? StoryCache.Get($"map:{_graph.GetEntityId()}:{step.guid}", () => StepFacts.Of(_graph, step))
+                ? StoryCache.Get($"map:{_graph.GetEntityId()}:{step.Guid}", () => StepFacts.Of(_graph, step))
                 : StepFacts.Empty;
             var story = facts.Story;
             var pieces = facts.Pieces;
@@ -348,20 +348,20 @@ namespace NarrativeGraphEditor
                 pieces.TryGetValue(c.actorId, out var e);
                 // «Lo de siempre» con presencia sin tocar no coloca a nadie: solo cuenta lo que la
                 // historia dice de verdad (una marca, un «no está» o un hecho de posición).
-                bool placedPiece = e != null && (e.Node.presence != ActorPresence.Unchanged
-                                                 || e.Node.layer != ActorStateNode.Layer.Usual);
+                bool placedPiece = e != null && (e.Node.Presence != ActorPresence.Unchanged
+                                                 || e.Node.PieceLayer != ActorStateNode.Layer.Usual);
                 bool named = placedPiece || (story != null && story.Actors.ContainsKey(c.actorId));
                 bool playerAtStart = c.actorId == "Player" && !string.IsNullOrEmpty(playerMark);
                 if (!named && !playerAtStart) continue;   // la historia no lo coloca: no sale
 
                 var p = new Placement();
                 string mark = null;
-                if (e != null && e.Node.presence != ActorPresence.Unchanged)
+                if (e != null && e.Node.Presence != ActorPresence.Unchanged)
                 {
                     p.Piece = e.Node;
-                    p.Away = e.Node.presence == ActorPresence.Away;
-                    mark = e.Node.markId;
-                    SetWhy(p, e.Graph, e.Source ?? e.Node.guid);
+                    p.Away = e.Node.Presence == ActorPresence.Away;
+                    mark = e.Node.MarkId;
+                    SetWhy(p, e.Graph, e.Source ?? e.Node.Guid);
                 }
                 else if (playerAtStart)
                 {
@@ -402,7 +402,7 @@ namespace NarrativeGraphEditor
             public static StepFacts Of(NarrativeGraph graph, NarrativeNode step)
             {
                 var facts = new StepFacts();
-                var plan = NarrativeStartPlanner.Plan(graph, step.guid);
+                var plan = NarrativeStartPlanner.Plan(graph, step.Guid);
                 facts.Story = plan.Story;
                 foreach (var e in ActorStateFacts.From(plan.Story)) facts.Pieces[e.Actor] = e;
                 var sheet = plan.Sheet;
@@ -450,7 +450,7 @@ namespace NarrativeGraphEditor
         {
             using var medida = StoryTiming.Measure(StoryText.T("Mapa: dibujar", "Map: draw"));
             _dirty = false;
-            var guid = _step != null ? _step.guid : null;
+            var guid = _step != null ? _step.Guid : null;
             if (guid != _stepGuid) { _stepGuid = guid; StepChanged?.Invoke(_graph, guid); }
             if (_canvas == null) return;
             _canvas.Clear();
@@ -664,7 +664,7 @@ namespace NarrativeGraphEditor
             el.Add(ring);
             var tip = new VisualElement { pickingMode = PickingMode.Ignore, style = { width = 0, height = 0, borderLeftWidth = 6, borderRightWidth = 6, borderTopWidth = 8, borderLeftColor = Color.clear, borderRightColor = Color.clear, borderTopColor = sel ? Color.white : col } };
             el.Add(tip);
-            if (p.Piece != null && p.Piece.lines != null && p.Piece.lines.Any(l => l != null))
+            if (p.Piece != null && p.Piece.Lines != null && p.Piece.Lines.Any(l => l != null))
             {
                 var talk = new Label("…") { pickingMode = PickingMode.Ignore, style = { position = Position.Absolute, right = 0, top = -6, fontSize = 12, unityFontStyleAndWeight = FontStyle.Bold, color = new Color(0.1f, 0.08f, 0.02f), backgroundColor = new Color(0.95f, 0.71f, 0.27f), paddingLeft = 3, paddingRight = 3 } };
                 Round(talk, 6);
@@ -702,15 +702,15 @@ namespace NarrativeGraphEditor
             if (p.Why != null) Link(StoryText.T("Lo dejó ", "Set by ") + p.Why, p.WhyGraph, p.WhyGuid);
             else Muted(StoryText.T("Ningún paso lo dice: está en su sitio de siempre.", "No step says so: they are in their usual place."));
 
-            var waits = Ahead<WaitNpcInteractionNode>(n => n.npcId == c.actorId, 1).FirstOrDefault();
+            var waits = Ahead<WaitNpcInteractionNode>(n => n.NpcId == c.actorId, 1).FirstOrDefault();
             if (waits != null)
             {
                 Section(StoryText.T("La historia le espera", "The story is waiting for them"));
-                Link(Num(waits) + "«" + NarrativeStartPlanner.Title(waits) + "»", _graph, waits.guid);
+                Link(Num(waits) + "«" + NarrativeStartPlanner.Title(waits) + "»", _graph, waits.Guid);
             }
 
             Section(StoryText.T("Si le hablas ahora", "If you talk to them now"));
-            var lines = p.Piece?.lines?.Where(l => l != null).ToList();
+            var lines = p.Piece?.Lines?.Where(l => l != null).ToList();
             if (lines == null || lines.Count == 0) Muted(StoryText.T("No dice nada propio.", "Nothing of their own."));
             else
             {
@@ -718,31 +718,31 @@ namespace NarrativeGraphEditor
                 foreach (var l in lines) DialogueButton(l);
             }
 
-            var agenda = Ahead<ActorStateNode>(n => n.actorId == c.actorId && n != _step, 4).ToList();
+            var agenda = Ahead<ActorStateNode>(n => n.ActorId == c.actorId && n != _step, 4).ToList();
             if (agenda.Count > 0)
             {
                 Section(StoryText.T("Lo que le espera", "What lies ahead"));
-                foreach (var n in agenda) Link(Num(n) + AgendaLine(n), _graph, n.guid);
+                foreach (var n in agenda) Link(Num(n) + AgendaLine(n), _graph, n.Guid);
             }
 
-            var next = Ahead<PlayDialogueNode>(n => n.npcId == c.actorId && n.dialogue != null, 3).ToList();
+            var next = Ahead<PlayDialogueNode>(n => n.NpcId == c.actorId && n.Dialogue != null, 3).ToList();
             if (next.Count > 0)
             {
                 Section(StoryText.T("Próximos diálogos", "Next dialogues"));
-                foreach (var n in next) { DialogueButton(n.dialogue, Num(n)); }
+                foreach (var n in next) { DialogueButton(n.Dialogue, Num(n)); }
             }
 
-            var quests = _graph?.nodes?.OfType<StartQuestNode>().Where(q => q.giverId == c.actorId && !string.IsNullOrEmpty(q.questId)).ToList();
+            var quests = _graph?.nodes?.OfType<StartQuestNode>().Where(q => q.GiverId == c.actorId && !string.IsNullOrEmpty(q.QuestId)).ToList();
             if (quests != null && quests.Count > 0)
             {
                 Section(StoryText.T("Misiones que da", "Quests they give"));
-                var story = _step != null ? NarrativeStartPlanner.Plan(_graph, _step.guid).Story : null;
+                var story = _step != null ? NarrativeStartPlanner.Plan(_graph, _step.Guid).Story : null;
                 foreach (var q in quests)
                 {
-                    string state = story != null && story.Quests.TryGetValue(q.questId, out var s)
+                    string state = story != null && story.Quests.TryGetValue(q.QuestId, out var s)
                         ? (s.value == RecordingStateWriter.QuestDone ? StoryText.T("hecha", "done") : StoryText.T("en curso", "active"))
                         : StoryText.T("sin empezar", "not started");
-                    Link($"{NarrativeProjectIndex.FindQuest(q.questId)?.displayName ?? q.questId} · {state}", _graph, q.guid);
+                    Link($"{NarrativeProjectIndex.FindQuest(q.QuestId)?.displayName ?? q.QuestId} · {state}", _graph, q.Guid);
                 }
             }
         }
@@ -818,7 +818,7 @@ namespace NarrativeGraphEditor
             if (steps[index] == _step) { StopPlaying(); return; }
             _step = steps[index];
             _dialogue = null;
-            StoryGraphWindow.SelectStep(_graph, _step.guid);
+            StoryGraphWindow.SelectStep(_graph, _step.Guid);
             Rebuild();
         }
 
@@ -851,7 +851,7 @@ namespace NarrativeGraphEditor
                 var list = new List<NarrativeWorldMap.Character>(_map != null ? _map.characters : new List<NarrativeWorldMap.Character>());
                 var have = new HashSet<string>(list.Select(c => c.actorId));
                 var ids = NarrativeProjectIndex.Graphs.Where(g => g?.nodes != null).SelectMany(g => g.nodes)
-                    .Select(n => n switch { ActorStateNode a => a.actorId, PlaceActorNode pl => pl.actorId, _ => null })
+                    .Select(n => n switch { ActorStateNode a => a.ActorId, PlaceActorNode pl => pl.ActorId, _ => null })
                     .Where(id => !string.IsNullOrEmpty(id) && have.Add(id)).OrderBy(id => id);
                 foreach (var id in ids)
                 {
@@ -870,11 +870,11 @@ namespace NarrativeGraphEditor
         /// Una pieza «Personaje desde aquí» en una línea: dónde pasa a estar y si dice algo.
         static string AgendaLine(ActorStateNode n)
         {
-            string where = n.layer == ActorStateNode.Layer.BackToUsual ? StoryText.T("vuelve a lo de siempre", "back to usual")
-                : n.presence == ActorPresence.Away ? StoryText.T("se va", "leaves")
-                : n.presence == ActorPresence.AtMark ? StoryText.T($"pasa a {n.markId}", $"moves to {n.markId}")
+            string where = n.PieceLayer == ActorStateNode.Layer.BackToUsual ? StoryText.T("vuelve a lo de siempre", "back to usual")
+                : n.Presence == ActorPresence.Away ? StoryText.T("se va", "leaves")
+                : n.Presence == ActorPresence.AtMark ? StoryText.T($"pasa a {n.MarkId}", $"moves to {n.MarkId}")
                 : StoryText.T("sigue donde está", "stays where they are");
-            int lines = n.lines?.Count(l => l != null) ?? 0;
+            int lines = n.Lines?.Count(l => l != null) ?? 0;
             return lines > 0 ? StoryText.T($"{where} · {lines} frase(s)", $"{where} · {lines} line(s)") : where;
         }
 
@@ -889,9 +889,9 @@ namespace NarrativeGraphEditor
             while (queue.Count > 0 && found < max && seen.Count < 400)
             {
                 var n = queue.Dequeue();
-                if (n == null || !seen.Add(n.guid)) continue;
+                if (n == null || !seen.Add(n.Guid)) continue;
                 if (n is T t && match(t)) { found++; yield return t; }
-                if (n.outputs != null) foreach (var o in n.outputs) queue.Enqueue(_graph.FindNode(o));
+                if (n.Outputs != null) foreach (var o in n.Outputs) queue.Enqueue(_graph.FindNode(o));
             }
         }
 

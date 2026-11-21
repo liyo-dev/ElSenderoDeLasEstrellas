@@ -4,6 +4,7 @@ using Game.NPC;
 using Sendero.Core.Feedback;
 using Sendero.UI;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// El final de la batalla contra el Mago Oscuro, en el orden de la novela («Tiempo 3»; GDD § 19,
 /// fila 7): el Mago parece vencido y ataca a traición; Liam se interpone; Will busca el Hechizo

@@ -183,8 +183,6 @@ namespace Game.Player
         private float DistanciaFinalDeCamara => victoryCamDistance + victoryCamExtraDistancePerMember * CompanerosEnLaFoto;
         private float YawFinalDeCamara => CompanerosEnLaFoto > 0 ? victoryCamGroupYawOffsetDeg : victoryCamYawOffsetDeg;
 
-        /// Gira al personaje al mando de cara a la cámara de juego: con él de frente, el ángulo de
-        /// la cámara de victoria da el 3/4 buscado y la fila del grupo se forma a lo ancho.
         private static void OrientarHaciaLaCamara(Transform jugador)
         {
             Camera refCam = Camera.main;
@@ -264,8 +262,6 @@ namespace Game.Player
             CameraDirectorService.Release(this);
         }
 
-        /// Plano de victoria con movimiento: de lejos, alto y de lado, a 3/4 de frente y cerca,
-        /// girando alrededor del centro de la foto y sin perderlo de vista.
         private IEnumerator Co_MoverCamaraDeVictoria(Transform jugador)
         {
             if (_victoryVcam == null) { _victoryCamMove = null; yield break; }

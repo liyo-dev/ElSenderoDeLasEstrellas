@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Which steps contain a text: title, step type, number and summary. Shared by the canvas,
     /// the outline and the lookup in the other graphs of the project.
@@ -18,7 +18,7 @@ namespace NarrativeGraphEditor.Story
         public static bool Matches(NarrativeNode node, string query, string number = null)
         {
             if (node == null || string.IsNullOrEmpty(query)) return false;
-            return Has(node.displayTitle, query)
+            return Has(node.DisplayTitle, query)
                 || Has(NarrativeNodeCatalog.TitleOf(node), query)
                 || Has(number, query)
                 || Has(StepSummary.For(node, 400), query);

@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NarrativeGraphEditor;
+using Liyodev.NarrativeGraph.Editor;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 namespace Sendero.Narrative.Editor
 {
@@ -43,7 +44,7 @@ namespace Sendero.Narrative.Editor
                 var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(g));
                 if (grafo?.nodes == null) continue;
                 foreach (var paso in grafo.nodes.OfType<GameStepNode>())
-                    if (paso.request is PedirDesbloqueo d) foreach (var h in d.spellsToUnlock) hechizos.Add(h);
+                    if (paso.Request is PedirDesbloqueo d) foreach (var h in d.spellsToUnlock) hechizos.Add(h);
             }
 
             var script = AssetDatabase.FindAssets("t:MonoScript " + nameof(PaginaDelGrimorio))

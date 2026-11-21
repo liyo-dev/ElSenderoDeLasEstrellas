@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>Lo que el grafo pide de sonido, atendido por <see cref="AudioService"/>.</summary>
 public sealed class AudioServiceNarrativeAdapter : INarrativeAudio, INarrativeAudioMix

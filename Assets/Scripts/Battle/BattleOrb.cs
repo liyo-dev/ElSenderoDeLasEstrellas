@@ -411,12 +411,12 @@ public class BattleOrb : MonoBehaviour
             _rb.isKinematic     = true;
         }
 
-        // FIX INC-051: antes se usaba Mathf.Max(_groundY + hoverHeight, _spawnY - 0.2f). El orbe
-        // aparece 1.5-2.3m por encima del enemigo (spawnCenterOffset + altura aleatoria), así que
-        // "_spawnY - 0.2f" casi siempre era MAYOR que la altura real del suelo y ganaba el Max():
-        // el orbe se teletransportaba de vuelta cerca de su altura de aparición justo al empezar a
-        // flotar, aunque ya hubiera rebotado correctamente hasta el suelo. Resultado: las bolitas
-        // se quedaban flotando en el aire en vez de posarse. Recalculamos el suelo real aquí mismo
+        // Antes se usaba Mathf.Max(_groundY + hoverHeight, _spawnY - 0.2f). El orbe aparece
+        // 1.5-2.3m por encima del enemigo (spawnCenterOffset + altura aleatoria), así que "_spawnY
+        // - 0.2f" casi siempre era MAYOR que la altura real del suelo y ganaba el Max(): el orbe
+        // se teletransportaba de vuelta cerca de su altura de aparición justo al empezar a flotar,
+        // aunque ya hubiera rebotado correctamente hasta el suelo. Resultado: las bolitas se
+        // quedaban flotando en el aire en vez de posarse. Recalculamos el suelo real aquí mismo
         // (con fallback al último _groundY conocido si el raycast no encuentra nada) en vez de
         // usar la altura de aparición como referencia.
         _groundY = RaycastGroundY();

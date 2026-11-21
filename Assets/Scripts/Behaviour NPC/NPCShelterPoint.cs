@@ -108,11 +108,11 @@ public class NPCShelterPoint : MonoBehaviour
 
     // ── Búsqueda ────────────────────────────────────────────────────────────────
 
-    // FIX INC-071: elegir el refugio más cercano en línea recta podía mandar al NPC a un punto
-    // más corto "a vista de pájaro" pero bloqueado por un muro/casa/río, forzando un rodeo
-    // larguísimo o dejándolo atascado a mitad de camino (ver IsPathBlocked en SeekShelterState).
-    // Entre los candidatos dentro de maxDist se prefiere ahora el que tenga la ruta de NavMesh
-    // COMPLETA más corta; si ninguno tiene ruta completa (p.ej. todos bloqueados), se cae al
+    // Elegir el refugio más cercano en línea recta podía mandar al NPC a un punto más corto "a
+    // vista de pájaro" pero bloqueado por un muro/casa/río, forzando un rodeo larguísimo o
+    // dejándolo atascado a mitad de camino (ver IsPathBlocked en SeekShelterState). Entre los
+    // candidatos dentro de maxDist se prefiere ahora el que tenga la ruta de NavMesh COMPLETA
+    // más corta; si ninguno tiene ruta completa (p.ej. todos bloqueados), se cae al
     // comportamiento anterior — el más cercano en línea recta — para no dejar nunca al NPC sin
     // refugio asignado.
     public static bool TryFindNearest(

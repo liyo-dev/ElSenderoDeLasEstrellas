@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Volcado del estado vivo del juego (vida, misiones, inventario, NPCs, grafos…) en el preset de
 /// la partida, justo antes de guardar.

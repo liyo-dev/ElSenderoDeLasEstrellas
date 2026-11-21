@@ -22,6 +22,7 @@ Shader "El Sendero/Dibujo"
         [Toggle(_FOLLAJE)] _Follaje("Follaje de dibujo (copas y matas: color de zona, golpes de hoja y matiz por árbol)", Float) = 0.0
         [NoScaleOffset] _MascaraDeFollaje("Qué parte de la textura es follaje (blanco = follaje)", 2D) = "white" {}
         _FollajeMip("Nivel de la textura del que sale el color de cada zona", Range(0, 10)) = 5.0
+        _LuzDePersonaje("Luz de personaje (sombra más pequeña y más clara, como en el dibujo animado)", Range(0, 1)) = 0.0
 
         [HideInInspector][MainColor] _BaseColor("Color (no tiñe)", Color) = (1, 1, 1, 1)
         [HideInInspector] _BumpMap("Normal Map", 2D) = "bump" {}
@@ -32,6 +33,11 @@ Shader "El Sendero/Dibujo"
         [HideInInspector] _ZWrite("__zw", Float) = 1.0
         [HideInInspector] _Cull("__cull", Float) = 2.0
         [HideInInspector] _QueueOffset("Queue offset", Float) = 0.0
+        // Marca de personaje (stencil): el cuerpo la escribe y las piezas de la cara solo se pintan donde
+        // está, así nunca asoman por fuera del contorno de la cabeza. Por defecto, nada.
+        [HideInInspector] _StencilRef("Stencil ref", Int) = 0
+        [HideInInspector] _StencilComp("Stencil comp", Float) = 8
+        [HideInInspector] _StencilPass("Stencil pass", Float) = 0
     }
 
     SubShader
@@ -47,6 +53,7 @@ Shader "El Sendero/Dibujo"
             Blend[_SrcBlend][_DstBlend]
             ZWrite[_ZWrite]
             Cull[_Cull]
+            Stencil { Ref [_StencilRef] Comp [_StencilComp] Pass [_StencilPass] }
 
             HLSLPROGRAM
             #pragma vertex Vertice
@@ -169,15 +176,24 @@ Shader "El Sendero/Dibujo"
                 inputData.shadowCoord = float4(0, 0, 0, 0);
                 #endif
 
-                half3 color = ColorDeDibujo(inputData, albedo, _Brillo);
+                half3 color = ColorDeDibujo(inputData, albedo, _Brillo, _LuzDePersonaje);
                 // Borde de luz de anime: una línea clara y dura en el contorno del lado del sol, para que el
                 // personaje se despegue del fondo. Solo en los materiales que lo piden (personajes).
                 if (_BordeDeLuz > 0.001h)
                 {
+                    // Ancho fijo en píxeles (19 nov 2026, «todos parece que llevan guantes»): antes era una banda de
+                    // fresnel, y en lo pequeño (manos, dedos, antebrazos) la banda ocupaba la pieza entera y la
+                    // aclaraba toda. Ahora solo se enciende a menos de ~3 px (a 1080) de donde la superficie se
+                    // pone de canto (nv = 0), medido con lo que cambia nv de un píxel al siguiente. El revés de las
+                    // prendas de dos caras (nv < 0) no lleva borde.
                     Light sol = GetMainLight();
-                    half fresnel = 1.0h - saturate(dot(inputData.normalWS, inputData.viewDirectionWS));
+                    float nv = dot(inputData.normalWS, inputData.viewDirectionWS);
+                    half fresnel = 1.0h - (half)saturate(nv);
                     half ladoDelSol = saturate(dot(inputData.normalWS, sol.direction) * 2.0h + 0.3h);
-                    half borde = smoothstep(0.62h, 0.68h, fresnel) * ladoDelSol;
+                    float anchoPx = 3.0 * _ScreenParams.y / 1080.0;
+                    float pixelesHastaElCanto = saturate(nv) / max(fwidth(nv), 1e-4);
+                    half enElCanto = (half)(1.0 - smoothstep(anchoPx * 0.5, anchoPx, pixelesHastaElCanto));
+                    half borde = smoothstep(0.62h, 0.68h, fresnel) * enElCanto * ladoDelSol * (half)step(0.0, nv);
                     color += borde * _BordeDeLuz * saturate(sol.color) * (albedo * 0.6h + 0.4h);
                 }
                 #if defined(_EMISSION)
@@ -200,8 +216,8 @@ Shader "El Sendero/Dibujo"
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma vertex ShadowPassVertex
-            #pragma fragment ShadowPassFragment
+            #pragma vertex VerticeDeSombra
+            #pragma fragment FragmentoDeSombra
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _SOMBRA_SIN_RECORTE
             #pragma multi_compile_instancing
@@ -212,7 +228,7 @@ Shader "El Sendero/Dibujo"
             #undef _ALPHATEST_ON
             #endif
             #include "DibujoEntrada.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "DibujoProfundidad.hlsl"
             ENDHLSL
         }
 
@@ -226,13 +242,13 @@ Shader "El Sendero/Dibujo"
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma vertex DepthOnlyVertex
-            #pragma fragment DepthOnlyFragment
+            #pragma vertex VerticeDeProfundidad
+            #pragma fragment FragmentoDeProfundidad
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
             #pragma multi_compile_instancing
             #include "DibujoEntrada.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            #include "DibujoProfundidad.hlsl"
             ENDHLSL
         }
 
@@ -246,14 +262,14 @@ Shader "El Sendero/Dibujo"
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma vertex DepthNormalsVertex
-            #pragma fragment DepthNormalsFragment
+            #pragma vertex VerticeDeProfundidad
+            #pragma fragment FragmentoDeNormales
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
-            #pragma multi_compile_fragment _ _WRITE_RENDERING_LAYERS
             #pragma multi_compile_instancing
+            #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
             #include "DibujoEntrada.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthNormalsPass.hlsl"
+            #include "DibujoProfundidad.hlsl"
             ENDHLSL
         }
     }

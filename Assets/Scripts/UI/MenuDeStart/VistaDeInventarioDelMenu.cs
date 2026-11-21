@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Core.InputGlyphs;
 using TMPro;
 using UnityEngine;
@@ -8,51 +8,53 @@ using P = Sendero.UI.PiezasDelMenuDeStart;
 namespace Sendero.UI
 {
     /// <summary>
-    /// Pestaña Inventario del menú de Start: objetos por categoría (Consumibles, Misión, Recuerdos;
-    /// LT/RT o clic), cuadrícula de iconos con la cantidad solo si hay más de uno, y a la derecha
-    /// el objeto elegido en grande con su descripción, lo que hace y «Usar» si se puede usar.
+    /// Pestaña Inventario del menú de Start (maqueta «1 · Inventario»): a la izquierda las
+    /// categorías (Misión, Consumibles, Recuerdos y Tesoros, con su cuenta; LT/RT o clic), en el
+    /// centro la hoja con la cuadrícula de la categoría (5 × 5, la casilla elegida en dorado y los
+    /// huecos con raya discontinua) y a la derecha el objeto elegido en grande con su tipo, su
+    /// descripción y lo que hace. A usa el objeto si se puede usar.
     /// La categoría sale del tipo de uso del objeto (<see cref="ItemData.usageKind"/>): los de
     /// misión son Quest; los consumibles que se usan desde el inventario, Consumibles; el resto,
-    /// Recuerdos. Las monedas no salen (van en la cabecera). La última categoría, Tesoros, es el
-    /// registro de tesoros por región (<see cref="RegistroDeTesoros"/>).
+    /// Recuerdos. Las monedas no salen (van en la cabecera). Tesoros es el registro de tesoros por
+    /// región (<see cref="RegistroDeTesoros"/>).
     /// </summary>
     public sealed class VistaDeInventarioDelMenu : IVistaDelMenuDeStart
     {
-        private enum Categoria { Consumibles, Mision, Recuerdos, Tesoros }
+        private enum Categoria { Mision, Consumibles, Recuerdos, Tesoros }
         private const int Categorias = 4;
-        private static readonly string[] NombresDeCategoria = { "Consumibles", "Misión", "Recuerdos", "Tesoros" };
-        private static readonly string[] Etiquetas = { "Consumible", "Objeto de misión", "Recuerdo", "" };
-        private static readonly Color[] ColoresDeEtiqueta = { P.Verde, P.OroDeTexto, new Color32(0x6A, 0x4F, 0xB8, 0xFF), P.OroDeTexto };
+        private static readonly string[] NombresDeCategoria = { "Misión", "Consumibles", "Recuerdos", "Tesoros" };
+        private static readonly string[] Etiquetas = { "Objeto de misión", "Consumible", "Recuerdo", "" };
 
-        private const int Columnas = 5, FilasVisibles = 4;
-        private const float Lado = 160f, Hueco = 18f;
+        private const int Columnas = 5, FilasVisibles = 5;
+        private const float Lado = 128f, Paso = 150f;
 
         private MenuDeStart _menu;
-        private readonly List<Image> _chips = new();
-        private readonly List<TextMeshProUGUI> _textosDeChip = new();
-        private readonly List<Image> _casillas = new();
-        private readonly List<Image> _bordes = new();
+        private readonly List<PiezasDeUI.Carta> _chips = new();
+        private readonly List<TextMeshProUGUI> _textosDeChip = new(), _cuentasDeChip = new();
+        private readonly List<P.Casilla> _casillas = new();
         private readonly List<Image> _iconos = new();
         private readonly List<TextMeshProUGUI> _cantidades = new();
         private readonly List<Inventory.Entry>[] _porCategoria = { new(), new(), new(), new() };
         private Categoria _categoria;
         private int _elegido, _primeraFila;
 
-        private Image _iconoGrande, _usar;
-        private TextMeshProUGUI _etiqueta, _nombre, _tienes, _descripcion, _efecto, _aviso, _vacio;
-        private GameObject _cajaDeEfecto, _detalle;
+        private Image _iconoGrande;
+        private TextMeshProUGUI _tituloHoja, _etiqueta, _nombre, _descripcion, _efecto, _vacio;
+        private GameObject _detalle, _chipEtiqueta;
+        private string _aviso = "";
 
         public string Titulo => "Inventario";
         public bool UsaPersonaje => false;
         public bool UsaX => false;
+        public bool UsaGatillos => true;
 
         public string Pistas
         {
             get
             {
                 var e = Elegido;
-                string p = P.Boton(InputGlyphNames.TriggerLeft) + P.Boton(InputGlyphNames.TriggerRight) + " Categoría";
-                if (e.item != null && Usable(e.item)) p = P.Boton(InputGlyphNames.South) + " Usar     " + p;
+                string p = P.Boton(InputGlyphNames.MenuLT) + P.Boton(InputGlyphNames.MenuRT) + " Categoría";
+                if (e.item != null && Usable(e.item)) p = P.Boton(InputGlyphNames.Confirm) + " Usar     " + p;
                 return p;
             }
         }
@@ -62,82 +64,84 @@ namespace Sendero.UI
         public void Montar(RectTransform cuerpo, MenuDeStart menu)
         {
             _menu = menu;
-            var izq = P.CajaConBorde("Objetos", cuerpo, P.Borde, P.Panel);
-            P.Colocar((RectTransform)izq.transform.parent, 0f, 0f, 960f, 886f);
-            var c = izq.transform;
-
-            float x = 30f;
             for (int i = 0; i < NombresDeCategoria.Length; i++)
             {
                 int indice = i;
-                var chip = P.Caja("Categoría " + NombresDeCategoria[i], c, P.Ficha, 16f);
-                P.Colocar(chip.rectTransform, x, 26f, 210f, 58f);
-                P.Clicable(chip, () => PonerCategoria((Categoria)indice));
-                var t = P.Txt("Texto", chip.transform, NombresDeCategoria[i], 24f, P.TextoSuave, true, TextAlignmentOptions.Center);
+                var chip = PiezasDeUI.NuevaCarta("Categoría " + NombresDeCategoria[i], cuerpo, PaletaUI.PapelApagado, 16f, 5f);
+                PiezasDeUI.ColocarArribaIzquierda(chip.raiz, 54f, 160f + i * 94f, 300f, 70f);
+                var tapa = chip.raiz.gameObject.AddComponent<Image>();
+                tapa.color = new Color(1f, 1f, 1f, 0f);
+                P.Clicable(tapa, () => PonerCategoria((Categoria)indice));
+                var t = P.Titulo("Texto", chip.contenido, NombresDeCategoria[i], 28f, P.TextoMaqueta);
                 P.Rellenar(t.rectTransform);
+                t.margin = new Vector4(22f, -4f, 60f, 0f);
+                var cuenta = P.Pastilla("Cuenta", chip.contenido, PaletaUI.PapelClaro, 250f, 14f, 34f, 34f, 20f, out _);
+                cuenta.font = P.FuenteTitulos;
                 _chips.Add(chip);
                 _textosDeChip.Add(t);
-                x += 222f;
+                _cuentasDeChip.Add(cuenta);
             }
+            var nota = P.Txt("Nota", cuerpo, "Los objetos de misión no se pueden tirar.", 21f,
+                new Color(P.SobreNoche.r, P.SobreNoche.g, P.SobreNoche.b, 0.85f), false, TextAlignmentOptions.TopLeft, envolver: true);
+            PiezasDeUI.ColocarArribaIzquierda(nota.rectTransform, 54f, 160f + NombresDeCategoria.Length * 94f + 38f, 300f, 120f);
 
-            float x0 = (954f - (Columnas * Lado + (Columnas - 1) * Hueco)) * 0.5f;
+            P.Hoja("Objetos", cuerpo, 400f, 160f, 800f, 800f);
+            _tituloHoja = P.Etiqueta("Título", cuerpo, "", 430f, 136f, 260f, 56f, 34f);
             for (int i = 0; i < Columnas * FilasVisibles; i++)
             {
                 int indice = i;
                 int col = i % Columnas, fila = i / Columnas;
-                var casilla = P.CajaConBorde("Casilla " + i, c, P.Ficha, P.Ficha, 4f, 22f);
-                var borde = (Image)casilla.transform.parent.GetComponent<Image>();
-                P.Colocar(borde.rectTransform, x0 + col * (Lado + Hueco), 116f + fila * (Lado + Hueco), Lado, Lado);
-                P.Clicable(borde, () => AlClic(indice));
-                _bordes.Add(borde);
-                var icono = PiezasDeUI.Imagen("Icono", casilla.transform, null, Color.white);
+                var casilla = P.Casilla.Crear("Casilla " + i, cuerpo, 20f, 36f, () => AlClic(indice), () => AlClic(indice, true));
+                PiezasDeUI.ColocarArribaIzquierda(casilla.raiz, 438f + col * Paso, 224f + fila * Paso, Lado, Lado, Giro(i));
+                var icono = PiezasDeUI.Imagen("Icono", casilla.contenido, null, Color.white);
                 icono.preserveAspect = true;
                 icono.raycastTarget = false;
-                P.Rellenar(icono.rectTransform, 22f);
-                var n = P.Txt("Cantidad", casilla.transform, "", 22f, P.Texto, true, TextAlignmentOptions.BottomRight);
-                P.Rellenar(n.rectTransform, 10f);
+                P.Rellenar(icono.rectTransform, 20f);
+                var n = P.Titulo("Cantidad", casilla.contenido, "", 24f, PaletaUI.TintaDeTexto, TextAlignmentOptions.BottomRight);
+                P.Rellenar(n.rectTransform, 12f);
                 _casillas.Add(casilla);
                 _iconos.Add(icono);
                 _cantidades.Add(n);
             }
 
-            var der = P.CajaConBorde("Detalle", cuerpo, P.Borde, P.Panel);
-            P.Colocar((RectTransform)der.transform.parent, 993f, 0f, 819f, 886f);
-            var d = der.transform;
-            _detalle = P.Vacio("Contenido", d).gameObject;
+            P.Hoja("Detalle", cuerpo, 1250f, 160f, 562f, 800f);
+            _detalle = P.Vacio("Contenido", cuerpo).gameObject;
             P.Rellenar((RectTransform)_detalle.transform);
             var dc = _detalle.transform;
-            var marco = P.Caja("Marco del icono", dc, P.FichaOscura, 30f);
-            P.Colocar(marco.rectTransform, 36f, 36f, 200f, 200f);
-            _iconoGrande = PiezasDeUI.Imagen("Icono", marco.transform, null, Color.white);
+            var halo = PiezasDeUI.Imagen("Halo", dc, PiezasDeUI.Resplandor, new Color32(0xFF, 0xE9, 0xA3, 0xFF));
+            halo.raycastTarget = false;
+            PiezasDeUI.ColocarArribaIzquierda(halo.rectTransform, 1381f, 212f, 300f, 300f);
+            _iconoGrande = PiezasDeUI.Imagen("Icono", dc, null, Color.white);
             _iconoGrande.preserveAspect = true;
             _iconoGrande.raycastTarget = false;
-            P.Rellenar(_iconoGrande.rectTransform, 22f);
-            _etiqueta = P.Txt("Etiqueta", dc, "", 20f, P.OroDeTexto, true);
-            P.Colocar(_etiqueta.rectTransform, 266f, 54f, 510f, 30f);
-            _nombre = P.Txt("Nombre", dc, "", 44f, P.Texto, true, TextAlignmentOptions.TopLeft, envolver: true);
-            P.Colocar(_nombre.rectTransform, 266f, 92f, 510f, 110f);
-            _tienes = P.Txt("Cantidad", dc, "", 24f, P.TextoSuave, true);
-            P.Colocar(_tienes.rectTransform, 266f, 196f, 510f, 34f);
-            _descripcion = P.Txt("Descripción", dc, "", 28f, P.Texto, false, TextAlignmentOptions.TopLeft, envolver: true);
-            P.Colocar(_descripcion.rectTransform, 36f, 270f, 747f, 230f);
-            var efecto = P.Caja("Efecto", dc, new Color(0.3f, 0.82f, 0.49f, 0.14f), 16f);
-            P.Colocar(efecto.rectTransform, 36f, 512f, 747f, 64f);
-            _cajaDeEfecto = efecto.gameObject;
-            _efecto = P.Txt("Texto", efecto.transform, "", 24f, P.Verde, true, TextAlignmentOptions.MidlineLeft);
-            P.Rellenar(_efecto.rectTransform, 18f);
-            _aviso = P.Txt("Aviso", dc, "", 24f, P.OroDeTexto, true, TextAlignmentOptions.TopLeft, envolver: true);
-            P.Colocar(_aviso.rectTransform, 36f, 600f, 747f, 80f);
-            _usar = P.Caja("Usar", dc, P.Oro, 18f);
-            P.Colocar(_usar.rectTransform, 36f, 780f, 240f, 70f);
-            P.Clicable(_usar, Usar);
-            var tu = P.TxtConIconos("Texto", _usar.transform, P.Boton(InputGlyphNames.South) + "  Usar", 28f, P.OroOscuro, TextAlignmentOptions.Center);
-            tu.fontStyle = FontStyles.Bold;
-            P.Rellenar(tu.rectTransform);
+            PiezasDeUI.ColocarArribaIzquierda(_iconoGrande.rectTransform, 1431f, 260f, 200f, 200f);
+            PiezasDeUI.EstrellaEn("Chispa", dc, 1387f, 263f, 34f, 12f);
+            PiezasDeUI.EstrellaEn("Chispa", dc, 1683f, 303f, 26f, 12f);
+            PiezasDeUI.EstrellaEn("Chispa", dc, 1660f, 430f, 20f, 12f);
+            PiezasDeUI.EstrellaEn("Chispa", dc, 1411f, 441f, 22f, 12f);
+            _nombre = P.Titulo("Nombre", dc, "", 46f, PaletaUI.TintaDeTexto, TextAlignmentOptions.Top);
+            PiezasDeUI.ColocarArribaIzquierda(_nombre.rectTransform, 1280f, 526f, 502f, 62f);
+            _nombre.enableAutoSizing = true; _nombre.fontSizeMin = 30f; _nombre.fontSizeMax = 46f;
+            var chipTipo = PiezasDeUI.NuevaCarta("Tipo", dc, PaletaUI.PapelApagado, 20f, 0f);
+            PiezasDeUI.ColocarArribaIzquierda(chipTipo.raiz, 1431f, 596f, 200f, 40f);
+            _chipEtiqueta = chipTipo.raiz.gameObject;
+            _etiqueta = P.Txt("Texto", chipTipo.contenido, "", 20f, P.TextoMaqueta, false, TextAlignmentOptions.Center);
+            P.Rellenar(_etiqueta.rectTransform);
+            _descripcion = P.Txt("Descripción", dc, "", 26f, PaletaUI.TintaDeTexto, false, TextAlignmentOptions.Top, envolver: true);
+            PiezasDeUI.ColocarArribaIzquierda(_descripcion.rectTransform, 1294f, 660f, 474f, 160f);
+            _descripcion.enableAutoSizing = true; _descripcion.fontSizeMin = 20f; _descripcion.fontSizeMax = 26f;
+            var raya = PiezasDeUI.Imagen("Raya", dc, null, new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.35f));
+            raya.raycastTarget = false;
+            PiezasDeUI.ColocarArribaIzquierda(raya.rectTransform, 1294f, 836f, 474f, 3f);
+            _efecto = P.Txt("Efecto", dc, "", 22f, P.OroDeTexto, false, TextAlignmentOptions.Top, envolver: true);
+            PiezasDeUI.ColocarArribaIzquierda(_efecto.rectTransform, 1294f, 856f, 474f, 90f);
 
-            _vacio = P.Txt("Vacío", d, "No hay nada en esta categoría.", 28f, P.TextoApagado, false, TextAlignmentOptions.Center, envolver: true);
-            P.Rellenar(_vacio.rectTransform, 60f);
+            _vacio = P.Txt("Vacío", cuerpo, "No hay nada en esta categoría.", 26f, P.TextoMaqueta, false, TextAlignmentOptions.Center, envolver: true);
+            PiezasDeUI.ColocarArribaIzquierda(_vacio.rectTransform, 1290f, 200f, 482f, 720f);
         }
+
+        // Cada casilla con un giro pequeño, como dibujadas a mano.
+        private static float Giro(int i) => (i * 7 % 5 - 2) * 0.45f;
 
         // ─── Datos ────────────────────────────────────────────────────────────
 
@@ -180,7 +184,7 @@ namespace Sendero.UI
             if (_porCategoria[(int)_categoria].Count == 0)
                 for (int i = 0; i < _porCategoria.Length; i++)
                     if (_porCategoria[i].Count > 0) { _categoria = (Categoria)i; break; }
-            _aviso.text = "";
+            _aviso = "";
             _elegido = Mathf.Clamp(_elegido, 0, Mathf.Max(0, _porCategoria[(int)_categoria].Count - 1));
             Pintar();
         }
@@ -195,7 +199,7 @@ namespace Sendero.UI
             _categoria = c;
             _elegido = 0;
             _primeraFila = 0;
-            _aviso.text = "";
+            _aviso = "";
             Pintar();
             _menu.RefrescarPistas();
         }
@@ -206,11 +210,13 @@ namespace Sendero.UI
             for (int i = 0; i < _chips.Count; i++)
             {
                 bool activa = i == (int)_categoria;
-                _chips[i].color = activa ? P.Oro : P.Ficha;
-                _textosDeChip[i].color = activa ? P.OroOscuro : P.TextoSuave;
+                _chips[i].Pintar(activa ? PaletaUI.Oro : PaletaUI.PapelApagado);
+                _chips[i].raiz.localRotation = Quaternion.Euler(0f, 0f, activa ? 1.5f : -0.8f);
+                _textosDeChip[i].color = activa ? PaletaUI.TintaDeTexto : P.TextoMaqueta;
                 int cuenta = (Categoria)i == Categoria.Tesoros ? TesorosEncontrados() : _porCategoria[i].Count;
-                _textosDeChip[i].text = NombresDeCategoria[i] + "  <size=80%>" + cuenta + "</size>";
+                _cuentasDeChip[i].text = cuenta.ToString();
             }
+            _tituloHoja.text = NombresDeCategoria[(int)_categoria];
 
             int filaElegida = _elegido / Columnas;
             if (filaElegida < _primeraFila) _primeraFila = filaElegida;
@@ -219,10 +225,7 @@ namespace Sendero.UI
             {
                 int k = _primeraFila * Columnas + i;
                 bool hay = k < lista.Count;
-                bool elegida = hay && k == _elegido;
-                var fondo = elegida ? P.Elegida : hay ? P.Ficha : P.Hueco;
-                _casillas[i].color = fondo;
-                _bordes[i].color = elegida ? P.Oro : fondo;
+                _casillas[i].Poner(!hay ? P.EstadoDeCasilla.Vacia : k == _elegido ? P.EstadoDeCasilla.Elegida : P.EstadoDeCasilla.Llena);
                 _iconos[i].enabled = hay && lista[k].item.icon != null;
                 _iconos[i].sprite = hay ? lista[k].item.icon : null;
                 _cantidades[i].text = hay && lista[k].count > 1 ? "×" + lista[k].count : "";
@@ -242,16 +245,13 @@ namespace Sendero.UI
             int cat = (int)_categoria;
             _iconoGrande.sprite = e.item.icon;
             _iconoGrande.enabled = e.item.icon != null;
-            _etiqueta.text = Etiquetas[cat].ToUpperInvariant();
-            _etiqueta.color = ColoresDeEtiqueta[cat];
-            _nombre.text = e.item.GetLocalizedName();
-            _tienes.text = e.count > 1 ? "Tienes " + e.count : "";
+            P.Activar(_chipEtiqueta, Etiquetas[cat].Length > 0);
+            _etiqueta.text = Etiquetas[cat];
+            _nombre.text = e.item.GetLocalizedName() + (e.count > 1 ? "  <size=70%><color=#6B5844>×" + e.count + "</color></size>" : "");
             string desc = e.item.GetLocalizedDescription();
             _descripcion.text = string.IsNullOrWhiteSpace(desc) ? "" : desc;
             string efecto = Efecto(e.item);
-            P.Activar(_cajaDeEfecto, !string.IsNullOrEmpty(efecto));
-            _efecto.text = efecto;
-            P.Activar(_usar.gameObject, Usable(e.item));
+            _efecto.text = _aviso.Length > 0 ? _aviso : efecto;
         }
 
         private static int TesorosEncontrados()
@@ -305,18 +305,19 @@ namespace Sendero.UI
                 int nuevo = _elegido + h + v * Columnas;
                 if (h != 0 && (nuevo / Columnas != _elegido / Columnas)) nuevo = _elegido;
                 nuevo = Mathf.Clamp(nuevo, 0, lista.Count - 1);
-                if (nuevo != _elegido) { _elegido = nuevo; _aviso.text = ""; EntradaDelMenu.Sonido("UI_Navigate"); Pintar(); _menu.RefrescarPistas(); }
+                if (nuevo != _elegido) { _elegido = nuevo; _aviso = ""; EntradaDelMenu.Sonido("UI_Navigate"); Pintar(); _menu.RefrescarPistas(); }
             }
             if (EntradaDelMenu.Aceptar) Usar();
         }
 
-        private void AlClic(int casilla)
+        /// Clic en una casilla: la elige o, si ya lo estaba, usa el objeto. Al pasar el ratón, solo la elige.
+        private void AlClic(int casilla, bool soloElegir = false)
         {
             int k = _primeraFila * Columnas + casilla;
             if (k >= _porCategoria[(int)_categoria].Count) return;
-            if (k == _elegido) { Usar(); return; }
+            if (k == _elegido) { if (!soloElegir) Usar(); return; }
             _elegido = k;
-            _aviso.text = "";
+            _aviso = "";
             EntradaDelMenu.Sonido("UI_Navigate");
             Pintar();
             _menu.RefrescarPistas();
@@ -329,8 +330,8 @@ namespace Sendero.UI
             string mensaje = _menu.UsarObjeto(e.item);
             Leer();
             _elegido = Mathf.Clamp(_elegido, 0, Mathf.Max(0, _porCategoria[(int)_categoria].Count - 1));
+            _aviso = mensaje ?? "";
             Pintar();
-            _aviso.text = mensaje ?? "";
             _menu.AlCambiarEstadisticas?.Invoke();
             _menu.RefrescarPistas();
         }

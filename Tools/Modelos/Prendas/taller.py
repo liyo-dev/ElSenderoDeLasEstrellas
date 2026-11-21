@@ -335,6 +335,94 @@ def _en_el_paso_de_las_manos(lista):
     return avisos
 
 
+# ── Piezas pegadas sobre otra prenda y tiras por delante del faldón (Eldran sentado, 20 nov 2026) ────────────
+PEGADA_SOBRE = 0.02        # una pieza con casi todos sus puntos a menos de esto de otra prenda va pegada a ella (m)
+PEGADA_SOBRE_PARTE = 0.9   # parte de sus puntos que tiene que estar así de cerca
+CINTURA_Z = 0.40           # alto de la cintura del cuerpo del pack (por debajo, lo que cuelga es faldón)
+TIRA_BAJA = 0.06           # baja claramente de la cintura (como un faldón): lo de la cadera no cuenta (m)
+TIRA_ANCHO = 0.08          # una pieza más estrecha que esto (en X) por delante del faldón es una tira o un adorno (m)
+
+def _malla_de_mundo(o):
+    vs = [o.matrix_world @ v.co for v in o.data.vertices]
+    return vs, BVHTree.FromPolygons(vs, [list(p.vertices) for p in o.data.polygons])
+
+SEPARA_SENTADO = 0.008     # una pieza pegada que, sentado, se aleja de su prenda más que esto respecto al reposo (m)
+POSE_SENTADO = [("thigh", 'X', -80), ("calf", 'X', 85)]   # la de chequeo_choques.py, solo las piernas
+
+def _coords_deformadas(o):
+    dg = bpy.context.evaluated_depsgraph_get(); oe = o.evaluated_get(dg); me = oe.to_mesh()
+    vs = [o.matrix_world @ v.co for v in me.vertices]; caras = [list(p.vertices) for p in me.polygons]
+    oe.to_mesh_clear(); return vs, caras
+
+def _sentar(arm, sentar):
+    for pb in arm.pose.bones: pb.matrix_basis = Matrix()
+    bpy.context.view_layer.update()
+    if not sentar: return
+    for hueso, eje, g in POSE_SENTADO:
+        for lado in ("l", "r"):
+            pb = arm.pose.bones.get(f"{hueso}_{lado}")
+            if pb is None: continue
+            h = pb.matrix.to_translation()
+            pb.matrix = Matrix.Translation(h) @ Matrix.Rotation(math.radians(g), 4, eje) @ Matrix.Translation(-h) @ pb.matrix
+            bpy.context.view_layer.update()
+
+def _pegadas_sin_sobre(lista, arm):
+    """Una pieza pegada encima de otra prenda (solapa, ribete, bajo, botón, bordado) por debajo de la cintura que copia
+    los pesos del cuerpo y no los de esa prenda se mueve distinto que ella: cada pieza que cuelga se pesa como faldón
+    hasta su propio bajo, así que una tira más corta que el faldón sigue al muslo antes que él. Se sienta al personaje
+    y se avisa si la pieza se aleja de su prenda más de SEPARA_SENTADO (sentada se despega o se queda de canto).
+    Por encima de la cintura las dos copian del cuerpo y van juntas: ahí no se mira."""
+    avisos, mallas = [], {}
+    for o, _ in lista:
+        if len(o.data.polygons): mallas[o.name] = _malla_de_mundo(o)
+    pares = []
+    for o, pesos in lista:
+        if isinstance(pesos, dict) or (isinstance(pesos, rl.Zona) and pesos.sobre is not None) or o.name not in mallas: continue
+        vs = mallas[o.name][0]
+        if min(p.z for p in vs) >= CINTURA_Z - 0.02: continue
+        mejor, parte_mejor = None, 0.0
+        for q, _ in lista:
+            if q is o or q.name not in mallas or len(q.data.vertices) <= len(o.data.vertices): continue
+            bvh = mallas[q.name][1]
+            parte = sum(1 for p in vs if bvh.find_nearest(p, PEGADA_SOBRE)[0] is not None) / max(1, len(vs))
+            if parte > parte_mejor: mejor, parte_mejor = q, parte
+        if mejor is not None and parte_mejor >= PEGADA_SOBRE_PARTE: pares.append((o, mejor))
+    if not pares: return avisos
+    posicion = arm.data.pose_position; arm.data.pose_position = 'POSE'
+    def distancias():
+        out = []
+        for o, q in pares:
+            vq, cq = _coords_deformadas(q); bvh = BVHTree.FromPolygons(vq, cq)
+            out.append(np.array([bvh.find_nearest(p)[3] for p in _coords_deformadas(o)[0]]))
+        return out
+    try:
+        _sentar(arm, False); reposo = distancias()
+        _sentar(arm, True); sentado = distancias()
+    finally:
+        _sentar(arm, False); arm.data.pose_position = posicion
+    for (o, q), d0, d1 in zip(pares, reposo, sentado):
+        separa = float((d1 - d0).max())
+        if separa > SEPARA_SENTADO:
+            avisos.append(f"Pegada sin «sobre»: {o.name} va encima de {q.name} y copia los pesos del cuerpo: sentado se "
+                          f"separa de ella {separa * 1000:.0f} mm (máx. {SEPARA_SENTADO * 1000:.0f}). "
+                          f"Pon rl.Zona(sobre=<{q.name}>) (y rigida=True si es un adorno pequeño).")
+    return avisos
+
+def _tiras_por_delante_del_faldon(lista):
+    """Tiras y adornos estrechos por delante, por debajo de la cintura: sentado, el faldón cae sobre el regazo y la
+    pieza queda de canto sobre él; una tira oscura con un botón en la punta se lee como un palo en la mano."""
+    avisos = []
+    for o, pesos in lista:
+        if isinstance(pesos, rl.Zona) and pesos.huesos and any("arm" in h or "hand" in h for h in pesos.huesos): continue
+        P = np.array([tuple(o.matrix_world @ v.co) for v in o.data.vertices])
+        if not len(P): continue
+        if P[:, 0].max() - P[:, 0].min() > TIRA_ANCHO or P[:, 1].mean() > -0.1: continue
+        if P[:, 2].min() < CINTURA_Z - TIRA_BAJA:
+            avisos.append(f"Tira por delante del faldón: {o.name} baja por delante hasta z {P[:, 2].min():.2f}, por debajo de "
+                          f"la cintura ({CINTURA_Z}). Sentado queda de canto sobre el regazo: acábala en el cinturón.")
+    return avisos
+
+
 # ── Revisión antes de exportar ────────────────────────────────────────────────────────────────────
 HOLGURA_RIGIDA = 0.02      # una pieza rígida alrededor de un miembro no se separa del cuerpo más que esto (m)
 
@@ -343,7 +431,9 @@ def revisar_antes_de_exportar(lista, cuerpo, arm, parar=False):
     - escala: el personaje tiene que medir en metros (el pelo del Archimago se hinchaba en cm y quedaba pegado);
     - pesos: cada vértice suma 1 y no tiene más de 4 huesos (Unity corta el resto);
     - piezas rígidas (pesos fijos a un hueso del brazo o la pierna) que se separan del cuerpo más de HOLGURA_RIGIDA:
-      al doblar el miembro hacia el tronco se meten en él (puños del Archimago).
+      al doblar el miembro hacia el tronco se meten en él (puños del Archimago);
+    - piezas pegadas sobre otra prenda que no copian sus pesos (`sobre=`) y tiras o adornos estrechos por delante del
+      faldón por debajo de la cintura (Eldran sentado: la solapa se leía como un palo en la mano).
     Devuelve la lista de avisos; con parar=True corta el script si hay alguno."""
     avisos = []
     zs = []
@@ -377,6 +467,8 @@ def revisar_antes_de_exportar(lista, cuerpo, arm, parar=False):
                               f"se meterá en el tronco al doblar el brazo o la pierna. Usa una pieza que copie pesos o cíñela.")
     avisos += _contrastes(lista)
     avisos += _en_el_paso_de_las_manos(lista)
+    avisos += _pegadas_sin_sobre(lista, arm)
+    avisos += _tiras_por_delante_del_faldon(lista)
     for a_ in avisos: print("REVISAR:", a_)
     if not avisos: print("REVISAR: nada")
     if parar and avisos: raise SystemExit("Revisión antes de exportar: " + "; ".join(avisos))

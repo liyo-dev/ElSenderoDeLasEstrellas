@@ -76,6 +76,7 @@ public class LevitationTarget : MonoBehaviour
     // ── Estado ───────────────────────────────────────────────────────────────
     private bool _isBeingLevitated;
     private bool _isInFlight;
+    private MagicSpellSO _spellDeLevitacion;
     private bool _isPlayingHitReaction;
     private PlayerLevitationController _currentLevitator;
     private float _targetHeight;
@@ -99,6 +100,32 @@ public class LevitationTarget : MonoBehaviour
     // ── API pública ──────────────────────────────────────────────────────────
     public bool CanBeLevitated   => canBeLevitated && !_isBeingLevitated;
     public bool IsBeingLevitated => _isBeingLevitated;
+    /// <summary>Levitando o volando tras soltarlo: Empujar lo lanza mucho más lejos.</summary>
+    public bool EnElAire => _isBeingLevitated || _isInFlight;
+
+    /// <summary>
+    /// Lo despide en esa dirección con esa fuerza (impulso): si lo están levitando, lo suelta así;
+    /// si ya va por el aire, le suma el impulso. False si no está en el aire.
+    /// </summary>
+    public bool EmpujarEnElAire(Vector3 direccion, float fuerza)
+    {
+        direccion.y = 0f;
+        if (direccion.sqrMagnitude < 0.0001f || fuerza <= 0f) return false;
+        direccion.Normalize();
+        if (_isInFlight)
+        {
+            if (_rigidbody == null || _rigidbody.isKinematic) return false;
+            _rigidbody.AddForce(direccion * fuerza + Vector3.up * fuerza * 0.4f, ForceMode.Impulse);
+            return true;
+        }
+        if (_isBeingLevitated && _spellDeLevitacion != null)
+        {
+            // Lo suelta así: a partir de aquí va por el aire y quien lo levitaba ya no lo mueve.
+            EndLevitation(_spellDeLevitacion, direccion, fuerza);
+            return true;
+        }
+        return false;
+    }
 
     public static event System.Action OnAnyLevitationStarted;
     public static event System.Action OnAnyLevitationEnded;
@@ -134,6 +161,7 @@ public class LevitationTarget : MonoBehaviour
 
         _isBeingLevitated = true;
         _currentLevitator = levitator;
+        _spellDeLevitacion = spell;
         _targetHeight     = transform.position.y + spell.levitationHeight;
 
         // Configurar física
@@ -180,7 +208,7 @@ public class LevitationTarget : MonoBehaviour
 
     public void UpdateLevitation(MagicSpellSO spell, Vector3 targetPosition, float followSpeed)
     {
-        if (!_isBeingLevitated) return;
+        if (!_isBeingLevitated || _isInFlight) return;
 
         Vector3 finalTarget = new Vector3(targetPosition.x, _targetHeight, targetPosition.z);
         Vector3 toTarget    = finalTarget - transform.position;
@@ -212,7 +240,7 @@ public class LevitationTarget : MonoBehaviour
 
     public void EndLevitation(MagicSpellSO spell, Vector3 pushDirection, float pushForce)
     {
-        if (!_isBeingLevitated) return;
+        if (!_isBeingLevitated || _isInFlight) return;
 
         UnsubscribeDamage();
 

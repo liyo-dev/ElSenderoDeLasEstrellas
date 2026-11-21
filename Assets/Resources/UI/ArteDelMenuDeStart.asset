@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc6f3b6bddfe9a44aa8e0b315ac453f1, type: 3}
+  m_Name: ArteDelMenuDeStart
+  m_EditorClassIdentifier: Assembly-CSharp::Sendero.UI.ArteDelMenuDeStart
+  estilo: {fileID: 11400000, guid: b099ba4d93dcb5a409b5d6466dfaf6de, type: 2}
+  pestanas:
+  - {fileID: 21300000, guid: 6d1dea7322770ef45b728127b8cbdf6d, type: 3}
+  - {fileID: 21300000, guid: ffd1b328e84db00438439cdeeccd091e, type: 3}
+  - {fileID: 21300000, guid: 6b13e83a32de0fc4aa5f524574727065, type: 3}
+  - {fileID: 21300000, guid: bd84d5d3155e0b04daab206e64ff5be3, type: 3}
+  moneda: {fileID: 21300000, guid: 4892d7c279838884d8fa393d22b7c29c, type: 3}
+  corazon: {fileID: 21300000, guid: 8a29502f44e8d5543a50b7af0af16dbc, type: 3}
+  gota: {fileID: 21300000, guid: 128db7cfbfa328f4fbf61e085893ddf9, type: 3}
+  huecos:
+  - {fileID: 21300000, guid: 146355e3fe1ad924fbb0a0b7637c2483, type: 3}
+  - {fileID: 21300000, guid: c380f7ea64a297246a436632aa2350eb, type: 3}
+  - {fileID: 21300000, guid: 46d5deb570105ec44bf0934e1b3d9129, type: 3}
+  - {fileID: 21300000, guid: ab38c9cc81906b643b8676a036092d61, type: 3}
+  rasgos:
+  - rasgo: 2
+    icono: {fileID: 21300000, guid: 899e864d9f77be74fbc288e5c5b283d4, type: 3}
+  - rasgo: 0
+    icono: {fileID: 21300000, guid: 899e864d9f77be74fbc288e5c5b283d4, type: 3}
+  - rasgo: 3
+    icono: {fileID: 21300000, guid: 694a484612cd6444295a1e2b03bf8c9d, type: 3}
+  - rasgo: 1
+    icono: {fileID: 21300000, guid: 694a484612cd6444295a1e2b03bf8c9d, type: 3}
+  rasgoPorDefecto: {fileID: 21300000, guid: 694a484612cd6444295a1e2b03bf8c9d, type: 3}

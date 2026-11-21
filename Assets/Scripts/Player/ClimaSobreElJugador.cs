@@ -9,8 +9,10 @@ using UnityEngine;
 ///   PosesDeActuacion), encoge los hombros y tirita (procedural sobre la animación, en LateUpdate) y
 ///   pone cara de helado (NPCEmotion.Frozen como cara de fondo); andando no cambia nada.
 /// Solo con el jugador libre: en el suelo, en modo Default, sin bloqueo de PlayerLockService
-/// (diálogos, cinemáticas). Nadie pisa la capa UpperBody ni la cara de fondo si otro sistema las
-/// está usando. Ver INC-699, INC-959.
+/// (diálogos, cinemáticas). Son poses de ambiente: ceden ante lo que reclama la capa UpperBody por
+/// encima (llevar algo, interactuar, combate, cinemática; ver PosesDeMedioCuerpo) retirándose sin
+/// tocar la capa, y vuelven cuando queda libre. Tampoco pisan la cara de fondo de otro sistema.
+/// Ver INC-699, INC-959.
 public static class ClimaSobreElJugador
 {
     /// Estado en bucle de la capa UpperBody (lo crea el menú de clima). Sin él se usa Fear01, que
@@ -58,6 +60,7 @@ public static class ClimaSobreElJugador
         public float pesoGesto;
         public int frameDelCruce;            // el Animator no refleja el CrossFade hasta su siguiente paso
         public bool caraNuestra;
+        public bool cedido;                  // la capa la tiene otra pose de más prioridad
         public float frioPedido, pesoFrio;
         public float segundosQuieto;
         public Vector3 posAnterior;
@@ -173,6 +176,17 @@ public static class ClimaSobreElJugador
     {
         if (!c.Vivo) { SoltarCuerpo(c); return; }
 
+        // Otra pose manda en el torso: se le deja la capa y el frío se retira con su fundido.
+        c.cedido = c.capa > 0 && !PosesDeMedioCuerpo.AmbientePermitido(c.anim, c.capa);
+        if (c.cedido)
+        {
+            c.segundosQuieto = 0f;
+            c.frioPedido = 0f;
+            ActualizarGesto(c, 0, dt);
+            PonerCara(c, false);
+            return;
+        }
+
         c.segundosQuieto = quieto ? c.segundosQuieto + dt : 0f;
         bool helado = quieto && !taparse && frio >= FrioParaAbrazarse && c.segundosQuieto >= SegundosQuietoParaAbrazarse;
 
@@ -232,7 +246,9 @@ public static class ClimaSobreElJugador
 
         float peso = c.pesoFrio;
         // Abrazado, los brazos los pone el clip: el procedural solo los pega mientras no lo está.
-        float brazos = c.gesto != 0 && c.gesto == c.hashFrio ? 1f - c.pesoGesto : 1f;
+        // Con el torso cedido a otra pose, hombros y brazos son suyos: solo se funden pecho y cabeza.
+        float brazos = c.cedido ? 0f : c.gesto != 0 && c.gesto == c.hashFrio ? 1f - c.pesoGesto : 1f;
+        float hombros = c.cedido ? 0f : 1f;
         Transform raiz = c.go.transform;
         Vector3 derecha = raiz.right, delante = raiz.forward, arriba = raiz.up;
         float t = Time.time * FrecuenciaDeTiritona;
@@ -243,8 +259,8 @@ public static class ClimaSobreElJugador
         Girar(c.pecho, arriba, temblor);
         Girar(c.cabeza, derecha, CabezaGacha * peso);
         // Alrededor de 'delante', un ángulo positivo sube lo que apunta a la derecha.
-        Girar(c.hombroD, delante, HombrosEncogidos * peso + temblor2);
-        Girar(c.hombroI, delante, -HombrosEncogidos * peso - temblor2);
+        Girar(c.hombroD, delante, (HombrosEncogidos * peso + temblor2) * hombros);
+        Girar(c.hombroI, delante, (-HombrosEncogidos * peso - temblor2) * hombros);
         Girar(c.brazoD, delante, -BrazosPegados * peso * brazos);
         Girar(c.brazoI, delante, BrazosPegados * peso * brazos);
     }
@@ -276,6 +292,7 @@ public static class ClimaSobreElJugador
         c.frioPedido = 0f;
         c.segundosQuieto = 0f;
         c.conPosAnterior = false;
+        c.cedido = c.capa > 0 && c.anim != null && !PosesDeMedioCuerpo.CapaLibrePara(c.anim, c.capa, PosesDeMedioCuerpo.Ambiente);
         if (c.gesto != 0) ActualizarGesto(c, 0, Time.unscaledDeltaTime, inmediato: true);
         PonerCara(c, false);
     }
@@ -309,6 +326,15 @@ public static class ClimaSobreElJugador
         if (c.capa <= 0 || c.anim == null || !c.anim.isActiveAndEnabled) { c.gesto = 0; c.pesoGesto = 0f; return; }
         var anim = c.anim;
 
+        // La capa la ha reclamado una pose de más prioridad: es suya, se suelta sin escribir ni
+        // estado ni peso (su propio cruce hace de fundido de salida del gesto).
+        if (!PosesDeMedioCuerpo.CapaLibrePara(anim, c.capa, PosesDeMedioCuerpo.Ambiente))
+        {
+            c.gesto = 0;
+            c.pesoGesto = 0f;
+            return;
+        }
+
         if (c.gesto != 0)
         {
             // Si otro sistema ha cambiado el estado o el peso del torso, la capa ya no es nuestra: se
@@ -317,10 +343,13 @@ public static class ClimaSobreElJugador
             bool enGesto = c.EsGestoNuestro(estado.shortNameHash) ||
                            (anim.IsInTransition(c.capa) && c.EsGestoNuestro(anim.GetNextAnimatorStateInfo(c.capa).shortNameHash));
             bool pesoAjeno = Mathf.Abs(anim.GetLayerWeight(c.capa) - c.pesoGesto) > 0.08f;
-            if (pesoAjeno) { c.gesto = 0; return; }
+            if (pesoAjeno) { c.gesto = 0; c.pesoGesto = 0f; return; }
             if (!enGesto && Time.frameCount - c.frameDelCruce > 1)
             {
-                if (deseado == 0) { c.gesto = 0; return; }
+                // Otro sistema ha puesto su estado en la capa (aunque no la haya reclamado): es suya.
+                // Solo si ha vuelto al reposo es que el clip terminó solo.
+                bool enReposo = estado.shortNameHash == HashReposo && !anim.IsInTransition(c.capa);
+                if (deseado == 0 || !enReposo) { c.gesto = 0; c.pesoGesto = 0f; return; }
                 // El clip terminó (Fear01 tiene tiempo de salida): se relanza sin soltar la capa.
                 anim.CrossFadeInFixedTime(deseado, 0.12f, c.capa);
                 c.gesto = deseado;

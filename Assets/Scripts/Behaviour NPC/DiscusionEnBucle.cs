@@ -2,6 +2,7 @@ using Game.NPC.Common;
 using Game.NPC.States;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Liyodev.NarrativeGraph;
 
 namespace Game.NPC
 {
@@ -87,7 +88,23 @@ namespace Game.NPC
                 if (!mirandose) return;
             }
 
+            if (Time.unscaledTime >= _siguienteComprobacion)
+            {
+                _siguienteComprobacion = Time.unscaledTime + 0.5f;
+                AsegurarIconos();
+            }
+
             if (Time.unscaledTime >= _siguienteTurno) Turno();
+        }
+
+        /// El bocadillo sigue mientras dura la discusión: si uno de los dos se ha apagado y vuelto a
+        /// encender (la historia lo retira y lo devuelve, una escena lo toma…), su icono se fue con él
+        /// y aquí vuelve. Ver INC-1328.
+        private void AsegurarIconos()
+        {
+            if (iconoDePelea == null) return;
+            if (_iconoYo == null || !_iconoYo.HasActiveIcon) _iconoYo = MostrarIcono(_yo.Transform);
+            if (_iconoOtro == null || !_iconoOtro.HasActiveIcon) _iconoOtro = MostrarIcono(_otro.Transform);
         }
 
         private void OnDisable()
@@ -231,7 +248,7 @@ namespace Game.NPC
         /// la limpieza si el NPC se apaga o se destruye (INC-184) son todos del controlador.
         private NPCAlertIconController MostrarIcono(Transform npc)
         {
-            if (iconoDePelea == null || npc == null) return null;
+            if (iconoDePelea == null || npc == null || !npc.gameObject.activeInHierarchy) return null;
 
             const string nombreHijo = "_IconoDePelea";
             var hijo = npc.Find(nombreHijo);

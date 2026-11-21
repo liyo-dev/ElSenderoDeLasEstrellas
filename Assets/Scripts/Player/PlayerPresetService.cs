@@ -238,8 +238,7 @@ public class PlayerPresetService : MonoBehaviour
         float maxMP = Mathf.Max(0f, preset.maxMP);
         float currentMP = Mathf.Clamp(preset.currentMP, 0f, maxMP > 0f ? maxMP : float.MaxValue);
 
-        // Sin maná guardado: el justo para lanzar un par de veces el hechizo más caro que conoce. Un
-        // preset 0/0 sin hechizos se respeta.
+        // Sin maná guardado: el justo para lanzar un par de veces el hechizo más caro que conoce.
         if (maxMP <= 0f)
         {
             float masCaro = Mathf.Max(CosteMasAlto(preset.basicSpellIds), CosteMasAlto(preset.unlockedSpells));
@@ -306,14 +305,19 @@ public class PlayerPresetService : MonoBehaviour
 #endif
                 return;
             }
-            if (spell.slotType == SpellSlotType.SpecialOnly || basics.Contains(spell)) return;
+            if (basics.Contains(spell) || !GrimorioDelPersonaje.EsBasico(spell)) return;
             if (spell.caster != Slot.Will) return;
             basics.Add(spell);
         }
 
-        if (preset.basicSpellIds != null)
-            foreach (var id in preset.basicSpellIds) TryAdd(id);
-        if ((autoFillEmptySlotsFromUnlocked || basics.Count == 0) && preset.unlockedSpells != null)
+        // Set fijo (20 nov 2026): los rápidos de Will que ya sabe van siempre puestos, en el orden de
+        // su ficha; ya no se eligen. Lo que sepa de más (partidas antiguas), detrás.
+        var sabe = new HashSet<SpellId>();
+        if (preset.unlockedSpells != null) foreach (var id in preset.unlockedSpells) sabe.Add(id);
+        if (preset.basicSpellIds != null) foreach (var id in preset.basicSpellIds) sabe.Add(id);
+        foreach (var s in GrimorioDelPersonaje.RapidosDelSet(Slot.Will))
+            if (s != null && sabe.Contains(s.spellId)) TryAdd(s.spellId);
+        if (preset.unlockedSpells != null)
             foreach (var id in preset.unlockedSpells) TryAdd(id);
 
         var caster = cuerpo.GetComponent<MagicCaster>();

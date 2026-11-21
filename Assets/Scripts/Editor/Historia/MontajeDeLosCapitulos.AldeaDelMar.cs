@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// La aldea del mar (pueblo pesquero) con vida: sus vecinos, que salen de
@@ -18,7 +19,7 @@ public static partial class MontajeDeLosCapitulos
     private const string CarpetaAldea = "Assets/_NPCs/AldeaDelMar";
     private const string PuestoDeRemedios = "puerto_remedios";
     private const string PuestoDelPosadero = "posada_posadero";
-    private static readonly string[] VecinosDeLaAldea = { "Posadero", "Remedios", "Anselmo", "Engracia", "Eusebio", "Fermin", "Benito", "Rosario" };
+    private static readonly string[] VecinosDeLaAldea = { "Posadero", "Remedios", "Anselmo", "Engracia", "Eusebio", "Fermin", "Benito", "Rosario", "Pez", "Candela" };
     /// <summary>Vecinos que se quedan sentados: su punto de salida se ajusta al asiento que tienen debajo.</summary>
     private static readonly string[] SentadosDeLaAldea = { "Eusebio", "Benito", "Rosario" };
     /// <summary>Atrezo que va encima de una mesa (se apoya en lo que tenga debajo, no en el suelo).</summary>
@@ -56,6 +57,7 @@ public static partial class MontajeDeLosCapitulos
             ("CHAR_REMEDIOS", "Remedios", "Remedios"), ("CHAR_ANSELMO", "Anselmo", "Anselmo"),
             ("CHAR_ENGRACIA", "Engracia", "Engracia"), ("CHAR_EUSEBIO", "Eusebio", "Eusebio"),
             ("CHAR_FERMIN", "Fermín", "Fermín"), ("CHAR_BENITO", "Benito", "Benito"), ("CHAR_ROSARIO", "Rosario", "Rosario"),
+            ("CHAR_PEZ", "Pez", "Fish"), ("CHAR_CANDELA", "Candela", "Candela"),
         }) TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Dialogos, clave, es, en);
 
         // Lo que dicen si nada más les da frase (el diálogo propio del prefab).
@@ -69,6 +71,8 @@ public static partial class MontajeDeLosCapitulos
             ("DLG_FERMIN_01", "Buen día para pasear.", "Nice day for a walk."),
             ("DLG_BENITO_01", "Un día de pesca y un plato caliente. No pido más.", "A day's fishing and a hot meal. I don't ask for more."),
             ("DLG_ROSARIO_01", "Aquí se come la mejor sopa de la costa. Y la única, también.", "Best soup on the coast, this. Only soup on the coast, too."),
+            ("DLG_PEZ_01", "Shh. Los boquerones están contando un chiste.", "Shh. The anchovies are telling a joke."),
+            ("DLG_CANDELA_01", "Cada noche enciendo el farol. Por si acaso.", "Every night I light the lantern. Just in case."),
             ("DLG_LUCIA_01", "¡Hola! Mi madre dice que no hable con forasteros… pero tú no pareces forastero.", "Hi! My mum says not to talk to strangers… but you don't look like a stranger."),
         }) TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Dialogos, clave, es, en);
 
@@ -80,12 +84,16 @@ public static partial class MontajeDeLosCapitulos
         Vecino("Fermin", 270.0f, -432.0f, 0f, navMesh: true);
         Vecino("Benito", 282.6f, -430.8f, 90f);                // comiendo en la terraza de la posada, en su banco
         Vecino("Rosario", 285.4f, -430.8f, 270f, voz: "Vecina"); // enfrente, en el banco junto a la puerta
+        // Pez, en la orilla junto al embarcadero, hablándole al agua (el montaje del Cap. 3 busca la orilla); Candela, en el porche de la casa del farol (la
+        // casa apartada, solo se llega nadando). Su sitio exacto lo mide el montaje del Cap. 3 en la escena.
+        Vecino("Pez", PuntaDelMuelle.x, PuntaDelMuelle.y, 180f, y: 3.8f);
+        Vecino("Candela", 245f, -484f, 0f, y: 1.6f, voz: "Vecina");
 
         // ── Lo que cuentan: durante el Cap. 3 (animales con aro, carros de noche) y el resto del juego ──
         var enCap3 = Tramo(S3.Aldea, FinCap3);
         Charla("Remedios", enCap3,
             Frase("REMEDIOS_C3_1", "CHAR_REMEDIOS", "¿Lo de los animales con aro? Pregunta en la posada. Yo no tengo tiempo ni de rascarme.", "The collared animals? Ask at the inn. I don't even have time to scratch myself."),
-            Frase("REMEDIOS_C3_2", "CHAR_REMEDIOS", "Anoche un perro con un collar raro se pasó horas rascándose contra la casa de las nasas, la del tejado de paja. No me dejó pegar ojo.", "Last night a dog with a strange collar spent hours scratching against the house with the lobster pots, the one with the thatched roof. I didn't sleep a wink."));
+            Frase("REMEDIOS_C3_2", "CHAR_REMEDIOS", "¿Carros de noche? Yo duermo como un tronco. La que no duerme es Candela, la del farol.", "Carts at night? I sleep like a log. The one who doesn't sleep is Candela, the one with the lantern."));
         Charla("Remedios", null,
             Frase("REMEDIOS_1", "CHAR_REMEDIOS", "Estas cajas no se van a llevar solas. Ojalá.", "These crates won't carry themselves. I wish."),
             Frase("REMEDIOS_2", "CHAR_REMEDIOS", "Si el mar está bueno, hay pescado. Si no, hay cajas igual.", "If the sea is kind, there's fish. If not, there are crates anyway."));
@@ -99,7 +107,7 @@ public static partial class MontajeDeLosCapitulos
             Frase("ENGRACIA_1", "CHAR_ENGRACIA", "Remedios, pociones y algo de comer. ¿Qué te pongo?", "Remedies, potions and something to eat. What can I get you?"),
             Frase("ENGRACIA_2", "CHAR_ENGRACIA", "Lo que no tenga lo pido al Reino. Tarda, pero llega.", "Whatever I don't have, I order from the Kingdom. It takes a while, but it gets here."));
         Charla("Eusebio", enCap3,
-            Frase("EUSEBIO_C3_1", "CHAR_EUSEBIO", "Lucía, la cría de la posada, dice que vio un zorro con collar en la cerca del huerto. Esa niña ve muchas cosas… pero esta vez la creo.", "Lucía, the little girl from the inn, says she saw a fox with a collar at the garden fence. That girl sees all sorts… but this time I believe her."),
+            Frase("EUSEBIO_C3_1", "CHAR_EUSEBIO", "Esta mañana la cerca del huerto amaneció rota. Lucía dice que fue un carro. Yo, esta vez, la creo.", "This morning the garden fence was broken. Lucía says it was a cart. This time, I believe her."),
             Frase("EUSEBIO_C3_2", "CHAR_EUSEBIO", "En mis tiempos, los demonios se quedaban en los cuentos.", "In my day, demons stayed in fairy tales.", NPCEmotion.Worried));
         Charla("Eusebio", null,
             Frase("EUSEBIO_1", "CHAR_EUSEBIO", "Siéntate un rato, chico. Desde este banco se ve todo el puerto.", "Sit down a while, lad. You can see the whole harbour from this bench."),
@@ -118,11 +126,18 @@ public static partial class MontajeDeLosCapitulos
             Frase("BENITO_1", "CHAR_BENITO", "Un día de pesca y un plato caliente. No pido más.", "A day's fishing and a hot meal. I don't ask for more."),
             Frase("BENITO_2", "CHAR_BENITO", "La sopa de hoy lleva de todo. No preguntes qué.", "Today's soup has a bit of everything. Don't ask what.", NPCEmotion.Happy));
         Charla("Rosario", enCap3,
-            Frase("ROSARIO_C3_1", "CHAR_ROSARIO", "Lucía no habla de otra cosa que del zorro. Y de la cuchara, claro.", "Lucía talks about nothing but that fox. And the spoon, of course.", NPCEmotion.Happy),
+            Frase("ROSARIO_C3_1", "CHAR_ROSARIO", "Lucía no habla de otra cosa que de la cerca rota. Y de la cuchara, claro.", "Lucía talks about nothing but the broken fence. And the spoon, of course.", NPCEmotion.Happy),
             Frase("ROSARIO_C3_2", "CHAR_ROSARIO", "Desde que se ven esos animales, cierro el gallinero con dos vueltas de llave.", "Ever since those animals turned up, I lock the henhouse twice over.", NPCEmotion.Worried));
         Charla("Rosario", null,
             Frase("ROSARIO_1", "CHAR_ROSARIO", "Aquí se come la mejor sopa de la costa. Y la única, también.", "Best soup on the coast, this. Only soup on the coast, too."),
             Frase("ROSARIO_2", "CHAR_ROSARIO", "Siéntate, hombre, que de pie se come peor.", "Sit down, love, food goes down better sitting.", NPCEmotion.Happy));
+
+        Charla("Pez", null,
+            Frase("PEZ_1", "CHAR_PEZ", "Hoy los boquerones están insoportables.", "The anchovies are unbearable today."),
+            Frase("PEZ_2", "CHAR_PEZ", "Si ves a Doña Lubina, dile que sigo esperando una disculpa.", "If you see Doña Lubina, tell her I'm still waiting for an apology."));
+        Charla("Candela", null,
+            Frase("CANDELA_1", "CHAR_CANDELA", "Cada noche enciendo el farol. Por si acaso.", "Every night I light the lantern. Just in case."),
+            Frase("CANDELA_2", "CHAR_CANDELA", "Desde aquí se ve todo: el mar, el puerto y el camino del bosque.", "From here you can see everything: the sea, the harbour and the forest road."));
 
         // La terraza de la posada: la mesa de encuentro (Lucía, su cuenco y la cuchara; la sopa de Will sale
         // en la cinemática) y otra mesa con Benito y Rosario comiendo.
@@ -231,12 +246,10 @@ public static partial class MontajeDeLosCapitulos
         // 13 nov). Atiende en la puerta de la posada con sus gestos de espera. Ver INC-1155.
         AsegurarOficiosDeLaAldea(informe);
 
-        // Pistas de la madera: lo que se ve, dentro del punto de inspección (sale y se va con su tramo).
+        // La pista de la cerca: lo que se ve, dentro del punto de inspección (sale y se va con su tramo).
         var inspeccion = raiz.Find(Cap3 + " · inspección");
         var huerto = inspeccion != null ? inspeccion.Find("Pista · la cerca del huerto/Punto") : null;
-        var cobertizo = inspeccion != null ? inspeccion.Find("Pista · el cobertizo de las redes/Punto") : null;
         if (huerto != null) MarcasDelHuerto(huerto); else informe.AppendLine("AVISO: falta el punto de la cerca del huerto.");
-        if (cobertizo != null) MarcasDelCobertizo(cobertizo); else informe.AppendLine("AVISO: falta el punto del cobertizo de las redes.");
 
         // Los que se quedan sentados (Eusebio en el banco, Benito y Rosario en la terraza), sentados de verdad.
         foreach (var n in SentadosDeLaAldea)
@@ -402,61 +415,42 @@ public static partial class MontajeDeLosCapitulos
         finally { PrefabUtility.UnloadPrefabContents(raiz); }
     }
 
-    /// <summary>Pelo rojizo enganchado y arañazos en la cerca; huellas pequeñas en la tierra, delante.</summary>
+    /// <summary>
+    /// La cerca del huerto por donde salió el carro de noche: una tabla arrancada caída al pie, dos rodadas
+    /// hondas que se van hacia el camino del bosque y paja de la carga enganchada en las astillas, que
+    /// todavía brilla un poco (la luz de las jaulas). Tamaños pensados para leerse desde la cámara del juego.
+    /// </summary>
     private static void MarcasDelHuerto(Transform punto)
     {
         var marcas = Hijo(punto, "Marcas");
         var suelo = punto.position;
         // La cara de la cerca que da al camino (norte): se busca con un rayo desde delante.
         var cara = Superficie(suelo + new Vector3(0f, 0.6f, 1.5f), Vector3.back, suelo + new Vector3(0f, 0.6f, -0.4f));
-        var pelo = MaterialDeColor(new Color(0.78f, 0.33f, 0.12f), "Aldea_PeloDeZorro");
-        var aranazo = MaterialDeColor(new Color(0.22f, 0.14f, 0.08f), "Aldea_Aranazo");
-        var huella = MaterialDeColor(new Color(0.24f, 0.17f, 0.1f), "Aldea_Huella");
+        var madera = MaterialDeColor(new Color(0.5f, 0.34f, 0.2f), "Aldea_TablaRota");
+        var rodada = MaterialDeColor(new Color(0.22f, 0.15f, 0.09f), "Aldea_Rodada");
+        var paja = MaterialQueBrilla(new Color(1f, 0.86f, 0.45f), "Aldea_PajaQueBrilla", 1.6f);
         var giro = Quaternion.LookRotation(-cara.normal);
-        Pieza(PrimitiveType.Sphere, marcas, "Pelo 1", cara.point + cara.normal * 0.03f + Vector3.up * -0.05f, giro, new Vector3(0.16f, 0.07f, 0.06f), pelo);
-        Pieza(PrimitiveType.Sphere, marcas, "Pelo 2", cara.point + cara.normal * 0.03f + giro * new Vector3(0.12f, 0.08f, 0f), giro * Quaternion.Euler(0f, 0f, 30f), new Vector3(0.12f, 0.05f, 0.05f), pelo);
-        Pieza(PrimitiveType.Sphere, marcas, "Pelo 3", cara.point + cara.normal * 0.03f + giro * new Vector3(-0.1f, -0.12f, 0f), giro * Quaternion.Euler(0f, 0f, -20f), new Vector3(0.1f, 0.05f, 0.05f), pelo);
-        for (int i = 0; i < 3; i++)
-            Pieza(PrimitiveType.Cube, marcas, $"Arañazo {i + 1}", cara.point + cara.normal * 0.012f + giro * new Vector3(-0.25f + i * 0.06f, 0.05f, 0f),
-                giro * Quaternion.Euler(0f, 0f, 18f), new Vector3(0.018f, 0.28f, 0.01f), aranazo);
-        // Huellas: un rastro que llega a la cerca.
-        for (int i = 0; i < 6; i++)
-        {
-            var p = AlSuelo(new Vector3(suelo.x + 0.9f - i * 0.18f + (i % 2) * 0.08f, float.NaN, suelo.z + 1.4f - i * 0.22f));
-            Pieza(PrimitiveType.Cylinder, marcas, $"Huella {i + 1}", p + Vector3.up * 0.01f, Quaternion.Euler(0f, 35f, 0f), new Vector3(0.09f, 0.004f, 0.12f), huella);
-        }
-    }
-
-    /// <summary>
-    /// En la pared norte de la casa de las nasas, sobre el zócalo de piedra (el yeso claro, donde se ven):
-    /// cuatro surcos oscuros a la altura del cuello de un perro, restos de hierro que brillan dentro de ellos,
-    /// un mechón de pelo y las huellas que llegan hasta la pared. Tamaños pensados para leerse desde la
-    /// cámara del juego, a 3-4 m.
-    /// </summary>
-    private static void MarcasDelCobertizo(Transform punto)
-    {
-        var marcas = Hijo(punto, "Marcas");
-        var suelo = punto.position;
-        // La pared está al sur del punto.
-        var cara = Superficie(suelo + new Vector3(0f, 0.7f, 0.3f), Vector3.back, suelo + new Vector3(0f, 0.7f, -0.9f));
-        var aranazo = MaterialDeColor(new Color(0.24f, 0.15f, 0.09f), "Aldea_Aranazo");
-        var hierro = MaterialQueBrilla(new Color(0.5f, 0.78f, 1f), "Aldea_HierroQueBrilla", 3.2f);
-        var pelo = MaterialDeColor(new Color(0.32f, 0.26f, 0.22f), "Aldea_PeloDePerro");
-        var huella = MaterialDeColor(new Color(0.24f, 0.17f, 0.1f), "Aldea_Huella");
-        var giro = Quaternion.LookRotation(-cara.normal);
+        // La tabla arrancada, caída al pie de la cerca.
+        var pie = AlSuelo(cara.point + cara.normal * 0.45f);
+        Pieza(PrimitiveType.Cube, marcas, "Tabla arrancada", pie + Vector3.up * 0.04f, giro * Quaternion.Euler(0f, 25f, 84f), new Vector3(0.12f, 1.1f, 0.03f), madera);
+        // Paja enganchada en las astillas y alguna en el suelo.
+        for (int i = 0; i < 5; i++)
+            Pieza(PrimitiveType.Cube, marcas, $"Paja {i + 1}", cara.point + cara.normal * 0.03f + giro * new Vector3(-0.2f + i * 0.09f, -0.05f + (i % 2) * 0.07f, 0f),
+                giro * Quaternion.Euler(0f, 0f, -35f + i * 17f), new Vector3(0.012f, 0.22f, 0.012f), paja);
         for (int i = 0; i < 4; i++)
-            Pieza(PrimitiveType.Cube, marcas, $"Arañazo {i + 1}", cara.point + cara.normal * 0.012f + giro * new Vector3(-0.18f + i * 0.11f, 0.02f * (i % 2), 0f),
-                giro * Quaternion.Euler(0f, 0f, 20f), new Vector3(0.045f, 0.5f, 0.012f), aranazo);
-        for (int i = 0; i < 3; i++)
-            Pieza(PrimitiveType.Cube, marcas, $"Hierro {i + 1}", cara.point + cara.normal * 0.02f + giro * new Vector3(-0.13f + i * 0.11f, -0.04f + i * 0.05f, 0f),
-                giro * Quaternion.Euler(0f, 0f, 20f), new Vector3(0.02f, 0.2f, 0.012f), hierro);
-        Pieza(PrimitiveType.Sphere, marcas, "Pelo", cara.point + cara.normal * 0.03f + giro * new Vector3(0.24f, -0.12f, 0f), giro * Quaternion.Euler(0f, 0f, -25f), new Vector3(0.14f, 0.06f, 0.05f), pelo);
-        // Huellas de perro: vienen de las nasas y acaban en la pared.
-        for (int i = 0; i < 6; i++)
         {
-            var p = AlSuelo(new Vector3(cara.point.x - 1.1f + i * 0.2f + (i % 2) * 0.1f, float.NaN, cara.point.z + 1.5f - i * 0.24f));
-            Pieza(PrimitiveType.Cylinder, marcas, $"Huella {i + 1}", p + Vector3.up * 0.01f, Quaternion.Euler(0f, 150f, 0f), new Vector3(0.12f, 0.004f, 0.15f), huella);
+            var p = AlSuelo(cara.point + cara.normal * (0.6f + i * 0.35f) + Vector3.Cross(Vector3.up, cara.normal) * (0.3f - i * 0.2f));
+            Pieza(PrimitiveType.Cube, marcas, $"Paja suelta {i + 1}", p + Vector3.up * 0.01f, Quaternion.Euler(0f, i * 47f, 90f), new Vector3(0.012f, 0.2f, 0.012f), paja);
         }
+        // Dos rodadas hondas, paralelas, que salen de la cerca hacia el camino.
+        var lado = Vector3.Cross(Vector3.up, cara.normal);
+        for (int r = -1; r <= 1; r += 2)
+            for (int i = 0; i < 8; i++)
+            {
+                var p = AlSuelo(cara.point + cara.normal * (0.8f + i * 0.6f) + lado * (r * 0.75f));
+                Pieza(PrimitiveType.Cube, marcas, $"Rodada {(r < 0 ? "izq" : "der")} {i + 1}", p + Vector3.up * 0.005f,
+                    Quaternion.LookRotation(cara.normal), new Vector3(0.14f, 0.012f, 0.62f), rodada);
+            }
     }
 
     /// <summary>

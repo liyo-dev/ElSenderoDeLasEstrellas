@@ -629,15 +629,20 @@ public static partial class VestidoDelMundo
     /// dónde está la superficie). Sin ella el barco no flotaría. Lleva además su volumen «Not
     /// Walkable» para que los vecinos no anden por el mar.
     /// </summary>
+    // El agua para nadar cubre toda la aldea del mar (boyas, casa del farol, bajo el puente), no solo
+    // el amarre: fuera de la caja el nado se corta y el jugador cae al fondo (INC-1398). Sobre tierra
+    // no estorba: solo se nada donde el agua cubre. El volumen «Not Walkable» sigue con 'lado'.
+    private const float LadoDelAguaDelPuerto = 180f;
+
     private static void PonerAguaDelPuerto(Obra o, Transform grupo, Vector2 amarre, Vector2 haciaElMar)
     {
         const float lado = 60f;
         var centro = amarre + haciaElMar * (lado * 0.35f);
 
         float fondo = float.MaxValue;
-        for (int a = -1; a <= 1; a++)
-            for (int b = -1; b <= 1; b++)
-                fondo = Mathf.Min(fondo, o.Suelo.Altura(centro.x + a * lado * 0.5f, centro.y + b * lado * 0.5f));
+        for (int a = -2; a <= 2; a++)
+            for (int b = -2; b <= 2; b++)
+                fondo = Mathf.Min(fondo, o.Suelo.Altura(centro.x + a * LadoDelAguaDelPuerto * 0.25f, centro.y + b * LadoDelAguaDelPuerto * 0.25f));
         float suelo = Mathf.Min(fondo, NivelDelMar) - 1f;
 
         var go = new GameObject("Agua del puerto (para nadar)");
@@ -648,7 +653,7 @@ public static partial class VestidoDelMundo
         var caja = go.AddComponent<BoxCollider>();
         caja.isTrigger = true;
         caja.center = new Vector3(centro.x, (suelo + NivelDelMar) * 0.5f, centro.y);
-        caja.size = new Vector3(lado, NivelDelMar - suelo, lado);
+        caja.size = new Vector3(LadoDelAguaDelPuerto, NivelDelMar - suelo, LadoDelAguaDelPuerto);
 
         int capaSuelo = LayerMask.NameToLayer("Floor");
         var noCaminable = new GameObject("Fondo no caminable del puerto");

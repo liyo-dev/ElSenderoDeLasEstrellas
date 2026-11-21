@@ -17,7 +17,7 @@ MonoBehaviour:
   rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap3_04_ElClaro.guion.txt
   duracion: 24.770712
   presentacion: 1
-  huella: "2026-11-18 15:27 \xB7 8b5881c50f76176679ae2fa9f2968f7e"
+  huella: "2026-11-19 20:55 \xB7 a78ce45f817aeaf315ee0406790a00c3"
   actores:
   - id: Player
     prefab: Assets/Prefabs/_WILL.prefab
@@ -76,12 +76,21 @@ MonoBehaviour:
       actor: NPC_Contrabandista1
     animacion:
     - fundido: 0
+      t: 1.25
+      tipo: 2
+      estado: Idle03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
       t: 6.1949997
       tipo: 2
       estado: HeadShake01
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 11.7699995
       tipo: 3
@@ -89,6 +98,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 11.849999
       tipo: 2
@@ -96,6 +106,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 13.0199995
       tipo: 4
@@ -103,6 +114,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 13.369999
       tipo: 3
@@ -110,6 +122,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 13.449999
       tipo: 2
@@ -117,6 +130,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 15.483672
       tipo: 4
@@ -124,6 +138,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 15.833672
       tipo: 3
@@ -131,6 +146,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 15.9136715
       tipo: 2
@@ -138,6 +154,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 18.48034
       tipo: 2
@@ -145,6 +162,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 21.278671
       tipo: 4
@@ -152,6 +170,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0.6
       t: 21.628672
       tipo: 1
@@ -159,6 +178,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     caras:
     - t: 10.7699995
       emocion: enfado
@@ -262,12 +282,21 @@ MonoBehaviour:
       actor: Player
     animacion:
     - fundido: 0
+      t: 1.25
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
       t: 5.495
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 5.575
       tipo: 2
@@ -275,6 +304,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 8.08
       tipo: 4
@@ -282,6 +312,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 9.129999
       tipo: 2
@@ -289,6 +320,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 16.533672
       tipo: 2
@@ -296,6 +328,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 22.328672
       tipo: 2
@@ -303,6 +336,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     caras:
     - t: 5.495
       emocion: molesto
@@ -310,7 +344,7 @@ MonoBehaviour:
     visible: []
     deslizando: []
   - id: NPC_Contrabandista1
-    prefab: Assets/_NPCs/Pueblo/Jorge.prefab
+    prefab: Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab
     alias: c1
     colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
     claveDelNombre: CHAR_CONTRABANDISTA
@@ -397,6 +431,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
       t: 8.509999
       tipo: 2
@@ -404,6 +439,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0.3
       t: 9.829999
       tipo: 1
@@ -411,6 +447,7 @@ MonoBehaviour:
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     caras: []
     visible: []
     deslizando: []
@@ -505,7 +542,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.71611065
+    alturaDelFoco: 0.7517908
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
@@ -537,19 +574,19 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294704968237391
+      rid: 6540294727198835283
     linea: 0
   - onlyIfFlag: 
     skipIfFlag: 
     t: 10.7699995
     beat:
-      rid: 6540294704968237392
+      rid: 6540294727198835284
     linea: 41
   - onlyIfFlag: 
     skipIfFlag: 
     t: 24.770712
     beat:
-      rid: 6540294704968237393
+      rid: 6540294727198835285
     linea: 0
   etiquetas:
   - nombre: inicio
@@ -571,7 +608,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 6540294704968237391
+    - rid: 6540294727198835283
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -579,7 +616,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294704968237392
+    - rid: 6540294727198835284
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -592,7 +629,7 @@ MonoBehaviour:
         seguirAlActor: 1
         registrarComo: 
         escala: 0.25
-    - rid: 6540294704968237393
+    - rid: 6540294727198835285
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

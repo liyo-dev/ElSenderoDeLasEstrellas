@@ -1,0 +1,20 @@
+{
+    "name": "Kits.InkOutline.Editor",
+    "rootNamespace": "Kits.InkOutline.Editor",
+    "references": [
+        "Kits.InkOutline",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

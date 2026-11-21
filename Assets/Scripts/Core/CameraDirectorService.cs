@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Árbitro central de "quién tiene el control de la cámara cinemática" (el flag estático
@@ -100,6 +101,19 @@ public static class CameraDirectorService
     /// True si hay algún owner con el control reclamado en este momento (incluida la ventana de gracia).
     public static bool HasOwner => s_currentOwner != null;
 
+    /// True si alguien tiene la cámara y no la está soltando. En la ventana de gracia de un
+    /// <see cref="Release"/> la cámara está libre para un relevo: quien la reclame entonces la
+    /// recibe sin que vuelva un instante al jugador (lo que pasa al acabar una cinemática).
+    public static bool Ocupada => s_currentOwner != null && s_pendingRelease == null;
+
+    /// FOV de juego de <paramref name="camara"/>: el guardado al empezar la cadena de dueños (una
+    /// cinemática deja el de su último plano) o, si no hay cadena, el que tiene ahora.
+    public static float FovDeJuego(Camera camara)
+    {
+        if (camara == null) return 60f;
+        return s_hayFovGuardado && s_camaraDeJuego == camara ? s_fovDeJuego : camara.fieldOfView;
+    }
+
     /// True si la cámara la tiene una cinemática. Una cámara de juego reclamada (la lateral del
     /// templo que canta) no oculta el marcador de apuntado ni el HUD de combate.
     public static bool HayCine => s_currentOwner != null && s_ownerEsCinematica;
@@ -158,14 +172,12 @@ public static class CameraDirectorService
     {
         if (owner == null) return;
 
-        // DIAGNÓSTICO (20 sept 2026, Raúl: "al terminar todas las secuencias siempre se queda
-        // mal la cámara y debe cambiar a la de gameplay"): por lectura de código no se ha
-        // encontrado ningún sistema que reclame la cámara sin pasar por Claim()/Release() — pero SI un segundo owner
-        // se hubiera colado como dueño actual sin que este owner se enterase, Release() haría
-        // aquí un `return` COMPLETAMENTE SILENCIOSO y el flag se quedaría bloqueado para
-        // siempre, con "cámara que nunca vuelve al gameplay" como único síntoma visible. Este
-        // aviso hace ruidoso justo ese caso, en vez de dejarlo pasar sin rastro: si aparece en
-        // consola, apunta directamente a quién es el dueño real que está bloqueando la cámara.
+        // DIAGNÓSTICO: por lectura de código no se ha encontrado ningún sistema que reclame la cámara sin pasar por
+        // Claim()/Release() — pero SI un segundo owner se hubiera colado como dueño actual sin que este owner se
+        // enterase, Release() haría aquí un `return` COMPLETAMENTE SILENCIOSO y el flag se quedaría bloqueado para
+        // siempre, con "cámara que nunca vuelve al gameplay" como único síntoma visible. Este aviso hace ruidoso
+        // justo ese caso, en vez de dejarlo pasar sin rastro: si aparece en consola, apunta directamente a quién es
+        // el dueño real que está bloqueando la cámara.
         if (!Equals(s_currentOwner, owner))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

@@ -1,12 +1,14 @@
-# Cap. 3 · Llegan los contrabandistas. Will los espera a propósito junto al fuego: el posadero le dijo que
+﻿# Cap. 3 · Llegan los contrabandistas. Will los espera a propósito junto al fuego: el posadero le dijo que
 # esos carros pasan de noche con animales, y quiere ver si tienen que ver con los aros. Al oír ruedas no se
 # sorprende: se pone alerta y se esconde, como lo tenía pensado, tras el matorral de antes del puente. Por el camino llegan los dos: el grandote tirando del carro (la carga
 # tapada con paja y una luz debajo) y el vigía delante. El vigía ve las brasas y mira alrededor; el
 # grandote le mete prisa y siguen hacia el puente. Will decide seguirlos para ver si llevan animales con aro.
 # Lo que hace el vigía junto al fuego (pararse, mirar alrededor) es lo que hará en el seguimiento:
 # así se ve antes de jugarlo.
-# El carro (PROP_Carro) va detrás del grandote solo (CargaArrastrada): no se mueve en el guion y en el
-# horneado no existe; en juego se coloca tras él al empezar y el previz lo pone para las fotos.
+# El carro (PROP_Carro) va detrás del grandote solo (CargaArrastrada): él va metido entre las varas,
+# agarrándolas, y el carro avanza siempre hacia donde apuntan, con las ruedas girando (WheelSpin). No se
+# mueve en el guion y en el horneado no existe; en juego se coloca tras él al empezar y el previz lo pone
+# para las fotos.
 GUION Cap3_03_ElCarro
 ESCENA MainWorld
 ZONA Cap3Carro -100 -212 30
@@ -16,7 +18,7 @@ RITMO entre_frases=0.4 mismo_hablante=0.25
 
 REPARTO
 will  Player               nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
-c1    NPC_Contrabandista1  nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/Pueblo/Jorge.prefab
+c1    NPC_Contrabandista1  nombre=CHAR_CONTRABANDISTA color=B9A58C prefab=Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab
 c2    NPC_Contrabandista2  nombre=CHAR_CONTRABANDISTA color=A89C8A prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
 
 PUNTOS
@@ -81,7 +83,8 @@ plano primer will
 will cara miedo
 espera 1.4
 plano medio c1
-c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 mira=c2
+# Metido entre las varas no se gira entero: le habla al vigía volviendo la cabeza.
+c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 cabeza=c2
 
 @sevan
 c1 anda a c1_fin sin_esperar

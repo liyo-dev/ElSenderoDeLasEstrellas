@@ -15,17 +15,17 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_HUERTO_01
-    text: "Pelo rojizo enganchado en la madera\u2026 Aqu\xED es donde Luc\xEDa vio al zorro."
+    text: "Rodadas hondas que salen hacia el camino del bosque\u2026 Un carro muy cargado, y sin camino."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 6
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_HUERTO_02
-    text: "Se ha rascado aqu\xED hasta arrancarse el pelo. Como si el collar le hiciera da\xF1o."
+    text: "Paja enganchada en la tabla rota. Todav\xEDa brilla un poco\u2026 como respira la luz que vio el posadero."
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
-    emotion: 2
+    emotion: 4
   maxLinesPerPage: 0
   isGroupConversation: 0

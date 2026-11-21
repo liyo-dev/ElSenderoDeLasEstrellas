@@ -239,9 +239,6 @@ public class InteractionDetector : MonoBehaviour
             if (current)
                 current.SetHintVisible(true, gameObject);
 
-            // Y apagar a los demás TAMBIÉN aquí (INC-375): el icono doble del 23 sep seguía
-            // saliendo porque el foco no cambiaba —los dos NPCs estaban juntos y el elegido era
-            // siempre el mismo—, así que el barrido de abajo no llegaba a ejecutarse nunca.
             ApagarOtrosHints();
             return;
         }
@@ -250,10 +247,7 @@ public class InteractionDetector : MonoBehaviour
         current = next;
         if (current) current.SetHintVisible(true, gameObject);
 
-        // Y NINGÚN otro. En la partida del 23 sep salían dos iconos de interactuar a la vez sobre
-        // dos NPCs pegados: basta con que alguien deje un hint encendido por otro camino (un
-        // diálogo que se cierra, un NPC que se desactiva a mitad de animación) para que se queden
-        // dos en pantalla. El foco es uno, así que aquí se apagan todos los demás que estén en
+        // Y NINGÚN otro. El foco es uno, así que aquí se apagan todos los demás que estén en
         // rango — es barato y no depende de por dónde se haya encendido el otro (INC-366).
         ApagarOtrosHints();
 

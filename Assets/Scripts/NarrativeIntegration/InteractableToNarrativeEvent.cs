@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 [DisallowMultipleComponent]
 public class InteractableToNarrativeEvent : MonoBehaviour

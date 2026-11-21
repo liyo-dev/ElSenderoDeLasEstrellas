@@ -3,8 +3,6 @@ using System;
 namespace Core
 {
     /// <summary>
-    /// Formatea fechas al mismo estilo usado en las Notas del Parche in-game y en los devlogs de
-    /// itch.io: "24 ago 2026" (día, mes abreviado en español en minúsculas sin punto, año).
     ///
     /// Lo usa <c>PatchNotesFlyoutPanel</c> en runtime (solo como respaldo si todavía no existe
     /// Resources/PatchNotes/BuildDate.txt — p. ej. probando en el Editor sin haber hecho nunca un

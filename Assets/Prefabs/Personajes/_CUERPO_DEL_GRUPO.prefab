@@ -36655,6 +36655,8 @@ GameObject:
   - component: {fileID: 8318815163587728995}
   - component: {fileID: 6937290580841477148}
   - component: {fileID: 5141261694448213059}
+  - component: {fileID: 6982312970250921101}
+  - component: {fileID: 721302524847156131}
   m_Layer: 3
   m_Name: _CUERPO_DEL_GRUPO
   m_TagString: Player
@@ -37185,6 +37187,9 @@ MonoBehaviour:
   alturaMaximaSalida: 0.9
   velocidadSubirBorde: 3
   fondoMaximoSinNadar: 0.6
+  alturaParaRescatar: 1.2
+  fundidoDelRescate: 0.3
+  margenDelBordeAlRescatar: 1
   intervaloOndasNadando: 0.3
   intervaloOndasQuieto: 1.3
   sfxZambullida: Agua_Zambullida
@@ -37218,7 +37223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFlyingController
   locomotionLayerIndex: 0
-  flyIdleState: fly_idle
+  flyIdleState: Esquiva_Preparar
   flyMoveState: fly_dive
   flyDiveState: fly_dive
   flyLandingState: Landing
@@ -37271,7 +37276,7 @@ MonoBehaviour:
   shieldPrefab: {fileID: 8273130377967293091, guid: af4e13155cc85cd41bb871bd49bd5973, type: 3}
   shieldAnchor: {fileID: 0}
   shieldOffset: {x: 0, y: 0, z: 0}
-  preparacionAnimation: UpperBody.Magic.HumanM@MagicAttackDirect2H01 - Load
+  golpeEnElEscudo: {fileID: 7096558223447901525, guid: 86379749242f4ec4bba2a32e6b047e98, type: 3}
   defendAnimation: UpperBody.Defend_NoWeapon
   defendHitAnimation: UpperBody.DefendHit_NoWeapon
   locomotionAnimation: UpperBody.UpperIdle
@@ -37292,6 +37297,12 @@ MonoBehaviour:
   counterLockSeconds: 0.45
   counterVfx: {fileID: 6792082476904279775, guid: b9986e1e2706bfc4bb9b6451c64a92b2, type: 3}
   counterSfxKey: EstelaAppears_ShieldBlock
+  segundosAturdidoAlRomperse: 2
+  estadoDeAturdido: Dizzy_NoWeapon
+  estadoDeLocomocion: Free Locomotion
+  alRomperse: {fileID: 0}
+  sonidoAlRomperse: EstelaAppears_ShieldBlock
+  sacudidaAlRomperse: 0.45
   meleeBlockFactor: 0.3
   meleeDeflectPush: 8
   meleeDeflectRadius: 3
@@ -37325,40 +37336,8 @@ MonoBehaviour:
   exitBattleDelay: 3
   layerFadeDuration: 0.3
   victoryAnimationDuration: 3
-  victorySfxKey: Npc_Battle_Victory
-  enableVictoryCamera: 1
-  victoryCamDistance: 2.8
-  victoryCamHeight: 1.6
-  victoryCamYawOffsetDeg: -35
-  victoryCamLookHeight: 1.3
-  victoryCamFOV: 38
-  victoryCamBlendSeconds: 0.4
   victoryJumpStateName: JumpFullSpin_InPlace_NoWeapon
   victoryJumpHeight: 1.4
-  victoryCamMoveSeconds: 3
-  victoryCamStartDistance: 6.5
-  victoryCamStartHeight: 3
-  victoryCamStartYawOffsetDeg: -110
-  victoryDelayAfterDefeat: 1.5
-  celebracionEnGrupo:
-    orden: 010000000200000000000000i
-    poses:
-    - personaje: 1
-      estado: Victory_NoWeapon
-    - personaje: 2
-      estado: HandClap01
-    - personaje: 0
-      estado: Cheer02
-    gestoFinal: Cheer01
-    separacion: 1.2
-    radioDeBusqueda: 25
-    distanciaParaColocarDeGolpe: 15
-    topeParaLlegar: 3.5
-    topeDePose: 3
-  victoryCamExtraDistancePerMember: 1.1
-  victoryCamGroupYawOffsetDeg: -15
-  victoryCamGroupScreenShift: 0.8
-  victoryFinalHoldSeconds: 0.4
   debugMode: 1
 --- !u!114 &3198370422079134296
 MonoBehaviour:
@@ -37529,6 +37508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombatInput
   magicCaster: {fileID: 5659214614461655011}
+  esquiva: {fileID: 6982312970250921101}
   inputBufferSeconds: 0.35
   rotateSfxKey: UI_Navigate
 --- !u!114 &1633366989386466029
@@ -37683,7 +37663,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   body: {fileID: 0}
   estadoDesdeElSuelo: JumpFullSpin_InPlace_NoWeapon
-  tramoEnElAire: {x: 0.1, y: 0.81}
+  tramoDeLosPiesEnElAire: {x: 0.4, y: 0.73}
   duracionSinAnimacion: 0.8
   estadoEnElAire: JumpAirSpin_InPlace_NoWeapon
   estadoDeCaida: Falling
@@ -37747,7 +37727,7 @@ MonoBehaviour:
   vibracionAguda: 0.9
   duracionDeLaVibracion: 0.18
   sfxDelAcierto: Star_Collision
-  ondaEnLosPies: {fileID: 9080140021571130472, guid: 82066d902ed0dd6488ddfd32eb994801, type: 3}
+  ondaEnLosPies: {fileID: 7796728318565738606, guid: d707799c07c34a54fbde949774e00e2d, type: 3}
   duracionDeLaOnda: 2
 --- !u!114 &3917994098979638911
 MonoBehaviour:
@@ -37940,8 +37920,6 @@ MonoBehaviour:
     behaviourType: 64
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 0}
-    questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 0}
     partyConfig: {fileID: 11400000, guid: 9a4cc9adcb31ab8498500a3a24b01918, type: 2}
     socialConfig: {fileID: 11400000, guid: dbae5cee0cbea644f970309beafba69d, type: 2}
     walkSpeed: 1.5
@@ -38051,6 +38029,92 @@ MonoBehaviour:
   etiquetaConElJugador: Player
   etiquetaConLaIA: Untagged
   empiezaConElJugador: 0
+--- !u!114 &6982312970250921101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103202742228681490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2ce5bddbfd55994b8999d27774332a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EsquivaDelJugador
+  voltereta: {fileID: 5151905188443100448}
+  salud: {fileID: 0}
+  distancia: 4.5
+  duracionAtras: 0.5
+  tramoDeMovimiento: {x: 0.05, y: 0.7}
+  devuelveElControlEn: 0.7
+  velocidad: 1.4
+  saltito: 0
+  stickMinimo: 0.3
+  saltoDelLeon: 0
+  estadoDelSalto: Esquiva_Salto
+  alturaDelSalto: 0.9
+  distanciaDelSalto: 3.2
+  duracionDelSalto: 0.7
+  distanciaRodando: 2.2
+  estadoDePreparar: Esquiva_Preparar
+  estadoDeLaVoltereta: JumpAirSpin_InPlace_NoWeapon
+  estadoDeLaCaida: JumpEnd_InPlace_NoWeapon
+  empiezaAPrepararEn: 0.35
+  empiezaLaVolteretaEn: 0.5
+  segundosDeCaida: 0.12
+  segundosInvulnerable: 0.3
+  espera: 0.4
+  guardarPulsacion: 0.2
+  estadoAdelante: RollFWD_Battle_InPlace_NoWeapon
+  estadoAtras: RollBWD_Battle_InPlace_NoWeapon
+  estadoIzquierda: RollLFT_Battle_InPlace_NoWeapon
+  estadoDerecha: RollRGT_Battle_InPlace_NoWeapon
+  parametroDeVelocidad: VelocidadDeEsquiva
+  sfxAlRodar: 
+--- !u!114 &721302524847156131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103202742228681490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b03fbeb1d455e94d8f692c66e2e5e9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContraataqueCoreografiado
+  estadoDeParar: Contraataque_Parar
+  burbujaAlParar: {fileID: 7932536863746555601, guid: 9388b0fa2d858e44882905f498a6a729, type: 3}
+  golpeAlParar: {fileID: 7096558223447901525, guid: 86379749242f4ec4bba2a32e6b047e98, type: 3}
+  bolaClavada: 0.15
+  sacudidaAlParar: 0.55
+  duracionDeLaSacudida: 0.22
+  arrastre: 0.7
+  duracionDelArrastre: 0.2
+  alturaDeLaBola: 0.55
+  adelanteDelRebote: 0.25
+  llegadaDeLaBola: 0.8
+  camaraLenta: 0.3
+  capaDeBrazos: 1
+  antesDeSaltar: 0.1
+  estadoEnElAire: JumpAir_InPlace_NoWeapon
+  alturaDelSalto: 1.1
+  duracionDeLaSubida: 0.35
+  vueltas: 1
+  alAtrapar: {fileID: 0}
+  estadoDeImpulso: Contraataque_Impulso
+  duracionDelImpulso: 0.28
+  fundidoDelImpulso: 0.16
+  fundidoDeLanzar: 0.07
+  estadoDeLanzar: Contraataque_Lanzar
+  antesDeSoltar: 0.12
+  retardo: 0.1
+  velocidadDelRetardo: 0.05
+  retroceso: 1.6
+  duracionDeLaCaida: 0.3
+  estadoDeLocomocion: Free Locomotion
+  parametroDeBloqueoAereo: isFlying
+  fundido: 0.08
 --- !u!1 &9125298888619857253
 GameObject:
   m_ObjectHideFlags: 0

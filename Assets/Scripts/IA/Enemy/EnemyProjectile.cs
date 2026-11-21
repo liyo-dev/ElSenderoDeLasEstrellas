@@ -29,13 +29,12 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private Vector3 direction;
     private float damage;
     private bool initialized = false;
-    // FIX INC-082: velocidad real usada en vuelo. Antes Initialize()/FixedUpdate() usaban siempre el
-    // campo serializado `speed` (fijo en el prefab, ej. 15), ignorando por completo el rockSpeed/
-    // rockRainSpeed que configura GolemBossAI por Inspector — SetupRockProjectile/RockThrowAttack
-    // asignaban rb.linearVelocity con la velocidad correcta, pero Initialize() la pisaba un instante
-    // después con `direction * speed` (el campo del prefab), y FixedUpdate() la seguía reafirmando
-    // así en cada physics tick. El resultado: todas las rocas del Golem viajaban siempre a la
-    // velocidad fija del prefab, nunca a la que se veía en el Inspector — la predicción de impacto
+    // Velocidad real usada en vuelo. 15), ignorando por completo el rockSpeed/ rockRainSpeed que
+    // configura GolemBossAI por Inspector — SetupRockProjectile/RockThrowAttack asignaban
+    // rb.linearVelocity con la velocidad correcta, pero Initialize() la pisaba un instante después
+    // con `direction * speed` (el campo del prefab), y FixedUpdate() la seguía reafirmando así en
+    // cada physics tick. El resultado: todas las rocas del Golem viajaban siempre a la velocidad fija
+    // del prefab, nunca a la que se veía en el Inspector — la predicción de impacto
     // (PredictThrowTargetPosition) se calculaba para una velocidad que el proyectil real nunca tenía.
     // SetSpeed() permite que quien lanza el proyectil fuerce la velocidad real antes de Initialize().
     private float _speedOverride = -1f;
@@ -58,6 +57,57 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
     /// <summary>Quien lo lanza decide si se puede devolver (antes de Initialize).</summary>
     public void PermitirDevolucion(bool si) => _sePuedeDevolver = si;
+
+    [Tooltip("Es magia de un elemento: rompe el escudo del jugador de su mismo color (RuptoresDeEscudo). " +
+             "Apagado = no es magia (roca, golpe de criatura): el escudo solo lo para. Ver escudos de colores, 20 nov.")]
+    [SerializeField] private bool _esMagia;
+    [SerializeField] private MagicElement _elemento = MagicElement.Fire;
+
+    /// <summary>Su elemento, si es magia. Lo que no es magia nunca rompe un escudo.</summary>
+    public bool TryGetElemento(out MagicElement elemento)
+    {
+        elemento = _elemento;
+        return _esMagia;
+    }
+
+    /// <summary>Quien lo lanza le da elemento (antes o después de Initialize).</summary>
+    public void AsignarElemento(MagicElement elemento)
+    {
+        _esMagia = true;
+        _elemento = elemento;
+    }
+
+    /// <summary>
+    /// Tiñe un proyectil (o la bola que crece en la mano) con el color de su elemento, el mismo de
+    /// los escudos (<see cref="RuptoresDeEscudo.ColorDe"/>): así se ve de qué color es lo que llega.
+    /// </summary>
+    public static void TenirConElemento(GameObject bola, MagicElement elemento)
+    {
+        if (bola == null) return;
+        Color color = RuptoresDeEscudo.ColorDe(elemento);
+        var bloque = new MaterialPropertyBlock();
+        foreach (var render in bola.GetComponentsInChildren<Renderer>(true))
+        {
+            if (render is ParticleSystemRenderer) continue;
+            render.GetPropertyBlock(bloque);
+            bloque.SetColor(BaseColorProperty, color);
+            bloque.SetColor(ColorProperty, color);
+            bloque.SetColor(EmissionColorProperty, color * 2f);
+            bloque.SetColor(TintColorProperty, color);
+            bloque.SetColor(MainColorProperty, color);
+            render.SetPropertyBlock(bloque);
+        }
+        foreach (var particulas in bola.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            var main = particulas.main;
+            main.startColor = color;
+        }
+        foreach (var estela in bola.GetComponentsInChildren<TrailRenderer>(true))
+        {
+            estela.startColor = color;
+            estela.endColor = new Color(color.r, color.g, color.b, 0f);
+        }
+    }
 
     public GameObject Lanzador { get; private set; }
     public float DanoEntrante => damage;
@@ -82,11 +132,8 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private RaycastHit[] _sweepHitBuffer = new RaycastHit[8];
     private int _playerLayerMask;
     private float _nextProximityCheck;
-    // FIX INC-027: posición del último chequeo de proximidad, usada para barrer (sweep) todo el
-    // tramo recorrido desde entonces. Antes se comprobaba solo un punto instantáneo cada 0.05s;
-    // con rocas rápidas (rockSpeed=18, rockRainSpeed=12) el proyectil podía avanzar más que el
-    // radio de detección entre dos chequeos y "pasar por encima" del jugador sin llegar a
-    // solaparse con él en ningún muestreo puntual.
+    // Posición del último chequeo de proximidad, usada para barrer (sweep) todo el tramo
+    // recorrido desde entonces.
     private Vector3 _lastCheckedPosition;
     private bool _hasLastCheckedPosition;
 
@@ -104,12 +151,9 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private int _playerLayer;
     private int _projectileLayer;
     private int _defaultLayer;
-    // FIX INC-082: la sala del Golem (BossArenaController.floorLayer) usa el layer dedicado "Floor"
-    // (índice 10 en TagManager.asset), no "Default", para su suelo. Antes este script no lo conocía
-    // por nombre — el suelo de esa sala solo caía en el fallback genérico `if (!other.isTrigger)` del
-    // final de OnTriggerEnter, que SÍ funciona pero no deja rastro claro en el flujo de código de que
-    // el suelo del Golem se maneja aquí. Se cachea explícitamente para que quede documentado y para
-    // poder tratarlo igual que "Default" sin depender del fallback silencioso.
+    // La sala del Golem (BossArenaController.floorLayer) usa el layer dedicado "Floor" (índice 10 en
+    // TagManager.asset), no "Default", para su suelo. Se cachea explícitamente para que quede
+    // documentado y para poder tratarlo igual que "Default" sin depender del fallback silencioso.
     private int _floorLayer;
 
     // AoE al impactar (configurado en tiempo de ejecución para lluvia de rocas)
@@ -123,6 +167,8 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private static readonly int BaseColorProperty = Shader.PropertyToID("_BaseColor");
     private static readonly int ColorProperty = Shader.PropertyToID("_Color");
     private static readonly int EmissionColorProperty = Shader.PropertyToID("_EmissionColor");
+    private static readonly int TintColorProperty = Shader.PropertyToID("_TintColor");
+    private static readonly int MainColorProperty = Shader.PropertyToID("_MainColor");
 
     // VFX de "grieta en el suelo" al impactar contra terreno (configurado por GolemBossAI para que
     // sus rocas reutilicen el mismo VFX que el aterrizaje de Fase 3 — ver ConfigureGroundImpactVfx)
@@ -173,9 +219,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     public void Initialize(Vector3 dir, float dmg)
     {
         direction = dir.normalized;
-        // FIX INC-024/027: un valor negativo (ej: -1) es el sentinel "usa el daño del prefab".
-        // Antes no existía este fallback y el daño quedaba en -1, por lo que
-        // PlayerHealthSystem.TakeDamage() lo descartaba (damageAmount <= 0f) y la roca no dañaba nunca.
+        // Un valor negativo (ej: -1) es el sentinel "usa el daño del prefab".
         damage = dmg >= 0f ? dmg : baseDamage;
         initialized = true;
         AmenazasAlJugador.Registrar(this);
@@ -192,9 +236,6 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
             AudioService.Instance?.PlaySFX(spawnSFXKey, worldPosition: transform.position);
         }
 
-        // Aplicar velocidad inicial usando física
-        // FIX INC-082: usar EffectiveSpeed (respeta SetSpeed(), si se llamó antes) en vez de `speed`
-        // a secas — ver comentario en la declaración de _speedOverride.
         if (rb)
         {
             rb.linearVelocity = direction * EffectiveSpeed;
@@ -207,10 +248,10 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private void Expirar() => Destroy(gameObject);
 
     /// <summary>
-    /// FIX INC-082: permite que quien lanza el proyectil (GolemBossAI: rockSpeed/rockRainSpeed)
-    /// fuerce una velocidad real distinta a la serializada en el prefab (`speed`). Debe llamarse
-    /// ANTES de Initialize() — Initialize()/FixedUpdate() usan EffectiveSpeed, que prioriza este
-    /// valor sobre el campo del prefab si se ha configurado uno (> 0).
+    /// Permite que quien lanza el proyectil (GolemBossAI: rockSpeed/rockRainSpeed) fuerce una
+    /// velocidad real distinta a la serializada en el prefab (`speed`). Debe llamarse ANTES de
+    /// Initialize() — Initialize()/FixedUpdate() usan EffectiveSpeed, que prioriza este valor
+    /// sobre el campo del prefab si se ha configurado uno (> 0).
     /// </summary>
     public void SetSpeed(float newSpeed)
     {
@@ -351,8 +392,6 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         // Usar SOLO física para movimiento (detección de colisiones garantizada)
         if (!initialized || hasHit) return;
 
-        // Mantener la velocidad constante
-        // FIX INC-082: EffectiveSpeed (ver _speedOverride) en vez de `speed` a secas.
         if (rb)
         {
             rb.linearVelocity = direction * EffectiveSpeed;
@@ -379,9 +418,9 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         const float detectionRadius = 0.8f;
         Vector3 currentPos = transform.position;
 
-        // FIX INC-027: en lugar de comprobar solo el punto actual, barremos (SphereCast) desde la
-        // última posición chequeada hasta la actual. Así, aunque el proyectil avance más que el
-        // radio de detección entre dos chequeos (rocas rápidas), no puede "saltarse" al jugador.
+        // En lugar de comprobar solo el punto actual, barremos (SphereCast) desde la última
+        // posición chequeada hasta la actual. Así, aunque el proyectil avance más que el radio de
+        // detección entre dos chequeos (rocas rápidas), no puede "saltarse" al jugador.
         int hitCount;
         if (_hasLastCheckedPosition)
         {
@@ -436,6 +475,15 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         // anula o el escudo lo reduce.
         if (ControlDelJugador.DelJugador(hit, out PlayerHealthSystem playerHealth))
         {
+            // Con el escudo puesto lo para (o lo rompe si es de su color) aunque la burbuja no haya
+            // llegado a tocarlo: la proximidad se mira 20 veces por segundo.
+            var escudo = PlayerShieldController.De(playerHealth);
+            if (escudo != null && escudo.RecibirEnElEscudo(gameObject, transform.position))
+            {
+                hasHit = true;
+                DestroyProjectile();
+                return true;
+            }
             hasHit = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[EnemyProjectile] Impacto JUGADOR por proximidad: {damage} daño");
@@ -477,9 +525,9 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
              ControlDelJugador.EsElJugador(other)))
             return;
 
-        // FIX INC-082 (diagnóstico): log de cada impacto real para poder ver en Console, sin abrir el
-        // profiler ni instrumentar nada, contra qué layer/trigger está chocando cada roca — pensado
-        // para confirmar de una vez si el suelo de la sala del Golem tiene un layer/trigger inesperado.
+        // Log de cada impacto real para poder ver en Console, sin abrir el profiler ni instrumentar
+        // nada, contra qué layer/trigger está chocando cada roca — pensado para confirmar de una vez si
+        // el suelo de la sala del Golem tiene un layer/trigger inesperado.
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[EnemyProjectile] OnTriggerEnter '{other.name}' layer={LayerMask.LayerToName(otherLayer)} isTrigger={other.isTrigger}");
 #endif
@@ -499,9 +547,12 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
             return;
         }
         
-        // PRIORIDAD 1: Si impacta contra el escudo del jugador
+        // PRIORIDAD 1: Si impacta contra el escudo del jugador (lo para, o lo rompe si es de su color).
         if (other.GetComponent<PlayerShieldController.ShieldMarker>() != null)
         {
+            var escudo = other.GetComponentInParent<PlayerShieldController>();
+            // En la ventana del contraataque, lo devolvible se deja pasar: lo devuelve la B.
+            if (escudo != null && !escudo.RecibirEnElEscudo(gameObject, transform.position)) return;
             hasHit = true;
             DestroyProjectile();
             return;
@@ -632,8 +683,15 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 #endif
     }
 
+    private bool _destruido;
+
     public void DestroyProjectile()
     {
+        // Puede llegar dos veces en el mismo choque (la burbuja del escudo y el propio proyectil):
+        // un solo impacto.
+        if (_destruido) return;
+        _destruido = true;
+        hasHit = true;
         // Detener movimiento antes de destruir
         if (rb)
         {

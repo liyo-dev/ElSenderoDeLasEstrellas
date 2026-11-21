@@ -43,9 +43,8 @@ namespace Game.NPC
         #region Singleton
         private static PlayerParty _instance;
 
-        // igual que TransitionManager (ver auditoría 2026-08-11), Instance
-        // recreaba un GameObject "PlayerParty" nuevo cada vez que se consultaba con _instance en
-        // null. PlayerParty es DontDestroyOnLoad y se destruye junto al resto de la escena al
+        // Sin esta guarda, Instance recreaba un GameObject "PlayerParty" nuevo cada vez que se
+        // consultaba con _instance en null. PlayerParty es DontDestroyOnLoad y se destruye junto al resto de la escena al
         // cerrar partida / salir de Play Mode; el orden de destrucción entre objetos no está
         // garantizado, así que otros OnDestroy()/Update() que consultan PlayerParty.Instance para
         // desuscribirse o leer el estado podían ejecutarse DESPUÉS de que este objeto ya se
@@ -162,6 +161,12 @@ namespace Game.NPC
         private Vector3 _puntoAterrizajeJugador;
         private bool _hayPuntoAterrizaje;
         private int _mascaraSueloRastro = -1;
+
+        // Turnos de salto: cada puesto del grupo apunta qué salto del rastro ha cruzado ya (por la
+        // distancia del despegue) y cuándo cayó. Así saltan de uno en uno, en el orden del grupo.
+        private const int MaxPuestosDeSalto = 8;
+        private readonly float[] _saltoCruzadoPorPuesto = { -1f, -1f, -1f, -1f, -1f, -1f, -1f, -1f };
+        private readonly float[] _caidaPorPuesto = new float[MaxPuestosDeSalto];
 
         // Caché del Will de la IA para no repetir GetComponent/listas en cada consulta de
         // formación (UpdateDestination la pide cada 0,1 s). Se refresca cada 0,5 s.
@@ -423,6 +428,17 @@ namespace Game.NPC
             }
             else if (_jugadorEstabaEnAire)
             {
+                // Un salto que cae donde despegó (en el sitio, o subir y bajar al mismo suelo) no
+                // es un salto que haya que copiar: nadie lo repite.
+                Vector3 desdeElDespegue = posicion - _inicioSaltoActual;
+                if (_saltoActualConfirmado
+                    && new Vector2(desdeElDespegue.x, desdeElDespegue.z).magnitude < DesplazamientoMinimoSaltoHorizontal
+                    && Mathf.Abs(desdeElDespegue.y) < DesplazamientoMinimoSaltoVertical)
+                {
+                    _saltoActualConfirmado = false;
+                    _muestrasDesdeInicioSalto = Mathf.Max(_muestrasDesdeInicioSalto, ContarMuestrasEnAireRecientes());
+                }
+
                 if (_saltoActualConfirmado)
                 {
                     float cierre = _distanciaTotalRastro + Vector3.Distance(posicion, ultima.posicion);
@@ -470,6 +486,19 @@ namespace Game.NPC
             AgregarMuestra(posicion, enAire, direccion, distanciaAcumulada);
 
             if (enAire && !_saltoActualConfirmado) _muestrasDesdeInicioSalto++;
+        }
+
+        /// <summary>Cuántas de las últimas muestras seguidas están marcadas en el aire.</summary>
+        private int ContarMuestrasEnAireRecientes()
+        {
+            int n = 0;
+            for (int i = 0; i < _totalMuestrasRastro; i++)
+            {
+                int idx = (_cabezaRastro - i + CapacidadRastro) % CapacidadRastro;
+                if (!_rastro[idx].enAire) break;
+                n++;
+            }
+            return n;
         }
 
         private void AgregarMuestra(Vector3 posicion, bool enAire, Vector3 direccion, float distanciaAcumulada)
@@ -759,6 +788,59 @@ namespace Game.NPC
             _saltoActualConfirmado = false;
             _muestrasDesdeInicioSalto = 0;
             _hayPuntoAterrizaje = false;
+            for (int i = 0; i < MaxPuestosDeSalto; i++) _saltoCruzadoPorPuesto[i] = -1f;
+        }
+
+        /// <summary>El compañero de ese puesto ha cruzado el salto que despega en esa distancia del rastro.</summary>
+        public void AvisarSaltoCruzado(int puesto, float distanciaDespegue)
+        {
+            if (puesto < 0 || puesto >= MaxPuestosDeSalto) return;
+            if (distanciaDespegue <= _saltoCruzadoPorPuesto[puesto]) return;
+            _saltoCruzadoPorPuesto[puesto] = distanciaDespegue;
+            _caidaPorPuesto[puesto] = Time.time;
+        }
+
+        /// <summary>
+        /// ¿Le toca saltar al compañero de ese puesto? Los de delante en el grupo tienen que haber
+        /// cruzado ese salto y llevar <paramref name="esperaTrasCaer"/> segundos en el suelo.
+        /// </summary>
+        public bool LeTocaSaltar(int puesto, float distanciaDespegue, float esperaTrasCaer)
+        {
+            int hasta = Mathf.Min(puesto, MaxPuestosDeSalto);
+            for (int q = 0; q < hasta; q++)
+            {
+                if (_saltoCruzadoPorPuesto[q] < distanciaDespegue - 0.05f) return false;
+                if (Time.time - _caidaPorPuesto[q] < esperaTrasCaer) return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// La distancia más avanzada del rastro, entre <paramref name="desde"/> y <paramref name="hasta"/>,
+        /// cuya muestra queda a menos de <paramref name="radio"/> de una posición. Sirve para saber por
+        /// dónde del recorrido del jugador va un compañero: si el jugador volvió a pasar a su lado, se
+        /// engancha a ese paso, el más reciente.
+        /// </summary>
+        public bool BuscarDistanciaMasAvanzadaCerca(Vector3 posicion, float desde, float hasta, float radio, out float distancia)
+        {
+            distancia = 0f;
+            if (_totalMuestrasRastro == 0) return false;
+
+            float radioCuadrado = radio * radio;
+            bool hay = false;
+            for (int edad = 0; edad < _totalMuestrasRastro; edad++)
+            {
+                PuntoDeRastro muestra = _rastro[(_cabezaRastro - edad + CapacidadRastro) % CapacidadRastro];
+                if (muestra.distanciaAcumulada > hasta) continue;
+                if (muestra.distanciaAcumulada < desde) break;
+                if ((muestra.posicion - posicion).sqrMagnitude > radioCuadrado) continue;
+                if (!hay || muestra.distanciaAcumulada > distancia)
+                {
+                    distancia = muestra.distanciaAcumulada;
+                    hay = true;
+                }
+            }
+            return hay;
         }
 
         /// <summary>
@@ -784,7 +866,9 @@ namespace Game.NPC
                 int idxViejo = (_cabezaRastro - edad - 1 + CapacidadRastro) % CapacidadRastro;
                 PuntoDeRastro nuevo = _rastro[idxNuevo];
                 PuntoDeRastro viejo = _rastro[idxViejo];
-                if (distanciaObjetivo > nuevo.distanciaAcumulada) continue;
+                // De la muestra más nueva a la más vieja: el tramo que vale es el primero cuyo
+                // extremo viejo ya queda por detrás de la distancia pedida.
+                if (distanciaObjetivo < viejo.distanciaAcumulada) continue;
 
                 float tramo = nuevo.distanciaAcumulada - viejo.distanciaAcumulada;
                 if (tramo < 0.0001f)
@@ -1620,9 +1704,8 @@ namespace Game.NPC
                     // un sistema de LOD/culling por distancia, o porque su Awake() aún no ha corrido
                     // en el primer frame tras una carga en frío), este escaneo los pasaba por alto
                     // exactamente igual que el registro — dejándolos pendientes para siempre pese a
-                    // existir físicamente en la escena. Ver informe del jugador (17/08/2026): tras
-                    // cerrar el juego del todo y recargar una partida con Estela/Liam en el equipo,
-                    // solo aparece Will.
+                    // existir físicamente en la escena (al recargar una partida con Estela/Liam en
+                    // el equipo solo aparecía Will).
                     var allPartyMembers = UnityEngine.Object.FindObjectsByType<NPCPartyMember>(UnityEngine.FindObjectsInactive.Include);
                     Log($"  {allPartyMembers.Length} NPCPartyMember encontrados en escena");
 
@@ -1639,7 +1722,7 @@ namespace Game.NPC
                             Log($"  Encontrado en escena: '{pm.gameObject.name}'");
                             if (!HasMember(pm))
                             {
-                                // Si lo encontramos gracias al FIX de arriba (FindObjectsInactive.Include),
+                                // Si lo encontramos con FindObjectsInactive.Include,
                                 // puede estar desactivado — reactivarlo antes de unirlo. SetActive(true)
                                 // dispara Awake() de forma síncrona si el objeto nunca había estado activo,
                                 // así que _npcManager/_agent ya estarán listos para el JoinParty() siguiente.
@@ -2262,7 +2345,7 @@ namespace Game.NPC
             
             foreach (var id in memberIds)
             {
-                // Ignorar explícitamente IDs narrativos antiguos o corruptos que se guardaron antes de este parche
+                // Ignorar explícitamente IDs narrativos antiguos o corruptos de guardados antiguos
                 if (id.StartsWith("NPC_InteractiveNarrative_Config_"))
                 {
                     Log($"Ignorando ID narrativo del party '{id}'. Tratando de extraer el nombre real...");

@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
-using GraphAsset = global::NarrativeGraph;
+using GraphAsset = Liyodev.NarrativeGraph.NarrativeGraph;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     public static class NarrativeMenu
     {

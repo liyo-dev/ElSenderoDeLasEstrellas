@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Controla las animaciones corporales del jugador durante los diálogos.
@@ -49,6 +50,8 @@ public class PlayerDialogueAnimator : MonoBehaviour
 
         // Al hablar solo se mueve la boca: la cabeza no cabecea con Talk01-03 (INC-1144).
         CabezaQuietaAlHablar.Asegurar(gameObject);
+        // Los giros por código encima de la animación (mirada, sentado) no se acumulan si el Animator no escribe (INC-1308).
+        GiroSobreLaAnimacion.Asegurar(gameObject);
     }
 
     void OnEnable()
@@ -125,11 +128,11 @@ public class PlayerDialogueAnimator : MonoBehaviour
         _gestureCoroutine = null;
     }
 
-    // ── La cara del jugador (FIX 16 sep 2026) ────────────────────────────────
-    // Mismo arreglo que en NPCSimpleAnimator.PlayBodyEmotion: hasta hoy esto solo movía el cuerpo
-    // de Will y su cara no cambiaba nunca en ningún diálogo. Ver el comentario largo allí y
-    // EmotionControllerResolver (Will lleva DOS NPCEmotionController en el mismo GameObject y solo
-    // uno tiene los meshes puestos, así que un GetComponent a secas cogía el vacío).
+    // ── La cara del jugador ──────────────────────────────── Mismo arreglo que en
+    // NPCSimpleAnimator.PlayBodyEmotion: hasta hoy esto solo movía el cuerpo de Will y su cara no
+    // cambiaba nunca en ningún diálogo. Ver el comentario largo allí y EmotionControllerResolver
+    // (Will lleva DOS NPCEmotionController en el mismo GameObject y solo uno tiene los meshes
+    // puestos, así que un GetComponent a secas cogía el vacío).
     private NPCEmotionController _emotionControllerCached;
     private bool _emotionControllerResolved;
 
@@ -148,9 +151,8 @@ public class PlayerDialogueAnimator : MonoBehaviour
 
     /// Devuelve la CAPA BASE del jugador a su locomoción normal.
     ///
-    /// FIX 16 sep 2026 (Raúl: "cuando termina la secuencia Will se queda con la animación de
-    /// mareo"). Causa raíz, confirmada leyendo Invector@BasicLocomotion.controller: casi todos los
-    /// gestos de diálogo de Will viven en la capa UpperBody y tienen transición de salida propia
+    /// Causa raíz, confirmada leyendo Invector@BasicLocomotion.controller: casi todos los gestos
+    /// de diálogo de Will viven en la capa UpperBody y tienen transición de salida propia
     /// (Laugh01, Cheer01/02, HeadNod01, Question01, Beg01, Talk01...), pero unos pocos viven en la
     /// CAPA BASE — y "Dizzy_NoWeapon" además NO TIENE NINGUNA TRANSICIÓN DE SALIDA. Una vez que
     /// entra ahí, la capa base se queda en mareo para siempre: los gestos siguientes se reproducen

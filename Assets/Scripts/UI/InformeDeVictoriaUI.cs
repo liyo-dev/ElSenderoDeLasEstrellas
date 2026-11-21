@@ -227,7 +227,7 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
         if (continuar != null)
         {
             InputGlyphService.UsarIconos(continuar);
-            continuar.text = $"{InputGlyphService.SpriteTag(InputGlyphNames.South)} {Texto("BATTLE_REPORT_CONTINUE", "Continuar")}";
+            continuar.text = $"{InputGlyphService.SpriteTag(InputGlyphNames.Confirm)} {Texto("BATTLE_REPORT_CONTINUE", "Continuar")}";
         }
 
         string encuentro = r.NombreDelEncuentro;

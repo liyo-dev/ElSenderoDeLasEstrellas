@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Liyodev.NarrativeGraph;
 
 // Beats que tocan el MUNDO durante una cinemática: el tiempo atmosférico y el movimiento de un
-// actor por sitios donde no hay NavMesh. Los dos nacen del storyboard del prólogo del 19 sep 2026
-// («algo cambia en el cielo» y «la llegada»), pero ninguno es específico de esa escena.
+// actor por sitios donde no hay NavMesh.
 
 /// Enciende o apaga un fenómeno atmosférico mientras dura la cinemática.
 ///
@@ -68,10 +68,8 @@ public class NubesDeAperturaBeat : SequenceBeat
     public override IEnumerator Run(SequenceContext ctx)
     {
         // LA CÁMARA DE VERDAD (INC-385). `ActiveCamera` es el DRIVER, y su transform es el
-        // GameObject del sequencer — que vive en MainWorld. Colgadas de ahí, las dos nubes
-        // aparecían flotando en la aldea, a cuatro metros de un objeto que no es la lente: es
-        // literalmente lo que dijo Raúl («las nubes del principio creo que están saliendo en
-        // MainWorld»). Lo que hay que usar es la Camera que mueve ese driver.
+        // GameObject del sequencer — que vive en MainWorld. Lo que hay que usar es la Camera
+        // que mueve ese driver.
         var lente = ctx?.Player != null
             ? (ctx.Player.CachedCamera != null ? ctx.Player.CachedCamera.transform : null)
             : null;
@@ -499,9 +497,8 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
 
         // La referencia para normalizar el paso es UNA CONSTANTE, igual para todos (INC-317).
         //
-        // Antes salía de `agent.speed`, la velocidad del NavMeshAgent de cada personaje. La idea
-        // era que el paso casara con el avance, pero aquí no se aplica: este beat mueve el
-        // transform a mano y APAGA el agente tres líneas más abajo, así que su velocidad no
+        // La idea era que el paso casara con el avance, pero aquí no se aplica: este beat mueve
+        // el transform a mano y APAGA el agente tres líneas más abajo, así que su velocidad no
         // interviene en nada. Lo único que hacía era que dos personajes andando a la misma
         // velocidad real movieran las piernas a ritmos distintos, porque `agent.speed` es un
         // ajuste de pathfinding y cada prefab trae el suyo.
@@ -843,13 +840,11 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
 /// y después andar, sin pegarse al suelo, hasta un punto del aire. Eso tiene tres problemas y los
 /// tres se ven en el prólogo:
 ///
-///   · El salto va HACIA LA MARCA, no hacia arriba. Raúl, sobre el esquive del Archimago: «salta
-///     para esquivar un ataque en lugar de saltar hacia arriba en el eje Y, y parece que salta
-///     para otro lado». Es literal — iba a donde estuviera esa coordenada.
-///   · La caída va a otra marca, así que el personaje aterriza donde diga el número y no donde
-///     está el suelo. En la sexta grabación el Archimago termina **de pie encima de un tejado**.
-///   · Cada trozo había que colocarlo a mano en la escena, y un cambio de posición del personaje
-///     deja las marcas mintiendo sin que nada avise.
+/// · El salto va HACIA LA MARCA, no hacia arriba. Es literal — iba a donde estuviera esa
+/// coordenada. · La caída va a otra marca, así que el personaje aterriza donde diga el número y
+/// no donde está el suelo. En la sexta grabación el Archimago termina **de pie encima de un
+/// tejado**. · Cada trozo había que colocarlo a mano en la escena, y un cambio de posición del
+/// personaje deja las marcas mintiendo sin que nada avise.
 ///
 /// Aquí el arco es RELATIVO: sube `altura` metros sobre donde esté, se aparta `desplazamiento`
 /// metros en la dirección que se le diga, y baja hasta el suelo que tenga debajo, buscándolo con

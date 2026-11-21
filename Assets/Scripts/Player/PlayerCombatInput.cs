@@ -7,6 +7,8 @@ using Core;
 /// <item>X: serie básica (<see cref="MagicCaster.CastBasic"/>). Si el hechizo admite modo preciso,
 /// sale al soltar: toque = normal, mantenido = preciso.</item>
 /// <item>LB: pasa al siguiente hechizo básico equipado.</item>
+/// <item>RB (C en teclado): esquiva (<see cref="EsquivaDelJugador.Pedir"/>) hacia donde apunta
+/// el stick de movimiento.</item>
 /// </list>
 /// Una X pulsada mientras aún sale el hechizo anterior se guarda un instante y sale en cuanto se
 /// puede (buffer de entrada). La levitación lee sus propios botones (PlayerLevitationController).
@@ -17,6 +19,8 @@ public class PlayerCombatInput : MonoBehaviour
 {
     [Header("Referencias")]
     [SerializeField] private MagicCaster magicCaster;
+    [Tooltip("Esquiva del personaje (RB). Se busca sola si está vacía.")]
+    [SerializeField] private EsquivaDelJugador esquiva;
 
     [Header("Serie básica (X)")]
     [Tooltip("Segundos que se guarda una X pulsada mientras el hechizo anterior aún está saliendo.")]
@@ -34,6 +38,7 @@ public class PlayerCombatInput : MonoBehaviour
     void Awake()
     {
         if (!magicCaster) magicCaster = GetComponentInParent<MagicCaster>();
+        if (!esquiva) esquiva = GetComponentInParent<EsquivaDelJugador>();
     }
 
     void OnDisable()
@@ -55,7 +60,14 @@ public class PlayerCombatInput : MonoBehaviour
         }
 
         HandleRotation();
+        HandleDodge();
         HandleBasicAttack();
+    }
+
+    private void HandleDodge()
+    {
+        if (esquiva && GamepadInputReader.EsquivaPressed)
+            esquiva.Pedir(GamepadInputReader.Move);
     }
 
     private void HandleRotation()
@@ -127,6 +139,7 @@ public class PlayerCombatInput : MonoBehaviour
     void OnValidate()
     {
         if (!magicCaster) magicCaster = GetComponentInParent<MagicCaster>();
+        if (!esquiva) esquiva = GetComponentInParent<EsquivaDelJugador>();
     }
 #endif
 }

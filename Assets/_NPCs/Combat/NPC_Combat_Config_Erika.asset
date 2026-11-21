@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Modules.NPCCombatConfig
   moduleName: 
   description: 
-  health: 100
+  cerebro: 1
+  perfilDeCombate: {fileID: 11400000, guid: 38849677acc7661469f86e8166b9d962, type: 2}
+  health: 160
   detectionRange: 10
   fieldOfView: 160
   minAttackDistance: 2
   maxAttackDistance: 10
-  isAggressive: 1
+  isAggressive: 0
   canChaseOutOfBounds: 0
   maxChaseDistance: 20
   alertIconPrefab: {fileID: 6303534759802428624, guid: 8754cf18218ab1b4c8c7c227f1e9ad68, type: 3}
@@ -30,7 +32,7 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 662809776453450714, guid: c9ac1bd5123d1544b8b85daac217ad0b, type: 3}
   manaBarPrefab: {fileID: 662809776453450714, guid: 06a21cf2429ee2d4e879a503cb78faf6, type: 3}
   showManaBarToPlayer: 0
-  dialogueOnAlert: {fileID: 11400000, guid: 4d7e29d781db19a44b19a032275208f2, type: 2}
+  dialogueOnAlert: {fileID: 0}
   dialogueOnAlertRepeat: {fileID: 0}
   dialogueOnDefeat: {fileID: 11400000, guid: 00e01ce253148554881597dfe2faa75c, type: 2}
   dialogueAfterDefeat: {fileID: 11400000, guid: cbaea10abdb313f4cbb0b49b649d6381, type: 2}

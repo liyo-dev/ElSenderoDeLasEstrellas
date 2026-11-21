@@ -15,7 +15,7 @@ MonoBehaviour:
   moduleName: 
   description: 
   cerebro: 1
-  perfilDeCombate: {fileID: 0}
+  perfilDeCombate: {fileID: 11400000, guid: c344ac75d5111234d9e5e29f63834910, type: 2}
   health: 100
   detectionRange: 10
   fieldOfView: 160

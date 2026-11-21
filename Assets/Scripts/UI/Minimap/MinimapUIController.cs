@@ -220,7 +220,6 @@ public class MinimapUIController : MonoBehaviour
 
     public void RefreshIcon(MinimapMarker marker)
     {
-        // Si todavía no está registrado (SetIcon antes de Start), se registra ahora.
         Register(marker);
 
         for (int i = 0; i < _entries.Count; i++)

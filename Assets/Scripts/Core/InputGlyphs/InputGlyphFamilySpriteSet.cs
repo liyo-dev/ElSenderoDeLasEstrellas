@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Core.InputGlyphs
 {
     /// <summary>
-    /// Set completo de los 17 sprites de botón (ver <see cref="InputGlyphNames"/>) para UNA familia
+    /// Set de los sprites de botón (ver <see cref="InputGlyphNames"/>) para UNA familia
     /// de dispositivo (Xbox/PlayStation/Switch/Teclado). Referencias directas, sin Resources.Load
     /// por archivo — sustituye a la carpeta Resources/InputGlyphs/&lt;Familia&gt;/*.png que usaba
     /// antes <see cref="InputGlyphService"/>, que dependía de que cada PNG existiera con el nombre
@@ -45,6 +45,9 @@ namespace Core.InputGlyphs
                  "sin rellenar este campo. En Teclado&Ratón SÍ hace falta arte propio (Espacio/Enter, " +
                  "no la tecla E) — ver InputGlyphNames.Confirm.")]
         [SerializeField] private Sprite confirm;
+        [Tooltip("X de los menús (UI): en mando es el mismo botón que 'west' y no hace falta rellenarlo; " +
+                 "en Teclado&Ratón es la tecla C, no el clic de 'west'. Ver InputGlyphNames.MenuX.")]
+        [SerializeField] private Sprite menuX;
         [Tooltip("Botón de teletransporte en un punto de guardado — mismo botón físico que North en mando, pero tecla distinta en teclado (T, no Q). Ver InputGlyphNames.Teleport.")]
         [SerializeField] private Sprite teleport;
 
@@ -56,10 +59,10 @@ namespace Core.InputGlyphs
                  "Usado hoy por el hint de cambiar de personaje del HUD (panel MainCharacters).")]
         [SerializeField] private Sprite dpadRight;
         [Tooltip("D-pad arriba en mando; tecla \"J\" en teclado. Ver InputGlyphNames.DpadUp. " +
-                 "Sin consumidor en HUD todavía (2026-08-12) — se rellena para completar el set.")]
+                 "Sin consumidor en HUD todavía; se rellena para completar el set.")]
         [SerializeField] private Sprite dpadUp;
         [Tooltip("D-pad abajo en mando; tecla \"G\" en teclado. Ver InputGlyphNames.DpadDown. " +
-                 "Sin consumidor en HUD todavía (2026-08-12) — se rellena para completar el set.")]
+                 "Sin consumidor en HUD todavía; se rellena para completar el set.")]
         [SerializeField] private Sprite dpadDown;
 
         [Header("Ver mapa grande")]
@@ -83,6 +86,7 @@ namespace Core.InputGlyphs
                 case InputGlyphNames.Stick: return stick;
                 case InputGlyphNames.Start: return start;
                 case InputGlyphNames.Confirm: return confirm;
+                case InputGlyphNames.MenuX: return menuX;
                 case InputGlyphNames.Teleport: return teleport;
                 case InputGlyphNames.DpadLeft: return dpadLeft;
                 case InputGlyphNames.DpadRight: return dpadRight;

@@ -36,6 +36,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0.65, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 0
+  correccionHaciaElObjetivo: 90
   useScaleOverride: 1
   scaleOverride: {x: 1.5, y: 1.5, z: 1.5}
   manaCost: 40
@@ -106,8 +107,12 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  invisibilidadSegundos: 6
+  materialDeInvisible: {fileID: 0}
   abreProteccionSegundos: 6
   vfxProteccionAbierta: {fileID: 9198150716392636064, guid: ede49d97bd3bcba4c84471d5269b31ca, type: 3}
+  empujeEnElAire: 0
   enGrimorio: 1
+  especialConMision: 1
   caster: 1
   comboSequence: 02000000000000000100000003000000i

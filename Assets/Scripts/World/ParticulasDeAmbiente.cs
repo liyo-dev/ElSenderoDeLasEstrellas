@@ -123,8 +123,12 @@ public abstract class ParticulasDeAmbiente : MonoBehaviour
         }
     }
 
+    /// Efectos que pone una cinemática o un nivel a propósito y no dependen de que el jugador esté cerca.
+    protected virtual bool ActivaSinJugador => false;
+
     private bool JugadorCerca()
     {
+        if (ActivaSinJugador) return true;
         if (!PlayerService.TryGetComponent(out Transform jugador, true, false) || jugador == null) return false;
         return Zona.SqrDistance(jugador.position) <= distanciaDeActivacion * distanciaDeActivacion;
     }

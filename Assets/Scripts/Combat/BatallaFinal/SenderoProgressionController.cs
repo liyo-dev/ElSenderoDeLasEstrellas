@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sendero.Core.Feedback;
 using Invector.vCharacterController;
+using Liyodev.NarrativeGraph;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

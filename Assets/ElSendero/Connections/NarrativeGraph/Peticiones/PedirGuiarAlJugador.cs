@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.NPC;
 using Game.NPC.States;
+using Liyodev.NarrativeGraph;
 
 /// Un NPC lleva al jugador andando hasta un SpawnAnchor mientras el jugador tiene el control.
 ///

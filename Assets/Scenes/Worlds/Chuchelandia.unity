@@ -151601,7 +151601,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6240641739715126112, guid: 2db79d01abddae142bf5e9e098e00d53, type: 3}
       propertyPath: m_Name
-      value: _LIAM
+      value: Actor_Liam
       objectReference: {fileID: 0}
     - target: {fileID: 6412527670760295432, guid: 2db79d01abddae142bf5e9e098e00d53, type: 3}
       propertyPath: m_CastShadows
@@ -183556,7 +183556,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2492702236771832282, guid: 32f72536e3ea86349ba8d44f419f74b9, type: 3}
       propertyPath: m_Name
-      value: _ESTELA
+      value: Actor_Estela
       objectReference: {fileID: 0}
     - target: {fileID: 2694248492647885185, guid: 32f72536e3ea86349ba8d44f419f74b9, type: 3}
       propertyPath: m_CastShadows

@@ -1,8 +1,12 @@
 {
     "texts": [
         {
-            "key": "AUTOGUARDADO",
-            "value": "Game saved"
+            "key": "AVISO_AUTOGUARDADO",
+            "value": "This game saves automatically. When you see this symbol, do not turn off or close the game."
+        },
+        {
+            "key": "AVISO_AUTOGUARDADO_PASAR",
+            "value": "Continue"
         },
         {
             "key": "STAT_EFECTO_ATAQUE_MAS",
@@ -62,7 +66,7 @@
         },
         {
             "key": "SHOP_MSG_EFFECT_UNAVAILABLE",
-            "value": "This product\u0027s effect cannot be applied."
+            "value": "This product's effect cannot be applied."
         },
         {
             "key": "ABILITIES_LEVEL_LABEL",
@@ -318,7 +322,11 @@
         },
         {
             "key": "CONTROLS_TARGET_NEXT",
-            "value": "Next target (enemy or markable)"
+            "value": "Switch target (while locked on)"
+        },
+        {
+            "key": "CONTROLS_DODGE",
+            "value": "Dodge (roll where you aim)"
         },
         {
             "key": "CONTROLS_TEAM_ATTACK",
@@ -409,6 +417,10 @@
             "value": "F"
         },
         {
+            "key": "GLYPH_KEY_C",
+            "value": "C"
+        },
+        {
             "key": "GLYPH_KEY_SHIFT",
             "value": "Shift"
         },
@@ -445,8 +457,16 @@
             "value": "Right stick click (R3)"
         },
         {
+            "key": "GLYPH_STICK_RIGHT_SIDE",
+            "value": "the right stick to one side"
+        },
+        {
             "key": "GLYPH_VIEW",
             "value": "View"
+        },
+        {
+            "key": "GLYPH_WHEEL",
+            "value": "the mouse wheel"
         },
         {
             "key": "GLYPH_WHEEL_DOWN",
@@ -958,7 +978,7 @@
         },
         {
             "key": "MainMenu_BugReport",
-            "value": "Bug Report"
+            "value": "Report a bug"
         },
         {
             "key": "MainMenu_Continue",
@@ -982,11 +1002,11 @@
         },
         {
             "key": "MainMenu_NewGame",
-            "value": "New Game"
+            "value": "New game"
         },
         {
             "key": "MainMenu_PatchNotes",
-            "value": "Patch Notes"
+            "value": "Patch notes"
         },
         {
             "key": "MainMenu_Settings",
@@ -1221,8 +1241,32 @@
             "value": "Mana cost: {0}"
         },
         {
+            "key": "SHIELD_BROKEN_SAME_COLOR",
+            "value": "Shield broken! It was {0}: magic of its own colour breaks it. Switch character or quick spell."
+        },
+        {
+            "key": "GRIMOIRE_SPECIAL_QUEST",
+            "value": "Special · learnt through a quest"
+        },
+        {
+            "key": "GRIMOIRE_QUICK_ORDER",
+            "value": "Quick spell {0} of 4"
+        },
+        {
+            "key": "GRIMOIRE_QUICK_UNKNOWN",
+            "value": "Quick spell · not learnt yet"
+        },
+        {
+            "key": "GRIMOIRE_KIND_SPECIAL",
+            "value": "Special"
+        },
+        {
+            "key": "SPELL_EMPUJAR_NAME",
+            "value": "Push"
+        },
+        {
             "key": "SPELL_TORNADO_NAME",
-            "value": "Cycloneburst"
+            "value": "Cyclone"
         },
         {
             "key": "SPELL_UNASSIGNED_SHORT",
@@ -1870,7 +1914,7 @@
         },
         {
             "key": "GRIMOIRE_STEP_ROTATE",
-            "value": "Switch basic"
+            "value": "Next quick spell"
         },
         {
             "key": "GRIMOIRE_STEP_HOLD",
@@ -1918,7 +1962,7 @@
         },
         {
             "key": "GRIMOIRE_COMBO_ALWAYS",
-            "value": "Takes no slot · always at hand"
+            "value": "Combo · always at hand"
         },
         {
             "key": "GRIMOIRE_LOCKED_TITLE",
@@ -1963,6 +2007,10 @@
         {
             "key": "ELEMENT_MIND",
             "value": "Mind"
+        },
+        {
+            "key": "ELEMENT_DARK",
+            "value": "Dark"
         },
         {
             "key": "SPELL_FX_KNOCKBACK",
@@ -2144,7 +2192,10 @@
             "key": "JEFES_DEMONIO2_RECUERDA",
             "value": "Check the colour of the rune that's left and switch to whoever it belongs to."
         },
-        {"key":"CAP2_PUENTE_FALTAN_PIEZAS","value":"The plank is broken. You need a rope and some nails to fix it."},
+        {
+            "key": "CAP2_PUENTE_FALTAN_PIEZAS",
+            "value": "The plank is broken. You need a rope and some nails to fix it."
+        },
         {
             "key": "REQUISITO_FALTA_OBJETO",
             "value": "You need something for this: {0}."
@@ -2255,11 +2306,7 @@
         },
         {
             "key": "CAP3_TUTO_SEGUIR",
-            "value": "Follow them without being seen. When they stop to look back, hide in a bush or behind a wall."
-        },
-        {
-            "key": "CAP3_ROTULO_MANANA",
-            "value": "The next morning…"
+            "value": "Follow them without being seen. When they stop to look back, or one of them gets a «?» over his head, hide in a bush or behind a wall before it fades."
         },
         {
             "key": "DEMO_FIN_ROTULO",
@@ -2347,11 +2394,119 @@
         },
         {
             "key": "CAP3_TUTO_DOS",
-            "value": "Several enemies. Press {BOTON} to switch targets."
+            "value": "There are two of them. Switch targets with {BOTON}."
         },
         {
             "key": "LUGAR_VALLE",
             "value": "The Valley"
+        },
+        {
+            "key": "AJUSTES_PESTANA_SONIDO",
+            "value": "Sound"
+        },
+        {
+            "key": "AJUSTES_PESTANA_IMAGEN",
+            "value": "Display"
+        },
+        {
+            "key": "AJUSTES_PESTANA_IDIOMA",
+            "value": "Language"
+        },
+        {
+            "key": "AJUSTES_PESTANA_JUEGO",
+            "value": "Game"
+        },
+        {
+            "key": "AJUSTES_MUSICA",
+            "value": "Music"
+        },
+        {
+            "key": "AJUSTES_EFECTOS",
+            "value": "Effects"
+        },
+        {
+            "key": "AJUSTES_VOCES",
+            "value": "Voices"
+        },
+        {
+            "key": "AJUSTES_SUBTITULOS",
+            "value": "Subtitles in conversations"
+        },
+        {
+            "key": "AJUSTES_VIBRACION",
+            "value": "Controller vibration"
+        },
+        {
+            "key": "AJUSTES_INVERTIR_Y",
+            "value": "Invert camera (Y axis)"
+        },
+        {
+            "key": "AJUSTES_GUARDADO_SOLO",
+            "value": "Changes are saved automatically."
+        },
+        {
+            "key": "MENU_ELEGIR",
+            "value": "Select"
+        },
+        {
+            "key": "MENU_ATRAS",
+            "value": "Back"
+        },
+        {
+            "key": "MENU_CAMBIAR",
+            "value": "Change"
+        },
+        {
+            "key": "MENU_VOLVER",
+            "value": "Back"
+        },
+        {
+            "key": "MENU_TU_PARTIDA",
+            "value": "Your journey"
+        },
+        {
+            "key": "MENU_CAPITULO",
+            "value": "Chapter {0}"
+        },
+        {
+            "key": "MENU_GUARDADA_AHORA",
+            "value": "saved just now"
+        },
+        {
+            "key": "MENU_GUARDADA_MINUTOS",
+            "value": "saved {0} min ago"
+        },
+        {
+            "key": "MENU_GUARDADA_HORAS",
+            "value": "saved {0} h ago"
+        },
+        {
+            "key": "MENU_GUARDADA_AYER",
+            "value": "saved yesterday"
+        },
+        {
+            "key": "MENU_GUARDADA_DIAS",
+            "value": "saved {0} days ago"
+        },
+        {
+            "key": "AJUSTES_SENSIBILIDAD",
+            "value": "Sensitivity"
+        },
+        {
+            "key": "RASGO_NOMBRE_VIENTOMASBARATO",
+            "value": "Light wind"
+        },
+        {
+            "key": "RASGO_NOMBRE_CONTRAATAQUEMASAMPLIO",
+            "value": "Quick reflexes"
+        },
+        {
+            "key": "RASGO_NOMBRE_PLANEAR",
+            "value": "Glide"
+        },
+        {
+            "key": "RASGO_NOMBRE_REBOTEEXTRA",
+            "value": "Extra bounce"
         }
     ]
 }

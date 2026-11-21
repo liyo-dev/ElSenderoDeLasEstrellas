@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// <summary>
     /// Índice único del proyecto para el editor narrativo (solo editor).
@@ -101,22 +101,96 @@ namespace NarrativeGraphEditor
         {
             static void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] moved, string[] movedFrom)
             {
+                bool invalidar = false;
                 foreach (var path in imported.Concat(deleted).Concat(moved).Concat(movedFrom))
                 {
                     var ext = Path.GetExtension(path);
-                    // Entra, sale o se mueve una escena o un prefab: la lista de archivos que se leen
-                    // ya no vale (que cambie su contenido lo resuelve la caché por archivo).
-                    if (ext.Equals(".unity", StringComparison.OrdinalIgnoreCase) || ext.Equals(".prefab", StringComparison.OrdinalIgnoreCase))
-                        _assetListDirty = true;
                     if (!s_projectExtensions.Contains(ext)) continue;
+                    // Lo que ha cambiado se vuelve a leer aunque la caché se dé por buena (ver Trusted).
+                    MarkChanged(path);
+                    // Entra, sale o se mueve una escena o un prefab: la lista de archivos que se leen
+                    // ya no vale. Que solo cambie su contenido lo resuelve la caché por archivo.
+                    bool yaml = ext.Equals(".unity", StringComparison.OrdinalIgnoreCase) || ext.Equals(".prefab", StringComparison.OrdinalIgnoreCase);
+                    if (yaml && (!IsListed(path) || Array.IndexOf(deleted, path) >= 0 || Array.IndexOf(movedFrom, path) >= 0))
+                        _assetListDirty = true;
+                    if (invalidar) continue;
                     var type = ext.Equals(".asset", StringComparison.OrdinalIgnoreCase) ? AssetDatabase.GetMainAssetTypeAtPath(path) : null;
                     if (type == typeof(NarrativeGraph)) { _graphsDirty = true; Story.StoryCache.Invalidate(); continue; }
-                    // De los .asset solo cuentan los datos (ScriptableObject): mallas, terrenos o luces
-                    // horneadas no aportan nada. Uno borrado ya no tiene tipo: cuenta, por si acaso.
+                    // De los .asset solo cuentan los datos (ScriptableObject) que leen los catálogos:
+                    // mallas, terrenos, luces horneadas o los ajustes del propio editor no aportan nada.
+                    // Uno borrado ya no tiene tipo: cuenta, por si acaso.
                     if (type != null && !typeof(ScriptableObject).IsAssignableFrom(type)) continue;
-                    Invalidate(); Story.StoryCache.Invalidate(); return;
+                    if (type != null && !IsWatchedAssetType(type)) continue;
+                    invalidar = true;
+                    s_lastInvalidation = path;
                 }
+                if (invalidar) { Invalidate(); Story.StoryCache.Invalidate(); }
             }
+        }
+
+        // ─── Qué cambios cuentan ──────────────────────────────────────────
+
+        // Tipos de ScriptableObject que leen los catálogos (Contributions.WatchAssetTypes). Sin
+        // ninguno declarado, cuenta cualquier ScriptableObject.
+        static readonly List<Type> s_watchedAssetTypes = new();
+        static bool s_watchedAssetTypesDeclared;
+
+        // El último archivo que obligó a rehacer el índice entero (sale en la sonda de tiempos).
+        static string s_lastInvalidation;
+
+        static bool IsWatchedAssetType(Type type)
+        {
+            if (!s_watchedAssetTypesDeclared) return true;
+            foreach (var t in s_watchedAssetTypes) if (t.IsAssignableFrom(type)) return true;
+            return false;
+        }
+
+        // La caché por archivo se comprueba (tamaño y fecha) una vez por sesión del editor. Después,
+        // cada archivo que cambia pasa por ChangeWatcher, así que los demás se dan por buenos sin
+        // abrirlos ni mirar su fecha: con miles de escenas y prefabs, solo mirar las fechas costaba
+        // más de un segundo cada vez. La marca y la lista de cambiados viven en SessionState para
+        // sobrevivir a la recarga de código de cada Play; al cerrar Unity se pierden y se vuelve a
+        // comprobar todo.
+        const string TrustedKey = "NarrativeProjectIndex.CacheTrusted";
+        const string ChangedKey = "NarrativeProjectIndex.ChangedSinceScan";
+        static HashSet<string> s_changed;
+
+        static HashSet<string> Changed
+        {
+            get
+            {
+                if (s_changed != null) return s_changed;
+                s_changed = new HashSet<string>(StringComparer.Ordinal);
+                var saved = SessionState.GetString(ChangedKey, string.Empty);
+                if (saved.Length > 0) s_changed.UnionWith(saved.Split('\n'));
+                return s_changed;
+            }
+        }
+
+        static bool Trusted => SessionState.GetBool(TrustedKey, false);
+
+        static void MarkChanged(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !Changed.Add(path.Replace('\\', '/'))) return;
+            if (Trusted) SessionState.SetString(ChangedKey, string.Join("\n", s_changed));
+        }
+
+        /// Un archivo que no ha cambiado desde la última comprobación completa.
+        static bool Unchanged(string path) => Trusted && !Changed.Contains(path.Replace('\\', '/'));
+
+        static void MarkScanned()
+        {
+            Changed.Clear();
+            SessionState.SetString(ChangedKey, string.Empty);
+            SessionState.SetBool(TrustedKey, true);
+        }
+
+        static HashSet<string> s_listed;
+        static bool IsListed(string path)
+        {
+            if (_yamlPaths == null) return false;
+            s_listed ??= new HashSet<string>(_yamlPaths, StringComparer.Ordinal);
+            return s_listed.Contains(path);
         }
 
         /// Archivos que lee la capa del proyecto: escenas, prefabs, código y assets de datos. Los
@@ -265,7 +339,9 @@ namespace NarrativeGraphEditor
         static void EnsureBuilt()
         {
             if (!_projectDirty && !_graphsDirty) return;
-            using var medida = Story.StoryTiming.Measure(_projectDirty ? "Índice del proyecto: rehacer todo" : "Índice del proyecto: rehacer grafos");
+            using var medida = Story.StoryTiming.Measure(_projectDirty
+                ? "Índice del proyecto: rehacer todo" + (s_lastInvalidation != null ? $" (por {s_lastInvalidation})" : string.Empty)
+                : "Índice del proyecto: rehacer grafos");
             var sw = System.Diagnostics.Stopwatch.StartNew();
             _scannedFiles = 0; _cachedFiles = 0;
             try
@@ -274,6 +350,7 @@ namespace NarrativeGraphEditor
                 using (Story.StoryTiming.Measure("grafos")) RebuildGraphs();
                 _projectDirty = false;
                 _graphsDirty = false;
+                s_lastInvalidation = null;
             }
             catch (Exception ex)
             {
@@ -293,6 +370,8 @@ namespace NarrativeGraphEditor
             _primaryLanguage = "Principal"; _secondaryLanguage = "Secundario";
 
             using (Story.StoryTiming.Measure("caché")) LoadCache();
+            s_watchedAssetTypes.Clear();
+            s_watchedAssetTypesDeclared = false;
 
             // Lo que solo el juego sabe leer: textos, misiones, actores, convenciones de sus escenas.
             var contributions = new Contributions();
@@ -312,6 +391,7 @@ namespace NarrativeGraphEditor
             // Código C#: RaiseCustom("LITERAL") / OnCustom("LITERAL").
             using (Story.StoryTiming.Measure("código")) ScanScriptsForSignals(contributions);
 
+            MarkScanned();
             SaveCacheIfChanged();
 
             _projectSignals.Clear();
@@ -345,7 +425,7 @@ namespace NarrativeGraphEditor
                 foreach (var n in g.nodes)
                 {
                     if (n == null) continue;
-                    string where = $"Grafo {g.name} › {NarrativeNodeCatalog.TitleOf(n)}{(string.IsNullOrEmpty(n.displayTitle) ? "" : " '" + n.displayTitle + "'")}";
+                    string where = $"Grafo {g.name} › {NarrativeNodeCatalog.TitleOf(n)}{(string.IsNullOrEmpty(n.DisplayTitle) ? "" : " '" + n.DisplayTitle + "'")}";
                     refs.Collect(n);
                     foreach (var sig in refs.Signals)
                     {
@@ -406,6 +486,21 @@ namespace NarrativeGraphEditor
             {
                 foreach (var e in extensions)
                     if (!string.IsNullOrEmpty(e)) s_projectExtensions.Add(e.StartsWith(".") ? e : "." + e);
+            }
+
+            /// <summary>
+            /// Tipos de ScriptableObject que lee el catálogo (sus misiones, sus secuencias…): solo los
+            /// cambios en assets de esos tipos rehacen el índice. Si ningún catálogo declara tipos,
+            /// cualquier ScriptableObject que cambie lo rehace.
+            /// </summary>
+            public void WatchAssetTypes(params Type[] types)
+            {
+                foreach (var t in types)
+                {
+                    if (t == null) continue;
+                    s_watchedAssetTypesDeclared = true;
+                    if (!s_watchedAssetTypes.Contains(t)) s_watchedAssetTypes.Add(t);
+                }
             }
 
             /// <summary>Carpetas donde buscar señales en el código. Sin ninguna, se busca en todo Assets.</summary>
@@ -558,6 +653,8 @@ namespace NarrativeGraphEditor
             catch (Exception ex)
             {
                 Debug.LogWarning($"[NarrativeProjectIndex] No se pudo guardar la caché: {ex.Message}");
+                // Sin caché al día en disco, tras la próxima recarga de código hay que comprobarlo todo.
+                SessionState.SetBool(TrustedKey, false);
             }
         }
 
@@ -575,7 +672,13 @@ namespace NarrativeGraphEditor
 
         static string[] GetFileValues(string path, Func<string[]> read)
         {
-            if (read == null || !TryGetFileStamp(path, out var size, out var mtime)) return Array.Empty<string>();
+            if (read == null) return Array.Empty<string>();
+            if (Unchanged(path) && _fileCache.TryGetValue(path, out var known))
+            {
+                _cachedFiles++;
+                return known.values ?? Array.Empty<string>();
+            }
+            if (!TryGetFileStamp(path, out var size, out var mtime)) return Array.Empty<string>();
             if (_fileCache.TryGetValue(path, out var cached) && cached.size == size && cached.mtime == mtime)
             {
                 _cachedFiles++;
@@ -639,11 +742,17 @@ namespace NarrativeGraphEditor
             }
             _assetListDirty = false;
             _cacheChanged = true;
+            s_listed = null;
             return _yamlPaths;
         }
 
         static YamlCacheEntry GetYamlEntry(string path, Contributions rules)
         {
+            if (Unchanged(path) && _yamlCache.TryGetValue(path, out var known))
+            {
+                _cachedFiles++;
+                return known;
+            }
             if (!TryGetFileStamp(path, out var size, out var mtime)) return null;
             if (_yamlCache.TryGetValue(path, out var cached) && cached.size == size && cached.mtime == mtime)
             {

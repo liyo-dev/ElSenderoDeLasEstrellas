@@ -82,20 +82,15 @@ namespace Game.NPC
             [Tooltip("Mínimo de ataques que debe conservar cuando finge (ej: 1 = guarda al menos 1 ataque)")]
             [Range(1, 3)] public int minAttacksToKeepForAmbush; // Ataques que reserva para emboscada
 
-            [Header("🏃 Retirada Táctica (huida a cobertura con poca vida)")]
-            [Tooltip("PROPUESTA (4 sep 2026): NPCTacticalRetreat.cs y estos 3 campos de NPCCombatConfig "
-                     + "ya existían completamente implementados, pero nunca se llamaban desde ningún sitio "
-                     + "del Brain — la retirada nunca se disparaba en la práctica. false = comportamiento "
-                     + "idéntico al de antes (ningún NPC existente cambia salvo que se active a propósito).")]
+            [Header("Retirada Táctica (huida a cobertura con poca vida)")]
+            [Tooltip("Activa la retirada táctica (NPCTacticalRetreat y los 3 campos de NPCCombatConfig). false = sin retirada.")]
             public bool useTacticalRetreat;
             [Range(0.1f, 0.5f)] public float retreatHealthThreshold;
             public float retreatCooldown;
 
-            [Header("👥 Coordinación de Equipo (opcional)")]
-            [Tooltip("PROPUESTA (4 sep 2026, inspirado en el patrón 'Attack Slot' de juegos de acción "
-                     + "con varios enemigos): máximo de compañeros que pueden estar atacando al MISMO "
-                     + "objetivo a la vez. 0 = sin límite (comportamiento idéntico al de antes — todos los "
-                     + "NPCs existentes que no configuren este campo no cambian). Solo tiene efecto real "
+            [Header("Coordinación de Equipo (opcional)")]
+            [Tooltip("Máximo de compañeros que pueden estar atacando al MISMO "
+                     + "objetivo a la vez. 0 = sin límite (sin tope). Solo tiene efecto real "
                      + "cuando varios NPCs comparten objetivo (p.ej. Lety+Vicky vs. el jugador): con un "
                      + "valor de 1, no atacan a la vez — el que no consigue turno flanquea en vez de "
                      + "sumarse al aluvión o quedarse plantado.")]
@@ -123,13 +118,13 @@ namespace Game.NPC
         Transform _player;
         Transform _combatTarget; // Objetivo actual de ataque (jugador o miembro del equipo)
         NPCShieldController _shieldController;
-        // FIX #15: antes se llamaba GetComponent<LevitationTarget>()
-        // cada vez que corría la corrutina State_Attack. Se cachea en Initialize() como el resto de deps.
+        // Antes se llamaba GetComponent<LevitationTarget>() cada vez que corría la corrutina
+        // State_Attack. Se cachea en Initialize() como el resto de deps.
         LevitationTarget _levitationTarget;
-        // PROPUESTA (4 sep 2026 — "hit-stagger"): ver OnDamageTakenDuringAttack() más abajo.
+        // Ver OnDamageTakenDuringAttack() más abajo.
         Damageable _damageable;
         private bool _hitDuringAttackWindup;
-        // PROPUESTA (4 sep 2026 — retirada táctica): ver State_TacticalRetreat() más abajo.
+        // Ver State_TacticalRetreat() más abajo.
         NPCTacticalRetreat _tacticalRetreat;
         // ver DoDodge() más abajo.
         Modules.NPCCombatLifecycleHandler _lifecycleHandler;
@@ -158,10 +153,9 @@ namespace Game.NPC
         private bool _isUsingDeceptionStrategy; // ¿Está fingiendo quedarse sin magia?
         private int _attacksReservedForAmbush; // Número de ataques que guarda para emboscada
 
-        // PROPUESTA (4 sep 2026 — generalización del anti-kiting de Golem/Demonio, ver incidencia
-        // del mismo día): mientras se acerca sin alcanzar maxDistance, si el jugador se mantiene
-        // fuera de rango mucho tiempo (kiteando a walkSpeed, la misma vulnerabilidad que tenían los
-        // jefes), escala a runSpeed para cerrar distancia en vez de perseguir despacio para siempre.
+        // Mientras se acerca sin alcanzar maxDistance, si el jugador se mantiene fuera de rango
+        // mucho tiempo (kiteando a walkSpeed, la misma vulnerabilidad que tenían los jefes), escala
+        // a runSpeed para cerrar distancia en vez de perseguir despacio para siempre.
         private float _approachKitingSinceTime = -1f;
         [SerializeField] private float approachKitingSpeedUpDelay = 3f;
         
@@ -185,17 +179,13 @@ namespace Game.NPC
         private Collider[] _coverBuffer = new Collider[32];
         private Collider[] _obstacleBuffer = new Collider[32];
         private RaycastHit[] _raycastBuffer = new RaycastHit[32];
-        // FIX #11: buffer para HasClearSpace (antes Physics.OverlapCapsule
-        // alocaba un array nuevo en cada llamada; se usa OverlapCapsuleNonAlloc con este buffer reutilizable).
+        // Buffer para HasClearSpace.
         private Collider[] _clearSpaceBuffer = new Collider[16];
         
         // OPTIMIZACIÓN: NavMeshPath reutilizable (evita allocations en MoveTo)
         private NavMeshPath _reusablePath;
 
-        // FIX #20: LayerMask.GetMask cacheado (antes se
-        // recalculaba en cada llamada a HasIncomingProjectileThreat, incluida desde Update
-        // indirectamente vía IsPlayerAttacking).
-        // CORRECCIÓN 16 ago 2026: NO puede ser "static readonly" en un MonoBehaviour — el
+        // LayerMask.GetMask cacheado. NO puede ser "static readonly" en un MonoBehaviour — el
         // inicializador de un campo static se ejecuta en el constructor estático del tipo (.cctor),
         // y Unity prohíbe llamar a LayerMask.NameToLayer ahí ("not allowed to be called from a
         // MonoBehaviour constructor or instance field initializer"). Si el .cctor lanza una
@@ -223,8 +213,8 @@ namespace Game.NPC
             _levitationTarget = GetComponent<LevitationTarget>();
             _projectileThreatMask = LayerMask.GetMask("PlayerProjectile", "Projectile", "ProjectilePlayer", "MagicProjectile");
 
-            // PROPUESTA (4 sep 2026 — "hit-stagger"): desuscribir antes por si Initialize() se
-            // llamara más de una vez sobre el mismo NPC (evita duplicar la suscripción).
+            // Desuscribir antes por si Initialize() se llamara más de una vez sobre el mismo
+            // NPC (evita duplicar la suscripción).
             if (_damageable != null) _damageable.OnDamaged -= OnDamageTakenDuringAttack;
             _damageable = GetComponent<Damageable>();
             if (_damageable != null) _damageable.OnDamaged += OnDamageTakenDuringAttack;
@@ -247,12 +237,12 @@ namespace Game.NPC
 
             if (_fsmRoutine != null) StopCoroutine(_fsmRoutine);
 
-            // FIX #4: esta instancia persiste entre
-            // StopCombat()/BeginCombat() (el NPC no se destruye), así que sin este reset,
-            // reenganchar combate retomaba _currentState donde se había quedado (p.ej.
-            // HIDING_TO_RECHARGE) en vez de EVALUATE, saltándose toda la evaluación inicial
-            // (línea de visión, distancia de peligro, amenazas entrantes, línea de fuego), y una
-            // estrategia de engaño a medio completar podía arrastrarse a un combate nuevo.
+            // Esta instancia persiste entre StopCombat()/BeginCombat() (el NPC no se destruye),
+            // así que sin este reset, reenganchar combate retomaba _currentState donde se había
+            // quedado (p.ej. HIDING_TO_RECHARGE) en vez de EVALUATE, saltándose toda la
+            // evaluación inicial (línea de visión, distancia de peligro, amenazas entrantes,
+            // línea de fuego), y una estrategia de engaño a medio completar podía arrastrarse a
+            // un combate nuevo.
             _currentState = CombatState.EVALUATE;
             _previousState = CombatState.EVALUATE;
             _isUsingDeceptionStrategy = false;
@@ -289,24 +279,23 @@ namespace Game.NPC
             if (_agent.enabled && _agent.isOnNavMesh) _agent.isStopped = true;
             _animator.SetBattleMode(false);
 
-            // FIX #12: si el combate termina (por distancia o
-            // por derrota) mientras el NPC está defendiendo, el escudo no se destruía ni
-            // reseteaba hasta que expirase su propio timer interno — podía quedar flotando y
-            // bloqueando proyectiles varios segundos después de que el NPC ya no estuviera en
-            // combate (o incluso sobre su cadáver).
+            // Si el combate termina (por distancia o por derrota) mientras el NPC está
+            // defendiendo, el escudo no se destruía ni reseteaba hasta que expirase su propio
+            // timer interno — podía quedar flotando y bloqueando proyectiles varios segundos
+            // después de que el NPC ya no estuviera en combate (o incluso sobre su cadáver).
             _shieldController?.StopDefending();
         }
 
         /// <summary>
-        /// FIX #19: detiene y reinicia limpiamente la FSM de
-        /// combate. Reemplaza el uso externo de StopAllCoroutines() desde
-        /// NPCCombatLifecycleHandler.OnDamaged al interrumpir un hechizo en curso. Ese método
-        /// paraba _fsmRoutine pero NUNCA lo volvía a arrancar (los únicos 3 sitios que reinician
-        /// FSM_Loop son BeginCombat y las dos ramas de OnTakeDamage para
-        /// SEARCHING/HIDING_TO_RECHARGE/REPOSITION — ATTACK, que es el único estado real en que
-        /// _isCasting es true, no está en esa lista) — un NPC golpeado mientras casteaba se
-        /// quedaba con la IA de combate parada para siempre. Este método para Y reinicia en
-        /// EVALUATE, igual que ya hace OnTakeDamage para los otros estados vulnerables.
+        /// Detiene y reinicia limpiamente la FSM de combate. Reemplaza el uso externo de
+        /// StopAllCoroutines() desde NPCCombatLifecycleHandler.OnDamaged al interrumpir un
+        /// hechizo en curso. Ese método paraba _fsmRoutine pero NUNCA lo volvía a arrancar (los
+        /// únicos 3 sitios que reinician FSM_Loop son BeginCombat y las dos ramas de
+        /// OnTakeDamage para SEARCHING/HIDING_TO_RECHARGE/REPOSITION — ATTACK, que es el único
+        /// estado real en que _isCasting es true, no está en esa lista) — un NPC golpeado
+        /// mientras casteaba se quedaba con la IA de combate parada para siempre. Este método
+        /// para Y reinicia en EVALUATE, igual que ya hace OnTakeDamage para los otros estados
+        /// vulnerables.
         /// </summary>
         public void InterruptCasting()
         {
@@ -365,7 +354,7 @@ namespace Game.NPC
                 lowManaRetreatThreshold = cc.lowManaRetreatThreshold,
                 
                 // Tácticas & Defensa
-                difficultyLevel = cc.difficultyLevel, // FIX #13: configurable por NPC (antes hardcodeado a 0.7f para todos)
+                difficultyLevel = cc.difficultyLevel, // Configurable por NPC
                 useShield = cc.useShield,
                 shieldDuration = cc.shieldMaxDuration,
                 shieldCooldown = cc.shieldCooldown,
@@ -373,10 +362,10 @@ namespace Game.NPC
                 coverSearchRadius = cc.coverSearchRadius,
                 dodgeDistance = 3f,
 
-                // FIX #5: completar el mapeo de la estrategia de engaño/emboscada — antes
-                // estos dos campos ni existían en el struct-initializer, así que quedaban en
-                // 0f/0 por defecto y la mecánica de fingir quedarse sin maná para emboscar
-                // (~150 líneas ya implementadas en NPCCombatBrain) nunca se activaba.
+                // Completar el mapeo de la estrategia de engaño/emboscada — antes estos dos
+                // campos ni existían en el struct-initializer, así que quedaban en 0f/0 por
+                // defecto y la mecánica de fingir quedarse sin maná para emboscar (~150
+                // líneas ya implementadas en NPCCombatBrain) nunca se activaba.
                 deceptionChance = cc.deceptionChance,
                 minAttacksToKeepForAmbush = cc.minAttacksToKeepForAmbush,
                 
@@ -735,14 +724,14 @@ namespace Game.NPC
             // Si no hay línea de fuego clara, moverse a mejor posición
             if (!HasClearLineOfFire())
             {
-                // FIX #18: esta es la transición con más riesgo
-                // real de "nerviosismo" (un NPC justo al filo de tener línea de fuego puede
-                // entrar/salir de REPOSITION en frames consecutivos por pequeños movimientos del
-                // player o de un obstáculo). Se conecta aquí TryChangeState (antes código muerto,
-                // nadie lo llamaba) para aplicar el mínimo de 1.5s entre cambios documentado en su
-                // comentario original. El resto de transiciones de State_Evaluate (huir por
-                // distancia de peligro, buscar, atacar, recargar) se dejan inmediatas a propósito
-                // — son decisiones urgentes/decisivas, no casos de parpadeo cosmético.
+                // Esta es la transición con más riesgo real de "nerviosismo" (un NPC justo al filo
+                // de tener línea de fuego puede entrar/salir de REPOSITION en frames consecutivos
+                // por pequeños movimientos del player o de un obstáculo). Se conecta aquí
+                // TryChangeState (antes código muerto, nadie lo llamaba) para aplicar el mínimo de
+                // 1.5s entre cambios documentado en su comentario original. El resto de
+                // transiciones de State_Evaluate (huir por distancia de peligro, buscar, atacar,
+                // recargar) se dejan inmediatas a propósito — son decisiones urgentes/decisivas,
+                // no casos de parpadeo cosmético.
                 if (TryChangeState(CombatState.REPOSITION))
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -931,11 +920,11 @@ namespace Game.NPC
             };
         }
         
-        // FIX #22: epsilon único compartido — antes
-        // HasManaForSlot toleraba 0.001f de déficit pero TrySpendManaForSlot exigía el coste
-        // exacto, así que con maná entre manaCost-0.001f y manaCost (sin llegar) la FSM decidía
-        // atacar (HasManaForSlot aprobaba) pero el gasto real fallaba (TrySpendManaForSlot
-        // rechazaba), cancelando un ataque ya comprometido/animado.
+        // Epsilon único compartido — antes HasManaForSlot toleraba 0.001f de déficit pero
+        // TrySpendManaForSlot exigía el coste exacto, así que con maná entre manaCost-0.001f y
+        // manaCost (sin llegar) la FSM decidía atacar (HasManaForSlot aprobaba) pero el gasto
+        // real fallaba (TrySpendManaForSlot rechazaba), cancelando un ataque ya
+        // comprometido/animado.
         private const float MANA_EPSILON = 0.001f;
 
         private bool HasManaForSlot(int slotIndex)
@@ -1150,8 +1139,6 @@ namespace Game.NPC
             // Verificar que la posición está en NavMesh
             if (NavMesh.SamplePosition(targetPos, out NavMeshHit navHit, 3f, NavMesh.AllAreas))
             {
-                // Verificar que hay un camino válido
-                // FIX #14: reutiliza _reusablePath en vez de allocar
                 if (_agent.enabled && _agent.isOnNavMesh && _agent.CalculatePath(navHit.position, _reusablePath) && _reusablePath.status == NavMeshPathStatus.PathComplete)
                 {
                     return navHit.position;
@@ -1171,7 +1158,7 @@ namespace Game.NPC
             {
                 if (NavMesh.SamplePosition(altPos, out navHit, 2f, NavMesh.AllAreas))
                 {
-                    // FIX #14: reutiliza _reusablePath en vez de allocar
+                    // Reutiliza _reusablePath en vez de allocar
                     if (_agent.enabled && _agent.isOnNavMesh && _agent.CalculatePath(navHit.position, _reusablePath) && _reusablePath.status == NavMeshPathStatus.PathComplete)
                     {
                         return navHit.position;
@@ -1217,8 +1204,6 @@ namespace Game.NPC
                     
                     Vector3 candidatePos = navHit.position;
                     
-                    // Verificar camino válido
-                    // FIX #14: reutiliza _reusablePath en vez de allocar
                     if (!_agent.enabled || !_agent.isOnNavMesh || !_agent.CalculatePath(candidatePos, _reusablePath) || _reusablePath.status != NavMeshPathStatus.PathComplete)
                         continue;
                     
@@ -1377,10 +1362,6 @@ namespace Game.NPC
                 
                 SetCooldownForSlot(chosenAttack.slotIndex, chosenAttack.cooldown);
                 
-                // Ejecutar Animación
-                // FIX INC-021: si el peso de la capa upperBodyLayer está a 0 (valor por defecto de
-                // Mecanim para capas adicionales), Play() selecciona el estado pero no se ve nada —
-                // el NPC "dispara sin animación" porque la capa no aporta nada a la pose final.
                 _rawAnimator.SetLayerWeight(settings.upperBodyLayer, 1f);
                 _rawAnimator.Play(chosenAttack.animationState, settings.upperBodyLayer);
                 
@@ -1454,11 +1435,11 @@ namespace Game.NPC
             _currentState = CombatState.EVALUATE;
         }
 
-        // PROPUESTA (4 sep 2026 — "hit-stagger"): los jefes (Golem/Demonio) YA descartan a propósito
-        // el hit-react mientras atacan (su OnDamageTaken hace "if (isAttacking) return;") — diseño
-        // deliberado, no tocado. Los NPCs humanoides de esta FSM no tenían NINGÚN sistema de
-        // reacción al daño; este handler solo marca la bandera que consume el windup en
-        // State_Attack de más arriba, no interrumpe nada fuera de esa ventana.
+        // Los jefes (Golem/Demonio) YA descartan a propósito el hit-react mientras atacan (su
+        // OnDamageTaken hace "if (isAttacking) return;") — diseño deliberado, no tocado. Los NPCs
+        // humanoides de esta FSM no tenían NINGÚN sistema de reacción al daño; este handler solo
+        // marca la bandera que consume el windup en State_Attack de más arriba, no interrumpe nada
+        // fuera de esa ventana.
         private void OnDamageTakenDuringAttack(float amount)
         {
             if (_currentState == CombatState.ATTACK)
@@ -1500,14 +1481,10 @@ namespace Game.NPC
                 _shieldController.StartDefending(settings.shieldDuration);
                 _shieldCd = settings.shieldCooldown + settings.shieldDuration;
                 
-                // FIX (petición Raúl, 4 sep 2026 — "a veces se quedan con el escudo puesto y
-                // andando lento sin sentido"): antes, mientras defendía, se recalculaba cada 0.35s
-                // un desplazamiento lateral aleatorio (o de retirada) a walkSpeed*0.55/0.65 — se lee
-                // como un arrastrarse sin propósito, más aún porque la dirección de strafe solo
-                // cambiaba un 20% de las veces y el escudo dura hasta 5s. Ahora solo se mueve
-                // cuando hay un motivo real (el jugador demasiado cerca): retrocede con paso
-                // decidido a velocidad normal; a distancia segura planta el escudo quieto, como un
-                // bloqueo real y legible, en vez de deambular sin razón aparente.
+                // Ahora solo se mueve cuando hay un motivo real (el jugador demasiado cerca):
+                // retrocede con paso decidido a velocidad normal; a distancia segura planta el
+                // escudo quieto, como un bloqueo real y legible, en vez de deambular sin razón
+                // aparente.
                 float defendTime = settings.shieldDuration;
                 float elapsed = 0f;
                 float repathTimer = 0f;
@@ -2091,11 +2068,11 @@ namespace Game.NPC
                 var hit = _coverBuffer[i];
                 if (hit.isTrigger) continue;
 
-                // FIX #6: descartar personajes como
-                // "cobertura" — viven en la capa Default igual que la geometría (CLAUDE.md §2).
-                // Sin este filtro, el NPC podía elegir al jugador, a un aliado o a otro enemigo
-                // como punto de referencia para esconderse; como los personajes se mueven, la
-                // posición calculada dejaba de cubrir nada en el frame siguiente.
+                // Descartar personajes como "cobertura" — viven en la capa Default igual que la
+                // geometría (CLAUDE.md §2). Sin este filtro, el NPC podía elegir al jugador, a
+                // un aliado o a otro enemigo como punto de referencia para esconderse; como los
+                // personajes se mueven, la posición calculada dejaba de cubrir nada en el frame
+                // siguiente.
                 if (hit.transform.root.GetComponent<NPCSimpleAnimator>() != null) continue;
 
                 // Calcular punto opuesto al player detrás del objeto
@@ -2119,11 +2096,6 @@ namespace Game.NPC
                         continue;
                     }
                     
-                    // Verificar camino accesible
-                    // FIX #14: reusar _reusablePath en vez de
-                    // alocar un NavMeshPath nuevo por cada combinación de obstáculo×distancia
-                    // evaluada en este bucle (la clase ya declara _reusablePath explícitamente
-                    // para evitar esta allocation, pero este sitio no lo usaba).
                     if (!_agent.enabled || !_agent.isOnNavMesh || !_agent.CalculatePath(navHit.position, _reusablePath) || _reusablePath.status != NavMeshPathStatus.PathComplete)
                     {
                         continue;
@@ -2501,8 +2473,8 @@ namespace Game.NPC
             
             StopMove();
             
-            // CORRECCIÓN: Solo mostrar interrogación si NO estábamos en combate reciente
-            // Si el NPC simplemente se giró y perdió visión momentáneamente, NO mostrar interrogación
+            // Solo mostrar interrogación si NO estábamos en combate reciente Si el NPC simplemente se
+            // giró y perdió visión momentáneamente, NO mostrar interrogación
             bool showQuestionMark = !_wasInRecentCombat;
             
             if (showQuestionMark)
@@ -2607,10 +2579,6 @@ namespace Game.NPC
                         #endif
                         MoveTo(navHit.position, settings.walkSpeed);
                         
-                        // DURANTE EL MOVIMIENTO: Verificar constantemente
-                        // FIX (4 sep 2026, mismo patrón que NPCCombatTeam.Co_ApproachFormation y
-                        // NPCTacticalRetreat): el umbral de 1m no miraba el stoppingDistance real
-                        // del agente — si era mayor, el bucle siempre agotaba el moveTimeout.
                         float moveTimeout = 5f;
                         float moveTimer = 0f;
                         float searchArriveThreshold = Mathf.Max(1f, _agent.stoppingDistance + 0.1f);
@@ -2660,8 +2628,6 @@ namespace Game.NPC
                         
                         StopMove();
                         
-                        // AL DETENERSE: Mostrar interrogación de nuevo y animación
-                        // CORRECCIÓN: Solo si NO es combate reciente
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[CombatBrain:{gameObject.name}] Parada de búsqueda #{searchAttempts} - No encontrado");
                         #endif
@@ -2743,12 +2709,6 @@ namespace Game.NPC
                 #endif
                 MoveTo(_combatStartPosition, settings.walkSpeed);
                 
-                // Esperar a llegar al origen
-                // FIX (4 sep 2026, mismo patrón que NPCCombatTeam.Co_ApproachFormation y
-                // NPCTacticalRetreat): el umbral fijo de 1.5m no miraba el stoppingDistance real
-                // del agente, y este bucle no tenía NINGÚN margen de seguridad de tiempo — si el
-                // stoppingDistance heredado era >= 1.5m, el NPC se quedaba parado "volviendo al
-                // origen" para siempre sin completar nunca el regreso.
                 float returnArriveThreshold = Mathf.Max(1.5f, _agent.stoppingDistance + 0.1f);
                 float returnTimer = 0f;
                 const float RETURN_TO_ORIGIN_MAX_TIME = 8f;
@@ -2882,11 +2842,11 @@ namespace Game.NPC
                 // Ignorar triggers
                 if (obstacle.isTrigger) continue;
 
-                // FIX #6: descartar personajes como
-                // "cobertura" — viven en la capa Default igual que la geometría (CLAUDE.md §2).
-                // Sin este filtro, el NPC podía elegir al jugador, a un aliado o a otro enemigo
-                // como punto de referencia para esconderse; como los personajes se mueven, la
-                // posición calculada dejaba de cubrir nada en el frame siguiente.
+                // Descartar personajes como "cobertura" — viven en la capa Default igual que la
+                // geometría (CLAUDE.md §2). Sin este filtro, el NPC podía elegir al jugador, a
+                // un aliado o a otro enemigo como punto de referencia para esconderse; como los
+                // personajes se mueven, la posición calculada dejaba de cubrir nada en el frame
+                // siguiente.
                 if (obstacle.transform.root.GetComponent<NPCSimpleAnimator>() != null) continue;
 
                 // Ignorar obstáculos muy grandes (probablemente son terreno o estructuras completas)
@@ -2930,8 +2890,7 @@ namespace Game.NPC
                         continue;
                     }
                     
-                    // 3. Verificar que el camino desde la posición actual hasta la cobertura es válido
-                    // FIX #14: reutiliza _reusablePath en vez de allocar
+                    // 3.
                     if (!_agent.enabled || !_agent.isOnNavMesh || !_agent.CalculatePath(coverPos, _reusablePath) || _reusablePath.status != NavMeshPathStatus.PathComplete)
                     {
                         #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -3018,9 +2977,6 @@ namespace Game.NPC
             Vector3 bottom = position + Vector3.up * radius;
             Vector3 top = position + Vector3.up * (height - radius);
             
-            // Si hay colisión, no hay espacio libre
-            // FIX #11: NonAlloc con buffer reutilizable en vez de
-            // Physics.OverlapCapsule (que aloca un array nuevo cada llamada).
             int clearSpaceCount = Physics.OverlapCapsuleNonAlloc(bottom, top, radius * 0.9f, _clearSpaceBuffer, obstacleMask);
 
             if (clearSpaceCount > 0)

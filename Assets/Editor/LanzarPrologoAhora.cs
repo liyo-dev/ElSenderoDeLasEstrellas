@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Lanza el prólogo a mano, sin pasar por el arranque del juego (INC-393).
 ///

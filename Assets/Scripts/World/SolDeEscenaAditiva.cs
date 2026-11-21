@@ -5,9 +5,8 @@ using UnityEngine;
 /// ── El bug que evita ──────────────────────────────────────────────────────────────────────────
 /// Una escena aditiva que trae su propia luz direccional NO sustituye al sol del mundo: se SUMA a
 /// él. El resultado son dos soles a la vez, con sombras cruzadas y todo lavado, y cuesta verlo
-/// porque cada escena por separado se ve bien. Le pasó a Prologo_Valle: traía un
-/// 'Luz_Sol_Manana' que se sumaba al sol que maneja DayNightCycle. Es el mismo error que la cámara
-/// duplicada del 17 sep (una MainCamera propia en una escena aditiva), con otra ropa.
+/// porque cada escena por separado se ve bien. Le pasó a Prologo_Valle: traía un 'Luz_Sol_Manana'
+/// que se sumaba al sol que maneja DayNightCycle.
 ///
 /// Pero quitar la luz a secas deja la escena imposible de editar: abierta sola en el Editor, sin
 /// MainWorld, no se ve nada. Así que la luz se queda, y se apaga sola al arrancar si hay otro sol.

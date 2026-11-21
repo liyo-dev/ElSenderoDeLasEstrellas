@@ -4238,6 +4238,7 @@ GameObject:
   - component: {fileID: 4885364171848783601}
   - component: {fileID: 8462475757833360656}
   - component: {fileID: 4253720663923726822}
+  - component: {fileID: 5850636652041024176}
   m_Layer: 7
   m_Name: ImpLadron
   m_TagString: Untagged
@@ -4348,6 +4349,7 @@ MonoBehaviour:
   animacionDeMuerte: Die
   segundosHastaDesaparecer: 2.5
   vfxAlDesaparecer: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
+  puntosDeSintonia: 20
   alturaDeVuelo: 2.2
   alturaDelTiron: 1.1
   velocidad: 4.5
@@ -4393,6 +4395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 6
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &8462475757833360656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4407,6 +4410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &4253720663923726822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4427,6 +4431,21 @@ MonoBehaviour:
   soloConLaMision: 
   radioDeProximidad: 0
   debugLogs: 0
+--- !u!114 &5850636652041024176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7873758047551725490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_IMP
+  debilidades: 02000000i
+  resistencias: 
 --- !u!1 &7925330681016888401
 GameObject:
   m_ObjectHideFlags: 0

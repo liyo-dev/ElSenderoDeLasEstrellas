@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Conecta los sistemas de El Sendero con el grafo narrativo: registra en

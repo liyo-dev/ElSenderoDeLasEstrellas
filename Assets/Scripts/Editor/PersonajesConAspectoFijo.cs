@@ -133,6 +133,22 @@ public static class PersonajesConAspectoFijo
             Piezas = new[] { "Head02_Female", "Hair08", "Body04", "Eye07", "Mouth03" },
             Lineas = new[] { "DLG_LUCIA_01" }, Pasea = false, BuscaRefugio = false, EsNino = true,
         };
+        yield return new Personaje
+        {
+            // Pez: un adulto que se cree medio pez, habla con los peces y nada mejor que nadie. Pelo
+            // revuelto de salitre y ropa de faena. Enseña a nadar a Will en el Cap. 3.
+            Nombre = "Pez", Ruta = Aldea + "Pez.prefab", IdPersonaje = "CHAR_PEZ", IdPersistencia = "NPC_Pez",
+            Piezas = new[] { "Head01_Male", "Hair05", "Body16", "Eye01", "Mouth02" },
+            Lineas = new[] { "DLG_PEZ_01" }, Pasea = false, BuscaRefugio = false,
+        };
+        yield return new Personaje
+        {
+            // Candela, la pescadora del farol: vive en la casa apartada (solo se llega nadando) y cada noche
+            // enciende un farol en la ventana por si vuelve la barca de su marido. Pelo cano y ropa de faena.
+            Nombre = "Candela", Ruta = Aldea + "Candela.prefab", IdPersonaje = "CHAR_CANDELA", IdPersistencia = "NPC_Candela", Voz = "Vecina",
+            Piezas = new[] { "Head02_Female", "Hair13", "Body17", "Eye07", "Mouth03" },
+            Lineas = new[] { "DLG_CANDELA_01" }, Pasea = false, BuscaRefugio = false,
+        };
 
         // ── El pueblo del prólogo: la vida de fondo de la mañana (guion Prologo_UltimaNoche). No hablan;
         // los mueve el guion. Su sitio de salida lo pone *Prólogo: vestir el pueblo*. El niño que va de la

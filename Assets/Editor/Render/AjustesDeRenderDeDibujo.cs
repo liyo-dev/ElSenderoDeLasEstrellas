@@ -60,8 +60,10 @@ public static class AjustesDeRenderDeDibujo
         Debug.Log("[Render] " + sb);
     }
 
-    /// Flores y hierba del terreno (detalles) a 400 m eran miles de puntitos lejanos que centelleaban y costaban
-    /// mucho; con el dibujo, de lejos se lee mejor el color del suelo. Y el terreno se teselaba a 0,5 px de error.
+    /// Flores y hierba del terreno (detalles) hasta 90 m: más lejos eran miles de puntitos que centelleaban y
+    /// costaban mucho; con el dibujo, de lejos se lee mejor el color del suelo. El error de altura del terreno
+    /// se queda en 1 px: con más, el terreno cambia de forma al moverse la cámara y asoma por encima de lo que
+    /// va pegado al suelo (plazas, rosas de los vientos, tarimas), que parpadea. Ver INC-1326.
     [MenuItem("El Sendero/Aspecto de dibujo/Render: terreno (distancia de flores y detalle) (escenas abiertas)")]
     static void TerrenoEnLasAbiertas() => Terreno(false);
 
@@ -69,7 +71,7 @@ public static class AjustesDeRenderDeDibujo
     static void TerrenoEnLasJugables() => Terreno(true);
 
     const float DistanciaDeFlores = 90f;
-    const float ErrorDelTerreno = 3f;
+    const float ErrorDelTerreno = 1f;
 
     static void Terreno(bool todasLasJugables)
     {
@@ -121,7 +123,7 @@ public static class AjustesDeRenderDeDibujo
         foreach (var m in materiales)
         {
             if (m.shader.name != "El Sendero/Dibujo" || !AssetDatabase.Contains(m)) continue;
-            m.SetFloat("_BordeDeLuz", 0.45f);
+            m.SetFloat("_BordeDeLuz", 0f); // Raúl (19 nov): sin borde de luz (contorno C)
             EditorUtility.SetDirty(m);
             n++;
         }

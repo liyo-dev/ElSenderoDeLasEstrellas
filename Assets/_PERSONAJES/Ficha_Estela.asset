@@ -26,16 +26,17 @@ MonoBehaviour:
     magic: 1
     fly: 0
     sprint: 1
-    shield: 0
+    shield: 1
   hechizoIzquierdo: {fileID: 11400000, guid: 60af2fbe1683a7648bad32993e434d75, type: 2}
   hechizoDerecho: {fileID: 11400000, guid: f4fc5e380ac486947b74e825bf2f0835, type: 2}
   hechizoEspecial: {fileID: 0}
   basicos:
   - {fileID: 11400000, guid: 60af2fbe1683a7648bad32993e434d75, type: 2}
-  - {fileID: 11400000, guid: f4fc5e380ac486947b74e825bf2f0835, type: 2}
-  - {fileID: 11400000, guid: 361c80dd87ae5614cb8a89853338e0bc, type: 2}
   - {fileID: 11400000, guid: 158f946d6cae7af4383cd10326a6b7b6, type: 2}
+  - {fileID: 11400000, guid: 361c80dd87ae5614cb8a89853338e0bc, type: 2}
+  - {fileID: 11400000, guid: f4fc5e380ac486947b74e825bf2f0835, type: 2}
   combos:
+  - {fileID: 11400000, guid: e626ff05b80d32845bb0c200144c77ba, type: 2}
   - {fileID: 11400000, guid: dcbaab312ac31074eaa98a9a63a656db, type: 2}
-  - {fileID: 11400000, guid: 75bb7e1656c7edf42b8845d2c03022ad, type: 2}
   - {fileID: 11400000, guid: 75007e62f7e89cd468a52b3beac87d79, type: 2}
+  - {fileID: 11400000, guid: 75bb7e1656c7edf42b8845d2c03022ad, type: 2}

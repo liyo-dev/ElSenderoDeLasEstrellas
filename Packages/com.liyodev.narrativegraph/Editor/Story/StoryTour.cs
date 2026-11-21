@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Recorrido guiado por el editor: una burbuja por zona, con la zona resaltada. Sale solo la
     /// primera vez que se abre el editor y se puede repetir desde Ajustes.

@@ -79,30 +79,6 @@ public static class PortadaDelJuego
         return go;
     }
 
-    /// Contorno de tinta más marcado para las fotos: a tamaño de portada, las manos y los brazos que
-    /// se cruzan por delante del cuerpo necesitan línea para leerse. Va en un Volume global temporal
-    /// con prioridad alta, que se borra al acabar; el look del juego no cambia.
-    private static GameObject ContornoDeFoto(Scene escena)
-    {
-        if (!escena.IsValid()) return null;
-        var go = new GameObject("Contorno de la foto (temporal)") { hideFlags = HideFlags.DontSave };
-        SceneManager.MoveGameObjectToScene(go, escena);
-        var vol = go.AddComponent<Volume>();
-        vol.isGlobal = true;
-        vol.priority = 1000f;
-        var perfil = ScriptableObject.CreateInstance<VolumeProfile>();
-        perfil.hideFlags = HideFlags.DontSave;
-        var c = perfil.Add<ContornoDeTinta>(true);
-        c.intensidad.Override(1f);
-        c.grosor.Override(2f);
-        c.umbralDeSilueta.Override(0.015f);
-        c.umbralDePliegue.Override(0.3f);
-        c.pesoDePliegues.Override(0.8f);
-        c.tinta.Override(new Color(0.22f, 0.2f, 0.3f, 1f));
-        vol.sharedProfile = perfil;
-        return go;
-    }
-
     private static void Hacer(bool rapido, string guion = Guion)
     {
         if (Application.isPlaying) return;
@@ -112,7 +88,7 @@ public static class PortadaDelJuego
         var escena = CapturaDeEscenario.AbrirEscena(Escena);
         var activa = SceneManager.GetActiveScene();
         var apagados = new List<GameObject>();
-        GameObject estrella = null, contorno = null;
+        GameObject estrella = null;
         try
         {
             if (escena.IsValid() && escena.isLoaded)
@@ -132,14 +108,12 @@ public static class PortadaDelJuego
                         { t.gameObject.SetActive(false); apagados.Add(t.gameObject); }
             }
             estrella = PonerEstrella(escena);
-            contorno = ContornoDeFoto(escena);
             HorneadorDeGuion.Hornear(guion, storyboard: true);
         }
         finally
         {
             Horno.TamanoDelStoryboard = antes; Horno.CarasDelStoryboard.Clear(); Horno.PiezasDeCaraDelStoryboard.Clear(); Horno.ApuntesDelStoryboard.Clear();
             if (estrella != null) Object.DestroyImmediate(estrella);
-            if (contorno != null) { var v = contorno.GetComponent<Volume>(); if (v != null && v.sharedProfile != null) Object.DestroyImmediate(v.sharedProfile); Object.DestroyImmediate(contorno); }
             foreach (var r in apagados) if (r != null) r.SetActive(true);
             if (activa.IsValid() && activa.isLoaded) SceneManager.SetActiveScene(activa);
         }

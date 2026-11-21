@@ -9,6 +9,7 @@ using Sendero.Narrative.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Prueba de los capítulos de la historia sin mando: se usa desde el buzón de órdenes del Editor
@@ -175,7 +176,6 @@ public static class PruebaDeLaHistoria
             case "unir":
             {
                 if (!ControlDelJugador.SlotDeNombre(p[1], out var slot)) return "no es del grupo";
-                // Antes de unir: el estado del compañero que se busca (por qué puede fallar).
                 string nombre = ControlDelJugador.Nombre(slot);
                 var diag = new StringBuilder();
                 foreach (var m in UnityEngine.Object.FindObjectsByType<NPCPartyMember>(FindObjectsInactive.Include))
@@ -325,8 +325,8 @@ public static class PruebaDeLaHistoria
                 foreach (var r in hub.GetAllRunners())
                 {
                     if (r == null || r.graph == null) continue;
-                    var ramas = (campo?.GetValue(r) as HashSet<NarrativeNode>)?.Select(n => n.displayTitle) ?? Enumerable.Empty<string>();
-                    sb.AppendLine($"- {r.graph.name}: {(r.CurrentNode != null ? r.CurrentNode.displayTitle : "(nada)")}" +
+                    var ramas = (campo?.GetValue(r) as HashSet<NarrativeNode>)?.Select(n => n.DisplayTitle) ?? Enumerable.Empty<string>();
+                    sb.AppendLine($"- {r.graph.name}: {(r.CurrentNode != null ? r.CurrentNode.DisplayTitle : "(nada)")}" +
                                   (ramas.Any() ? " · ramas: " + string.Join(" | ", ramas) : ""));
                 }
             var j = PlayerService.Player;

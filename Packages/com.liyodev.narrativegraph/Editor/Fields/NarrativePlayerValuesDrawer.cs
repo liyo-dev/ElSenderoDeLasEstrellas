@@ -1,9 +1,9 @@
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Lo que guarda un punto de arranque: dónde aparece el jugador (el campo de posición de la
     /// ficha). El resto del jugador sale de la historia; para probar con otro, un jugador de prueba.

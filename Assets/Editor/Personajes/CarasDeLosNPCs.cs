@@ -82,6 +82,9 @@ public static class CarasDeLosNPCs
                     Extras = new[] { ("Blanco", LuzDeSombra), ("Iris", LuzDeSombra), ("IrisOscuro", LuzDeSombra), ("Negro", LuzDeSombra),
                                      ("BocaSombra", Sombra), ("LenguaSombra", Sombra) },
                     Brillan = new[] { ("Blanco", 5f), ("Iris", 5f), ("IrisOscuro", 5f), ("Negro", 5f) } },
+        // Los jóvenes del recuerdo de «La mañana después» (INC-1338): los ojos del kit, sin marcas de la edad, con cejas del color de su pelo
+        new Juego { Clave = "eldran_joven", Fbx = $"{CarpetaKit}/Caras_NPC_h_almendra_ambar.fbx", Iris = Ambar, Ojos = 130, Cabeza = Cabeza.Hombre, Ceja = new Color(0.15f, 0.095f, 0.065f) },
+        new Juego { Clave = "silas_joven", Fbx = $"{CarpetaKit}/Caras_NPC_h_almendra_verde.fbx", Iris = Verde, Ojos = 120, Cabeza = Cabeza.Hombre, Ceja = new Color(0.4f, 0.2f, 0.1f) },
         new Juego { Clave = "will", Fbx = CarasProtas + "/Caras_chico_verde.fbx", Iris = Verde, Ojos = 30, Cabeza = Cabeza.Hombre, DeProtagonista = true },
     };
 
@@ -106,6 +109,7 @@ public static class CarasDeLosNPCs
         ("AldeaDelMar/Posadero", "h_almendra_ambar"), ("AldeaDelMar/Anselmo", "h_tostado_marron"),
         ("AldeaDelMar/Eusebio", "h_mayor_ambar"), ("AldeaDelMar/Fermin", "h_chico_azul"),
         ("AldeaDelMar/Benito", "h_tostado_marron"),
+        ("AldeaDelMar/Pez", "h_chico_azul"),
         ("NonInteractable/VecinoDelMirador", "h_tostado_marron"),
         ("NonInteractable/AbuelaDelMirador", "m_mayor_azul"), ("NonInteractable/VecinaDelMirador", "m_pecas_marron"),
         // Hombres con cabeza de mujer
@@ -120,6 +124,7 @@ public static class CarasDeLosNPCs
         ("Tendera", "m_afilado_verde"), ("Verónica", "m_almendra_azul"),
         ("AldeaDelMar/Remedios", "m_pecas_marron"), ("AldeaDelMar/Engracia", "m_almendra_azul"),
         ("AldeaDelMar/Rosario", "m_almendra_marron"),
+        ("AldeaDelMar/Candela", "m_mayor_azul"),
         ("NonInteractable/Guerrero#1", "m_almendra_oscuro"), ("NonInteractable/Guerrero#3", "m_almendra_azul"),
         ("NonInteractable/TownNpc#2", "m_almendra_marron"), ("NonInteractable/TownNpc#7", "m_almendra_oscuro"),
         ("NonInteractable/PanaderaDelValle", "m_mayor_azul"), ("NonInteractable/MadreDelValle", "m_pecas_marron"),
@@ -132,6 +137,8 @@ public static class CarasDeLosNPCs
         // Liora (prólogo y final): su prefab propio lo crea VestuarioDeLosNPCs (copia de Tendera); pasar antes ese menú
         ("Liora", "liora"),
         // El Mago Oscuro: sombra en el prólogo, revelado (con cara y pelo) para el final; el segundo lo crea MagoOscuroPorEstados
+        // Eldran y Silas jóvenes (su prefab lo crea VestuarioDeLosNPCs; pasar antes ese menú)
+        ("Recuerdos/EldranJoven", "eldran_joven"), ("Recuerdos/SilasJoven", "silas_joven"),
         ("Assets/Prefabs/_MAGO_OSCURO.prefab", "mago_oscuro_sombra"), ("Assets/Prefabs/_MAGO_OSCURO_REVELADO.prefab", "mago_oscuro"),
     };
 

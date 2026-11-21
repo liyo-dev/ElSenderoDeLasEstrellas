@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Los dibujos propios del grafo: una textura por categoría (en la banda de la tarjeta)
     /// y una por personaje (en la tarjeta y en el mapa). Lo que falte se queda con el pictograma

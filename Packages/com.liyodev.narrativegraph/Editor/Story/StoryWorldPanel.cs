@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Pestaña «En vivo»: por dónde va la historia y qué espera, qué no cuadra con la partida y cómo
     /// debería estar el mundo al llegar al paso. En Play sigue al paso en el que va el juego; fuera
@@ -125,8 +125,8 @@ namespace NarrativeGraphEditor.Story
             {
                 var row = new Button(() =>
                 {
-                    if (run.Graph == _graph) NavigateTo?.Invoke(run.Step.guid);
-                    else OpenInGraph?.Invoke(run.Graph, run.Step.guid);
+                    if (run.Graph == _graph) NavigateTo?.Invoke(run.Step.Guid);
+                    else OpenInGraph?.Invoke(run.Graph, run.Step.Guid);
                 });
                 row.AddToClassList("story-live__running");
                 row.EnableInClassList("is-this", run.Graph == _graph);
@@ -301,7 +301,7 @@ namespace NarrativeGraphEditor.Story
 
         public void OnProjectNode(NarrativeNode node)
         {
-            _source = node?.guid;
+            _source = node?.Guid;
             if (_source != null) SourceGraph[_source] = Graph;
         }
 

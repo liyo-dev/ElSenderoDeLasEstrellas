@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505b709263e653344a3fa268f29aa1a3, type: 3}
+  m_Name: PerfilDeCombate_Erika
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Combate.PerfilDeCombate
+  acciones:
+  - nombre: Chispa
+    proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+    animacion: MagicLeft
+    distanciaMinima: 0
+    distanciaMaxima: 14
+    segundosDeAviso: 0.6
+    segundosDeRecuperacion: 0.6
+    enfriamiento: 2.5
+    costeDeMana: 15
+    dano: 8
+    velocidad: 0
+    peso: 1
+    funcion: 1
+    sePuedeDevolver: 1
+    conElemento: 0
+    elemento: 0
+  - nombre: Golpe
+    proyectil: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
+    animacion: MagicRight
+    distanciaMinima: 0
+    distanciaMaxima: 14
+    segundosDeAviso: 0.8
+    segundosDeRecuperacion: 0.8
+    enfriamiento: 5
+    costeDeMana: 25
+    dano: 15
+    velocidad: 0
+    peso: 0.8
+    funcion: 0
+    sePuedeDevolver: 1
+    conElemento: 0
+    elemento: 0
+  defensas:
+    esquivar: 1
+    distanciaDeEsquiva: 3
+    recuperacionDeEsquiva: 1.4
+    escudo: 1
+    duracionDelEscudo: 1.5
+    enfriamientoDelEscudo: 7
+    escudoElemental: 0
+    elementoDelEscudo: 2
+    cubrirseParaRecargar: 0
+    radioDeCobertura: 14
+    recargaACubierto: 1.5
+    leerLaRepeticion: 0.8
+    repeticionesParaLeerla: 3
+    segundosDeRepeticion: 12
+  caracter:
+    agresividad: 0.5
+    cautela: 0.5
+    movilidad: 0.5
+    paciencia: 0.6
+    distanciaPreferida: 7
+    distanciaMinima: 3
+    distanciaMaxima: 12
+    velocidadAndando: 2.5
+    velocidadCorriendo: 5.5
+    atacantesALaVez: 1
+    umbralDeVueltasContinuas: 0.8
+    leeLaDefensaDelJugador: 1
+  dificultad: 0.4
+  fases:
+  - nombre: En serio
+    desdeVida: 0.5
+    acciones:
+    - nombre: Chispa
+      proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+      animacion: MagicLeft
+      distanciaMinima: 0
+      distanciaMaxima: 14
+      segundosDeAviso: 0.5
+      segundosDeRecuperacion: 0.5
+      enfriamiento: 2
+      costeDeMana: 15
+      dano: 10
+      velocidad: 0
+      peso: 1
+      funcion: 1
+      sePuedeDevolver: 1
+      conElemento: 0
+      elemento: 0
+    - nombre: Golpe
+      proyectil: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
+      animacion: MagicRight
+      distanciaMinima: 0
+      distanciaMaxima: 14
+      segundosDeAviso: 0.7
+      segundosDeRecuperacion: 0.7
+      enfriamiento: 4
+      costeDeMana: 25
+      dano: 18
+      velocidad: 0
+      peso: 0.8
+      funcion: 0
+      sePuedeDevolver: 1
+      conElemento: 0
+      elemento: 0
+    - nombre: Remate
+      proyectil: {fileID: 7541299261854152833, guid: 71b502122a0cfe640969b5a2538bcdc1, type: 3}
+      animacion: MagicSpecial
+      distanciaMinima: 0
+      distanciaMaxima: 14
+      segundosDeAviso: 1.1
+      segundosDeRecuperacion: 1.3
+      enfriamiento: 7
+      costeDeMana: 35
+      dano: 25
+      velocidad: 0
+      peso: 0.7
+      funcion: 2
+      sePuedeDevolver: 1
+      conElemento: 0
+      elemento: 0
+    cambiaCaracter: 1
+    caracter:
+      agresividad: 0.7
+      cautela: 0.45
+      movilidad: 0.7
+      paciencia: 0.45
+      distanciaPreferida: 7
+      distanciaMinima: 3
+      distanciaMaxima: 12
+      velocidadAndando: 2.8
+      velocidadCorriendo: 6
+      atacantesALaVez: 1
+      umbralDeVueltasContinuas: 0.8
+      leeLaDefensaDelJugador: 1
+    cambiaDefensas: 1
+    defensas:
+      esquivar: 1
+      distanciaDeEsquiva: 3.2
+      recuperacionDeEsquiva: 1.1
+      escudo: 1
+      duracionDelEscudo: 1.5
+      enfriamientoDelEscudo: 5
+      escudoElemental: 1
+      elementoDelEscudo: 0
+      cubrirseParaRecargar: 0
+      radioDeCobertura: 14
+      recargaACubierto: 1.5
+      leerLaRepeticion: 1
+      repeticionesParaLeerla: 3
+      segundosDeRepeticion: 12
+    dificultad: 0.55
+    segundosDeTransicion: 2
+    animacion: 
+    claveDeFrase: ERIKA_DUELO_FASE2
+    frase: "\xA1Vale, se acab\xF3 el calentamiento!"
+    fraseEnCaja: 1
+    sacudida: 1
+    recuperaVidaHasta: 0
+  afinidades: []

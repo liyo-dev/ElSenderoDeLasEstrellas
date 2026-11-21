@@ -21,7 +21,7 @@ public sealed class ViajeDelLab : MonoBehaviour, ISeccionDelLab
     private void OnEnable() => s_actual = this;
     private void OnDisable() { if (s_actual == this) s_actual = null; }
 
-    /// Nombre del destino más cercano a una posición (para el reporte de errores).
+    /// Nombre del destino más cercano a una posición.
     public static string ZonaCercana(Vector3 posicion)
     {
         if (s_actual == null) return "—";
@@ -49,14 +49,20 @@ public sealed class ViajeDelLab : MonoBehaviour, ISeccionDelLab
         else
         {
             GUILayout.Label("Viaje rápido: el panel se cierra y llegas con tu grupo.", EstiloDelLab.Etiqueta);
+            // En dos columnas: con una sola, los últimos destinos (la lucha contra personas) quedaban
+            // por debajo del panel y con mando no se podía bajar hasta ellos.
+            int columna = 0;
             foreach (var d in destinos)
             {
                 if (d.punto == null) continue;
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button(d.nombre, EstiloDelLab.Boton, GUILayout.Width(220f))) Ir(d.punto);
-                GUILayout.Label(d.queHay, EstiloDelLab.Nota);
-                GUILayout.EndHorizontal();
+                if (columna == 0) GUILayout.BeginHorizontal();
+                GUILayout.BeginVertical(GUILayout.Width(400f));
+                if (GUILayout.Button(d.nombre, EstiloDelLab.Boton, GUILayout.Width(390f))) Ir(d.punto);
+                GUILayout.Label(d.queHay, EstiloDelLab.Nota, GUILayout.Width(390f));
+                GUILayout.EndVertical();
+                if (++columna == 2) { GUILayout.EndHorizontal(); columna = 0; }
             }
+            if (columna != 0) GUILayout.EndHorizontal();
         }
 
         GUILayout.Space(12f);

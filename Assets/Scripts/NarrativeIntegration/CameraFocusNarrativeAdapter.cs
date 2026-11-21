@@ -1,6 +1,7 @@
 using System.Collections;
 using Sendero.Core.Feedback;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Planos de foco del grafo en El Sendero: corta la cámara del jugador a un

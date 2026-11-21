@@ -81,7 +81,7 @@ public static partial class VestidoDelPrologo
     /// Una hoja de 1×1 m con la bisagra en x=0.
     const string Contraventana = CarpetaPueblo + "/Contraventana.fbx";
     const string Mirador = CarpetaPueblo + "/Mirador.fbx";
-    const float EscalonDelMirador = 0.3f;
+    const float EscalonDelMirador = 0.65f;
     /// Distancia a la pared de quien se asoma al mirador (el antepecho está a 0,55 m por dentro).
     const float FondoDelQueSeAsoma = 0.16f;
     const string PuertaDeCasa = CarpetaPueblo + "/PuertaDeCasa.fbx";

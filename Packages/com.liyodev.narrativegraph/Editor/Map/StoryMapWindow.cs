@@ -1,10 +1,10 @@
 using System;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// El mapa de la historia en su propia ventana (lo que pasa al sacarlo del editor con ⧉).
     /// Al cerrarla, el mapa vuelve a su sitio dentro del editor.

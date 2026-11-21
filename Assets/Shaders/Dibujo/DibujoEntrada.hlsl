@@ -21,6 +21,7 @@ half _Brillo;
 half _Pincel;
 half _Follaje;
 half _FollajeMip;         // Mip del que se toma el color medio de cada zona de follaje.
+half _LuzDePersonaje;     // Personajes: sombra más pequeña (solo de espaldas al sol) y más clara.
 CBUFFER_END
 
 #endif

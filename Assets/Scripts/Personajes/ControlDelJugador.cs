@@ -1,6 +1,7 @@
 ﻿using System;
 using Game.NPC;
 using UnityEngine;
+using UnityEngine.AI;
 using Slot = PartyControlManager.CharacterSlot;
 
 /// Quién lleva el jugador y qué cuerpo tiene cada personaje del grupo. Es la puerta única para el
@@ -206,6 +207,61 @@ public static class ControlDelJugador
             DevolverALaIA(sale.GetComponent<NPCPartyMember>());
         }
         return true;
+    }
+
+    /// Distancia a partir de la cual el relevo no pone al que sale en el sitio del que entra, sino
+    /// detrás del jugador (INC-1369).
+    private const float DistanciaMaximaParaRelevo = 6f;
+    private const float DistanciaDetrasDelJugador = 1.5f;
+
+    /// Cambio de personaje con el grupo en «Siguiendo» y sin pareja (INC-1369): el que entra aparece
+    /// donde estaba el jugador, con su mismo giro y velocidad, y el cuerpo que deja el jugador pasa a
+    /// la IA justo donde estaba el que entra. Si el que entra estaba a más de 6 m, el que sale queda
+    /// 1,5 m detrás del jugador, sobre la malla de navegación.
+    public static bool CambiarElMandoEnElSitio(Slot de, Slot a)
+    {
+        var entra = PilotoDe(a);
+        if (entra == null) return false;
+        var sale = de != a ? PilotoDe(de) : null;
+        if (sale == null) return CambiarElMando(de, a);
+
+        // Las poses y la velocidad se leen primero: al pasar a la IA el cuerpo que sale se congela.
+        var posSale = sale.transform.position;
+        var rotSale = sale.transform.rotation;
+        var posEntra = entra.transform.position;
+        var rotEntra = entra.transform.rotation;
+        var rbSale = sale.GetComponent<Rigidbody>();
+        var velocidad = rbSale != null && !rbSale.isKinematic ? rbSale.linearVelocity : Vector3.zero;
+
+        CambiarElMando(de, a);
+
+        // El que entra toma la pose y la velocidad del jugador.
+        Colocar(entra.gameObject, posSale, rotSale);
+        var rbEntra = entra.GetComponent<Rigidbody>();
+        if (rbEntra != null && !rbEntra.isKinematic) rbEntra.linearVelocity = velocidad;
+
+        // El que sale ocupa el sitio del que entra; si estaba lejos, queda detrás del jugador.
+        var destino = posEntra;
+        var giro = rotEntra;
+        if (Vector3.Distance(posEntra, posSale) > DistanciaMaximaParaRelevo)
+        {
+            giro = rotSale;
+            destino = posSale - (rotSale * Vector3.forward) * DistanciaDetrasDelJugador;
+            if (NavMesh.SamplePosition(destino, out var enMalla, 3f, NavMesh.AllAreas)) destino = enMalla.position;
+        }
+        Colocar(sale.gameObject, destino, giro);
+        return true;
+    }
+
+    /// Pone un cuerpo en esa pose. Si tiene agente de navegación dentro de la malla, lo lleva con
+    /// Warp; el Rigidbody se sincroniza para que la física no lo devuelva a su sitio.
+    private static void Colocar(GameObject cuerpo, Vector3 pos, Quaternion rot)
+    {
+        var agente = cuerpo.GetComponent<NavMeshAgent>();
+        if (agente != null && agente.isActiveAndEnabled && agente.isOnNavMesh) agente.Warp(pos);
+        cuerpo.transform.SetPositionAndRotation(pos, rot);
+        var rb = cuerpo.GetComponent<Rigidbody>();
+        if (rb != null) { rb.position = pos; rb.rotation = rot; }
     }
 
     /// Al cargar una escena o una partida, cada cuerpo con el piloto que le toca: el del personaje

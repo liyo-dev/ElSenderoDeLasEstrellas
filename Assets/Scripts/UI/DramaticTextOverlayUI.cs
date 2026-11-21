@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Sendero.Core.Feedback;
+using Liyodev.NarrativeGraph;
 
 [Serializable]
 public struct DramaticStylePreset
@@ -73,7 +74,7 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
     [Tooltip("Intensidad máxima del destello shimmer (0=sin shimmer, 1=blanco puro).")]
     [Range(0f, 1f)] [SerializeField] float _dreamShimmerIntensity = 0.65f;
 
-    [Header("Sueño — variante DreamWhite (visión de la Voz, 30/08/2026)")]
+    [Header("Sueño — variante DreamWhite (visión de la Voz)")]
     [Tooltip("Fondo blanco cálido (no blanco puro, para que no 'queme'). Pulsa suavemente hacia _dreamBgWhiteBright igual que Dream pulsa entre sus dos azules.")]
     [SerializeField] Color _dreamBgWhite       = new Color(0.98f, 0.97f, 0.94f, 1f);
     [SerializeField] Color _dreamBgWhiteBright = new Color(1f,    0.99f, 0.93f, 1f);
@@ -91,7 +92,7 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
     [Tooltip("Escala inicial del contenedor completo (zoom suave hacia 1.0 mientras aparecen las letras).")]
     [Range(1f, 1.5f)] [SerializeField] float _khContainerZoom = 1.06f;
 
-    [Header("Letter Fly-In (12/09/2026 — sustituye a Shake en 'Will, ¡DESPIERTA!')")]
+    [Header("Letter Fly-In (letra a letra)")]
     [Tooltip("Punto de origen COMPARTIDO (offset en unidades de canvas respecto al centro de cada letra) desde el que 'vuela' cada carácter hasta su posición final. Ej: (0,-220) hace que las letras avancen hacia el espectador y suban hasta su sitio, en vez de caer una a una como en KingdomHearts.")]
     [SerializeField] Vector2 _letterFlyInOrigin = new Vector2(0f, -220f);
     [Tooltip("Escala inicial de cada letra en su punto de origen. >1 = empieza más grande (sensación de venir hacia cámara).")]
@@ -110,9 +111,9 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
     Coroutine _playRoutine;
     Tween     _bgPulseTween;
 
-    // DreamWhite (30/08/2026): al entrar se guarda el degradado normal de texto (pensado para
-    // Dream) y se sustituye por el par legible sobre blanco; al salir se restaura. No usa el
-    // mismo mecanismo save/restore que Co_BossName (que también toca _dreamGradientLeft/Right)
+    // DreamWhite: al entrar se guarda el degradado normal de texto (pensado para Dream) y se
+    // sustituye por el par legible sobre blanco; al salir se restaura. No usa el mismo
+    // mecanismo save/restore que Co_BossName (que también toca _dreamGradientLeft/Right)
     // porque Co_BossName nunca pasa por DreamWhite — no hay solape entre ambos.
     bool  _dreamWhiteActive;
     Color _dreamGradientLeftPreWhite;
@@ -135,19 +136,19 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
         if (_rootGroup == null)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[DramaticTextOverlayUI] ❌ _rootGroup no asignado en el Inspector.", this);
+            Debug.LogError("[DramaticTextOverlayUI] _rootGroup no asignado en el Inspector.", this);
             #endif
         }
         if (_label == null)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[DramaticTextOverlayUI] ❌ _label (TextMeshProUGUI) no asignado en el Inspector.", this);
+            Debug.LogError("[DramaticTextOverlayUI] _label (TextMeshProUGUI) no asignado en el Inspector.", this);
             #endif
         }
         if (_textContainer == null)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[DramaticTextOverlayUI] ❌ _textContainer (RectTransform) no asignado en el Inspector.", this);
+            Debug.LogError("[DramaticTextOverlayUI] _textContainer (RectTransform) no asignado en el Inspector.", this);
             #endif
         }
 
@@ -282,14 +283,14 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
                 bool nextFullBlack = i < config.phrases.Length - 1 && config.phrases[i + 1].background == DramaticTextBackground.FullBlack;
                 bool currentFullBlack = current.background == DramaticTextBackground.FullBlack;
 
-                // FIX: si nos llaman con la pantalla ya cubierta por el overlay de FeedbackService
-                // (ej: una cinemática que terminó con Co_EndCinematicStayBlack y nos pasa el
-                // testigo, como la secuencia del prólogo → PedirTextoDramatico), la frase 0 haciendo su
-                // fade-in normal desde alpha=0 exponía durante entryDuration lo que hubiera detrás
-                // (la escena/cámara de gameplay ya reactivada) antes de que este overlay llegara a
-                // opacidad completa. Tratarla como "ya estamos en negro" evita ese hueco — solo
-                // aplica si además el fondo de esta frase es FullBlack (si no, no cubriría la
-                // pantalla igual y sí queremos ver el fade real).
+                // Si nos llaman con la pantalla ya cubierta por el overlay de FeedbackService (ej: una
+                // cinemática que terminó con Co_EndCinematicStayBlack y nos pasa el testigo, como la
+                // secuencia del prólogo → PedirTextoDramatico), la frase 0 haciendo su fade-in normal
+                // desde alpha=0 exponía durante entryDuration lo que hubiera detrás (la escena/cámara
+                // de gameplay ya reactivada) antes de que este overlay llegara a opacidad completa.
+                // Tratarla como "ya estamos en negro" evita ese hueco — solo aplica si además el fondo
+                // de esta frase es FullBlack (si no, no cubriría la pantalla igual y sí queremos ver el
+                // fade real).
                 bool screenAlreadyCovered = i == 0 && currentFullBlack && FeedbackService.IsScreenFaded;
 
                 // Si venimos de FullBlack y la actual también lo es, no hacer fade de entrada.
@@ -297,8 +298,6 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
                 // alpha=0 hasta que cada letra "entra"), por eso nunca saltan aunque la pantalla ya
                 // esté en negro — el letreo/vuelo carácter a carácter ES el contenido del plano.
                 //
-                // FIX (12 sep 2026): "Will, ¡DESPIERTA!" sale de golpe, sin letreo — reportado por
-                // Raúl con captura + log confirmando 'Anim: LetterFlyIn' disparándose igualmente.
                 // Causa: esta condición solo eximía a KingdomHearts. La frase del prólogo llega con
                 // la pantalla ya en negro (la awake de la secuencia del prólogo termina en fundido a
                 // negro, screenAlreadyCovered=true) y su propio fondo es FullBlack, así que
@@ -340,7 +339,7 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
         if (_label == null || _textContainer == null || _rootGroup == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[DramaticTextOverlayUI] ❌ Referencias UI nulas — asigna _label, _textContainer y _rootGroup en el Inspector.");
+            Debug.LogError("[DramaticTextOverlayUI] Referencias UI nulas — asigna _label, _textContainer y _rootGroup en el Inspector.");
 #endif
             yield break;
         }
@@ -695,15 +694,15 @@ public partial class DramaticTextOverlayUI : MonoBehaviour
 
     static float KhEaseOutQuart(float t) => 1f - Mathf.Pow(1f - t, 4f);
 
-    // ── Letter Fly-In (12/09/2026) ────────────────────────────────────────
+    // ── Letter Fly-In ────────────────────────────────────────
 
     /// <summary>
     /// Letra a letra, como KingdomHeartsRoutine (mismo patrón de vértices/timing por carácter),
     /// pero en vez de caer cada letra desde un pequeño offset propio, TODAS parten de un mismo
     /// punto de origen compartido (_letterFlyInOrigin) y más grandes (_letterFlyInScaleFrom) —
-    /// "letra a letra, avanzando desde la pantalla hasta su posición" (pedido de Raúl, sustituye a
-    /// Shake). Sin el zoom del contenedor completo de KingdomHearts a propósito: eso es justo lo
-    /// que hacía que se leyera como el título de una novela/videojuego.
+    /// "letra a letra, avanzando desde la pantalla hasta su posición". Sin el zoom del contenedor
+    /// completo de KingdomHearts a propósito: eso es justo lo que hacía que se leyera como el
+    /// título de una novela/videojuego.
     /// </summary>
     IEnumerator LetterFlyInRoutine(string text, DramaticStylePreset preset, Vector2 basePos,
                                     bool releaseScreenFadeOnOpaque = false)

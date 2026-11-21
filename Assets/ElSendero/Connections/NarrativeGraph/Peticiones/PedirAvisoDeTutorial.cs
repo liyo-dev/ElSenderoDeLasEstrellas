@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core;
 using Core.InputGlyphs;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Muestra u oculta el aviso de tutorial (TutorialPromptUI).
 /// Mostrar: la historia espera a que el jugador pulse la acción indicada (A/Submit/Interact) y

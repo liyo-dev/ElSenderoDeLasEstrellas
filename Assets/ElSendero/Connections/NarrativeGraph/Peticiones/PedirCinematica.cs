@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
+using Liyodev.NarrativeGraph;
 
 /// Pide una cinemática al sistema de cinemáticas y espera a que termine. El grafo solo emite la
 /// señal de entrada y espera la de fin: la escena la monta y la dirige el SequencePlayer que la

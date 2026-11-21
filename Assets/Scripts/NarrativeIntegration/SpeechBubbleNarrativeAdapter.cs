@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Bocadillos del grafo por el camino único de las frases (<see cref="PresentadorDeLinea"/>:

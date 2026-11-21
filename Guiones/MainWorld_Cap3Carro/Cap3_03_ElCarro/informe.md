@@ -1,22 +1,22 @@
 # Parte de horneado: Cap3_03_ElCarro
 
-2026-11-18 15:25 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
+2026-11-19 20:55 · guion `Assets/_SEQUENCES/Guiones/Cap3_03_ElCarro.guion.txt`
 
 **0:39,5** de secuencia · 5 frases · 7 planos · 4 efectos · 3 personajes
 
-Reparto medido (m): will 1,62/ojos 0,93 · c1 1,30/ojos 0,97 · c2 1,31/ojos 0,98
+Reparto medido (m): will 1,62/ojos 0,93 · c1 1,43/ojos 1,07 · c2 1,31/ojos 0,98
 
 ## Errores (0)
 
 
 ## Avisos (8)
 
-- línea 18: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
-- línea 57: will dice CAP3_CARRO_01 cara=decidido: la frase CAP3_CARRO_01 no tiene voz en Voices/es; le doy 2,3 s por su texto
-- línea 76: c2 dice CAP3_CARRO_04 cara=molesto mira=fuego: la frase CAP3_CARRO_04 no tiene voz en Voices/es; le doy 2,7 s por su texto
-- línea 84: c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 mira=c2: la frase CAP3_CARRO_05 no tiene voz en Voices/es; le doy 3,4 s por su texto
-- línea 92: will dice CAP3_CARRO_02 cara=pensativo: la frase CAP3_CARRO_02 no tiene voz en Voices/es; le doy 4,6 s por su texto
-- línea 93: will dice CAP3_CARRO_03 cara=decidido: la frase CAP3_CARRO_03 no tiene voz en Voices/es; le doy 2,7 s por su texto
+- línea 20: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
+- línea 59: will dice CAP3_CARRO_01 cara=decidido: la frase CAP3_CARRO_01 no tiene voz en Voices/es; le doy 2,3 s por su texto
+- línea 78: c2 dice CAP3_CARRO_04 cara=molesto mira=fuego: la frase CAP3_CARRO_04 no tiene voz en Voices/es; le doy 2,7 s por su texto
+- línea 87: c1 dice CAP3_CARRO_05 cara=molesto gesto=Talk01 cabeza=c2: la frase CAP3_CARRO_05 no tiene voz en Voices/es; le doy 3,4 s por su texto
+- línea 95: will dice CAP3_CARRO_02 cara=pensativo: la frase CAP3_CARRO_02 no tiene voz en Voices/es; le doy 4,6 s por su texto
+- línea 96: will dice CAP3_CARRO_03 cara=decidido: la frase CAP3_CARRO_03 no tiene voz en Voices/es; le doy 2,7 s por su texto
 - 0:10,1: «general de c1 y c2» dura 9,6 s sin voz y con la cámara quieta. ¿Pasa algo dentro?
 - No hay captura del escenario: usa «El Sendero → Cinemáticas → Guion → 1. Capturar el escenario del prólogo» para tener los dibujos.
 

@@ -296,6 +296,10 @@ public class QuestMenuManager : MonoBehaviour
         if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
             return false;
 
+        // En una prueba que no para, el menú rápido no se abre (ver Situaciones.PruebaSinPausa).
+        if (Kits.Core.GameContext.Has(Situaciones.PruebaSinPausa))
+            return false;
+
         return true;
     }
 
@@ -366,11 +370,7 @@ public class QuestMenuManager : MonoBehaviour
         {
             GamepadInputReader.PushGameplaySuppression(this);
 
-            // Cambiar a modo UI centralizado. NOTA: PlayerInputManager.PushUIMode() ya se
-            // encarga de resetear el input suavizado de Invector (ResetInputSmoothing()) para
-            // que el player quede en idle al instante — fix centralizado el 16 ago 2026 tras el
-            // bug "se queda el player andando" con este panel abierto (antes se parcheaba aquí
-            // mismo; ver el comentario en PlayerInputManager.PushUIMode() para el detalle).
+            // Cambiar a modo UI centralizado.
             if (ServiceLocator.TryGet(out Core.PlayerInputManager pim))
                 pim.PushUIMode();
         }

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Liyodev.NarrativeGraph;
 
 public enum PresentacionDeTexto { Bocadillo, Subtitulo, SubtituloGrande }
 
@@ -80,15 +81,13 @@ public class SpeechBubbleUI : MonoBehaviour
     [Header("Tamaño")]
     [Tooltip("Ancho mínimo del bocadillo en píxeles de canvas. Aumenta si el texto se corta por los lados.")]
     [SerializeField] float _bubbleMinWidth = 420f;
-    [Tooltip("Ancho máximo del bocadillo en píxeles de canvas antes de partir el texto en varias líneas. BUGFIX (Agosto 2026): antes el bocadillo solo tenía un ancho MÍNIMO y nunca crecía con el texto real, así que cualquier línea más larga que ese mínimo se salía por los lados en todas las secuencias (ver captura del bug). Ahora el ancho se calcula a partir del texto real en Show(), entre este máximo y _bubbleMinWidth. El ALTO no se toca aquí — lo calcula solo el ContentSizeFitter/VerticalLayoutGroup del hijo \"Bubble\" en el prefab (ver Show()).\nAJUSTE (Agosto 2026, 2ª pasada): min/max bajados de 560/900 a 420/620. Con los valores viejos, cualquier frase de longitud media cabía en una sola línea muy ancha y el bocadillo salía como un óvalo aplastado y alargado; y las frases cortas se estiraban igual hasta el mínimo de 560, con el mismo efecto. Con el ancho máximo más bajo, el texto envuelve antes en 2-3 líneas más cortas y el bocadillo crece en vertical en su lugar — se ve más redondo y las líneas quedan más parejas entre sí (ayuda también a que el bloque de texto centrado se perciba realmente centrado, en vez de una única línea larga pegada a los bordes).")]
+    [Tooltip("Ancho máximo del bocadillo en píxeles de canvas antes de partir el texto en varias líneas. El ancho se calcula a partir del texto real en Show(), entre este máximo y _bubbleMinWidth. El ALTO no se toca aquí — lo calcula solo el ContentSizeFitter/VerticalLayoutGroup del hijo \"Bubble\" en el prefab (ver Show()). Un máximo bajo hace que el texto envuelva en 2-3 líneas cortas y el bocadillo crezca en vertical, más redondo y con las líneas más parejas.")]
     [SerializeField] float _bubbleMaxWidth = 620f;
     [Tooltip("Margen interno horizontal del texto (izquierda y derecha).")]
     [SerializeField] float _labelHorizontalMargin = 44f;
 
     [Header("Páginas (INC-435)")]
-    [Tooltip("Máximo de líneas por bocadillo. Regla de Raúl (25 sep 2026): «los textos de los " +
-             "bocadillos no pueden ser de más de tres líneas; si es así hay que paginar la frase en " +
-             "TODO EL JUEGO». Una frase que ocupa más se parte en páginas que salen una detrás de otra " +
+    [Tooltip("Máximo de líneas por bocadillo. Los bocadillos no pasan de tres líneas: una frase que ocupa más se parte en páginas que salen una detrás de otra " +
              "en el mismo bocadillo, cortando por el final de una frase siempre que se pueda.")]
     [SerializeField, Min(1)] int _maxLineas = 3;
     [Tooltip("Caracteres por segundo de lectura cómoda. Ninguna página dura menos de lo que se tarda " +
@@ -353,16 +352,12 @@ public class SpeechBubbleUI : MonoBehaviour
         return new Vector2(Mathf.Sin(t * 0.5f) * _vaivenLateral, Mathf.Sin(t) * _vaivenVertical);
     }
 
-    /// FIX (17 sep 2026, Raúl: "los bocadillos se cortan por arriba" -- prólogo, planos
-    /// cerrados). Antes esta posición se aplicaba sin límites: con poco
-    /// headroom (un CloseUp, por ejemplo) la cabeza del personaje queda cerca del borde superior
-    /// de la pantalla, y el bocadillo -- que crece HACIA ARRIBA desde el punto de anclaje, con el
-    /// pico apuntando hacia abajo a la cabeza -- se salía por encima del canvas. Nunca se había
-    /// visto porque las secuencias antiguas (Discusión Ventana, Despertar de la Estrella) siempre
-    /// enmarcan con más aire por encima; el prólogo es el primer sitio que pide planos cerrados de
-    /// verdad con este sistema. Se calcula el margen a partir del tamaño real del bocadillo (que ya
-    /// cambia con el texto, ver Show()) y de su propio pivote, así que funciona igual sin importar
-    /// si el pivote está abajo (como parece, por el pico) o en cualquier otro punto.
+    /// - prólogo, planos cerrados). Nunca se había visto porque las secuencias antiguas (Discusión
+    /// Ventana, Despertar de la Estrella) siempre enmarcan con más aire por encima; el prólogo es
+    /// el primer sitio que pide planos cerrados de verdad con este sistema. Se calcula el margen a
+    /// partir del tamaño real del bocadillo (que ya cambia con el texto, ver Show()) y de su propio
+    /// pivote, así que funciona igual sin importar si el pivote está abajo (como parece, por el
+    /// pico) o en cualquier otro punto.
     const float MargenSobreLaFranja = 12f;
 
     Vector2 ClampToCanvas(Vector2 local)
@@ -420,10 +415,9 @@ public class SpeechBubbleUI : MonoBehaviour
     /// </param>
     /// <param name="worldOffset">
     /// Sustituye, solo para esta llamada, el offset vertical de siempre (_worldOffset, 2,2 m).
-    /// Null (por defecto) = comportamiento de siempre. Pensado para SayBeat.markName (17 sep
-    /// 2026): una marca de posición ya colocada a la altura que toca no debería tener que
-    /// enterrarse 2,2 m bajo el suelo solo para compensar el offset pensado para cabezas de
-    /// personaje.
+    /// Null (por defecto) = comportamiento de siempre. Pensado para SayBeat.markName: una
+    /// marca de posición ya colocada a la altura que toca no debería tener que enterrarse 2,2
+    /// m bajo el suelo solo para compensar el offset pensado para cabezas de personaje.
     /// </param>
     /// <param name="fijoEnPantalla">
     /// En vez de seguir al personaje, el bocadillo se queda quieto en un lado de la pantalla
@@ -521,12 +515,12 @@ public class SpeechBubbleUI : MonoBehaviour
             ? new Vector4(MargenHorizontal, _label.margin.y, MargenHorizontal, _label.margin.w)
             : Vector4.zero;
 
-        // BUGFIX (Agosto 2026): el bocadillo solo tenía un ancho MÍNIMO fijo (_bubbleMinWidth) y
-        // nunca se adaptaba al texto real, así que cualquier línea más larga que ese mínimo se
-        // salía por los lados — pasaba en todas las secuencias, no era un caso puntual. Ahora se
-        // mide el ancho que ocuparía el texto en una sola línea (GetPreferredValues) y el
-        // bocadillo crece hasta el máximo para acomodarlo antes de partir el texto en
-        // varias líneas (word wrap).
+        // el bocadillo solo tenía un ancho MÍNIMO fijo (_bubbleMinWidth) y nunca se
+        // adaptaba al texto real, así que cualquier línea más larga que ese mínimo se salía por
+        // los lados — pasaba en todas las secuencias, no era un caso puntual. Ahora se mide el
+        // ancho que ocuparía el texto en una sola línea (GetPreferredValues) y el bocadillo
+        // crece hasta el máximo para acomodarlo antes de partir el texto en varias líneas (word
+        // wrap).
         //
         // OJO — el ALTO no se toca aquí a mano. El GameObject "Bubble" (padre de _label, ver
         // prefab SpeechBubbleUI/Bubble) tiene un VerticalLayoutGroup + ContentSizeFitter con

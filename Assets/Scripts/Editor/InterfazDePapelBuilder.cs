@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TMPro;
@@ -70,7 +70,6 @@ public static class InterfazDePapelBuilder
     static readonly (string raiz, string ruta)[] FondosDeNoche =
     {
         ("PanelControles", "Background"),
-        ("PanelSelectorIdioma", "Background"),
         ("PlayerEquipementMenu", "Controles (menú de Start)/Background"),
         ("QuestMenusCanvas", "QuestMainMenu"),
     };

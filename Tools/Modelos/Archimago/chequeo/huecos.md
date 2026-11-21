@@ -12,8 +12,8 @@ Peor vista: WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 180°: 0.1 % 
 - Pernera_l: 0.03 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 88°, giro 0°)
 - Tunica: 0.02 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 40°, giro 270°)
 - Manga_l: 0.02 % (peor en WalkFWD_InPlace_NoWeapon@10.3, desde abajo a 40°, giro 315°)
-- Sobretunica: 0.02 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 315°)
-- PunoRibete_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 65°, giro 225°)
+- Sobretunica: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 90°)
+- PunoRibete_r: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@1.0, desde abajo a 15°, giro 225°)
 - PunoRibete_l: 0.01 % (peor en WalkFWD_InPlace_NoWeapon@19.7, desde abajo a 15°, giro 180°)
 
 ## Manos con los brazos caídos (idle): parte que se ve desde algún lado

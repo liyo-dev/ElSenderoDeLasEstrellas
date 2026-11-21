@@ -106,8 +106,10 @@ public class AnimationCatalogueRunner : MonoBehaviour
         for (int i = 0; i < animator.layerCount; i++)
             animator.SetLayerWeight(i, 1f);
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Catálogo] Arrancando: {entradas.Count} entradas. " +
                   "ESPACIO pausa · → siguiente · ← anterior · R repetir.", this);
+#endif
 
         StartCoroutine(Co_Recorrer());
     }
@@ -131,9 +133,11 @@ public class AnimationCatalogueRunner : MonoBehaviour
             ColocarCamara(entrada.tipo == TipoEntrada.Animacion);
             Aplicar(entrada);
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Catálogo] {_indice + 1}/{entradas.Count} · {entrada.tipo} · '{entrada.nombre}'" +
                       (entrada.tipo == TipoEntrada.Animacion
                           ? $" (capa {entrada.nombreCapa}, {entrada.duracion:0.0}s)" : ""));
+#endif
 
             float espera = entrada.tipo == TipoEntrada.Animacion
                 ? Mathf.Clamp(entrada.duracion, duracionMinima, duracionMaxima)
@@ -156,7 +160,9 @@ public class AnimationCatalogueRunner : MonoBehaviour
         }
 
         _terminado = true;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[Catálogo] Terminado. Ya puedes parar el Play.", this);
+#endif
     }
 
     private void Aplicar(Entrada entrada)

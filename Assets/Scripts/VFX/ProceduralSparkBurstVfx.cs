@@ -1,20 +1,17 @@
 using UnityEngine;
 
 /// <summary>
-/// Explosión de chispas/rayos radiales — pensada como el "boom" real de Co_Collision en
-/// la secuencia del prólogo, distinto de los dos ProceduralLightningBoltVfx (que son cada rayo
-/// individual, uno por bando). Pedido de Raúl (12/09/2026): "cuando ambos hechizos se unen debe
-/// ocurrir una explosion y lo que vemos es el mismo prefab" — antes la colisión solo mostraba los
-/// dos mismos rayos de siempre, sin ningún efecto distinto que se leyera como impacto/explosión.
+/// Explosión de chispas/rayos radiales — pensada como el "boom" real de Co_Collision en la
+/// secuencia del prólogo, distinto de los dos ProceduralLightningBoltVfx (que son cada rayo
+/// individual, uno por bando).
 ///
 /// Genera N streaks cortos que salen disparados en direcciones aleatorias desde el centro (en vez
 /// de un único zigzag vertical como ProceduralLightningBoltVfx) más un flash de luz blanco/cálido
 /// muy intenso y de decaimiento rápido — mismo enfoque 100% por código, sin dependencias externas.
 ///
-/// FIX pooling (mismo aprendizaje que ProceduralLightningBoltVfx, ver su cabecera): nada se
-/// destruye a sí mismo. Awake() crea los LineRenderer/luz una vez; OnEnable() — que es lo que
-/// dispara el pool cada vez que reactiva la instancia — regenera direcciones/longitudes nuevas y
-/// resetea la luz a intensidad completa.
+/// Nada se destruye a sí mismo. Awake() crea los LineRenderer/luz una vez; OnEnable() — que es
+/// lo que dispara el pool cada vez que reactiva la instancia — regenera direcciones/longitudes
+/// nuevas y resetea la luz a intensidad completa.
 /// </summary>
 [DisallowMultipleComponent]
 public class ProceduralSparkBurstVfx : MonoBehaviour
@@ -27,9 +24,7 @@ public class ProceduralSparkBurstVfx : MonoBehaviour
     [Range(0f, 1f)] [SerializeField] private float upwardBias = 0.35f;
 
     [Header("Aspecto")]
-    // FIX (12/09/2026, pedido de Raúl: "vemos una explosion (fuego u otra que usemos)"): antes
-    // era un blanco cálido casi neutro (chispa de energía); ahora naranja/rojo de verdad para que
-    // se lea como fuego/explosión, no como otro rayo más.
+    // ): naranja/rojo de verdad para que se lea como fuego/explosión, no como otro rayo más.
     [SerializeField] private Color coreColor = new Color(1f, 0.42f, 0.08f, 1f);
     [SerializeField] private float sparkWidth = 0.05f;
     [SerializeField] private Material sparkMaterial;

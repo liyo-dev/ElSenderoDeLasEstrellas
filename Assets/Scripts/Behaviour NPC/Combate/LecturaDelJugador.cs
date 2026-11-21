@@ -27,6 +27,12 @@ namespace Game.NPC.Combate
         private static GameObject s_cuerpo;
         private static float s_ultimoLanzamiento = -999f;
 
+        private const int Lanzamientos = 8;
+        private static readonly MagicSpellSO[] s_lanzadoQue = new MagicSpellSO[Lanzamientos];
+        private static readonly float[] s_lanzadoCuando = new float[Lanzamientos];
+        private static int s_lanzadoSiguiente;
+        private static MagicSpellSO s_ultimoHechizo;
+
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
@@ -38,6 +44,9 @@ namespace Game.NPC.Combate
             s_ultimoLanzamiento = -999f;
             s_siguiente = 0;
             for (int i = 0; i < Capacidad; i++) s_devoluciones[i] = default;
+            s_lanzadoSiguiente = 0;
+            s_ultimoHechizo = null;
+            for (int i = 0; i < Lanzamientos; i++) { s_lanzadoQue[i] = null; s_lanzadoCuando[i] = -999f; }
         }
 #endif
 
@@ -98,7 +107,29 @@ namespace Game.NPC.Combate
             if (s_caster != null) s_caster.OnSpellCast += AlLanzar;
         }
 
-        private static void AlLanzar(MagicSpellSO hechizo, CastHand mano) => s_ultimoLanzamiento = Time.time;
+        /// <summary>
+        /// Veces que el jugador ha lanzado en los últimos 'segundos' el mismo hechizo que lanzó el
+        /// último (0 si hace más de 'segundos' que no lanza nada).
+        /// </summary>
+        public static int RepeticionesDelUltimo(float segundos)
+        {
+            if (s_ultimoHechizo == null) return 0;
+            float desde = Time.time - segundos;
+            int n = 0;
+            for (int i = 0; i < Lanzamientos; i++)
+                if (s_lanzadoQue[i] == s_ultimoHechizo && s_lanzadoCuando[i] >= desde) n++;
+            return n;
+        }
+
+        private static void AlLanzar(MagicSpellSO hechizo, CastHand mano)
+        {
+            s_ultimoLanzamiento = Time.time;
+            if (hechizo == null) return;
+            s_ultimoHechizo = hechizo;
+            s_lanzadoQue[s_lanzadoSiguiente] = hechizo;
+            s_lanzadoCuando[s_lanzadoSiguiente] = Time.time;
+            s_lanzadoSiguiente = (s_lanzadoSiguiente + 1) % Lanzamientos;
+        }
 
         private static void AlDevolver(GameObject lanzador)
         {

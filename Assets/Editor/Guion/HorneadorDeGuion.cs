@@ -425,6 +425,10 @@ internal sealed partial class Horno
         _salida.escena = _g.escena;
         _salida.rutaDelTexto = _rutaTexto;
         ResolverPlanos();
+        // Cinemática viva: gestos que no se ven enteros y vida de fondo en los huecos en cuadro.
+        ReaccionesAutomaticas();
+        GestosCortados();
+        VidaDeFondo();
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Comprobando…", 0.8f);
         Validar();
@@ -1586,6 +1590,7 @@ internal sealed partial class Horno
             case "sonido": clase = "SfxBeat"; if (a0 != null) campos["eventKey"] = a0; RenombrarActorOMarca(campos); break;
             case "ambiente": clase = "AmbienteBeat"; if (a0 != null) campos["loopId"] = a0; break;
             case "hora": clase = "TimeOfDayBeat"; if (a0 != null) campos["timeOfDay"] = a0; break;
+            case "pasa_el_tiempo": clase = "PasaElTiempoBeat"; if (a0 != null) campos["timeOfDay"] = a0; break;
             case "fundido": clase = "ScreenFadeBeat"; campos["fadeIn"] = a0 == "entra" ? "false" : "true"; campos["waitForEnd"] = "false";
                 if (o.args.Count > 1) campos["duration"] = o.args[1]; break;
             case "destello": clase = "ScreenFlashBeat"; if (a0 != null) campos["color"] = a0; if (o.args.Count > 1) campos["duration"] = o.args[1]; break;

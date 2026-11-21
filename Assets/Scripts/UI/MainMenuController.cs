@@ -187,6 +187,7 @@ public class MainMenuController : MonoBehaviour
         // cortada a mitad de camino, antes de que el jugador pueda volver a cargar partida.
         // Ver GameBootService.ResetTransientSessionState() para el detalle.
         GameBootService.ResetTransientSessionState();
+        SigiloDelGrupo.TerminarTodos();
 
         GameState.Push(GamePhase.MainMenu);
 
@@ -229,6 +230,15 @@ public class MainMenuController : MonoBehaviour
             // real, en ShowLanguageSelectFirst().
             if (rootGroup) rootGroup.alpha = 1f;
             ShowLanguageSelectFirst();
+        }
+        else if (AvisoDeGuardadoAlArrancar.Pendiente)
+        {
+            // Primera vez que se llega al menú en esta ejecución: antes, el aviso del símbolo de
+            // guardado. El menú queda oculto detrás y entra con su animación al acabar el aviso.
+            if (rootGroup) rootGroup.alpha = 0f;
+            if (buttonPanel != null) buttonPanel.SetActive(false);
+            SuspendMainMenuInteraction();
+            AvisoDeGuardadoAlArrancar.Mostrar(gameObject.scene, EntrarAlMenu);
         }
         else
         {
@@ -594,18 +604,30 @@ public class MainMenuController : MonoBehaviour
 
         languageSelectPanel.Show(() =>
         {
-            RestoreMainMenuInteraction();
-
-            if (buttonPanel != null)
-                buttonPanel.SetActive(true);
-
-            // El jugador ya eligió idioma: ahora sí toca la animación de entrada normal del
-            // menú, como si acabara de aparecer (mismo efecto que un arranque sin selector).
-            PlayIntro();
-
-            RestartArmAfterSettingsClose();
-            StartCoroutine(RestoreSelectionNextFrame(null));
+            // Con el idioma ya elegido, el aviso del símbolo de guardado sale en ese idioma.
+            if (AvisoDeGuardadoAlArrancar.Pendiente)
+                AvisoDeGuardadoAlArrancar.Mostrar(gameObject.scene, EntrarAlMenu);
+            else
+                EntrarAlMenu();
         });
+    }
+
+    /// <summary>
+    /// Deja ver el menú después del selector de idioma o del aviso de guardado: le devuelve la
+    /// interacción y hace la animación de entrada normal, como si acabara de aparecer.
+    /// </summary>
+    void EntrarAlMenu()
+    {
+        if (!isActiveAndEnabled) return;
+        RestoreMainMenuInteraction();
+
+        if (buttonPanel != null)
+            buttonPanel.SetActive(true);
+
+        PlayIntro();
+
+        RestartArmAfterSettingsClose();
+        StartCoroutine(RestoreSelectionNextFrame(null));
     }
 
     public void OnClickSettings()

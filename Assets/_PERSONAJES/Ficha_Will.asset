@@ -30,5 +30,13 @@ MonoBehaviour:
   hechizoIzquierdo: {fileID: 0}
   hechizoDerecho: {fileID: 0}
   hechizoEspecial: {fileID: 0}
-  basicos: []
-  combos: []
+  basicos:
+  - {fileID: 11400000, guid: d45589ea2589f21499b4b61ab8d6f54b, type: 2}
+  - {fileID: 11400000, guid: bdcedfac08b648a4393bdc5f82614590, type: 2}
+  - {fileID: 11400000, guid: 1b30e0431fab5ab4aad2293b98ee6df8, type: 2}
+  - {fileID: 11400000, guid: e7f89e2e3a3cab8439296cf8812126c6, type: 2}
+  combos:
+  - {fileID: 11400000, guid: fd9d38bfa5a54cc4da358ab98c1935d9, type: 2}
+  - {fileID: 11400000, guid: 227d901b115f63c40a07ecba5e66a91d, type: 2}
+  - {fileID: 11400000, guid: e5779bd95930fd54ab1bcc6414765930, type: 2}
+  - {fileID: 11400000, guid: dd988b22a74ca88479875cebde939756, type: 2}

@@ -201,7 +201,7 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Segundos que tarda en espesar/disipar la niebla ocasional.")]
     [SerializeField] private float mistTransitionDuration = 8f;
 
-    [Header("Clima - Viento (30 ago 2026)")]
+    [Header("Clima - Viento")]
     [Tooltip("Prefab OPCIONAL de partículas de viento. Vacío = rachas y hojas generadas en código (VfxDeClima.CrearViento), orientadas según DireccionDelViento.")]
     [SerializeField] private GameObject windPrefab;
     [Tooltip("Duración aleatoria (min, max) en segundos de un evento de viento.")]
@@ -304,7 +304,7 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private string cloudsBuildingUpSfxKey;
     [Tooltip("Event Key del AudioGraphProfile del SFX/ambiente de lluvia. Se reproduce en LOOP (vía AudioService.PlayLoopingSFX) desde que arranca la lluvia de verdad hasta que para, no como one-shot: así no importa si el clip asignado es más largo o más corto que la lluvia real.")]
     [SerializeField] private string rainStartedSfxKey;
-    [Tooltip("Volumen del loop de lluvia (0-1). A 1 tapaba la música y los diálogos del prólogo: «el sfx de lluvia está demasiado fuerte» (prologo20, INC-433).")]
+    [Tooltip("Volumen del loop de lluvia (0-1). A 1 tapa la música y los diálogos (INC-433).")]
     [SerializeField, Range(0f, 1f)] private float rainLoopVolume = 0.3f;
     [Tooltip("Event Key opcional del AudioGraphProfile para un one-shot adicional cuando para de llover (p.ej. un cue corto de viento amainando). El loop de rainStartedSfxKey se detiene siempre, tenga o no clave este campo.")]
     [SerializeField] private string rainStoppedSfxKey;
@@ -454,6 +454,12 @@ public class DayNightCycle : MonoBehaviour
 
     [Header("Cielo y nubosidad")]
     [SerializeField, Min(0f)] private float duracionDelFundidoDelCielo = 45f;
+
+    // Duración pedida para UN cambio de franja (las cinemáticas: «hora Night dura=6»). −1 = la de
+    // siempre (transitionDuration para la luz, duracionDelFundidoDelCielo para el cielo).
+    private float _duracionPedida = -1f;
+    private float _duracionDelFundidoActual = -1f;
+    private float DuracionDelFundidoActual => _duracionDelFundidoActual > 0f ? _duracionDelFundidoActual : duracionDelFundidoDelCielo;
     [SerializeField, Min(0.01f)] private float duracionDeNublarse = 40f;
     [SerializeField, Min(0.01f)] private float duracionDeDespejarse = 60f;
     [Tooltip("Nubosidad del clima a la que las estrellas empiezan a taparse.")]
@@ -548,6 +554,7 @@ public class DayNightCycle : MonoBehaviour
             _cieloDeSalida.CopyPropertiesFromMaterial(_runtimeSkybox);
             _destinoDelCielo = destino;
             _tiempoDeFundido = 0f;
+            _duracionDelFundidoActual = _duracionPedida;
         }
         ReapplyPendingSkybox();
     }
@@ -606,7 +613,7 @@ public class DayNightCycle : MonoBehaviour
         if (_destinoDelCielo != null)
         {
             _tiempoDeFundido += Time.deltaTime;
-            float t = Mathf.Clamp01(_tiempoDeFundido / Mathf.Max(0.01f, duracionDelFundidoDelCielo));
+            float t = Mathf.Clamp01(_tiempoDeFundido / Mathf.Max(0.01f, DuracionDelFundidoActual));
             _runtimeSkybox.Lerp(_cieloDeSalida, _destinoDelCielo, Mathf.SmoothStep(0f, 1f, t));
             if (t >= 1f)
             {
@@ -1150,6 +1157,15 @@ public class DayNightCycle : MonoBehaviour
 #endif
     }
 
+    /// Cambia de franja con una duración concreta para la luz, la niebla y el cielo a la vez (las
+    /// cinemáticas: «pasa_el_tiempo» y «hora X dura=N»). Con duración ≤ 0, la de siempre.
+    public void SetTimeOfDay(TimeOfDay timeOfDay, bool immediate, float duracion)
+    {
+        _duracionPedida = duracion > 0f ? duracion : -1f;
+        try { SetTimeOfDay(timeOfDay, immediate); }
+        finally { _duracionPedida = -1f; }
+    }
+
     public void SetNight() => SetTimeOfDay(TimeOfDay.Night, immediate: false);
 
     public void SetTimeOfDayByIndex(int index, bool immediate = false)
@@ -1391,11 +1407,12 @@ public class DayNightCycle : MonoBehaviour
         float startNoche = PesoDeNoche;
         float targetNoche = target.timeOfDay == TimeOfDay.Night ? 1f : 0f;
 
+        float duracion = _duracionPedida > 0f ? _duracionPedida : transitionDuration;
         float elapsed = 0f;
-        while (elapsed < transitionDuration)
+        while (elapsed < duracion)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / transitionDuration));
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duracion));
             PesoDeNoche = Mathf.Lerp(startNoche, targetNoche, t);
 
             if (light != null)
@@ -1447,8 +1464,8 @@ public class DayNightCycle : MonoBehaviour
         _rainCoroutine = null;
     }
 
-    // Primero se juntan las nubes, después se ponen oscuras y, ya cerradas y negras, llueve (Raúl, 18 nov).
-    // INC-984 pedía no esperar con el cielo gris sin agua: la oscuridad llega justo antes de la primera gota.
+    // Primero se juntan las nubes, después se ponen oscuras y, ya cerradas y negras, llueve. INC-984 pedía no
+    // esperar con el cielo gris sin agua: la oscuridad llega justo antes de la primera gota.
     const float NubosidadQueEmpiezaALlover = 0.85f;
     const float NubosidadQueEmpiezaAOscurecer = 0.4f;
     const float NubosidadDelTodoOscura = 0.9f;

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Un paso en el lienzo: cabecera del color de su tipo (icono, número, tipo), el título y una
     /// línea de lo que hace, con el retrato de su personaje. Las salidas con nombre se arrastran; al
@@ -150,7 +150,7 @@ namespace NarrativeGraphEditor.Story
             _face.image = face;
             _face.style.display = face != null ? DisplayStyle.Flex : DisplayStyle.None;
 
-            _title.text = string.IsNullOrWhiteSpace(Model.displayTitle) ? entry?.title ?? Model.KindType.Name : Model.displayTitle;
+            _title.text = string.IsNullOrWhiteSpace(Model.DisplayTitle) ? entry?.title ?? Model.KindType.Name : Model.DisplayTitle;
             _summary.text = StepSummary.For(Model);
             _summary.style.display = string.IsNullOrEmpty(_summary.text) ? DisplayStyle.None : DisplayStyle.Flex;
 
@@ -160,8 +160,8 @@ namespace NarrativeGraphEditor.Story
             EnableInClassList("has-warning", warnings.Count > 0);
 
             RebuildOutputs();
-            style.left = Model.position.x;
-            style.top = Model.position.y;
+            style.left = Model.Position.x;
+            style.top = Model.Position.y;
             style.width = StoryLayout.CardWidth;
             style.height = StoryLayout.HeightOf(Model);
         }

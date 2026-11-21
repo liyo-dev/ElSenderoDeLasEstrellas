@@ -36,9 +36,6 @@ public class CreditsSceneController : MonoBehaviour
     [Header("Contenido")]
     [TextArea(10, 60)]
     [SerializeField] string _creditsText =
-        // ver mismo comentario en CreditsFlyoutPanel.cs — el nombre de Raúl
-        // estaba duplicado en las dos pantallas de créditos (panel rápido + este crawl
-        // cinemático); quitarlo solo de una dejaba la otra sin corregir.
         "Créditos de assets\n\n\n\n" +
         "VFX\n\n" +
         "Matthew Guz - Spell Area of Effect, Orbs Effects\n\n" +
@@ -366,7 +363,7 @@ public class CreditsSceneController : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(_scrollRect);
         float blockHeight = Mathf.Max(_scrollRect.rect.height, 50f);
 
-        // BUGFIX: antes endY = 1080f + blockHeight, lo que obligaba al bloque a recorrer un
+        // antes endY = 1080f + blockHeight, lo que obligaba al bloque a recorrer un
         // blockHeight ENTERO de más tras quedar ya completamente invisible (su borde inferior,
         // con pivot.y=0, ya está fuera de pantalla en cuanto y >= 1080f). Con créditos largos
         // (bloque de varios miles de píxeles) eso añadía decenas de segundos de pantalla en

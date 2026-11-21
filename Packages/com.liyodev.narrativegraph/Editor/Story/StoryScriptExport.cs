@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Exports a chapter's lines and on-screen texts in story order, as a spreadsheet (CSV) for
     /// translators and voice actors: who says it, in which step, its key and its text.
@@ -37,7 +37,7 @@ namespace NarrativeGraphEditor.Story
                 try { refs = NarrativeNodeReferences.Of(node); }
                 catch (System.Exception) { continue; }
                 string number = structure.Number(node);
-                string title = node.displayTitle ?? string.Empty;
+                string title = node.DisplayTitle ?? string.Empty;
 
                 foreach (var line in refs.Lines)
                 {

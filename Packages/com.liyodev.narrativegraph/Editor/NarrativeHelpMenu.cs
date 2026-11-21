@@ -2,7 +2,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Abre el manual que viaja con el paquete, sin que el usuario tenga que buscarlo.
     public static class NarrativeHelpMenu

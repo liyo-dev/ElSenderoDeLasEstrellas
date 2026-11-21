@@ -125,6 +125,11 @@ public class MagicProjectileSpawner : MonoBehaviour
             Teleport(spell);
             return null;
         }
+        if (spell.kind == MagicKind.Invisibility)
+        {
+            HacerInvisible(spell);
+            return null;
+        }
 
         return LaunchProjectile(spell, origin, directionOverride, damageMultiplier);
     }
@@ -170,6 +175,11 @@ public class MagicProjectileSpawner : MonoBehaviour
         else if (spell.kind == MagicKind.Teleport)
         {
             Teleport(spell);
+            SonarSalida(spell);
+        }
+        else if (spell.kind == MagicKind.Invisibility)
+        {
+            HacerInvisible(spell);
             SonarSalida(spell);
         }
         else if (spell.chargeTime > 0f)
@@ -709,6 +719,17 @@ public class MagicProjectileSpawner : MonoBehaviour
     /// de NavMesh, no esté detrás de una pared y no cambie mucho de altura. Efecto en la salida
     /// (spawnVFX) y en la llegada (prefab del hechizo).
     /// </summary>
+    /// El lanzador se vuelve invisible (Invisibilidad), con su destello en los pies.
+    private void HacerInvisible(MagicSpellSO spell)
+    {
+        GameObject body = Instigator;
+        if (body == null) return;
+        if (spell.spawnVFX)
+            VfxPoolService.Instance.Play(spell.spawnVFX, body.transform.position + Vector3.up * 1f, body.transform.rotation,
+                spell.vfxLifetime > 0f ? spell.vfxLifetime : 2f);
+        Invisibilidad.Poner(body, spell.invisibilidadSegundos, spell.materialDeInvisible);
+    }
+
     private void Teleport(MagicSpellSO spell)
     {
         GameObject body = Instigator;

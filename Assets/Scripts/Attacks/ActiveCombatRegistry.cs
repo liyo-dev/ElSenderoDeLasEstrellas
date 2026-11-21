@@ -10,14 +10,14 @@ public static class ActiveCombatRegistry
 {
     private static readonly HashSet<GameObject> _npcsInCombat = new HashSet<GameObject>();
 
-    // Petición de Raúl: enemigos "menores" (arañas, de momento) que sí deben contar
-    // como combate activo (Battle Mode, ciclo manual L1/R1, etc.) pero NO deben hacer que la
-    // cámara/objetivo se enganchen solos al caminar cerca de ellos — ver
-    // CombatCameraTargeting.TryAutoLock/OnEnterCombat/OnNPCEnteredCombat, que usan
-    // GetClosestCameraLockableCombatNPC en vez de GetClosestCombatNPC para las decisiones de
-    // auto-lock. El marcador de apuntado para hechizos sigue funcionando igual vía el auto-scan
-    // normal de PlayerTargeting (Targetable.isInActiveCombat), que no pasa por aquí.
+    // El marcador de apuntado para hechizos sigue funcionando igual vía el auto-scan normal de
+    // PlayerTargeting (Targetable.isInActiveCombat), que no pasa por aquí.
     private static readonly HashSet<GameObject> _cameraLockExempt = new HashSet<GameObject>();
+
+    // Combate cerrado: mientras alguien lo tiene, solo sus participantes pueden entrar en combate
+    // contra el jugador (un combate de la historia no admite enemigos de paso). Ver INC-1331.
+    private static readonly HashSet<GameObject> _participantesDelCerrado = new HashSet<GameObject>();
+    private static object _duenoDelCerrado;
     
     /// <summary>
     /// Se dispara cuando un NPC entra en combate (útil para que los compañeros reaccionen)
@@ -35,6 +35,8 @@ public static class ActiveCombatRegistry
     {
         _npcsInCombat.Clear();
         _cameraLockExempt.Clear();
+        _participantesDelCerrado.Clear();
+        _duenoDelCerrado = null;
         OnNPCEnteredCombat = null;
         OnNPCExitedCombat = null;
     }
@@ -88,6 +90,67 @@ public static class ActiveCombatRegistry
     }
     
     /// <summary>
+    /// Cierra el combate a los NPCs que se añadan con <see cref="AnadirAlCombateCerrado"/>: los demás
+    /// enemigos no pueden entrar en combate hasta <see cref="AbrirCombate"/>. Un cierre nuevo
+    /// sustituye al anterior.
+    /// </summary>
+    public static void CerrarCombate(object dueno)
+    {
+        if (dueno == null) return;
+        _duenoDelCerrado = dueno;
+        _participantesDelCerrado.Clear();
+    }
+
+    /// <summary>Añade un participante al combate cerrado de <paramref name="dueno"/>.</summary>
+    public static void AnadirAlCombateCerrado(object dueno, GameObject npc)
+    {
+        if (npc != null && dueno != null && dueno == _duenoDelCerrado) _participantesDelCerrado.Add(npc);
+    }
+
+    /// <summary>Quita el cierre de <paramref name="dueno"/> (no hace nada si el cierre es de otro).</summary>
+    public static void AbrirCombate(object dueno)
+    {
+        if (dueno == null || dueno != _duenoDelCerrado) return;
+        _duenoDelCerrado = null;
+        _participantesDelCerrado.Clear();
+    }
+
+    /// <summary>¿Puede este enemigo entrar ahora en combate? No, si hay un combate cerrado y no es de los suyos.</summary>
+    public static bool PuedeEntrarEnCombate(GameObject npc)
+        => _duenoDelCerrado == null || (npc != null && _participantesDelCerrado.Contains(npc));
+
+    /// <summary>
+    /// ¿Queda algún enemigo en combate, aparte de <paramref name="npc"/>, que no esté ya vencido
+    /// según <paramref name="vencido"/>? Sin allocations.
+    /// </summary>
+    /// Cuenta a los que están en el estado de combate y, además, a todos los participantes del
+    /// combate cerrado: uno de ellos puede salir un momento del estado de combate (aturdido,
+    /// recolocándose, en un golpe) y sigue siendo de la pelea. Antes solo se miraba el estado de
+    /// combate y el primero en caer daba la victoria aunque quedara otro en pie.
+    public static bool QuedanOtrosEnPie(GameObject npc, Func<GameObject, bool> vencido)
+    {
+        CleanupDestroyedNPCs();
+        foreach (var otro in _npcsInCombat)
+            if (SigueEnPie(otro, npc, vencido)) return true;
+        foreach (var otro in _participantesDelCerrado)
+            if (SigueEnPie(otro, npc, vencido)) return true;
+        return false;
+    }
+
+    private static bool SigueEnPie(GameObject otro, GameObject npc, Func<GameObject, bool> vencido)
+    {
+        if (otro == null || otro == npc || !otro.activeInHierarchy) return false;
+        return vencido == null || !vencido(otro);
+    }
+
+    /// <summary>
+    /// ¿Está en una pelea? En el estado de combate o como participante del combate cerrado (aunque
+    /// en este instante esté fuera del estado de combate).
+    /// </summary>
+    public static bool EstaEnUnaPelea(GameObject npc)
+        => npc != null && (_npcsInCombat.Contains(npc) || (_duenoDelCerrado != null && _participantesDelCerrado.Contains(npc)));
+
+    /// <summary>
     /// Verifica si un NPC está actualmente en combate
     /// </summary>
     public static bool IsInCombat(GameObject npc)
@@ -129,8 +192,8 @@ public static class ActiveCombatRegistry
     /// </summary>
     public static GameObject GetClosestCombatNPC(Vector3 position, float maxDistance = 50f)
     {
-        // FIX #16: antes había ~5 Debug.Log por NPC evaluado,
-        // sin gatear, en un método pensado para poder llamarse con cierta frecuencia.
+        // Antes había ~5 Debug.Log por NPC evaluado, sin gatear, en un método pensado
+        // para poder llamarse con cierta frecuencia.
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCombatRegistry] GetClosestCombatNPC: Buscando entre {_npcsInCombat.Count} NPCs (pos={position}, maxDist={maxDistance}m)");
 #endif
@@ -204,10 +267,9 @@ public static class ActiveCombatRegistry
     }
 
     /// <summary>
-    /// FIX #17: variante sin allocation de GetAllInCombat,
-    /// para llamadores guiados por Update/cooldown periódico (p.ej. AllyCombatState.FindNearestEnemy)
-    /// que antes copiaban el HashSet completo a una List nueva cada vez. El buffer lo mantiene y
-    /// reutiliza el llamador.
+    /// Variante sin allocation de GetAllInCombat, para llamadores guiados por Update/cooldown
+    /// periódico (p.ej. AllyCombatState.FindNearestEnemy) que antes copiaban el HashSet completo a
+    /// una List nueva cada vez. El buffer lo mantiene y reutiliza el llamador.
     /// </summary>
     public static void GetAllInCombatNonAlloc(List<GameObject> buffer)
     {
@@ -235,6 +297,8 @@ public static class ActiveCombatRegistry
 #endif
         foreach (var npc in _npcsInCombat) Kits.Core.GameContext.Exit(Situaciones.Combate, npc);
         _npcsInCombat.Clear();
+        _participantesDelCerrado.Clear();
+        _duenoDelCerrado = null;
     }
     
     /// <summary>

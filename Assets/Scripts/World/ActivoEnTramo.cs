@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Enciende unos objetos del mundo solo mientras dura un tramo de la historia (un portal que se

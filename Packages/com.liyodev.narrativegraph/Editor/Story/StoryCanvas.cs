@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// The story canvas: pan, zoom, select and drag steps, connect them from any side, add a step
     /// by dropping a connection on empty space, insert one on a connection, sections as headings.
@@ -309,13 +309,13 @@ namespace NarrativeGraphEditor.Story
                 var n = pair.Key;
                 var card = pair.Value;
                 card.EnableInClassList("is-selected", _selection.Contains(n));
-                card.EnableInClassList("is-on-path", _pathNodes.Contains(n.guid));
+                card.EnableInClassList("is-on-path", _pathNodes.Contains(n.Guid));
                 // Con un paso elegido, lo que no es su camino se apaga para que se lea la historia.
-                card.EnableInClassList("is-off-path", _pathNodes.Count > 0 && !_pathNodes.Contains(n.guid) && !_selection.Contains(n));
-                card.EnableInClassList("is-current", n.guid == _currentGuid);
-                card.EnableInClassList("has-breakpoint", StoryBreakpoints.Has(_edit.Graph, n.guid));
-                card.EnableInClassList("is-visited", _visited.Contains(n.guid));
-                card.EnableInClassList("is-start", n.guid == start);
+                card.EnableInClassList("is-off-path", _pathNodes.Count > 0 && !_pathNodes.Contains(n.Guid) && !_selection.Contains(n));
+                card.EnableInClassList("is-current", n.Guid == _currentGuid);
+                card.EnableInClassList("has-breakpoint", StoryBreakpoints.Has(_edit.Graph, n.Guid));
+                card.EnableInClassList("is-visited", _visited.Contains(n.Guid));
+                card.EnableInClassList("is-start", n.Guid == start);
                 card.EnableInClassList("is-dimmed", !Matches(n));
                 card.EnableInClassList("is-drop-target", card == _dropTarget);
             }
@@ -456,7 +456,7 @@ namespace NarrativeGraphEditor.Story
             _mode = Mode.Drag;
             _dragMoved = false;
             _pointerStart = this.WorldToLocal(e.position);
-            _dragStart = _selection.ToDictionary(n => n, n => n.position);
+            _dragStart = _selection.ToDictionary(n => n, n => n.Position);
             this.CapturePointer(e.pointerId);
             e.StopPropagation();
         }
@@ -489,8 +489,8 @@ namespace NarrativeGraphEditor.Story
                     _dragMoved = true;
                     foreach (var pair in _dragStart)
                     {
-                        pair.Key.position = pair.Value + delta;
-                        if (_cardOf.TryGetValue(pair.Key, out var c)) c.SetPosition(pair.Key.position);
+                        pair.Key.Position = pair.Value + delta;
+                        if (_cardOf.TryGetValue(pair.Key, out var c)) c.SetPosition(pair.Key.Position);
                     }
                     QueueDragRefresh();
                     break;
@@ -543,8 +543,8 @@ namespace NarrativeGraphEditor.Story
         {
             if (_edit?.Graph == null || _selection.Count == 0) return;
             var source = StoryTemplate.FromSelection(_selection.ToList());
-            var origin = new Vector2(_selection.Min(n => n.position.x), _selection.Min(n => n.position.y));
-            var entryOffset = StoryTemplate.Entry(source.steps).position;
+            var origin = new Vector2(_selection.Min(n => n.Position.x), _selection.Min(n => n.Position.y));
+            var entryOffset = StoryTemplate.Entry(source.steps).Position;
             var copies = _edit.AddTemplate(source, origin + entryOffset + new Vector2(40f, 40f), string.Empty);
             UnityEngine.Object.DestroyImmediate(source);
             _selection.Clear();
@@ -587,9 +587,9 @@ namespace NarrativeGraphEditor.Story
             var finals = new Dictionary<NarrativeNode, Vector2>();
             foreach (var pair in _dragStart)
             {
-                var p = pair.Key.position;
+                var p = pair.Key.Position;
                 finals[pair.Key] = new Vector2(Mathf.Round(p.x / 10f) * 10f, Mathf.Round(p.y / 10f) * 10f);
-                pair.Key.position = pair.Value;
+                pair.Key.Position = pair.Value;
             }
             _edit.Move(finals);
         }
@@ -619,7 +619,7 @@ namespace NarrativeGraphEditor.Story
         void CancelGesture()
         {
             if (_mode == Mode.Drag && _dragStart != null && _dragMoved)
-                foreach (var pair in _dragStart) pair.Key.position = pair.Value;
+                foreach (var pair in _dragStart) pair.Key.Position = pair.Value;
             if (_box != null) _box.style.display = DisplayStyle.None;
             if (_mode != Mode.None) { _mode = Mode.None; _edges.SetDrag(null, null); _dropTarget = null; Rebuild(); }
         }
@@ -726,7 +726,7 @@ namespace NarrativeGraphEditor.Story
             return best;
         }
 
-        static string Title(NarrativeNode n) => string.IsNullOrWhiteSpace(n.displayTitle) ? NarrativeNodeCatalog.TitleOf(n) : n.displayTitle;
+        static string Title(NarrativeNode n) => string.IsNullOrWhiteSpace(n.DisplayTitle) ? NarrativeNodeCatalog.TitleOf(n) : n.DisplayTitle;
 
         // ── Menus ────────────────────────────────────────────────────────────
 
@@ -737,8 +737,8 @@ namespace NarrativeGraphEditor.Story
             e.menu.ClearItems();
             e.menu.AppendAction(StoryText.T("Jugar desde aquí", "Play from here"), _ => PlayRequested?.Invoke(node));
             e.menu.AppendAction(StoryText.T("Pausar aquí al jugar", "Pause here when playing"),
-                _ => { StoryBreakpoints.Toggle(_edit.Graph, node.guid); ApplyHighlights(); },
-                _ => StoryBreakpoints.Has(_edit.Graph, node.guid) ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal);
+                _ => { StoryBreakpoints.Toggle(_edit.Graph, node.Guid); ApplyHighlights(); },
+                _ => StoryBreakpoints.Has(_edit.Graph, node.Guid) ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal);
             e.menu.AppendAction(StoryText.T("Marcar como inicio", "Set as start"), _ => _edit.SetStart(node),
                 _ => node.IsAnnotation ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal);
             foreach (var section in _structure.Sections)

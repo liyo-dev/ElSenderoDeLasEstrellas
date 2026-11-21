@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Ficha del jugador del juego: dónde están sus datos de partida nueva, qué campos se enseñan y
     /// se pueden cambiar con un jugador de prueba, y cuál dice dónde aparece (lo guardan los puntos

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Geometry of the story canvas: card sizes, section frames, automatic layout and the route
     /// every connection takes. A connection leaves each card through the side facing the other
@@ -22,7 +22,7 @@ namespace NarrativeGraphEditor.Story
             => (node != null && node.HasNamedOutputs ? CardHeightWithOutputs : CardHeight)
                + (node != null && !node.IsAnnotation && StoryCardImages.ShowCardArt ? CardArtHeight : 0f);
 
-        public static Rect RectOf(NarrativeNode node) => new Rect(node.position, new Vector2(CardWidth, HeightOf(node)));
+        public static Rect RectOf(NarrativeNode node) => new Rect(node.Position, new Vector2(CardWidth, HeightOf(node)));
 
         public static Dictionary<StoryStructure.Section, Rect> SectionFrames(StoryStructure structure)
         {
@@ -48,7 +48,7 @@ namespace NarrativeGraphEditor.Story
         {
             var result = new Dictionary<NarrativeNode, Vector2>();
             var byGuid = new Dictionary<string, NarrativeNode>();
-            foreach (var n in graph.nodes) if (n != null) byGuid[n.guid] = n;
+            foreach (var n in graph.nodes) if (n != null) byGuid[n.Guid] = n;
 
             float y = 0f;
             foreach (var section in structure.Sections)
@@ -58,8 +58,8 @@ namespace NarrativeGraphEditor.Story
                 foreach (var step in section.Steps)
                 {
                     if (!depth.ContainsKey(step)) depth[step] = 0;
-                    if (step.outputs == null) continue;
-                    foreach (var g in step.outputs)
+                    if (step.Outputs == null) continue;
+                    foreach (var g in step.Outputs)
                     {
                         if (string.IsNullOrEmpty(g) || !byGuid.TryGetValue(g, out var next) || !members.Contains(next)) continue;
                         // Only forward in story order: a connection back is a loop, not a layer.
@@ -150,21 +150,21 @@ namespace NarrativeGraphEditor.Story
         public static List<Route> Routes(NarrativeGraph graph, StoryStructure structure)
         {
             var byGuid = new Dictionary<string, NarrativeNode>();
-            foreach (var n in graph.nodes) if (n != null) byGuid[n.guid] = n;
+            foreach (var n in graph.nodes) if (n != null) byGuid[n.Guid] = n;
             var frames = SectionFrames(structure);
 
             var specs = new List<Spec>();
             foreach (var from in graph.nodes)
             {
-                if (from?.outputs == null) continue;
+                if (from?.Outputs == null) continue;
                 var names = from.GetOutputPorts();
                 int connected = 0;
-                foreach (var g in from.outputs) if (!string.IsNullOrEmpty(g)) connected++;
+                foreach (var g in from.Outputs) if (!string.IsNullOrEmpty(g)) connected++;
                 bool parallel = names == null && connected > 1;
 
-                for (int i = 0; i < from.outputs.Count; i++)
+                for (int i = 0; i < from.Outputs.Count; i++)
                 {
-                    var g = from.outputs[i];
+                    var g = from.Outputs[i];
                     if (string.IsNullOrEmpty(g) || !byGuid.TryGetValue(g, out var to) || to == from) continue;
                     var route = new Route
                     {
@@ -195,7 +195,7 @@ namespace NarrativeGraphEditor.Story
                 else if (Mathf.Abs(p0.x - p3.x) > 0.5f)
                 {
                     float my = (p0.y + p3.y) * 0.5f;
-                    if (structure.SectionOf.TryGetValue(s.Route.From.guid, out var sa) && structure.SectionOf.TryGetValue(s.Route.To.guid, out var sb)
+                    if (structure.SectionOf.TryGetValue(s.Route.From.Guid, out var sa) && structure.SectionOf.TryGetValue(s.Route.To.Guid, out var sb)
                         && sa != sb && frames.TryGetValue(sa, out var fa) && frames.TryGetValue(sb, out var fb))
                     {
                         if (fa.yMax <= fb.yMin) my = (fa.yMax + fb.yMin) * 0.5f;

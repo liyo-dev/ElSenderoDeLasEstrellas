@@ -72,7 +72,6 @@ public class ItemRegistrySO : ScriptableObject
             {
                 // Forzar rebuild al cargar para asegurar que el mapa está actualizado
                 _cachedInstance.Rebuild();
-                // Debug.Log($"[ItemRegistrySO] Cargado desde Resources con {_cachedInstance.items?.Count ?? 0} items");
             }
             else
             {

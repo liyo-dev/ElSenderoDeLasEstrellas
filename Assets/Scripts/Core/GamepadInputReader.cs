@@ -68,12 +68,12 @@ namespace Core
         _navPrevious = Vector2.zero;
         _navFrame = -1;
         _boundControls = null;
-        // FIX Bajos: antes solo se ponía _pollingRegistered = false, pero
-        // eso es un flag NUESTRO — no desuscribe de verdad InputSystem.onAfterUpdate (evento
-        // estático del paquete Input System, sobrevive a sesiones de PlayMode sin domain reload).
-        // Con solo el flag reseteado, la siguiente EnsurePollingRegistered() añadía OTRA
-        // suscripción sin quitar la anterior: PollHardwareFallback se acumulaba una vez por sesión
-        // de PlayMode. Desuscribir explícitamente aquí antes de resetear el flag.
+        // Antes solo se ponía _pollingRegistered = false, pero eso es un flag NUESTRO — no
+        // desuscribe de verdad InputSystem.onAfterUpdate (evento estático del paquete Input
+        // System, sobrevive a sesiones de PlayMode sin domain reload). Con solo el flag reseteado,
+        // la siguiente EnsurePollingRegistered() añadía OTRA suscripción sin quitar la anterior:
+        // PollHardwareFallback se acumulaba una vez por sesión de PlayMode. Desuscribir
+        // explícitamente aquí antes de resetear el flag.
         #if ENABLE_INPUT_SYSTEM
         if (_pollingRegistered)
             InputSystem.onAfterUpdate -= PollHardwareFallback;
@@ -499,9 +499,9 @@ namespace Core
         if (gp.selectButton != null && gp.selectButton.wasPressedThisFrame)
             Emit(InputEventType.ToggleBigMap, Vector2.zero, InputActionPhase.Performed, applySuppression: true, dedupePerFrame: true);
 
-        // Activar/desactivar el lock-on de objetivo en combate (petición Raúl, 1 sep 2026) —
-        // clic del stick derecho (R3), botón sin usar por ningún otro sistema del proyecto (ver
-        // PlayerControls.inputactions). Único suscriptor: CombatCameraTargeting.HandleGamepadInput.
+        // Activar/desactivar el lock-on de objetivo en combate — clic del stick derecho (R3), botón
+        // sin usar por ningún otro sistema del proyecto (ver PlayerControls.inputactions). Único
+        // suscriptor: CombatCameraTargeting.HandleGamepadInput.
         if (gp.rightStickButton != null && gp.rightStickButton.wasPressedThisFrame)
             Emit(InputEventType.ToggleTargetLock, Vector2.zero, InputActionPhase.Performed, applySuppression: true, dedupePerFrame: true);
 
@@ -876,6 +876,47 @@ namespace Core
 #endif
 
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Esquivar pulsado este fotograma: RB del mando o la C del teclado (la rueda del ratón,
+    /// que es «RB» en teclado, sigue siendo cambiar de objetivo). Respeta la supresión de
+    /// gameplay. Lo lee PlayerCombatInput. Ver INC-1349.
+    /// </summary>
+    public static bool EsquivaPressed
+    {
+        get
+        {
+            if (IsGameplaySuppressed())
+                return false;
+            if (RightShoulderPressed)
+                return true;
+#if ENABLE_INPUT_SYSTEM
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null && kb.cKey.wasPressedThisFrame)
+                return true;
+#endif
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Stick derecho del mando (sin el ratón), cero con el gameplay suprimido. Con un objetivo
+    /// fijado, un empujón a un lado cambia de objetivo (CombatCameraTargeting).
+    /// </summary>
+    public static Vector2 StickDerechoDelMando
+    {
+        get
+        {
+            if (IsGameplaySuppressed())
+                return Vector2.zero;
+#if ENABLE_INPUT_SYSTEM
+            var gp = GetGamepad();
+            if (gp != null && gp.rightStick != null)
+                return gp.rightStick.ReadValue();
+#endif
+            return Vector2.zero;
         }
     }
 

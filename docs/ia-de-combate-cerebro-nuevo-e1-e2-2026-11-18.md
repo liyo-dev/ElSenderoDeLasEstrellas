@@ -14,7 +14,7 @@ Incidencia: INC-1283 en `TRACKER.md`. Etapas E1 (esqueleto) y E2 (decisión por 
 Cambios:
 
 - **Memoria de qué le devuelven** (`MemoriaDeCombate.Devuelta`/`DevueltasDe`): cada devolución con la B a un proyectil suyo se apunta a la última acción que lanzó; esa acción pesa 1/(1+n) durante 15 s. Se suma a la regla de grupo (2 o más devoluciones al grupo en 20 s → lo devolvible ×0,3).
-- **Jugador que se protege mucho**: con el escudo arriba más de 0,8 s, lo devolvible ×0,25 (antes ×0,6 siempre); a partir de 1,2 s, `Rodear` vale también solo o sin turno, escalado por movilidad (el poco movido espera). Sin rodeador en grupo, el punto de rodeo se calcula desde su propia línea: da vueltas mientras dure el escudo.
+- **Jugador que se protege mucho**: con el escudo arriba más de 0,8 s deja de lanzar lo devolvible (antes ×0,6 siempre); a partir de 1,2 s, `Rodear` vale también solo o sin turno, escalado por movilidad. Por defecto **flanquea una vez**: va a un punto fijo a un lado (±115°), se coloca y espera a que baje el escudo; no vuelve a flanquear hasta el siguiente escudo. **Vueltas continuas** solo si su movilidad o su dificultad llegan a `Caracter ▸ Umbral De Vueltas Continuas` del perfil (0,8 por defecto; sin perfil, también 0,8: los contrabandistas, con 0,6 y 0,65, flanquean una vez). Decidido por Raúl el 19 nov.
 - **«Si le rodean, cambia de escondite o sale a por él»**: si le descubren en 3 escondites seguidos, `Cubrirse y recargar` vale ×0,35 durante 5 s, y sale a pelear con lo que tenga.
 - **Reglas del CLAUDE.md**: `SondeoDelTerreno` ya no busca componentes en cada impacto de rayo; recuerda qué es cada collider (personaje, proyectil, escudo) en una tabla compartida que se vacía al llegar a 1024 entradas.
 
@@ -49,22 +49,22 @@ Sigue pendiente de diseño (no es E2): con los hechizos del pirata **todos los a
 
 ## Qué no se ha tocado
 
-Fases (E3), legibilidad completa (E4), Erika (E5), migrar los demás NPCs y retirar el cerebro clásico (E6), cinemáticas y grafo del Cap. 3, `PedirCombateContraNpc` (no hizo falta: el cerebro se elige por la config, y su copia en memoria conserva el campo).
+Legibilidad completa (E4), migrar los demás NPCs y retirar el cerebro clásico (E6), cinemáticas y grafo del Cap. 3, `PedirCombateContraNpc` (no hizo falta: el cerebro se elige por la config, y su copia en memoria conserva el campo).
 
 ## Prueba para Raúl (no se ha podido hacer)
 
 1. Abrir Unity, dejar compilar y mirar `Logs/Editor.log`: 0 `error CS`. Si hay errores, son de firmas que no se pudieron comprobar sin Unity.
 2. (Ya hecho: los contrabandistas usan `NPC_Combat_Config_Contrabandistas`, con el cerebro nuevo.)
 3. Probar el combate de los contrabandistas desde ese paso. Seleccionar cada contrabandista en la jerarquía: el campo `Decision Actual` del componente dice qué hace; con `Registrar Decisiones` sale en consola.
-4. Mirar: (a) no atacan a la vez; uno lanza y el otro se va hacia un lado; luego se cambian. (b) Cada lanzamiento avisa (bola creciendo, aviso de devolver) y tras lanzar se quedan un momento quietos: se les puede castigar. (c) Golpearles mientras preparan les corta el hechizo. (d) Devolver varias bolas seguidas con la B: dejan de lanzar tanto (con los hechizos del pirata todos son devolvibles, así que lanzan menos y se mueven más). (e) Gastarles el maná: van detrás de una roca o una casa donde no se les ve; si se les rodea, cambian de sitio. (f) No se quedan en rincones ni pegados entre sí. (g) Aturdir y dormir siguen funcionando (se marean y vuelven). (h) Con el escudo arriba más de un segundo dejan de lanzar y le rodean; al bajarlo vuelven a atacar. (i) Devolver siempre el mismo hechizo: lo usan menos y tiran de los otros dos. (j) Descubrirles en tres escondites seguidos: dejan de esconderse un rato.
+4. Mirar: (a) no atacan a la vez; uno lanza y el otro se va hacia un lado; luego se cambian. (b) Cada lanzamiento avisa (bola creciendo, aviso de devolver) y tras lanzar se quedan un momento quietos: se les puede castigar. (c) Golpearles mientras preparan les corta el hechizo. (d) Devolver varias bolas seguidas con la B: dejan de lanzar tanto (con los hechizos del pirata todos son devolvibles, así que lanzan menos y se mueven más). (e) Gastarles el maná: van detrás de una roca o una casa donde no se les ve; si se les rodea, cambian de sitio. (f) No se quedan en rincones ni pegados entre sí. (g) Aturdir y dormir siguen funcionando (se marean y vuelven). (h) Con el escudo arriba más de un segundo dejan de lanzar; uno se va a un lado una sola vez y espera (no da vueltas); al bajarlo vuelven a atacar. (i) Devolver siempre el mismo hechizo: lo usan menos y tiran de los otros dos. (j) Descubrirles en tres escondites seguidos: dejan de esconderse un rato.
 5. Lo mismo con un NPC solo con el cerebro clásico (cualquier otro): debe pelear igual que antes.
 
 ## Decisiones pendientes de Raúl
 
-1. **Kit o juego.** Por la regla 9 del `CLAUDE.md`, lo genérico debería ir a un kit (`Kits.CombatAI`, con nombres en inglés). El encargo pedía nombres en español como el resto, así que el cerebro está en `Assets/Scripts/Behaviour NPC/Combate/`, con el núcleo (perfil, situación, opciones, memoria) sin dependencias del juego salvo las lecturas. ¿Se pasa a kit en E6, al retirar el cerebro clásico?
+1. **Kit o juego.** Por la regla 9 del `CLAUDE.md`, lo genérico debería ir a un kit (`Kits.CombatAI`, con nombres en inglés). El encargo pedía nombres en español como el resto, así que el cerebro está en `Assets/Scripts/Behaviour NPC/Combate/`, con el núcleo (perfil, situación, opciones, memoria) sin dependencias del juego salvo las lecturas. ¿Se pasa a kit en E6, al retirar el cerebro clásico? Decidido (19 nov): **sí, en E6**.
 2. ~~Contrabandistas~~: resuelto, config propia (INC-1287).
-3. **Proyectiles no devolvibles**: hoy ningún NPC tiene uno. ¿Se crean variantes (otro color, para que se lean) para que tenga sentido «deja los devolvibles»?
-4. Recarga ×1,5 a cubierto: es una mecánica nueva; ¿se queda?
+3. **Proyectiles no devolvibles**: decidido (19 nov): **sí**, con otro color para que se lean y **cada uno con su VFX propio** (regla: no se repiten VFX entre hechizos). Por hacer, fuera de E2: hoy ningún NPC tiene uno.
+4. Recarga ×1,5 a cubierto: decidido (19 nov): **se queda**.
 5. Código repetido temporal: la búsqueda de cobertura y la línea de fuego existen también en el cerebro clásico. Se van con él en E6.
 6. Repasar con la propuesta del 13 nov los pesos de las opciones (este hilo no pudo leerla).
 
@@ -78,4 +78,13 @@ Tocados: `NPCCombatBrain.cs`, `States/CombatState.cs`, `Common/NPCStateContext.c
 1. Proyectiles no devolvibles: sí, con otro color para que se lean (cada hechizo nuevo con su VFX propio, regla de VFX).
 2. Recarga de maná ×1,5 a cubierto: se queda.
 3. Pasar a kit (`Kits.CombatAI`) en E6: sí.
-4. Rodeo con el escudo arriba cuando pelea solo: pendiente (se le ha explicado la diferencia).
+1b. Pendiente de hacer (fuera de E2): crear esas variantes no devolvibles para los NPCs que deban tenerlas.
+4. Rodeo con el escudo arriba cuando pelea solo: un solo flanqueo por defecto (se va a un lado, se coloca y espera a que baje el escudo); vueltas continuas solo en perfiles ágiles o de dificultad alta, decidido por los datos del perfil (`CaracterDeCombate.umbralDeVueltasContinuas`, 0,8 por defecto, comparado con movilidad y dificultad; sin `if` por personaje). Hecho (ver «Revisión del 19 nov»).
+5. Turnos de ataque (19 nov): Raúl de acuerdo con que luchen los dos pero el ataque mágico se turne (1 atacante a la vez en los contrabandistas). A nivel de diseño, ir subiendo la presión en combates posteriores (más atacantes a la vez, menos pausa entre turnos) según avance el juego: pendiente de una curva de dificultad.
+
+## E3 y Erika (19 nov, INC-1334)
+
+- **Fases (E3) hechas, genéricas en el perfil:** `PerfilDeCombate.fases` (umbral de vida → catálogo, carácter, defensas y dificultad; transición quieta e invulnerable con frase en bocadillo, gesto, sacudida y curación opcionales). El cerebro cumple `IJefeConFases` y deja en el umbral el golpe que lo cruzaría (`IFiltroDeDano`).
+- **Leer el hechizo repetido:** `Defensas.leerLaRepeticion` (+ `repeticionesParaLeerla`, `segundosDeRepeticion`).
+- **`Caracter.leeLaDefensaDelJugador`:** apagado = lanza aunque el jugador se proteja o le devuelva (lecciones).
+- **Erika (E5):** perfiles `PerfilDeCombate_Erika` y `_Lecciones`; lecciones con la petición `PedirLeccionDeCombate`. Detalle en TRACKER INC-1334.

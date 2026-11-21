@@ -151,6 +151,13 @@ public abstract class PruebaDelJugador : MonoBehaviour
     /// </summary>
     protected virtual bool SoltarElControlAlEmpezar => true;
 
+    /// <summary>
+    /// Devuelve el control a mitad de prueba, para las que lo dejan bloqueado al empezar y lo
+    /// sueltan cuando les toca (el Templo del Coro, al llegar el momento de correr).
+    /// </summary>
+    protected void SoltarElControl() => BloquearControl(false);
+    protected void BloquearElControl() => BloquearControl(true);
+
     /// <summary>Con la pantalla tapada y el jugador en la salida: deja la prueba como al principio.</summary>
     protected abstract void PrepararIntento();
 

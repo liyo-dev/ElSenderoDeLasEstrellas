@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// A group of steps saved to be reused: "a shop visit", "a boss fight with its cinematic"...
     /// Made from a selection in the editor and offered again in "What happens now?".
@@ -47,15 +47,15 @@ namespace NarrativeGraphEditor.Story
         public static StoryTemplate FromSelection(IReadOnlyCollection<NarrativeNode> selection)
         {
             if (selection == null || selection.Count == 0) return null;
-            var inside = new HashSet<string>(selection.Select(n => n.guid));
-            var origin = new Vector2(selection.Min(n => n.position.x), selection.Min(n => n.position.y));
+            var inside = new HashSet<string>(selection.Select(n => n.Guid));
+            var origin = new Vector2(selection.Min(n => n.Position.x), selection.Min(n => n.Position.y));
             var template = CreateInstance<StoryTemplate>();
-            foreach (var node in selection.OrderBy(n => n.position.y).ThenBy(n => n.position.x))
+            foreach (var node in selection.OrderBy(n => n.Position.y).ThenBy(n => n.Position.x))
             {
                 var copy = Clone(node);
-                copy.guid = node.guid;
-                copy.position = node.position - origin;
-                copy.section = string.Empty;
+                copy.Guid = node.Guid;
+                copy.Position = node.Position - origin;
+                copy.Section = string.Empty;
                 KeepOutputsInside(copy, inside);
                 template.steps.Add(copy);
             }
@@ -71,16 +71,16 @@ namespace NarrativeGraphEditor.Story
             {
                 if (step == null) continue;
                 var copy = Clone(step);
-                copy.guid = Guid.NewGuid().ToString();
-                remap[step.guid] = copy.guid;
+                copy.Guid = Guid.NewGuid().ToString();
+                remap[step.Guid] = copy.Guid;
                 copies.Add(copy);
             }
             foreach (var copy in copies)
             {
-                if (copy.outputs == null) continue;
-                for (int i = 0; i < copy.outputs.Count; i++)
-                    copy.outputs[i] = !string.IsNullOrEmpty(copy.outputs[i]) && remap.TryGetValue(copy.outputs[i], out var g) ? g : string.Empty;
-                if (!copy.HasNamedOutputs) copy.outputs.RemoveAll(string.IsNullOrEmpty);
+                if (copy.Outputs == null) continue;
+                for (int i = 0; i < copy.Outputs.Count; i++)
+                    copy.Outputs[i] = !string.IsNullOrEmpty(copy.Outputs[i]) && remap.TryGetValue(copy.Outputs[i], out var g) ? g : string.Empty;
+                if (!copy.HasNamedOutputs) copy.Outputs.RemoveAll(string.IsNullOrEmpty);
             }
             return copies;
         }
@@ -88,14 +88,14 @@ namespace NarrativeGraphEditor.Story
         /// The step the template starts with: the first one nothing inside it leads to.
         public static NarrativeNode Entry(IReadOnlyList<NarrativeNode> copies)
         {
-            var targets = new HashSet<string>(copies.Where(c => c.outputs != null).SelectMany(c => c.outputs));
-            return copies.FirstOrDefault(c => !c.IsAnnotation && !targets.Contains(c.guid)) ?? copies.FirstOrDefault();
+            var targets = new HashSet<string>(copies.Where(c => c.Outputs != null).SelectMany(c => c.Outputs));
+            return copies.FirstOrDefault(c => !c.IsAnnotation && !targets.Contains(c.Guid)) ?? copies.FirstOrDefault();
         }
 
         /// The step the template ends with: the last one with a free way out.
         public static NarrativeNode Exit(IReadOnlyList<NarrativeNode> copies)
-            => copies.LastOrDefault(c => !c.IsAnnotation && (c.outputs == null || c.outputs.Count == 0
-                                                             || (c.HasNamedOutputs && c.outputs.Any(string.IsNullOrEmpty))))
+            => copies.LastOrDefault(c => !c.IsAnnotation && (c.Outputs == null || c.Outputs.Count == 0
+                                                             || (c.HasNamedOutputs && c.Outputs.Any(string.IsNullOrEmpty))))
                ?? copies.LastOrDefault();
 
         static NarrativeNode Clone(NarrativeNode source)
@@ -103,19 +103,19 @@ namespace NarrativeGraphEditor.Story
             var copy = (NarrativeNode)Activator.CreateInstance(source.GetType());
             // EditorJsonUtility copia también las referencias [SerializeReference] (la petición de «Pedir al juego»).
             EditorJsonUtility.FromJsonOverwrite(EditorJsonUtility.ToJson(source), copy);
-            copy.outputs = source.outputs != null ? new List<string>(source.outputs) : new List<string>();
+            copy.Outputs = source.Outputs != null ? new List<string>(source.Outputs) : new List<string>();
             return copy;
         }
 
         static void KeepOutputsInside(NarrativeNode node, HashSet<string> inside)
         {
-            if (node.outputs == null) return;
+            if (node.Outputs == null) return;
             if (node.HasNamedOutputs)
             {
-                for (int i = 0; i < node.outputs.Count; i++)
-                    if (!inside.Contains(node.outputs[i])) node.outputs[i] = string.Empty;
+                for (int i = 0; i < node.Outputs.Count; i++)
+                    if (!inside.Contains(node.Outputs[i])) node.Outputs[i] = string.Empty;
             }
-            else node.outputs.RemoveAll(g => !inside.Contains(g));
+            else node.Outputs.RemoveAll(g => !inside.Contains(g));
         }
 
         static string SafeFileName(string title)

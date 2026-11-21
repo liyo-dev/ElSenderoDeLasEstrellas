@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 4791041056768204728}
   - component: {fileID: 2450120384487338745}
   - component: {fileID: 444673835587567709}
+  - component: {fileID: 9052687824604409221}
   m_Layer: 7
   m_Name: PBR_Golem
   m_TagString: Boss
@@ -500,6 +501,21 @@ MonoBehaviour:
   tinteMaximo: 0.6
   luzPorNivel: 2.5
   vfxAlCrecer: {fileID: 358637981425055526, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
+--- !u!114 &9052687824604409221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939999298480460806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_GOLEM
+  debilidades: 02000000i
+  resistencias: 
 --- !u!1 &1151455076570608189
 GameObject:
   m_ObjectHideFlags: 0

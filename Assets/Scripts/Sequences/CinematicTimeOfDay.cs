@@ -43,7 +43,10 @@ public static class CinematicTimeOfDay
 #endif
 
     /// Pone la hora del día que pide la cinemática. La primera vez guarda la que había.
-    public static void Apply(DayNightCycle.TimeOfDay hora, bool immediate)
+    public static void Apply(DayNightCycle.TimeOfDay hora, bool immediate) => Apply(hora, immediate, 0f);
+
+    /// Con duración (> 0): la luz, la niebla y el cielo cambian a la vez en esos segundos.
+    public static void Apply(DayNightCycle.TimeOfDay hora, bool immediate, float duracion)
     {
         var ciclo = DayNightCycle.Instance;
         if (ciclo == null)
@@ -68,7 +71,7 @@ public static class CinematicTimeOfDay
         ciclo.AutoAdvance = false;
         // Ni se sortea clima nuevo (INC-409): el tiempo de una cinemática lo pone la cinemática.
         DayNightCycle.SorteoDeClimaEnPausa = true;
-        ciclo.SetTimeOfDay(hora, immediate);
+        ciclo.SetTimeOfDay(hora, immediate, duracion);
 
         // Y que el cielo sea el del ciclo, pase lo que pase (INC-380). Mientras hay un override de
         // entorno, DayNightCycle NO toca RenderSettings.skybox a propósito
@@ -147,7 +150,7 @@ public static class CinematicTimeOfDay
         entorno.ApplyExteriorForCinematic(camara);
         _exteriorForzado = nuestro;
 
-        // ── Y ahora la parte que faltaba (19 sep 2026, cuarta grabación) ──────────────────────
+        // ── Y ahora la parte que faltaba ──────────────────────
         //
         // ApplyExteriorForCinematic recupera el skybox de su SNAPSHOT del exterior. Y ese snapshot
         // aquí no vale nada: se toma la primera vez que hace falta, y en el prólogo eso ocurre con

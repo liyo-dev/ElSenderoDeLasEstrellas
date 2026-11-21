@@ -161,13 +161,25 @@ namespace Game.NPC.Modules
 
         [Header("=== PLATAFORMAS Y RASTRO ===")]
 
+        [Tooltip("Espacio alrededor del jugador en el que no se mete nadie del grupo (metros), en todo el juego: " +
+                 "se paran fuera de él, no caen dentro al repetir un salto y esperan a que el jugador se aparte. " +
+                 "Manda sobre las distancias de abajo cuando son menores.")]
+        [Range(2f, 6f)]
+        public float espacioDelJugador = 3f;
+
+        [Tooltip("Cuánto se abre a su lado (metros) al seguir detrás del jugador por el suelo: así no queda entre " +
+                 "la cámara y el jugador. Con el jugador quieto se coloca a esa distancia de su lado, un poco por detrás. " +
+                 "Junto a un salto no se abre (espera en el borde con los demás).")]
+        [Range(0f, 5f)]
+        public float aperturaLateralDetras = 3f;
+
         [Tooltip("Distancia mínima a la que se para detrás del jugador cuando sigue por NavMesh, " +
                  "aunque distanciaParaPararse sea menor.")]
         [Range(1.5f, 5f)]
         public float distanciaMinimaFormacionDetras = 2.5f;
 
-        [Tooltip("Si está activo, en zonas de plataformas o saltos sigue el rastro real del jugador " +
-                 "y repite sus saltos. Si se apaga, usa la formación en V de siempre.")]
+        [Tooltip("Si está activo, a pie va por donde ha ido el jugador (su rastro), espera en el borde de " +
+                 "cada salto y lo repite después que él. Si se apaga, va derecho a su puesto en la formación.")]
         public bool seguirRastroEnPlataformas = true;
 
         [Tooltip("Distancia base detrás del jugador a lo largo del rastro para el primer compañero (metros).")]
@@ -187,10 +199,15 @@ namespace Game.NPC.Modules
         [Range(0f, 0.8f)]
         public float tiempoEstudioSalto = 0.2f;
 
-        [Tooltip("Metros que el jugador debe alejarse del punto de caída antes de que los compañeros " +
-                 "empiecen a cruzar. Así salta primero él y ellos no le estorban.")]
-        [Range(1f, 6f)]
-        public float espacioTrasAterrizaje = 2.5f;
+        [Tooltip("Distancia mínima (metros) entre donde va a caer el compañero y el jugador. Hasta que no la hay, " +
+                 "espera en el borde: salta primero el jugador y nadie le cae encima ni pegado.")]
+        [Range(0.8f, 3f)]
+        public float holguraAlCaer = 1.4f;
+
+        [Tooltip("Segundos que espera cada compañero después de que caiga el anterior antes de saltar él. " +
+                 "Saltan de uno en uno, en el orden del grupo.")]
+        [Range(0f, 1.5f)]
+        public float esperaEntreSaltos = 0.4f;
 
         [Tooltip("Separación lateral de respaldo a pie sin NavMesh cuando aún no hay rastro disponible (metros).")]
         [Range(0.5f, 3f)]

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using Game.Player;
+using Liyodev.NarrativeGraph;
 
 [DisallowMultipleComponent]
 public sealed class AudioService : MonoBehaviour
@@ -125,9 +126,9 @@ public sealed class AudioService : MonoBehaviour
     // Coroutines de música rastreadas individualmente para no matar el pool SFX
     Coroutine _crossfadeRoutine;
     Coroutine _fadeOutRoutine;
-    // FIX INC-056: durante un crossfade ambas fuentes (_musicA y _musicB) pueden estar sonando a
-    // la vez. _fadeOutRoutine solo cubría una; esta segunda referencia permite parar la otra
-    // también (ver StopMusic).
+    // Durante un crossfade ambas fuentes (_musicA y _musicB) pueden estar sonando a la vez.
+    // _fadeOutRoutine solo cubría una; esta segunda referencia permite parar la otra también
+    // (ver StopMusic).
     Coroutine _fadeOutRoutineB;
     Coroutine _setVolumeRoutine;
 
@@ -162,17 +163,16 @@ public sealed class AudioService : MonoBehaviour
         // Escenas
         SceneManager.sceneLoaded   += OnSceneLoaded;
 
-        // FIX (12 sep 2026, reporte de Raúl — "he añadido música para WillHouse pero sigue sonando
-        // la de MainWorld"): OnSceneLoaded ignora a propósito las escenas cargadas en aditivo (ver
-        // comentario ahí — "feature de cinemáticas aditivas eliminada"), pero los interiores
-        // cargados en aditivo (InteriorPortalTrigger, p.ej. WillHouse.unity) SÍ deben poder tener
-        // música de escena propia (AudioGraphProfile.sceneMusic), igual que cualquier escena base.
-        // En vez de tocar esa guarda de OnSceneLoaded (y arriesgarnos a resucitar el bug que la
-        // motivó), nos enganchamos a los eventos de EnvironmentController.OnInteriorEntered/
-        // OnInteriorExited — ya existen, los dispara TeleportService.ApplyEnvironmentForAnchor en
-        // cualquier flujo de entrada/salida de interior (andando o por InteriorPortalTrigger), y ya
-        // los consume MinimapController para lo mismo (activar/desactivar el minimapa). Escalable a
-        // cualquier interior futuro con su propia música, sin parche específico de WillHouse.
+        // OnSceneLoaded ignora a propósito las escenas cargadas en aditivo (ver comentario ahí —
+        // "feature de cinemáticas aditivas eliminada"), pero los interiores cargados en aditivo
+        // (InteriorPortalTrigger, p.ej. WillHouse.unity) SÍ deben poder tener música de escena
+        // propia (AudioGraphProfile.sceneMusic), igual que cualquier escena base. En vez de tocar
+        // esa guarda de OnSceneLoaded (y arriesgarnos a resucitar el bug que la motivó), nos
+        // enganchamos a los eventos de EnvironmentController.OnInteriorEntered/ OnInteriorExited —
+        // ya existen, los dispara TeleportService.ApplyEnvironmentForAnchor en cualquier flujo de
+        // entrada/salida de interior (andando o por InteriorPortalTrigger), y ya los consume
+        // MinimapController para lo mismo (activar/desactivar el minimapa). Escalable a cualquier
+        // interior futuro con su propia música, sin parche específico de WillHouse.
         EnvironmentController.OnInteriorEntered += HandleInteriorEntered;
         EnvironmentController.OnInteriorExited  += HandleInteriorExited;
         Telon.AlAbrirse += HandleTelonAbierto;
@@ -242,7 +242,6 @@ public sealed class AudioService : MonoBehaviour
         WireBattleWins();
         WireMinigames();
         _signalsWired = true;
-        // Debug.Log("[AudioService] Señales conectadas (SFX, BattleStarts, BattleWins, Minigames).");
     }
 
     IEnumerator EnsureSignalsRoutine()
@@ -460,15 +459,12 @@ public sealed class AudioService : MonoBehaviour
     /// </summary>
     void HandleInteriorEntered()
     {
-        // FIX (12 sep 2026, reporte de Raúl — "ha sonado la música de la casa de will durante la
-        // secuencia del prólogo"): el jugador puede empezar la partida directamente dentro de un
-        // interior (WorldBootstrap resuelve el anchor de arranque 'Bedroom' → WillHouse), y ese
-        // mismo instante coincide con el arranque de una cinemática (la del prólogo) que
-        // gestiona su propia música (heartbeat, "MAGOOSCURO_VISION"...). Si HandleInteriorEntered
-        // reproduce la música del interior ahí mismo, pisa por completo lo que la cinemática está
-        // montando. Mismo guard que ya usa el resto del archivo (Co_MusicaDelLugar) para no chocar con una cinemática en curso — cuando termine, su propio
-        // RestoreMusic()/RestoreSceneMusic() se encargará de poner la música del interior (ver FIX
-        // gemelo en RestoreSceneMusic(), más abajo).
+        // El jugador puede empezar la partida directamente dentro de un interior (WorldBootstrap resuelve el anchor de
+        // arranque 'Bedroom' → WillHouse), y ese mismo instante coincide con el arranque de una cinemática (la del
+        // prólogo) que gestiona su propia música (heartbeat, "MAGOOSCURO_VISION"...). Si HandleInteriorEntered
+        // reproduce la música del interior ahí mismo, pisa por completo lo que la cinemática está montando. Mismo guard
+        // que ya usa el resto del archivo (Co_MusicaDelLugar) para no chocar con una cinemática en curso — cuando
+        // termine, su propio RestoreMusic()/RestoreSceneMusic() se encargará de poner la música del interior.
         if (CinematicSequencerBase.AnySequenceActive) return;
         if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode) return;
 
@@ -501,10 +497,10 @@ public sealed class AudioService : MonoBehaviour
     {
         if (profile == null) return;
 
-        // FIX 16 sep 2026: mismo guard que ya tenía su gemelo HandleInteriorEntered y que faltaba
-        // aquí. Si hay una cinemática en curso, es ella quien manda sobre la música — al terminar,
-        // su propio RestoreMusic()/RestoreSceneMusic() pondrá lo que toque. Sin esto, salir de un
-        // interior a mitad de una secuencia le pisaba la música.
+        // Mismo guard que ya tenía su gemelo HandleInteriorEntered y que faltaba aquí. Si hay una
+        // cinemática en curso, es ella quien manda sobre la música — al terminar, su propio
+        // RestoreMusic()/RestoreSceneMusic() pondrá lo que toque. Sin esto, salir de un interior a
+        // mitad de una secuencia le pisaba la música.
         //
         // OJO, esto NO arregla por sí solo el caso de "salgo de casa y suena un segundo la música
         // del mundo antes que la de la secuencia": ahí el orden es al revés (la puerta levanta
@@ -826,7 +822,7 @@ public sealed class AudioService : MonoBehaviour
         _musicA.loop = true;
         _musicB.loop = true;
 
-        // BUGFIX: solo tocar la pila si ESTE combate llegó a apilar algo. Los enemigos
+        // solo tocar la pila si ESTE combate llegó a apilar algo. Los enemigos
         // sin battleMusicId nunca pasan por BeginBattleMusic (no cambian de música al
         // empezar), así que _battleActive sigue en false aquí; hacer Pop() igualmente
         // robaba la entrada de otro sistema (cinemática aditiva, minijuego) que sí la
@@ -910,11 +906,27 @@ public sealed class AudioService : MonoBehaviour
 
     // ===========================================================
     // Música
-    private readonly Dictionary<AudioClip, int> _posicionesDeMusica = new();
+    // Por tema: muestra en la que dejó de sonar y cuándo (tiempo sin escalar). Al volver, solo
+    // continúa donde iba si no ha pasado más de AudioGraphProfile.segundosDeMemoriaDeMusica.
+    private readonly Dictionary<AudioClip, (int muestra, float parada)> _posicionesDeMusica = new();
     private void RecordarMusica(AudioSource fuente)
     {
         if (fuente != null && fuente.clip != null && fuente.isPlaying)
-            _posicionesDeMusica[fuente.clip] = fuente.timeSamples;
+            _posicionesDeMusica[fuente.clip] = (fuente.timeSamples, Time.unscaledTime);
+    }
+
+    private bool TryMuestraRecordada(AudioClip clip, out int muestra)
+    {
+        muestra = 0;
+        if (!_posicionesDeMusica.TryGetValue(clip, out var recuerdo)) return false;
+        float maximo = profile != null ? profile.segundosDeMemoriaDeMusica : float.PositiveInfinity;
+        if (Time.unscaledTime - recuerdo.parada > maximo)
+        {
+            _posicionesDeMusica.Remove(clip);
+            return false;
+        }
+        muestra = recuerdo.muestra;
+        return true;
     }
     /// <param name="desdeSegundo">Si es 0 o más, la pista arranca en ese segundo (manda sobre
     /// <paramref name="continuarDondeIba"/>). Sirve para que el clímax de un tema caiga en un
@@ -945,7 +957,7 @@ public sealed class AudioService : MonoBehaviour
         }
         else if (muestraPedida >= 0)
         {
-            _posicionesDeMusica[clip] = muestraPedida;
+            _posicionesDeMusica[clip] = (muestraPedida, Time.unscaledTime);
             if (current.clip == clip) current.timeSamples = muestraPedida;
             if (other.clip == clip) other.timeSamples = muestraPedida;
         }
@@ -964,7 +976,7 @@ public sealed class AudioService : MonoBehaviour
             // llevar al volumen objetivo suavemente (sin cambiar de fuente)
             StopMusicCoroutines();
 
-            // BUGFIX: StopMusicCoroutines() solo mata la corrutina de crossfade/fade-out en
+            // StopMusicCoroutines() solo mata la corrutina de crossfade/fade-out en
             // curso, no la fuente en sí. Si 'other' venía de un crossfade interrumpido a medias
             // se queda sonando su clip anterior indefinidamente, mezclado con 'current' (esto es
             // lo que producía "suena la música de gameplay Y la de la zona a la vez"). Si 'other'
@@ -988,7 +1000,7 @@ public sealed class AudioService : MonoBehaviour
             other.loop = bucle;
             StopMusicCoroutines();
 
-            // BUGFIX: 'other' es la fuente que de verdad queremos activa a partir de ahora.
+            // 'other' es la fuente que de verdad queremos activa a partir de ahora.
             // Antes no se actualizaba _musicATurn, así que SetMusicVolumeTo seguía tratando a
             // 'current' (el clip viejo) como la fuente "actual" y la subía al volumen objetivo
             // en vez de pararla — dejando el clip viejo y el nuevo sonando a la vez. Alineamos
@@ -1022,7 +1034,7 @@ public sealed class AudioService : MonoBehaviour
         to.clip = clip;
         to.loop = bucle;
         SetSourceVolume(to, 0f);
-        to.timeSamples = continuarDondeIba && _posicionesDeMusica.TryGetValue(clip, out int muestra)
+        to.timeSamples = continuarDondeIba && TryMuestraRecordada(clip, out int muestra)
             ? Mathf.Clamp(muestra, 0, Mathf.Max(0, clip.samples - 1)) : 0;
         if (!to.isPlaying) to.Play();
 
@@ -1046,12 +1058,12 @@ public sealed class AudioService : MonoBehaviour
         _jingleSonando = null;
         if (fadeOut < 0f) fadeOut = defaultFade;
 
-        // FIX INC-056: antes solo se paraba la fuente "current" según el flag _musicATurn. Si
-        // había un crossfade en curso (ej: música de batalla del Golem empezando a sonar mientras
-        // la anterior aún no había terminado de apagarse) las DOS fuentes (_musicA y _musicB)
-        // podían estar sonando a la vez, y esta función dejaba la otra sonando de fondo — al
-        // morir, la música principal seguía escuchándose mezclada con la de Game Over. Ahora se
-        // paran ambas fuentes si están sonando, en vez de asumir que solo una lo está.
+        // Antes solo se paraba la fuente "current" según el flag _musicATurn. Si había un
+        // crossfade en curso (ej: música de batalla del Golem empezando a sonar mientras la
+        // anterior aún no había terminado de apagarse) las DOS fuentes (_musicA y _musicB) podían
+        // estar sonando a la vez, y esta función dejaba la otra sonando de fondo — al morir, la
+        // música principal seguía escuchándose mezclada con la de Game Over. Ahora se paran ambas
+        // fuentes si están sonando, en vez de asumir que solo una lo está.
         if (!_musicA.isPlaying && !_musicB.isPlaying) return;
 
         StopMusicCoroutines();
@@ -1298,7 +1310,7 @@ public sealed class AudioService : MonoBehaviour
         float b0 = BaseVolume(other);
         if (fade <= 0f) fade = 0.0001f;
 
-        // BUGFIX: antes 'other' se interpolaba desde a0 (volumen de 'current') hacia el mismo
+        // antes 'other' se interpolaba desde a0 (volumen de 'current') hacia el mismo
         // target que 'current', sin usar b0 nunca. Si 'other' tenía un clip distinto sonando
         // (p.ej. un crossfade interrumpido) esto la subía al mismo volumen que la música actual
         // en vez de apagarla — dos pistas distintas sonando a la vez indefinidamente. Ahora
@@ -2019,8 +2031,7 @@ public sealed class AudioService : MonoBehaviour
     {
         if (fadeDuration < 0f) fadeDuration = defaultFade;
 
-        // FIX (12 sep 2026, reporte de Raúl — "la música de MainWorld sonó dentro de la casa de
-        // Will"): RestoreSceneMusic() es el punto de restauración compartido por
+        // RestoreSceneMusic() es el punto de restauración compartido por
         // CinematicSequencerBase.RestoreMusic()/RestoreAfterBattle/RestoreAfterMinigame — todos
         // ellos, hasta ahora, ignoraban por completo si el jugador sigue dentro de un interior con
         // música propia (AudioGraphProfile.sceneMusic para la escena de ese interior, ver
@@ -2111,7 +2122,6 @@ public sealed class AudioService : MonoBehaviour
         AplicarVolumenDeBus(bus);
     }
 
-    /// Quita la petición de la clave en ese bus; sin peticiones vuelve al volumen del jugador.
     public void SoltarAtenuacionDeBus(string clave, AudioBus bus)
     {
         if (string.IsNullOrWhiteSpace(clave) || !_atenuacionesDeBus.Remove((bus, clave))) return;

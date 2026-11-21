@@ -291,6 +291,18 @@ namespace Kits.StylizedVfx.Editor
                   persistent ? 0f : 0.55f, 0.3f);
         }
 
+        /// Burbuja ligera: casi transparente, solo el borde brillante y vetas que se mueven (las pone
+        /// «thinShell», un material de ShellMaterial con poca opacidad y bastante ruido). Sin aros, sin
+        /// partículas y sin luz; sale en un instante sin rebote. Para escudos que se sostienen y no deben
+        /// tapar al personaje.
+        public static void ShieldThin(GameObject root, Material thinShell, EnergyPalette p, float center, float diameter)
+        {
+            var t = B.Group(root.transform, "Burbuja", new Vector3(0f, center, 0f));
+            B.Animate(t, new AnimationCurve(new Keyframe(0f, 0.88f, 0f, 2f), new Keyframe(1f, 1f, 0f, 0f)), 0.1f);
+            var burbuja = B.Sphere(t, "Esfera", diameter, thinShell != null ? thinShell : p.Shell);
+            Pulse(root, new Renderer[] { burbuja }, null, null, 0f, 0f, 1.6f, 0.12f, 0.1f);
+        }
+
         /// Círculo mágico apoyado en el suelo: aro con rombos y estrella de seis puntas que giran al revés.
         public static void MagicCircle(GameObject root, EnergyPalette p, EnergyMeshes m, float radius, bool risingSparks = true, float light = 0.9f)
         {

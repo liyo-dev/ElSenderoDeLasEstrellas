@@ -53,7 +53,7 @@ public sealed class TransicionDeFaseDeJefe : MonoBehaviour
     /// Multiplica el color de todos los materiales del cuerpo (y opcionalmente apaga su emisión)
     /// con un MaterialPropertyBlock, siempre a partir del color original del material: no se
     /// acumula y nunca toca los materiales compartidos del prefab. Cubre _Color (Standard) y
-    /// _BaseColor (URP); HasProperty() lo hace inocuo si el shader no los usa.
+    /// _BaseColor (URP) y _Tinte (shader de dibujo); HasProperty() lo hace inocuo si el shader no los usa.
     public void Tintar(Color multiplicador, bool apagarEmision)
     {
         multiplicador.a = 1f;
@@ -69,6 +69,9 @@ public sealed class TransicionDeFaseDeJefe : MonoBehaviour
                 mpb.SetColor("_Color", r.sharedMaterial.GetColor("_Color") * multiplicador);
             if (r.sharedMaterial.HasProperty("_BaseColor"))
                 mpb.SetColor("_BaseColor", r.sharedMaterial.GetColor("_BaseColor") * multiplicador);
+            // El shader de dibujo tiñe con _Tinte (su _BaseColor no tiñe).
+            if (r.sharedMaterial.HasProperty("_Tinte"))
+                mpb.SetColor("_Tinte", r.sharedMaterial.GetColor("_Tinte") * multiplicador);
             if (apagarEmision && r.sharedMaterial.HasProperty("_EmissionColor"))
                 mpb.SetColor("_EmissionColor", Color.black);
             r.SetPropertyBlock(mpb);

@@ -2,15 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Esquiva de obstáculos "físicos" para NPCs con NavMeshAgent, pensada específicamente para el
-/// caso de los árboles del Bosque Prohibido (INC-001 / INC-173): los 568 <c>Tree02_a01</c> del
-/// bosque NUNCA se marcaron "Navigation Static" (el NavMesh horneado no sabe que existen) y
-/// dependen de <c>NavMeshObstacle</c> + Carve para que los agentes los rodeen — pero todo el
-/// trabajo de ajustar Carve/tamaños de cápsula en la sesión del 4 sep 2026 se revirtió a
-/// petición de Raúl (ver <c>incidencia-navmesh-error-damagesequence-sueno-por-distancia-2026-09-04.md</c>),
-/// así que hoy los árboles vuelven a tener cápsulas por defecto (0,5m) que no cubren ni de lejos
-/// el tronco real, y cualquier NPC que camine "a través" del punto donde está el árbol se queda
-/// empujando contra su collider físico en vez de rodearlo.
 ///
 /// Esta clase NO toca NavMesh, Carve, ni el bakeado — es un desvío puramente en runtime, barato
 /// (SphereCast/CheckSphere throttled a unas 6-7 veces por segundo, sin allocs) que se añade como
@@ -58,7 +49,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
     private float _timer;
     private bool _avoiding;
     private Vector3 _avoidLateral; // unitario, hacia el lado elegido para rodear el obstáculo
-    private int _effectiveObstacleLayers; // obstacleLayers sin la capa "Floor" (ver FIX 6 sept 2026 en Awake)
+    private int _effectiveObstacleLayers; // ObstacleLayers sin la capa "Floor"
     private float _avoidingSince = -1f; // Time.time en que empezó a esquivar sin interrupción, -1 = no esquivando
 
 
@@ -67,14 +58,9 @@ public class NPCObstacleAvoidance : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _effectiveCastRadius = castRadius > 0f ? castRadius : (_agent.radius + 0.15f);
 
-        // excluir siempre la capa "Floor" (el suelo/terreno de todo el
-        // proyecto, ver AGENTS.md § 2 y el resto de raycasts de suelo ya existentes) del set de
-        // obstáculos. Sin esto, cualquier ondulación/pendiente del terreno que el SphereCast
-        // rozara a la altura del pecho del NPC se interpretaba como un obstáculo real y
-        // disparaba la esquiva lateral — reportado por Raúl como "saltitos, como si hubiera
-        // pequeños montículos" en NPCs que nunca antes tuvieron ese problema (Eldran/Liam/
-        // Estela siguiendo a Will, arañas del bosque) justo tras añadir este componente
-        // (INC-173). El terreno/suelo nunca debe tratarse como obstáculo a esquivar.
+        // excluir siempre la capa "Floor" (el suelo/terreno de todo el proyecto, ver AGENTS.md
+        // § 2 y el resto de raycasts de suelo ya existentes) del set de obstáculos. El
+        // terreno/suelo nunca debe tratarse como obstáculo a esquivar.
         int floorLayer = LayerMask.NameToLayer("Floor");
         _effectiveObstacleLayers = floorLayer >= 0 ? (obstacleLayers & ~(1 << floorLayer)) : (int)obstacleLayers;
 
@@ -109,9 +95,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
         }
 
         // red de seguridad contra bloqueo permanente — ver comentario del campo
-        // maxContinuousAvoidSeconds. Reportado por Raúl como "barrera invisible" bloqueando el avance
-        // en la plaza de MainWorld (mobiliario urbano apretado: bancos + farolas), justo tras activar
-        // el componente por primera vez en los prefabs reales de party (Eldran/_LIAM/_ESTELA).
+        // maxContinuousAvoidSeconds.
         if (_avoiding && _avoidingSince > 0f && Time.time - _avoidingSince > maxContinuousAvoidSeconds)
         {
             _avoiding = false;
@@ -141,15 +125,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
         {
             Vector3 lateral = Vector3.Cross(Vector3.up, dir).normalized;
 
-            // comprobar los DOS lados, no solo uno. Antes solo se comprobaba
-            // "rightBlocked" y, si estaba bloqueado, se esquivaba hacia el lado contrario SIN
-            // comprobar que ese lado estuviera realmente libre — en una zona con mobiliario urbano
-            // apretado (bancos + farolas de la plaza de MainWorld) un NPC podía quedar encajado entre
-            // dos obstáculos y el componente lo forzaba una y otra vez contra un lado que tampoco
-            // estaba libre, sin poder escapar nunca. Un NPC de party (collider real, misma capa que
-            // el jugador) atascado así en un paso estrecho se siente exactamente como una "barrera
-            // invisible" bloqueando el avance — reportado por Raúl justo tras activar el componente
-            // por primera vez en los prefabs reales.
+            // comprobar los DOS lados, no solo uno.
             float probeOffset = _effectiveCastRadius * 2f;
             bool rightBlocked = Physics.CheckSphere(origin + lateral * probeOffset, _effectiveCastRadius * 0.6f, _effectiveObstacleLayers, QueryTriggerInteraction.Ignore);
             bool leftBlocked = Physics.CheckSphere(origin - lateral * probeOffset, _effectiveCastRadius * 0.6f, _effectiveObstacleLayers, QueryTriggerInteraction.Ignore);

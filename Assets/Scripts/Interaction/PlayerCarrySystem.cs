@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Invector.vCharacterController;
 
@@ -20,6 +20,14 @@ public class PlayerCarrySystem : MonoBehaviour
     [SerializeField] private float throwAnimationDuration = 0.3f;
     [SerializeField] private float dropCooldown = 0.5f; // Cooldown después de soltar para evitar interacciones
 
+    // La caja va entre las manos si la pose de carga las tiene delante y juntas; si no, en el punto
+    // de carga. Mismo criterio que los NPCs con oficio (WorkState). Ver INC-1091.
+    private const float VelocidadDeLaCaja = 18f;
+    private const float SeparacionMaximaDeLasManos = 0.8f;
+    private const float DelanteMinimoDeLasManos = 0.12f;
+    // Hueco entre el eje del cuerpo y la cara trasera de la caja: así nunca se mete dentro del modelo.
+    private const float GrosorDelCuerpo = 0.22f;
+
     /// <summary>
     /// Evento disparado cuando el player suelta un objeto.
     /// Parámetro: GameObject que fue soltado.
@@ -37,6 +45,9 @@ public class PlayerCarrySystem : MonoBehaviour
     private bool _isCarrying;
     private bool _isPickingUp;
     private float _lastDropTime = -999f;
+    private Transform _manoIzquierda, _manoDerecha;
+    private Vector3 _centroLocal;            // centro visible del objeto, en su espacio local
+    private float _semiFondo;                // media profundidad del objeto según el frente del jugador
     
     /// <summary>
     /// Indica si el jugador acaba de soltar un objeto recientemente.
@@ -48,6 +59,11 @@ public class PlayerCarrySystem : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _actionManager = GetComponent<PlayerActionManager>();
+        if (_animator != null && _animator.isHuman)
+        {
+            _manoIzquierda = _animator.GetBoneTransform(HumanBodyBones.LeftHand);
+            _manoDerecha = _animator.GetBoneTransform(HumanBodyBones.RightHand);
+        }
 
         if (carryPoint == null)
         {
@@ -91,6 +107,8 @@ public class PlayerCarrySystem : MonoBehaviour
 
         if (_animator != null)
         {
+            // Llevar algo manda sobre las poses de ambiente (frío, viento, gestos de reposo).
+            PosesDeMedioCuerpo.Reclamar(_animator, this, PosesDeMedioCuerpo.Llevar);
             _animator.CrossFade(pickupStateName, transitionDuration, animatorLayer);
             // Subir el peso de la capa UpperBody a 1
             if (animatorLayer > 0)
@@ -123,8 +141,9 @@ public class PlayerCarrySystem : MonoBehaviour
         }
 
         _carriedObject.transform.SetParent(carryPoint, worldPositionStays:true);
-        _carriedObject.transform.localPosition = Vector3.zero;
-        _carriedObject.transform.localRotation = Quaternion.identity;
+        _carriedObject.transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+        _centroLocal = CentroLocal(_carriedObject.transform, out _semiFondo);
+        _carriedObject.transform.position = DondeVaLaCaja();
 
         if (_animator != null)
             _animator.CrossFade(carryMoveStateName, transitionDuration, animatorLayer);
@@ -178,6 +197,7 @@ public class PlayerCarrySystem : MonoBehaviour
         {
             _animator.SetLayerWeight(animatorLayer, 0f);
         }
+        PosesDeMedioCuerpo.Soltar(_animator, this);
 
         // Disparar evento antes de limpiar la referencia
         OnObjectDropped?.Invoke(_carriedObject);
@@ -211,12 +231,58 @@ public class PlayerCarrySystem : MonoBehaviour
     {
         if (_isCarrying && _carriedObject != null && carryPoint != null)
         {
-            _carriedObject.transform.position = carryPoint.position;
-            // Mantener el objeto recto: solo hereda la rotación Y del player (yaw),
-            // sin inclinarse con la animación del carryPoint
-            float playerYaw = transform.eulerAngles.y;
-            _carriedObject.transform.rotation = Quaternion.Euler(0f, playerYaw, 0f);
+            // Entre las manos (o en el punto de carga) y recto: solo hereda el rumbo del jugador,
+            // sin inclinarse con la animación.
+            float k = 1f - Mathf.Exp(-VelocidadDeLaCaja * Time.deltaTime);
+            var caja = _carriedObject.transform;
+            caja.position = Vector3.Lerp(caja.position, DondeVaLaCaja(), k);
+            caja.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
         }
+    }
+
+    /// Punto entre las dos manos si están delante del cuerpo y a la distancia de sostener algo (con
+    /// los brazos caídos la caja quedaría dentro del cuerpo); si no, el punto de carga.
+    private Vector3 DondeVaLaCaja()
+    {
+        if (_manoIzquierda != null && _manoDerecha != null)
+        {
+            Vector3 izq = _manoIzquierda.position, der = _manoDerecha.position;
+            if ((izq - der).sqrMagnitude <= SeparacionMaximaDeLasManos * SeparacionMaximaDeLasManos)
+            {
+                Vector3 punto = (izq + der) * 0.5f;
+                Vector3 delante = punto - transform.position;
+                delante.y = 0f;
+                // Lo que queda entre las manos es el centro del objeto, no su pivote (que puede ir en la base).
+                float adelante = Vector3.Dot(delante, transform.forward);
+                if (adelante >= DelanteMinimoDeLasManos)
+                {
+                    // Si las manos quedan pegadas al pecho, se adelanta la caja hasta que su cara
+                    // trasera queda fuera del cuerpo.
+                    float minimo = _semiFondo + GrosorDelCuerpo;
+                    if (adelante < minimo)
+                        punto += transform.forward * (minimo - adelante);
+                    return punto - _carriedObject.transform.TransformVector(_centroLocal);
+                }
+            }
+        }
+        return carryPoint.position;
+    }
+
+    /// Centro de lo que se ve del objeto (sus renderers), en su espacio local.
+    private Vector3 CentroLocal(Transform objeto, out float semiFondo)
+    {
+        var renderers = objeto.GetComponentsInChildren<Renderer>();
+        bool hay = false;
+        Bounds caja = default;
+        foreach (var r in renderers)
+        {
+            if (r == null || !r.enabled || r is ParticleSystemRenderer) continue;
+            if (!hay) { caja = r.bounds; hay = true; }
+            else caja.Encapsulate(r.bounds);
+        }
+        Vector3 f = transform.forward, e = caja.extents;
+        semiFondo = hay ? Mathf.Abs(f.x) * e.x + Mathf.Abs(f.z) * e.z : 0f;
+        return hay ? objeto.InverseTransformPoint(caja.center) : Vector3.zero;
     }
 
     public bool IsCarrying => _isCarrying;
@@ -242,6 +308,7 @@ public class PlayerCarrySystem : MonoBehaviour
 
         if (_animator != null && animatorLayer > 0)
             _animator.SetLayerWeight(animatorLayer, 0f);
+        PosesDeMedioCuerpo.Soltar(_animator, this);
 
         if (_actionManager != null)
             _actionManager.PopMode(ActionMode.Carrying);
@@ -253,6 +320,7 @@ public class PlayerCarrySystem : MonoBehaviour
         // ni los colliders del objeto cargado deshabilitados.
         CancelInvoke(nameof(AttachObject));
         CancelInvoke(nameof(PhysicallyDropObject));
+        PosesDeMedioCuerpo.Soltar(_animator, this);
 
         if (_isCarrying || _isPickingUp)
         {

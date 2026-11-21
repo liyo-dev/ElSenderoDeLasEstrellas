@@ -15,20 +15,19 @@ using UnityEngine;
 /// Mismo patrón que AnchorRegistry (SpawnAnchor) y PlayerService: coste de resolución pagado una
 /// sola vez (aquí en Awake), lookup O(1) después.
 ///
-/// hasta ahora EnvironmentController ocultaba este root entero
-/// con GameObject.SetActive(false). Eso apagaba TODO lo que cuelga de aquí, no solo el
-/// renderizado: ningún Update()/FixedUpdate() corre, ningún NavMeshAgent avanza, y ninguna
-/// coroutine en marcha puede seguir ni pararse limpiamente. Un NPC del root "AI" (p. ej. Oliver)
-/// congelado a mitad de una cinemática al entrar el jugador en un interior dejaba esa coroutine
-/// tirada, y cualquier intento posterior de lanzar otra sobre él
-/// (CinematicSequencerBase.RequestSkip/RequestSkipAll → StartCoroutine) fallaba en consola con
-/// "Coroutine couldn't be started because the game object 'Oliver' is inactive" (conversación
-/// 15 sep 2026). Ahora este componente solo apaga el RENDERIZADO (Renderer.enabled +
-/// Light.enabled + Terrain.enabled) vía SetVisible(): el mundo exterior deja de verse desde dentro
-/// del interior exactamente igual que antes — nada de skybox/copas de árboles colándose por las
-/// paredes — pero la simulación de todo lo que cuelga de este root (IA, física, coroutines) sigue
-/// corriendo con normalidad, así que no puede quedar nada "a medias". Se registra en Awake (no
-/// OnEnable) y solo se quita del registro en OnDestroy, igual que antes.
+/// hasta ahora EnvironmentController ocultaba este root entero con GameObject.SetActive(false).
+/// Eso apagaba TODO lo que cuelga de aquí, no solo el renderizado: ningún Update()/FixedUpdate()
+/// corre, ningún NavMeshAgent avanza, y ninguna coroutine en marcha puede seguir ni pararse
+/// limpiamente. Un NPC del root "AI" (p. ej. Oliver) congelado a mitad de una cinemática al entrar
+/// el jugador en un interior dejaba esa coroutine tirada, y cualquier intento posterior de lanzar
+/// otra sobre él (CinematicSequencerBase.RequestSkip/RequestSkipAll → StartCoroutine) fallaba en
+/// consola con "Coroutine couldn't be started because the game object 'Oliver' is inactive". Ahora
+/// este componente solo apaga el RENDERIZADO (Renderer.enabled + Light.enabled + Terrain.enabled)
+/// vía SetVisible(): el mundo exterior deja de verse desde dentro del interior exactamente igual
+/// que antes — nada de skybox/copas de árboles colándose por las paredes — pero la simulación de
+/// todo lo que cuelga de este root (IA, física, coroutines) sigue corriendo con normalidad, así
+/// que no puede quedar nada "a medias". Se registra en Awake (no OnEnable) y solo se quita del
+/// registro en OnDestroy, igual que antes.
 /// </summary>
 [DisallowMultipleComponent]
 public class ExteriorWorldRoot : MonoBehaviour
@@ -70,8 +69,6 @@ public class ExteriorWorldRoot : MonoBehaviour
     }
 
     /// <summary>
-    /// Oculta (false) o muestra (true) el renderizado de este root sin desactivar ningún
-    /// GameObject — ver el FIX de 15 sep 2026 en el comentario de la clase para el motivo.
     /// Guard de estado ya incluido (no repite trabajo si ya está en el estado pedido; cumple
     /// TDD.md § 12 también para este toggle, no solo para SetActive).
     /// </summary>
@@ -112,10 +109,10 @@ public class ExteriorWorldRoot : MonoBehaviour
 
     /// <summary>
     /// Devuelve TODOS los ExteriorWorldRoot registrados en este momento. Usado por
-    /// EnvironmentController.ApplyZoneVisibility() en vez de resolver por nombre uno a uno (14 sep
-    /// 2026, pedido de Raúl): el propio componente ExteriorWorldRoot ya es la marca de "esto es
-    /// mundo exterior, ocúltame al entrar en un interior/cinemática" — no hace falta, además,
-    /// mantener una lista de nombres a mano en cada AnchorEnvironment.
+    /// EnvironmentController.ApplyZoneVisibility() en vez de resolver por nombre uno a uno: el
+    /// propio componente ExteriorWorldRoot ya es la marca de "esto es mundo exterior, ocúltame al
+    /// entrar en un interior/cinemática" — no hace falta, además, mantener una lista de nombres a
+    /// mano en cada AnchorEnvironment.
     /// </summary>
     public static List<ExteriorWorldRoot> AllRegistered()
     {

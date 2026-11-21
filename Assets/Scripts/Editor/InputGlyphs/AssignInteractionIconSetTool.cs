@@ -16,7 +16,7 @@ namespace Core.InputGlyphs.EditorTools
     /// alguna vez se asigna un set distinto a mano en una instancia concreta, esta herramienta lo
     /// deja intacto.
     ///
-    /// FIX (2026-08-11): la primera versión recorría TODOS los prefabs del proyecto con
+    /// La primera versión recorría TODOS los prefabs del proyecto con
     /// PrefabUtility.LoadPrefabContents antes de mirar si de verdad contenían alguno de estos
     /// componentes — en un proyecto con miles de prefabs de arte comprado (personajes, props...)
     /// eso es carísimo y parecía "colgarse". Ahora se hace primero un filtro rápido por texto

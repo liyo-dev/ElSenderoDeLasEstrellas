@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Diálogo del juego. Hereda de NarrativeDialogueAsset para que el grafo narrativo lo guarde y lo
 /// reproduzca sin conocer el formato de las líneas.

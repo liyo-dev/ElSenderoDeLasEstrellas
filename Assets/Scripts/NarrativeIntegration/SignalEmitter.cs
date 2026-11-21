@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Convierte un hecho de la escena (trigger físico, interacción, muerte de un enemigo, acercarse,

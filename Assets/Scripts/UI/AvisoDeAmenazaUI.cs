@@ -7,8 +7,8 @@ namespace Sendero.UI
 {
     /// <summary>
     /// Icono del aviso de combate sobre la cabeza del jugador (<see cref="AvisoDeAmenazas"/>):
-    /// anillo con el glifo del botón del mando que se use (B para la defensa, A para recuperarse) o
-    /// un «!» rojo para lo que no se para. Tenue cuando viene; opaco, dorado y con golpe de escala
+    /// anillo con el glifo del botón del mando que se use (B para la defensa, A para recuperarse) y,
+    /// en rojo, RB (esquivar) para lo que no se para; con teclado, un «!» rojo. Tenue cuando viene; opaco, dorado y con golpe de escala
     /// en el momento justo. Prefab en Resources/UI/AvisoDeAmenaza (lo crea el menú de INC-666).
     /// </summary>
     [DisallowMultipleComponent]
@@ -67,7 +67,10 @@ namespace Sendero.UI
             if (icono != null) icono.DOKill();
         }
 
-        private void AlCambiarDeMando(InputGlyphDeviceFamily _) => PonerGlifo();
+        private void AlCambiarDeMando(InputGlyphDeviceFamily _)
+        {
+            if (_tipo != TipoDeAviso.Ninguno) PonerPiezas();
+        }
 
         private void AlAviso(TipoDeAviso tipo, EstadoDeAviso estado)
         {
@@ -81,17 +84,9 @@ namespace Sendero.UI
                 return;
             }
 
-            PonerGlifo();
+            PonerPiezas();
             bool ahora = estado == EstadoDeAviso.Ahora;
             bool noBloqueable = tipo == TipoDeAviso.NoBloqueable;
-            Color color = noBloqueable ? colorNoBloqueable : ahora ? colorAhora : colorAviso;
-            if (anillo != null) anillo.color = color;
-            if (glifo != null) glifo.enabled = !noBloqueable;
-            if (exclamacion != null)
-            {
-                exclamacion.enabled = noBloqueable;
-                exclamacion.color = color;
-            }
             _alfaObjetivo = ahora || noBloqueable ? 1f : alfaAviso;
 
             if (icono == null) return;
@@ -101,14 +96,39 @@ namespace Sendero.UI
                 icono.DOPunchScale(Vector3.one * golpeDeEscala, 0.25f, 6, 0.6f).SetUpdate(true);
         }
 
-        private void PonerGlifo()
+        /// Color del anillo y qué se ve dentro: el glifo del botón o, si no hay glifo que poner
+        /// (lo que no se para, con teclado), el «!».
+        private void PonerPiezas()
         {
-            if (glifo == null) return;
-            string nombre = _tipo == TipoDeAviso.Recuperacion ? InputGlyphNames.South : InputGlyphNames.East;
+            bool noBloqueable = _tipo == TipoDeAviso.NoBloqueable;
+            Color color = noBloqueable ? colorNoBloqueable : _estado == EstadoDeAviso.Ahora ? colorAhora : colorAviso;
+            if (anillo != null) anillo.color = color;
+            bool conGlifo = PonerGlifo();
+            if (glifo != null) glifo.enabled = conGlifo;
+            if (exclamacion != null)
+            {
+                exclamacion.enabled = noBloqueable && !conGlifo;
+                exclamacion.color = color;
+            }
+        }
+
+        /// True si ha puesto un glifo. Lo que no se para lleva el de esquivar (RB) solo con mando:
+        /// en teclado ese glifo es la rueda del ratón, que no esquiva.
+        private bool PonerGlifo()
+        {
+            if (glifo == null) return false;
+            string nombre;
+            if (_tipo == TipoDeAviso.NoBloqueable)
+            {
+                if (InputGlyphService.CurrentFamily == InputGlyphDeviceFamily.KeyboardMouse) return false;
+                nombre = InputGlyphNames.ShoulderRight;
+            }
+            else nombre = _tipo == TipoDeAviso.Recuperacion ? InputGlyphNames.South : InputGlyphNames.East;
             var sprite = InputGlyphService.GetSprite(nombre);
-            if (sprite == null) return;
+            if (sprite == null) return _tipo != TipoDeAviso.NoBloqueable;
             glifo.sprite = sprite;
             glifo.preserveAspect = true;
+            return true;
         }
 
         private void LateUpdate()

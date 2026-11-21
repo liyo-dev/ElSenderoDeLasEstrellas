@@ -103,7 +103,6 @@ public class SpawnManager : MonoBehaviour
         }
 
         OnAnchorChanged?.Invoke(id);
-        // Debug.Log($"[SpawnManager] CurrentAnchorId = {id}");
     }
 
     /// <summary>Devuelve el SpawnAnchor por id usando tu clase del mundo.</summary>

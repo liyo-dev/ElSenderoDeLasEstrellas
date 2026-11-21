@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f43311c27934016bba95f7ee8b47c23, type: 3}
   m_Name: InputGlyphFamilySpriteSet_KeyboardMouse
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   south: {fileID: 21300000, guid: c3777e54fb874f4b8e7753a41f286b80, type: 3}
   east: {fileID: 21300000, guid: e115de5992e74382b565bb966fd534fd, type: 3}
   west: {fileID: 21300000, guid: f93a7b7d300b4dbb9e0ef711e25326b0, type: 3}
@@ -24,6 +24,7 @@ MonoBehaviour:
   stick: {fileID: 21300000, guid: 9ec101e7bbc14abfbc13cb873fb15b1b, type: 3}
   start: {fileID: 21300000, guid: 5f7c4e856d964a2d8be08f611a0f1caa, type: 3}
   confirm: {fileID: 21300000, guid: e4cfbce37f7242f3905a2669295f841d, type: 3}
+  menuX: {fileID: 21300000, guid: a0392d40f76cee346b3c521d06c82825, type: 3}
   teleport: {fileID: 21300000, guid: 58c57f14b30442bc82cdbbc2dcae2f85, type: 3}
   dpadLeft: {fileID: 21300000, guid: 8eb45a6b9af04ddc832ab7f59731611f, type: 3}
   dpadRight: {fileID: 21300000, guid: 486b37c6a1ed45579db518d9daa15756, type: 3}

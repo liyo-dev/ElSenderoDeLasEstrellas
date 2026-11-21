@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Panel izquierdo: el capítulo como índice (secciones → pasos numerados; los puntos de arranque
     /// llevan ◆) y su vocabulario. Con un paso elegido, su camino se marca y el resto se apaga.
@@ -262,7 +262,7 @@ namespace NarrativeGraphEditor.Story
             var num = new Label(number);
             num.AddToClassList("story-outline__row-number");
             row.Add(num);
-            var name = string.IsNullOrWhiteSpace(node.displayTitle) ? NarrativeNodeCatalog.TitleOf(node) : node.displayTitle;
+            var name = string.IsNullOrWhiteSpace(node.DisplayTitle) ? NarrativeNodeCatalog.TitleOf(node) : node.DisplayTitle;
             var title = new Label(string.IsNullOrEmpty(node.Badge) ? name : node.Badge + " " + name) { tooltip = name };
             title.AddToClassList("story-outline__row-title");
             row.Add(title);

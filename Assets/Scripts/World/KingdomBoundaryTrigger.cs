@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Trigger de zona colocado en el límite visual del Reino (puente, arco, última casa

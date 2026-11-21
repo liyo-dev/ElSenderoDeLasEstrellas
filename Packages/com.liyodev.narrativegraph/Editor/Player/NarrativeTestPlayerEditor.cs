@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Inspector del jugador de prueba: cada campo de la ficha con una casilla «cambiar»; los que
     /// no se marcan salen de la historia. El sitio donde aparece no se cambia aquí.
     [CustomEditor(typeof(NarrativeTestPlayer))]
-    public sealed class NarrativeTestPlayerEditor : Editor
+    public sealed class NarrativeTestPlayerEditor : UnityEditor.Editor
     {
         PlayerScratch _scratch;
         SerializedObject _data;

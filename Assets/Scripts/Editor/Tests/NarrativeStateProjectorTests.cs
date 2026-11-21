@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Tests de EditMode de <see cref="NarrativeStateProjector"/>: qué nodos se proyectan al calcular
@@ -12,7 +13,7 @@ public class NarrativeStateProjectorTests
     class NodoDePrueba : NarrativeNode, INarrativeStateEffect
     {
         public override void Enter(NarrativeContext ctx, System.Action onReadyToAdvance) => onReadyToAdvance?.Invoke();
-        public void Project(INarrativeStateWriter state) => state.SetFlag(guid, true);
+        public void Project(INarrativeStateWriter state) => state.SetFlag(Guid, true);
     }
 
     /// Bifurcación real: puertos con nombre, la proyección no adivina la rama.
@@ -76,7 +77,7 @@ public class NarrativeStateProjectorTests
 
     void Nodo<T>(string guid, params string[] salidas) where T : NarrativeNode, new()
     {
-        var nodo = new T { guid = guid, outputs = new List<string>(salidas) };
+        var nodo = new T { Guid = guid, Outputs = new List<string>(salidas) };
         _grafo.nodes.Add(nodo);
         if (string.IsNullOrEmpty(_grafo.startNodeGuid)) _grafo.startNodeGuid = guid;
     }

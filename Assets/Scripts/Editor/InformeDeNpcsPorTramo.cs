@@ -1,3 +1,4 @@
+using Liyodev.NarrativeGraph;
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
@@ -134,7 +135,7 @@ public static class InformeDeNpcsPorTramo
             if (grafo == null || grafo.nodes == null) continue;
             foreach (var n in grafo.nodes)
                 if (n is ActorStateNode p)
-                    sb.Append($"- **{p.actorId}** · {grafo.name} · «{p.displayTitle}» · {p.layer} · presencia={p.presence} `{p.markId}` · frases={p.lines?.Count ?? 0}\n");
+                    sb.Append($"- **{p.ActorId}** · {grafo.name} · «{p.DisplayTitle}» · {p.PieceLayer} · presencia={p.Presence} `{p.MarkId}` · frases={p.Lines?.Count ?? 0}\n");
         }
     }
 

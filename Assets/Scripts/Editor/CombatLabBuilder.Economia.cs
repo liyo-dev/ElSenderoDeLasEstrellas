@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// Zona de economía del CombatLab, en la entrada del campo sur: Renard (tienda de Esencia y
 /// contratos de caza), Tomasa (tienda de Moneda), Patricia (pociones y capa por Moneda),

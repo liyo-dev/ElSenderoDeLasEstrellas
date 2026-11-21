@@ -141,6 +141,8 @@ public static partial class CombatLabBuilder
             Debug.LogWarning("[CombatLab] " + aviso);
         foreach (var aviso in CrearZonaCap2(scene))
             Debug.LogWarning("[CombatLab] " + aviso);
+        foreach (var aviso in CrearZonaLuchaNpcs(scene))
+            Debug.LogWarning("[CombatLab] " + aviso);
         CrearEstacionAmanecer();
 
         if (!AssetDatabase.IsValidFolder("Assets/Scenes/Test"))

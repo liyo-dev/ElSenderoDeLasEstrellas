@@ -116,7 +116,7 @@ namespace EasyTransition
         }
 
         /// <summary>
-        /// FIX (14 sep 2026, ver comentario de Transition.ForceComplete()): fuerza el cierre del
+        /// Fuerza el cierre del
         // overlay visual de la transición en curso si quedó huérfano (p. ej. porque la corrutina
         // Timer() de abajo se interrumpió por una carga/descarga aditiva de escena a mitad de
         // camino). Sin esto, resetear solo los flags lógicos (como hacía este método antes) dejaba
@@ -206,8 +206,8 @@ namespace EasyTransition
             return SceneManager.GetSceneByName(sceneName).buildIndex;
         }
 
-        // FIX Bajos: las tres corrutinas Timer solo ponían
-        // runningTransition = false al final del bloque "feliz". Si cualquier suscriptor de
+        // Las tres corrutinas Timer solo ponían runningTransition = false al final del bloque
+        // "feliz". Si cualquier suscriptor de
         // onTransitionBegin/onTransitionCutPointReached/onTransitionEnd lanzaba una excepción sin
         // capturar, Unity aborta la corrutina en ese punto — el código de después (incluido el
         // reset del flag) nunca se ejecuta, y runningTransition se queda en true para siempre:
@@ -309,11 +309,11 @@ namespace EasyTransition
             }
         }
 
-        // FIX Bajos: este Start() era un poll infinito cada 1s que nunca podía detectar nada útil
-        // — cualquier instancia duplicada ya se destruye en Awake() antes de que su propio Start()
-        // llegue a correr, así que la única instancia que sobrevive para ejecutar este bucle
-        // siempre tiene instance == this. Se elimina: no aportaba protección real, solo trabajo
-        // per-tick indefinido durante toda la partida.
+        // Este Start() era un poll infinito cada 1s que nunca podía detectar nada útil — cualquier
+        // instancia duplicada ya se destruye en Awake() antes de que su propio Start() llegue a
+        // correr, así que la única instancia que sobrevive para ejecutar este bucle siempre tiene
+        // instance == this. Se elimina: no aportaba protección real, solo trabajo per-tick
+        // indefinido durante toda la partida.
     }
 
 }

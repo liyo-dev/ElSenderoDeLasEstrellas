@@ -21,15 +21,14 @@ public class PlayerFlyingController : MonoBehaviour
 {
     private const float GroundCheckBuffer = 0.2f;
 
-    // FIX — "la animación de vuelo se quita y se pone": IsGrounded() usa un
-    // Physics.CheckCapsule con un buffer pequeño (GroundCheckBuffer) contra el propio collider
-    // del jugador. Volar a baja altura o rozar el terreno es parte normal del mecanismo (picados,
-    // vuelo rasante) — bastaba un único frame de solape para que Update() llamara a ExitFlight()
-    // de inmediato: eso desactiva el controller, restaura la gravedad y hace
-    // PlayerActionManager.PopMode(ActionMode.Flying), así que el jugador empieza a caer aunque
-    // siga con la intención de volar, y vuelve a entrar en vuelo al reintentar — visible como que
-    // la animación se activa y desactiva en bucle. Igual que el resto del proyecto exige contacto
-    // sostenido antes de aceptar una transición de movimiento (ver
+    // IsGrounded() usa un Physics.CheckCapsule con un buffer pequeño (GroundCheckBuffer) contra
+    // el propio collider del jugador. Volar a baja altura o rozar el terreno es parte normal del
+    // mecanismo (picados, vuelo rasante) — bastaba un único frame de solape para que Update()
+    // llamara a ExitFlight() de inmediato: eso desactiva el controller, restaura la gravedad y
+    // hace PlayerActionManager.PopMode(ActionMode.Flying), así que el jugador empieza a caer
+    // aunque siga con la intención de volar, y vuelve a entrar en vuelo al reintentar — visible
+    // como que la animación se activa y desactiva en bucle. Igual que el resto del proyecto exige
+    // contacto sostenido antes de aceptar una transición de movimiento (ver
     // FollowPlayerState._isFollowingSticky), exigimos que IsGrounded() se mantenga true durante
     // este margen antes de aceptarlo como aterrizaje real.
     private const float ExitFlightGroundedGrace = 0.12f;
@@ -46,7 +45,7 @@ public class PlayerFlyingController : MonoBehaviour
     [Tooltip("Pose mientras se lanza un hechizo en vuelo (el movimiento no cambia, solo la animación). INC-492.")]
     [SerializeField] private string castPoseState = "Falling";
     [SerializeField] private float castPoseCrossfade = 0.1f;
-    [Tooltip("Tras disparar, la pose de caída se mantiene hasta que se avanza y han pasado estos segundos sin disparar; quieto en el aire se queda en caída (Raúl, INC-492).")]
+    [Tooltip("Tras disparar, la pose de caída se mantiene hasta que se avanza y han pasado estos segundos sin disparar; quieto en el aire se queda en caída (INC-492).")]
     [SerializeField] private float castPoseRelease = 1f;
     [Tooltip("Segundos del fundido entre los estados de vuelo (quieto, avance, picado).")]
     [SerializeField, Min(0f)] private float fundidoEntreEstadosDeVuelo = 0.25f;

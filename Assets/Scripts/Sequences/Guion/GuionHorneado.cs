@@ -193,6 +193,8 @@ public struct OrdenDeAnimacion
     public bool alFinal;
     [Tooltip("Reacción de voz que suena con el gesto (laugh, hurt, gasp...); vacío, sin voz.")]
     public string voz;
+    [Tooltip("Quién lo pide: 0 el guion, 1 una reacción automática, 2 la vida de fondo (cinemática viva).")]
+    public byte origen;
 }
 
 [Serializable]

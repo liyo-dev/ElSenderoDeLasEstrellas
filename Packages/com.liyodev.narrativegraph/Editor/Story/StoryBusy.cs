@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Aviso de «Calculando…» con un círculo que gira, en el panel que lo contiene: tapándolo entero
     /// (<c>cover</c>) o como una píldora arriba que no oculta lo que hay. Lo que haya que hacer se

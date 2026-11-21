@@ -60,8 +60,7 @@ public sealed class AjustesCelebracionEnGrupo
 /// mira él, cada uno hace su pose al llegar y al final todos el mismo gesto a la vez.
 ///
 /// Los compañeros se mueven con el sistema de secuencias (SequenceActor + SequenceMovement): se
-/// retienen al empezar y se sueltan en Soltar(). El jugador no se mueve de su sitio; lo que hace él
-/// lo lleva su PlayerBattleModeController, a petición de CelebracionDeVictoria. Ver INC-542.
+/// retienen al empezar y se sueltan en Soltar(). Ver INC-542.
 public sealed class CelebracionEnGrupo
 {
     private sealed class Integrante

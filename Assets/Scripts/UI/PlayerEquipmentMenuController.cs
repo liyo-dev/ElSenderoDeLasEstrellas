@@ -180,7 +180,12 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         if (GamepadInputReader.CancelPressed || GamepadInputReader.StartPressed) _cancelRequested = true;
 
-        if (GamepadInputReader.YButtonPressedUI)
+        // Con teclado, en las pestañas que cambian de personaje o categoría con Q/E, la Q es eso y
+        // no «Salir al menú» (se cierra con Esc, como los demás menús).
+        bool qDelTeclado = UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.qKey.wasPressedThisFrame;
+        var mando = UnityEngine.InputSystem.Gamepad.current;
+        bool yDelMando = mando != null && mando.buttonNorth.wasPressedThisFrame;
+        if (GamepadInputReader.YButtonPressedUI && !(qDelTeclado && !yDelMando && _menu.UsaGatillos))
         {
             GamepadInputReader.PlayUISound("UI_Cancel");
             var popup = ConfirmationPopupUI.Instance;

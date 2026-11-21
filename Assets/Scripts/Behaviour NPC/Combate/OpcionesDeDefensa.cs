@@ -21,7 +21,7 @@ namespace Game.NPC.Combate
             if (!Cuerpo.Perfil.Defensas.esquivar || !Cuerpo.EsquivaLista) return 0f;
             if (s.hechizoEntrante && s.segundosHastaElHechizo < 0.9f && s.decideEsquivarlo) return 0.95f;
             if (s.jugadorMeApunta && s.veAlObjetivo && (s.jugadorCargando || s.segundosDesdeQueLanzo < 0.25f))
-                return 0.35f + 0.35f * Cuerpo.Perfil.Caracter.cautela * Cuerpo.Perfil.Dificultad;
+                return 0.35f + 0.35f * Cuerpo.Perfil.Caracter.cautela * Cuerpo.Perfil.Dificultad + 0.3f * s.repeticionLeida;
             return 0f;
         }
 
@@ -74,7 +74,9 @@ namespace Game.NPC.Combate
             if (!Cuerpo.Perfil.Defensas.escudo || !Cuerpo.EscudoListo) return 0f;
             float cautela = Cuerpo.Perfil.Caracter.cautela;
             if (s.hechizoEntrante && s.segundosHastaElHechizo < 1.2f && !s.decideEsquivarlo) return 0.6f + 0.3f * cautela;
-            if (s.jugadorCargando && s.jugadorMeApunta && s.veAlObjetivo) return 0.5f * cautela;
+            // Contra el hechizo que el jugador repite, se protege aunque sea poco cauta: ya lo espera.
+            if (s.jugadorCargando && s.jugadorMeApunta && s.veAlObjetivo)
+                return Mathf.Max(0.5f * cautela, s.repeticionLeida > 0f ? 0.45f + 0.45f * s.repeticionLeida : 0f);
             return 0f;
         }
 

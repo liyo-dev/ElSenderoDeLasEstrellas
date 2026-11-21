@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 namespace Game.NPC.Common
 {
@@ -111,6 +112,10 @@ namespace Game.NPC.Common
             _headBoneSearched = false;
         }
         
+        // Icono que se apaga (ShowFadingIcon).
+        private IconoQueSeApaga _apagado;
+        private bool _apagandose;
+
         // Estado
         private bool _isHiding;
         private bool _hiddenDuringDialogue;
@@ -421,6 +426,20 @@ namespace Game.NPC.Common
             }
         }
 
+        /// Muestra un icono que se va apagando durante 'duracion' segundos (pierde el color y se
+        /// vuelve transparente) y se quita al acabar: un aviso con cuenta atrás, p. ej. quien vigila
+        /// ha notado algo y da unos segundos antes de seguir.
+        public void ShowFadingIcon(GameObject iconPrefab, float duracion)
+        {
+            if (iconPrefab == null || duracion <= 0f) return;
+            if (!_headBoneSearched) FindHeadBone();
+            HideAlertIconImmediate();
+            _targetScale = Vector3.Scale(iconPrefab.transform.localScale, Vector3.one * iconScale);
+            _apagado ??= new IconoQueSeApaga();
+            _iconRoutine = StartCoroutine(ShowIconRoutine(iconPrefab, duracion, _apagado.Preparar));
+            _apagandose = true;
+        }
+
         /// <summary>
         /// Muestra el icono de alerta - Detectó al jugador
         /// </summary>
@@ -605,6 +624,7 @@ namespace Game.NPC.Common
         /// </summary>
         public void HideAlertIconImmediate()
         {
+            _apagandose = false;
             DOTween.Kill(this);
             _currentTween?.Kill();
             
@@ -638,6 +658,7 @@ namespace Game.NPC.Common
             // Instanciar en WORLD SPACE
             _currentIconInstance = Instantiate(iconPrefab);
             _currentIconInstance.name = $"{iconPrefab.name}_{name}_Alert";
+            LlevarALaEscenaDelNpc(_currentIconInstance);
             
             // Callback de configuración
             onInstanceCreated?.Invoke(_currentIconInstance);
@@ -696,6 +717,8 @@ namespace Game.NPC.Common
                     ApplyBillboard(_currentIconInstance.transform);
                 }
 
+                if (_apagandose && remainingDuration > 0f) _apagado.Aplicar(elapsed / remainingDuration);
+
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
@@ -731,6 +754,7 @@ namespace Game.NPC.Common
             // Instanciar en WORLD SPACE
             _currentIconInstance = Instantiate(iconPrefab);
             _currentIconInstance.name = $"{iconPrefab.name}_{name}_Persistent";
+            LlevarALaEscenaDelNpc(_currentIconInstance);
             
             // Calcular posición inicial
             Vector3 targetPos = GetIconWorldPosition();
@@ -805,6 +829,32 @@ namespace Game.NPC.Common
 
                 yield return null;
             }
+
+            // Nadie lo ha mandado quitar (HideAlertIcon marca _isHiding; HideAlertIconImmediate para
+            // esta corrutina) pero el icono ya no existe: lo ha destruido otra cosa (la escena en la
+            // que estaba se ha descargado). Un icono persistente sigue hasta que lo quiten: vuelve.
+            if (!_isHiding && !ReferenceEquals(_currentIconInstance, null))
+            {
+                _currentIconInstance = null;
+                _hiddenDuringDialogue = false;
+                _hiddenDuringSequence = false;
+                _iconRoutine = StartCoroutine(ShowPersistentIconRoutine(iconPrefab));
+            }
+        }
+
+        /// El icono vive en la escena de su NPC. Instanciado sin padre cae en la escena activa, que
+        /// puede ser otra (un interior, una escena de paso) y se lo lleva al descargarse. Ver INC-1328.
+        private void LlevarALaEscenaDelNpc(GameObject icono)
+        {
+            if (icono == null) return;
+            Scene escena = Ancla.gameObject.scene;
+            if (!escena.IsValid() || !escena.isLoaded || icono.scene == escena) return;
+            if (escena.buildIndex < 0 && escena.name == "DontDestroyOnLoad")
+            {
+                DontDestroyOnLoad(icono);
+                return;
+            }
+            SceneManager.MoveGameObjectToScene(icono, escena);
         }
         
         /// Esconde el icono persistente al empezar una secuencia y lo vuelve a sacar al acabar
@@ -861,5 +911,77 @@ namespace Game.NPC.Common
         /// Propiedad para verificar si hay un icono visible
         /// </summary>
         public bool HasActiveIcon => _currentIconInstance != null && !_isHiding;
+    }
+
+    /// Los colores de un icono y cómo se apagan: de su color a gris y casi transparente. Vale para
+    /// sprites, textos (de UI y 3D), imágenes de UI y mallas con color en el material.
+    internal sealed class IconoQueSeApaga
+    {
+        private const float AlfaFinal = 0.2f;
+        private static readonly int s_baseColor = Shader.PropertyToID("_BaseColor");
+        private static readonly int s_color = Shader.PropertyToID("_Color");
+
+        private readonly System.Collections.Generic.List<SpriteRenderer> _sprites = new();
+        private readonly System.Collections.Generic.List<Color> _coloresSprite = new();
+        private readonly System.Collections.Generic.List<UnityEngine.UI.Graphic> _graficos = new();
+        private readonly System.Collections.Generic.List<Color> _coloresGrafico = new();
+        private readonly System.Collections.Generic.List<Renderer> _mallas = new();
+        private readonly System.Collections.Generic.List<Color> _coloresMalla = new();
+        private readonly System.Collections.Generic.List<int> _propiedadMalla = new();
+        private readonly System.Collections.Generic.List<TMPro.TextMeshPro> _textos = new();
+        private readonly System.Collections.Generic.List<Color> _coloresTexto = new();
+        private MaterialPropertyBlock _bloque;
+
+        public void Preparar(GameObject icono)
+        {
+            _sprites.Clear(); _coloresSprite.Clear();
+            _graficos.Clear(); _coloresGrafico.Clear();
+            _mallas.Clear(); _coloresMalla.Clear(); _propiedadMalla.Clear();
+            _textos.Clear(); _coloresTexto.Clear();
+            if (icono == null) return;
+            foreach (var r in icono.GetComponentsInChildren<Renderer>(true))
+            {
+                if (r is SpriteRenderer sr) { _sprites.Add(sr); _coloresSprite.Add(sr.color); continue; }
+                if (r.TryGetComponent(out TMPro.TextMeshPro texto)) { _textos.Add(texto); _coloresTexto.Add(texto.color); continue; }
+                var m = r.sharedMaterial;
+                if (m == null) continue;
+                int id = m.HasProperty(s_baseColor) ? s_baseColor : m.HasProperty(s_color) ? s_color : -1;
+                if (id < 0) continue;
+                _mallas.Add(r); _coloresMalla.Add(m.GetColor(id)); _propiedadMalla.Add(id);
+            }
+            foreach (var g in icono.GetComponentsInChildren<UnityEngine.UI.Graphic>(true))
+            {
+                _graficos.Add(g); _coloresGrafico.Add(g.color);
+            }
+        }
+
+        /// 't' de 0 (con su color) a 1 (apagado).
+        public void Aplicar(float t)
+        {
+            t = Mathf.Clamp01(t);
+            for (int i = 0; i < _sprites.Count; i++)
+                if (_sprites[i] != null) _sprites[i].color = Apagar(_coloresSprite[i], t);
+            for (int i = 0; i < _graficos.Count; i++)
+                if (_graficos[i] != null) _graficos[i].color = Apagar(_coloresGrafico[i], t);
+            for (int i = 0; i < _textos.Count; i++)
+                if (_textos[i] != null) _textos[i].color = Apagar(_coloresTexto[i], t);
+            if (_mallas.Count == 0) return;
+            _bloque ??= new MaterialPropertyBlock();
+            for (int i = 0; i < _mallas.Count; i++)
+            {
+                var r = _mallas[i];
+                if (r == null) continue;
+                r.GetPropertyBlock(_bloque);
+                _bloque.SetColor(_propiedadMalla[i], Apagar(_coloresMalla[i], t));
+                r.SetPropertyBlock(_bloque);
+            }
+        }
+
+        private static Color Apagar(Color c, float t)
+        {
+            float gris = c.grayscale;
+            var g = new Color(gris, gris, gris, c.a * AlfaFinal);
+            return Color.Lerp(c, g, t);
+        }
     }
 }

@@ -280,7 +280,9 @@ public class PartyControlManager : MonoBehaviour
         }
 
         _activeIndex = newIndex;
-        ControlDelJugador.CambiarElMando(from, to);
+        // Con el grupo en «Siguiendo» y sin pareja, el personaje nuevo aparece donde iba el jugador. Ver INC-1369
+        if (_isPartyFollowing && !HayParejaValida()) ControlDelJugador.CambiarElMandoEnElSitio(from, to);
+        else ControlDelJugador.CambiarElMando(from, to);
         if (volverAlLider) SoltarAlSeguidor();
         OnActiveCharacterChanged?.Invoke(_activeIndex);
     }

@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Montador de los capítulos 3 y 4 (el tramo de la historia que faltaba: de la despedida del pueblo a
@@ -50,6 +51,7 @@ public static partial class MontajeDeLosCapitulos
         Cap2ExtrasPrefabs.Asegurar();
         AsegurarConfiguracionDeLaDemo(informe);
         MontarAssetsDespedida(informe);
+        TablasDelPuebloDeWill();
         var cap3 = MontarAssetsCap3(informe);
         var cap4 = MontarAssetsCap4(informe);
         AsegurarSecuencias(informe);
@@ -113,19 +115,19 @@ public static partial class MontajeDeLosCapitulos
         for (int i = 0; i < c.Notas.Count; i++)
         {
             string id = c.Prefijo + c.Notas[i].id;
-            Poner(g, c, id, "Nota", new Vector2(i * 3 * AnchoDeColumna, -AltoDeFila), new GraphNoteNode { note = c.Notas[i].texto }, null);
+            Poner(g, c, id, "Nota", new Vector2(i * 3 * AnchoDeColumna, -AltoDeFila), new GraphNoteNode { Note = c.Notas[i].texto }, null);
             ids.Add(id);
         }
         // Lo que montó una versión anterior del menú y ya no está en el recorrido.
-        g.nodes.RemoveAll(n => n != null && n.guid != null && n.guid.StartsWith(c.Prefijo) && !ids.Contains(n.guid));
+        g.nodes.RemoveAll(n => n != null && n.Guid != null && n.Guid.StartsWith(c.Prefijo) && !ids.Contains(n.Guid));
         g.startNodeGuid = c.Prefijo + c.Recorrido[0].Id;
         EditorUtility.SetDirty(g);
 
         // Aristas que apuntan a nodos que no existen: error de la tabla.
         foreach (var n in g.nodes)
-            foreach (var s in n.outputs)
+            foreach (var s in n.Outputs)
                 if (!string.IsNullOrEmpty(s) && g.FindNode(s) == null)
-                    informe.AppendLine($"ERROR · {c.Etiqueta}: «{n.displayTitle}» lleva a «{s}», que no existe.");
+                    informe.AppendLine($"ERROR · {c.Etiqueta}: «{n.DisplayTitle}» lleva a «{s}», que no existe.");
         informe.AppendLine($"Grafo «{c.Etiqueta}»: {ids.Count} nodos.");
         return g;
     }
@@ -150,39 +152,39 @@ public static partial class MontajeDeLosCapitulos
     private static void Poner(NarrativeGraph g, Capitulo c, string id, string titulo, Vector2 posicion, NarrativeNode n, List<string> salidas)
     {
         var anterior = g.FindNode(id);
-        n.guid = id;
-        n.displayTitle = titulo;
-        n.chapter = c.Nombre;
-        n.position = posicion;
-        n.outputs = salidas ?? new List<string>();
+        n.Guid = id;
+        n.DisplayTitle = titulo;
+        n.Chapter = c.Nombre;
+        n.Position = posicion;
+        n.Outputs = salidas ?? new List<string>();
         if (anterior == null) g.nodes.Add(n);
         else g.nodes[g.nodes.IndexOf(anterior)] = n;
     }
 
     // Nodos frecuentes.
-    private static NarrativeNode Esperar(string senal, bool antes = true) => new WaitCustomEventNode { eventKey = senal, acceptEarlierEvent = antes };
-    private static NarrativeNode Emitir(string senal) => new RaiseCustomEventNode { eventKey = senal };
-    private static NarrativeNode Flag(string flag) => new SetFlagNode { flagKey = flag };
-    private static NarrativeNode Hablar(string npc) => new WaitNpcInteractionNode { npcId = npc };
-    private static NarrativeNode Dialogo(string ruta, string npc = "") => new PlayDialogueNode { dialogue = Cargar<DialogueAsset>(ruta), npcId = npc };
+    private static NarrativeNode Esperar(string senal, bool antes = true) => new WaitCustomEventNode { EventKey = senal, AcceptEarlierEvent = antes };
+    private static NarrativeNode Emitir(string senal) => new RaiseCustomEventNode { EventKey = senal };
+    private static NarrativeNode Flag(string flag) => new SetFlagNode { FlagKey = flag };
+    private static NarrativeNode Hablar(string npc) => new WaitNpcInteractionNode { NpcId = npc };
+    private static NarrativeNode Dialogo(string ruta, string npc = "") => new PlayDialogueNode { Dialogue = Cargar<DialogueAsset>(ruta), NpcId = npc };
     private static NarrativeNode Punto(string id, string ancla)
     {
-        var punto = new CheckpointNode { checkpointId = id };
+        var punto = new CheckpointNode { CheckpointId = id };
         Sendero.Narrative.Editor.ArranqueDeLasPruebas.FijarAncla(punto, ancla);
         return punto;
     }
-    private static NarrativeNode Llevar(string actor, string marca) => new PlaceActorNode { actorId = actor, markId = marca, applyPlayerEnvironment = actor == "Player" };
+    private static NarrativeNode Llevar(string actor, string marca) => new PlaceActorNode { ActorId = actor, MarkId = marca, ApplyPlayerEnvironment = actor == "Player" };
     private static NarrativeNode Grupo(PedirGrupo.Accion accion, string personaje, bool retirar = false) =>
         GameStepNode.For(new PedirGrupo { accion = accion, personaje = personaje, retirarDeLaEscena = retirar });
     /// <summary>
     /// Destapa la pantalla. Un rótulo, o una cinemática que acaba en «fundido cubre», dejan la
     /// pantalla tapada para quien venga después; si lo que viene es jugar, hay que destaparla.
     /// </summary>
-    private static NarrativeNode Destapar() => new ScreenFadeNode { fadeIn = false, duration = 1f, restaurarMusicaDeEscena = true };
+    private static NarrativeNode Destapar() => new ScreenFadeNode { FadeIn = false, Duration = 1f, RestaurarMusicaDeEscena = true };
     private static NarrativeNode Rotulo(string clave, string es, string en)
     {
         TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Interfaz, clave, es, en);
-        return new TitleCardNode { textId = clave, text = es };
+        return new TitleCardNode { TextId = clave, Text = es };
     }
     /// <summary>
     /// Aviso de tutorial. Sin <paramref name="esperar"/> no para el juego y se quita solo al empezar
@@ -199,18 +201,18 @@ public static partial class MontajeDeLosCapitulos
         TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Dialogos, clave, es, en);
         // Que dé tiempo a leerlo: unas 14 letras por segundo y un respiro, aunque se pida menos.
         float paraLeer = Mathf.Max(es.Length, en.Length) / 14f + 0.8f;
-        return new ShowSpeechBubbleNode { textId = clave, text = es, duration = Mathf.Max(dura, paraLeer), waitForCompletion = true };
+        return new ShowSpeechBubbleNode { TextId = clave, Text = es, Duration = Mathf.Max(dura, paraLeer), WaitForCompletion = true };
     }
     private static NarrativeNode Completar(string mision, string paso, bool cerrar = false) => new CompleteQuestStepsNode
     {
-        questId = mision, stepConditionIds = new List<string> { paso }, completeQuest = cerrar,
+        QuestId = mision, StepConditionIds = new List<string> { paso }, CompleteQuest = cerrar,
     };
     private static NarrativeNode Desbloquear(SpellId hechizo, bool equipar) => GameStepNode.For(new PedirDesbloqueo
     {
         spellsToUnlock = new List<SpellId> { hechizo }, assignSpellsToEmptySlot = equipar,
         forceWillBeforeSpellUnlock = true, applyPresetAfterUnlock = true,
     });
-    private static NarrativeNode Dar(string rutaItem) => new GiveInventoryItemNode { item = Cargar<ItemData>(rutaItem) };
+    private static NarrativeNode Dar(string rutaItem) => new GiveInventoryItemNode { Item = Cargar<ItemData>(rutaItem) };
 
     // ── Misiones, objetos y diálogos ────────────────────────────────────────────────────────
 

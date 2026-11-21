@@ -1,8 +1,18 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Guardar y cargar la partida, y aplicar una partida recién cargada a los sistemas.
 public static partial class Partida
 {
+    /// <summary>
+    /// Empieza a escribirse la partida en disco (cualquier guardado: automático, el farol o un
+    /// final). Lo escucha el indicador de guardado de la pantalla.
+    /// </summary>
+    public static event System.Action GuardadoEmpieza;
+
+    /// <summary>Acaba de escribirse la partida; el valor dice si ha salido bien.</summary>
+    public static event System.Action<bool> GuardadoAcaba;
+
     /// <summary>
     /// Vuelca el estado del juego en el preset y lo escribe en disco. Los auto-guardados solo se
     /// hacen si la configuración los permite.
@@ -20,14 +30,93 @@ public static partial class Partida
             return false;
         }
 
-        VolcarEstadoDelJuego();
         // Un auto-guardado recuerda dónde está el jugador; un guardado manual vuelve a su ancla.
-        // Solo va al archivo: en memoria se queda vacía para que un cambio de escena no la use.
-        var datos = AGuardado(Preset);
-        datos.posicionDeAutoguardado = contexto == SaveRequestContext.Auto ? CapturarPosicionDelJugador() : default;
-        bool ok = guardado.Save(datos, contexto);
+        var posicion = contexto == SaveRequestContext.Auto ? CapturarPosicionDelJugador() : default;
+        bool ok = Escribir(guardado, contexto, posicion);
+        if (ok && contexto == SaveRequestContext.Auto && posicion.valida) s_ultimaPosicionSegura = posicion;
+        return ok;
+    }
+
+    /// <summary>
+    /// Guardado manual en un momento en que el jugador no está en un sitio jugable (un final, a
+    /// mitad de una escena): al cargar aparece donde el último auto-guardado de esta sesión (o el
+    /// de la partida cargada) si lo hay; si no, en su ancla.
+    /// </summary>
+    public static bool GuardarEnLaUltimaPosicionSegura(SaveSystem guardado)
+    {
+        if (!guardado)
+        {
+            GameBootProfileDebugger.Log("Guardar", "No hay SaveSystem", LogType.Error);
+            return false;
+        }
+        return Escribir(guardado, SaveRequestContext.Manual, s_ultimaPosicionSegura);
+    }
+
+    // La posición solo va al archivo: en memoria el preset la deja vacía para que un cambio de
+    // escena no la use.
+    static bool Escribir(SaveSystem guardado, SaveRequestContext contexto, PlayerSaveData.PosicionGuardada posicion)
+    {
+        GuardadoEmpieza?.Invoke();
+        bool ok = false;
+        try
+        {
+            VolcarEstadoDelJuego();
+            var datos = AGuardado(Preset);
+            datos.posicionDeAutoguardado = posicion;
+            // Mejor no guardar que dejar en disco una partida que no se puede continuar: se
+            // conserva el guardado anterior.
+            if (SePuedeContinuar(datos, out var motivo)) ok = guardado.Save(datos, contexto);
+            else Debug.LogError($"[Partida] Guardado ({contexto}) descartado: {motivo}.");
+        }
+        finally
+        {
+            GuardadoAcaba?.Invoke(ok);
+        }
         GameBootProfileDebugger.Log("Guardar", ok ? $"Guardado ({contexto})" : "Error al guardar", ok ? LogType.Log : LogType.Error);
         return ok;
+    }
+
+    /// La partida se podrá continuar: cada grafo guardado sigue en un paso que existe en su grafo, y
+    /// si la historia ya ha avanzado (hay señales emitidas) hay estado de los grafos guardado.
+    static bool SePuedeContinuar(PlayerSaveData d, out string motivo)
+    {
+        motivo = null;
+        var hub = NarrativeGraphHub.Instance;
+        if (hub == null) return true;
+
+        int conPaso = 0;
+        if (d.narrativeBlackboards != null)
+        {
+            foreach (var bb in d.narrativeBlackboards)
+            {
+                string paso = null;
+                bool terminado = false;
+                if (bb.blackboardData != null)
+                    foreach (var e in bb.blackboardData)
+                    {
+                        if (e == null) continue;
+                        if (e.key == NarrativeRunner.CurrentNodeKey) paso = e.value;
+                        else if (e.key == NarrativeRunner.FlowEndedKey) terminado = e.value == "1" || e.value == "True" || e.value == "true";
+                    }
+                if (terminado) conPaso++;
+                if (string.IsNullOrEmpty(paso)) continue;
+                conPaso++;
+                var runner = hub.GetRunner(bb.graphLabel);
+                if (runner == null || runner.graph == null) continue;
+                if (runner.graph.FindNode(paso) == null)
+                {
+                    motivo = $"el grafo «{bb.graphLabel}» quedaría en un paso que no existe ({paso})";
+                    return false;
+                }
+            }
+        }
+
+        if (conPaso == 0 && d.senalesEmitidas != null && d.senalesEmitidas.Count > 0 && hub.GetAllRunners().Count > 0)
+        {
+            motivo = "la historia ha avanzado pero ningún grafo tiene paso guardado (¿grafos sin arrancar?)";
+            return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -39,7 +128,7 @@ public static partial class Partida
     public static bool PuedeGuardarAhora(out string motivo)
     {
         motivo = QueImpideGuardar(out var paso);
-        if (paso != null) motivo = $"el paso «{paso.displayTitle}» no deja guardar";
+        if (paso != null) motivo = $"el paso «{paso.DisplayTitle}» no deja guardar";
         return motivo == null;
     }
 

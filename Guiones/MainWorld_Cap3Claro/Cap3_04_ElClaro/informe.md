@@ -1,15 +1,15 @@
 # Parte de horneado: Cap3_04_ElClaro
 
-2026-11-18 15:27 · guion `Assets/_SEQUENCES/Guiones/Cap3_04_ElClaro.guion.txt`
+2026-11-19 20:55 · guion `Assets/_SEQUENCES/Guiones/Cap3_04_ElClaro.guion.txt`
 
 **0:24,8** de secuencia · 7 frases · 2 planos · 3 efectos · 3 personajes
 
-Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · c1 1,30/ojos 0,97
+Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · c1 1,43/ojos 1,07
 
 ## Errores (0)
 
 
-## Avisos (8)
+## Avisos (7)
 
 - línea 11: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
 - línea 33: c1 dice CAP3_CLARO_01 mira=c2: la frase CAP3_CLARO_01 no tiene voz en Voices/es; le doy 4,1 s por su texto
@@ -17,8 +17,14 @@ Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · c1 1,30/ojos 0,9
 - línea 35: c1 dice CAP3_CLARO_03 gesto=HeadShake01: la frase CAP3_CLARO_03 no tiene voz en Voices/es; le doy 2,3 s por su texto
 - línea 44: will dice CAP3_CLARO_08 cara=sorpresa mira=claro: la frase CAP3_CLARO_08 no tiene voz en Voices/es; le doy 1,2 s por su texto
 - línea 49: will dice CAP3_CLARO_06 cara=preocupado: la frase CAP3_CLARO_06 no tiene voz en Voices/es; le doy 5,4 s por su texto
-- 0:00,0: en «general de c1 y c2» will está 7 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - No hay captura del escenario: usa «El Sendero → Cinemáticas → Guion → 1. Capturar el escenario del prólogo» para tener los dibujos.
+
+## Cinemática viva
+
+Vida de fondo puesta sola (nadie quieto en cuadro):
+
+- will: 1 micro-acción(es) de reposo en los huecos en cuadro.
+- c2: 1 micro-acción(es) de reposo en los huecos en cuadro.
 
 ## Línea de tiempo
 
@@ -43,6 +49,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · c1 1,30/ojos 0,9
 
 ### will (Player)
 
+- 0:01,3 gesto Idle03
 - 0:06,2 gesto HeadShake01
 - 0:11,8–0:13,0 habla
 - 0:11,9 gesto Talk03
@@ -56,6 +63,7 @@ Reparto medido (m): will 1,62/ojos 0,93 · c2 1,31/ojos 0,98 · c1 1,30/ojos 0,9
 
 ### c2 (NPC_Contrabandista2)
 
+- 0:01,3 gesto HeadNod01
 - 0:05,5–0:08,0 habla
 - 0:05,6 gesto HeadShake01
 - 0:09,1 gesto HeadNod01

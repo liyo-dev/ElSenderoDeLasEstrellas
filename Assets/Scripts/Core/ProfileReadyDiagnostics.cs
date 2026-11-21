@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Sistema de diagnóstico para detectar sistemas que NO se suscriben a OnProfileReady
@@ -176,28 +177,28 @@ public class ProfileReadyDiagnostics : MonoBehaviour
 
         // REPORTE CONSOLIDADO
         var report = new System.Text.StringBuilder();
-        report.AppendLine($"[ProfileReadyDiagnostics] 📊 Suscripciones: {_actualSubscribers.Count}/{presentExpectedCount} presentes esperados (de {_expectedSubscribers.Count} totales)");
+        report.AppendLine($"[ProfileReadyDiagnostics] Suscripciones: {_actualSubscribers.Count}/{presentExpectedCount} presentes esperados (de {_expectedSubscribers.Count} totales)");
         
         if (missing.Count > 0)
         {
-            report.AppendLine($"  ❌ FALTANTES ({missing.Count}): {string.Join(", ", missing.OrderBy(x => x))}");
-            report.AppendLine("     ⚠️ Estos sistemas ESTÁN en la escena pero NO se suscribieron - ¡COMPORTAMIENTO INCORRECTO!");
+            report.AppendLine($"  FALTANTES ({missing.Count}): {string.Join(", ", missing.OrderBy(x => x))}");
+            report.AppendLine("     Estos sistemas ESTÁN en la escena pero NO se suscribieron - ¡COMPORTAMIENTO INCORRECTO!");
         }
         else
         {
-            report.AppendLine("  ✅ Todos los sistemas presentes están suscritos correctamente");
+            report.AppendLine("  Todos los sistemas presentes están suscritos correctamente");
         }
 
         if (extra.Count > 0)
         {
-            report.AppendLine($"  ℹ️  Sistemas adicionales ({extra.Count}): {string.Join(", ", extra.OrderBy(x => x))}");
+            report.AppendLine($"   Sistemas adicionales ({extra.Count}): {string.Join(", ", extra.OrderBy(x => x))}");
         }
         
         // NUEVO: Reportar accesos inseguros
         if (unsafeAccessors.Count > 0)
         {
-            report.AppendLine($"  ⚠️  ACCESOS SIN SUSCRIPCIÓN ({unsafeAccessors.Count}): {string.Join(", ", unsafeAccessors.OrderBy(x => x))}");
-            report.AppendLine("     🔥 Estos sistemas acceden al Profile pero NO están suscritos a OnProfileReady - POSIBLE BUG!");
+            report.AppendLine($"   ACCESOS SIN SUSCRIPCIÓN ({unsafeAccessors.Count}): {string.Join(", ", unsafeAccessors.OrderBy(x => x))}");
+            report.AppendLine("     Estos sistemas acceden al Profile pero NO están suscritos a OnProfileReady - POSIBLE BUG!");
         }
 
         // Log con nivel apropiado
@@ -376,10 +377,10 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         report.AppendLine("========================================");
         report.AppendLine();
         
-        report.AppendLine($"⏱️  OnProfileReady disparado: {(_profileReadyFired ? $"SÍ (hace {Time.time - _profileReadyTime:F2}s)" : "NO")}");
+        report.AppendLine($" OnProfileReady disparado: {(_profileReadyFired ? $"SÍ (hace {Time.time - _profileReadyTime:F2}s)" : "NO")}");
         report.AppendLine();
         
-        report.AppendLine($"📊 Estadísticas:");
+        report.AppendLine($"Estadísticas:");
         report.AppendLine($"  - Sistemas esperados: {_expectedSubscribers.Count}");
         report.AppendLine($"  - Sistemas suscritos: {_actualSubscribers.Count}");
         report.AppendLine($"  - Sistemas exentos: {_exemptSystems.Count}");
@@ -392,7 +393,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         
         if (missing.Count > 0)
         {
-            report.AppendLine($"❌ SISTEMAS FALTANTES ({missing.Count}):");
+            report.AppendLine($"SISTEMAS FALTANTES ({missing.Count}):");
             foreach (var sys in missing.OrderBy(x => x))
             {
                 report.AppendLine($"  - {sys}");
@@ -401,26 +402,26 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         }
         else
         {
-            report.AppendLine("✅ Todos los sistemas esperados están suscritos");
+            report.AppendLine("Todos los sistemas esperados están suscritos");
             report.AppendLine();
         }
         
         // NUEVO: Reportar accesos sin suscripción
         if (unsafeAccessors.Count > 0)
         {
-            report.AppendLine($"🔥 ACCESOS SIN SUSCRIPCIÓN ({unsafeAccessors.Count}):");
+            report.AppendLine($"ACCESOS SIN SUSCRIPCIÓN ({unsafeAccessors.Count}):");
             report.AppendLine("   Estos sistemas acceden al Profile pero NO están suscritos a OnProfileReady:");
             foreach (var sys in unsafeAccessors.OrderBy(x => x))
             {
                 report.AppendLine($"  - {sys}");
             }
-            report.AppendLine("   ⚠️  Esto puede causar comportamientos diferentes entre Start y MainWorld!");
+            report.AppendLine("    Esto puede causar comportamientos diferentes entre Start y MainWorld!");
             report.AppendLine();
         }
         
         if (extra.Count > 0)
         {
-            report.AppendLine($"ℹ️  SISTEMAS ADICIONALES ({extra.Count}):");
+            report.AppendLine($" SISTEMAS ADICIONALES ({extra.Count}):");
             foreach (var sys in extra.OrderBy(x => x))
             {
                 report.AppendLine($"  - {sys}");
@@ -428,7 +429,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             report.AppendLine();
         }
         
-        report.AppendLine($"✅ SISTEMAS SUSCRITOS CORRECTAMENTE ({_actualSubscribers.Count}):");
+        report.AppendLine($"SISTEMAS SUSCRITOS CORRECTAMENTE ({_actualSubscribers.Count}):");
         foreach (var sys in _actualSubscribers.OrderBy(x => x))
         {
             var isExpected = _expectedSubscribers.Contains(sys);
@@ -438,7 +439,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         }
         report.AppendLine();
         
-        report.AppendLine($"🔓 SISTEMAS EXENTOS ({_exemptSystems.Count}):");
+        report.AppendLine($"SISTEMAS EXENTOS ({_exemptSystems.Count}):");
         foreach (var sys in _exemptSystems.OrderBy(x => x))
         {
             var hasAccessed = _profileAccessors.Contains(sys);
@@ -447,12 +448,12 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         }
         report.AppendLine();
         
-        report.AppendLine($"📝 TODOS LOS ACCESOS AL PROFILE ({_profileAccessors.Count}):");
+        report.AppendLine($"TODOS LOS ACCESOS AL PROFILE ({_profileAccessors.Count}):");
         foreach (var sys in _profileAccessors.OrderBy(x => x))
         {
             bool isSubscribed = _actualSubscribers.Contains(sys);
             bool isExempt = _exemptSystems.Contains(sys);
-            string status = isSubscribed ? "✅ suscrito" : isExempt ? "🔓 exento" : "❌ SIN SUSCRIPCIÓN";
+            string status = isSubscribed ? "suscrito" : isExempt ? "exento" : "SIN SUSCRIPCIÓN";
             report.AppendLine($"  - {sys} ({status})");
         }
         report.AppendLine();

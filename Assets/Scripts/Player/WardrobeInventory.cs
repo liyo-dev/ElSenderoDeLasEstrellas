@@ -181,13 +181,11 @@ public class WardrobeInventory : MonoBehaviour
         {
             list = new List<WardrobeEntry>();
             _entries[entry.category] = list;
-            // Debug.Log($"[WardrobeInventory.AddEntry] Creada nueva lista para categoría {entry.category}");
         }
 
         int existingIndex = list.FindIndex(e => string.Equals(e.partName, entry.partName, StringComparison.OrdinalIgnoreCase));
         if (existingIndex >= 0)
         {
-            // Debug.Log($"[WardrobeInventory.AddEntry] Ya existe entrada para '{entry.partName}' en {entry.category}");
             if (persistable)
             {
                 var existing = list[existingIndex];
@@ -198,7 +196,6 @@ public class WardrobeInventory : MonoBehaviour
                     existing.description = entry.description;
                     existing.icon = entry.icon;
                     list[existingIndex] = existing;
-                    // Debug.Log($"[WardrobeInventory.AddEntry] Actualizada entrada existente con wardrobeId '{entry.wardrobeId}'");
                     return true;
                 }
             }
@@ -211,7 +208,6 @@ public class WardrobeInventory : MonoBehaviour
         else
             list.Add(entry);
 
-        // Debug.Log($"[WardrobeInventory.AddEntry] Añadida nueva entrada '{entry.partName}' ({entry.displayName}) a {entry.category}. Total items en categoría: {list.Count}");
 
         if (persistable && !string.IsNullOrEmpty(entry.wardrobeId))
             _persistedIds.Add(entry.wardrobeId);
@@ -229,27 +225,22 @@ public class WardrobeInventory : MonoBehaviour
             return false;
         }
 
-        // Debug.Log($"[WardrobeInventory] Unlock: {item.WardrobeId} (Category: {item.Category}, PartName: {item.PartName}, persistToPreset: {persistToPreset})");
 
         var entry = CreateEntry(item);
         bool added = AddEntry(entry, persistable: true);
         
         if (!added)
         {
-            // Debug.LogWarning($"[WardrobeInventory] El item '{item.WardrobeId}' no pudo ser añadido (probablemente ya existe)");
             return false;
         }
 
-        // Debug.Log($"[WardrobeInventory] Item '{item.WardrobeId}' añadido correctamente a la categoría {item.Category}");
 
         if (persistToPreset && !string.IsNullOrEmpty(entry.wardrobeId))
         {
             _persistedIds.Add(entry.wardrobeId);
             SyncPresetUnlockedIds();
-            // Debug.Log($"[WardrobeInventory] Item '{item.WardrobeId}' persistido al preset");
         }
 
-        // Debug.Log($"[WardrobeInventory] Notificando cambios (OnWardrobeChanged)");
         NotifyChanged();
         return true;
     }

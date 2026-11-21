@@ -16,7 +16,7 @@ MonoBehaviour:
   displayNameId: SPELL_LLAMA_ASTRAL_NAME
   displayName: Llama Astral
   kind: 0
-  element: 0
+  element: 3
   lore: "La primera llama que Will aprendi\xF3 a encender en la palma de la mano."
   loreId: 
   prefab: {fileID: 156240471979232137, guid: 41988a9719a00ac48bc54eb5556d5ac1, type: 3}
@@ -107,8 +107,12 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  invisibilidadSegundos: 6
+  materialDeInvisible: {fileID: 0}
   abreProteccionSegundos: 0
   vfxProteccionAbierta: {fileID: 0}
+  empujeEnElAire: 0
   enGrimorio: 1
+  especialConMision: 0
   caster: 1
   comboSequence: 

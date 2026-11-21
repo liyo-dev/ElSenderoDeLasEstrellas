@@ -133,6 +133,11 @@ namespace Core.InputGlyphs
                          : family == InputGlyphDeviceFamily.Switch ? Loc("GLYPH_STICK_CLICK", "clic del stick")
                          : "L3";
 
+                // Cambiar de objetivo: stick derecho a un lado en mando, rueda en teclado (INC-1349).
+                case InputGlyphNames.SwitchTarget:
+                    return kb ? Loc("GLYPH_WHEEL", "la rueda del ratón")
+                              : Loc("GLYPH_STICK_RIGHT_SIDE", "el stick derecho hacia un lado");
+
                 case InputGlyphNames.Teleport: // Mismo botón físico que North en mando; "T" en teclado
                     return kb ? "T" : GetLabel(InputGlyphNames.North, family);
 

@@ -70,6 +70,21 @@ namespace Kits.Core
             if (owners.Count == 0) Changed?.Invoke(situation, false);
         }
 
+        /// <summary>Escribe cada situación abierta con sus claves (para diagnóstico).</summary>
+        public static void Describe(System.Text.StringBuilder into)
+        {
+            if (into == null) return;
+            foreach (var pair in s_owners)
+            {
+                DiscardDead(pair.Key, pair.Value);
+                if (pair.Value.Count == 0) continue;
+                into.Append(pair.Key).Append(':');
+                foreach (var owner in pair.Value)
+                    into.Append(' ').Append(owner is UnityEngine.Object o ? o.name + " (" + o.GetType().Name + ")" : owner.ToString());
+                into.AppendLine();
+            }
+        }
+
         static void DiscardDead(string situation, HashSet<object> owners)
         {
             s_dead.Clear();

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -36,6 +36,44 @@ public class NPCShieldController : MonoBehaviour
     private float _originalUpperBodyWeight;
 
     public bool IsDefending => _isDefending;
+
+    [Header("Escudo elemental")]
+    [SerializeField, Min(0f), Tooltip("Segundos que queda aturdido el NPC cuando le rompen el escudo.")]
+    private float segundosAturdidoAlRomperse = 2f;
+
+    private MagicElement? _elemento;
+
+    /// <summary>Elemento del escudo; null = escudo común, que para todo.</summary>
+    public MagicElement? Elemento => _elemento;
+
+    /// <summary>Le han roto el escudo con el elemento que lo vence.</summary>
+    public event System.Action AlRomperse;
+
+    /// <summary>Le han tirado un elemento que no lo rompe: el escudo para el hechizo y sigue.</summary>
+    public event System.Action<MagicElement> AlRebotar;
+
+    /// <summary>Pone o quita el elemento del escudo (RuptoresDeEscudo dice qué lo rompe).</summary>
+    public void ConfigurarElemento(MagicElement? elemento)
+    {
+        _elemento = elemento;
+        ColorearEscudo();
+    }
+
+    /// <summary>
+    /// Cambia el prefab de la burbuja (p. ej. por la del escudo elemental) y devuelve el de antes.
+    /// Si el escudo está puesto, se rehace con el nuevo.
+    /// </summary>
+    public GameObject CambiarPrefab(GameObject prefab)
+    {
+        var antes = shieldPrefab;
+        shieldPrefab = prefab;
+        if (_shieldInstance != null)
+        {
+            DeactivateShield();
+            if (_isDefending) ActivateShield();
+        }
+        return antes;
+    }
 
     /// <summary>
     /// Permite configurar el escudo desde NPCCombatConfig en runtime.
@@ -151,6 +189,7 @@ public class NPCShieldController : MonoBehaviour
             _shieldInstance.transform.localRotation = Quaternion.identity;
 
             ConfigureShieldDetector(_shieldInstance);
+            ColorearEscudo();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCShieldController] Escudo instanciado: '{resolvedShieldPrefab.name}' en {_shieldInstance.transform.position}");
@@ -269,6 +308,46 @@ public class NPCShieldController : MonoBehaviour
         detector.Initialize(this, _blockedLayers);
     }
 
+    // Tiñe el escudo con el color de su elemento (si lo tiene).
+    private void ColorearEscudo()
+    {
+        if (_shieldInstance == null || !_elemento.HasValue) return;
+        Color color = RuptoresDeEscudo.ColorDe(_elemento.Value);
+        var renderers = _shieldInstance.GetComponentsInChildren<Renderer>(true);
+        // Burbuja de energía (la del escudo elemental): brillo, cuerpo y borde del elemento.
+        PlayerShieldController.PintarConElemento(renderers, _elemento.Value);
+        var bloque = new MaterialPropertyBlock();
+        foreach (var render in renderers)
+        {
+            render.GetPropertyBlock(bloque);
+            bloque.SetColor("_BaseColor", color);
+            bloque.SetColor("_Color", color);
+            render.SetPropertyBlock(bloque);
+        }
+        foreach (var particulas in _shieldInstance.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            var main = particulas.main;
+            main.startColor = color;
+        }
+    }
+
+    /// <summary>Un hechizo de 'elemento' ha dado en el escudo. True si lo ha roto.</summary>
+    internal bool AlRecibirMagia(MagicElement elemento)
+    {
+        if (!_elemento.HasValue) return false;
+        if (!RuptoresDeEscudo.Rompe(elemento, _elemento.Value))
+        {
+            AlRebotar?.Invoke(elemento);
+            return false;
+        }
+        StopDefending();
+        var dano = GetComponent<Damageable>();
+        if (dano != null && segundosAturdidoAlRomperse > 0f)
+            EstadosDeCombate.Aplicar(dano, EstadoDeCombate.Aturdir, segundosAturdidoAlRomperse, 0f, transform.position, null);
+        AlRomperse?.Invoke();
+        return true;
+    }
+
     internal void OnShieldHit()
     {
         // Reproduce animación de impacto breve en la capa superior y vuelve a defensa
@@ -333,6 +412,12 @@ public class NPCShieldController : MonoBehaviour
 
             if (_blockedLayers.Contains(layer))
             {
+                var magia = go.GetComponentInChildren<MagicProjectile>();
+                if (magia != null && _owner.AlRecibirMagia(magia.Elemento))
+                {
+                    SafeDestroy(go);
+                    return;
+                }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCShieldHitDetector] Bloqueado proyectil: {go.name} (layer {layer})");
 #endif

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Componente reutilizable para misiones de "elimina N enemigos".
@@ -55,14 +56,13 @@ public class QuestKillContributor : MonoBehaviour
 
     private void HandleDied()
     {
-        // FIX INC-ARANAS-0-DE-4: bug reportado por Raúl — mataba arañas sin límite y
-        // el contador de la quest se quedaba siempre en "0/4". Todas las ramas de salida temprana de
-        // este método eran completamente silenciosas (sin log ni siquiera con debugLogs activado, que
-        // solo cubría el camino de ÉXITO) — así que un fallo aquí era indistinguible de "esta muerte
-        // no debía contar por diseño". Ahora cada salida deja rastro en consola (bajo debugLogs, igual
-        // que el resto del componente) para poder ver de un vistazo cuál de las cuatro condiciones
-        // (questId vacío, QuestManager.Instance null, quest no Activa, o ya sin steps pendientes) es
-        // la que está bloqueando el progreso la próxima vez que se reproduzca.
+        // Todas las ramas de salida temprana de este método eran completamente silenciosas (sin log ni
+        // siquiera con debugLogs activado, que solo cubría el camino de ÉXITO) — así que un fallo aquí
+        // era indistinguible de "esta muerte no debía contar por diseño". Ahora cada salida deja
+        // rastro en consola (bajo debugLogs, igual que el resto del componente) para poder ver de un
+        // vistazo cuál de las cuatro condiciones (questId vacío, QuestManager.Instance null, quest no
+        // Activa, o ya sin steps pendientes) es la que está bloqueando el progreso la próxima vez que
+        // se reproduzca.
         if (string.IsNullOrEmpty(questId))
         {
             if (debugLogs)

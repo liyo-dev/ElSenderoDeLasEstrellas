@@ -86,14 +86,17 @@ half3 LuzExtraDeDibujo(Light luz, half3 normalWS)
     return luz.color * (lerp(0.35h, 1.0h, cara) * alcance * saturate(luz.shadowAttenuation * 10.0h));
 }
 
-half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial)
+// «luzDePersonaje» (0 a 1): los personajes llevan la sombra más pequeña y más clara.
+half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial, half luzDePersonaje)
 {
     AjustesDeDibujo a = LeerAjustes();
     half4 mascaraDeSombra = unity_ProbesOcclusion;
     Light principal = GetMainLight(inputData.shadowCoord, inputData.positionWS, mascaraDeSombra);
 
     half nl = dot(inputData.normalWS, principal.direction);
-    half iluminado = smoothstep(a.umbral - a.suavidad, a.umbral + a.suavidad, nl);
+    // Los personajes de dibujo animado van casi enteros con luz: la sombra solo cae en el lado de espaldas al sol.
+    half umbral = a.umbral - 0.45h * luzDePersonaje;
+    half iluminado = smoothstep(umbral - a.suavidad, umbral + a.suavidad, nl);
     iluminado *= smoothstep(0.35h, 0.65h, principal.shadowAttenuation);
 
     half3 colorDeLuz = lerp(LuminanciaDeDibujo(principal.color).xxx, principal.color, a.tinteDeLuz) * principal.distanceAttenuation;
@@ -125,6 +128,8 @@ half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial)
     half calidez = saturate((albedo.r - max(albedo.g * 0.9h, albedo.b)) * 3.0h);
     half3 tonoDeSombra = albedo * lerp(a.sombra, a.sombraCalida, calidez);
     tonoDeSombra = max(lerp(LuminanciaDeDibujo(tonoDeSombra).xxx, tonoDeSombra, a.saturacionSombra), 0.0h);
+    // En los personajes la sombra es el mismo color algo más oscuro, sin enturbiarse.
+    tonoDeSombra = lerp(tonoDeSombra, lerp(tonoDeSombra, albedo, 0.4h), luzDePersonaje);
 
     // De día el sol más el ambiente pasan de 1 y el tono iluminado se quema: con el tope, la parte
     // iluminada sale del color de la pieza. De noche o en interiores la luz queda por debajo y no cambia.
@@ -152,6 +157,11 @@ half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial)
     #endif
 
     return color;
+}
+
+half3 ColorDeDibujo(InputData inputData, half3 albedo, half brilloDelMaterial)
+{
+    return ColorDeDibujo(inputData, albedo, brilloDelMaterial, 0.0h);
 }
 
 #endif

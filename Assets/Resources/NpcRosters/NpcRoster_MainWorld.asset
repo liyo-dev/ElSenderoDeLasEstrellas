@@ -166,7 +166,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_Contrabandista1
-    prefab: {fileID: 4329106663490025928, guid: 2ee002eec61c23d479bdb0c2ee1aac46, type: 3}
+    prefab: {fileID: 3238590465008799467, guid: fc981ffd7cfc80d489ec5c20f5c83f28, type: 3}
     gameObjectName: Contrabandista1
     persistenceId: NPC_Contrabandista1
     vozDeReacciones: Vecino
@@ -269,6 +269,26 @@ MonoBehaviour:
     prefab: {fileID: 6941739730369371496, guid: 9066a8590ac4a3f4087fe7832083bb73, type: 3}
     gameObjectName: Rosario
     persistenceId: NPC_Rosario
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Pez
+    prefab: {fileID: 6941739730369371496, guid: 2048e3b86ae33b545a89916b25221689, type: 3}
+    gameObjectName: Pez
+    persistenceId: NPC_Pez
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Candela
+    prefab: {fileID: 6941739730369371496, guid: 2ba6b084611532e42bc5fd9bae89390f, type: 3}
+    gameObjectName: Candela
+    persistenceId: NPC_Candela
     vozDeReacciones: Vecina
     startActive: 1
     requireNavMesh: 0

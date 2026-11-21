@@ -14,10 +14,9 @@ using Game.NPC.Common;
 /// NavMeshAgent apagado.
 ///
 /// Aquí se hace como lo hace el resto del juego (CinematicState.MoveToPositionSequence): el
-/// NavMeshAgent conduce, y el animator se limita a LEER su velocidad real ya normalizada. Es la
-/// versión que Raúl aprobó el 16 sep 2026 ("así es como quiero que caminen, como lo hace el player
-/// cuando lo controlo yo"). Cualquier arreglo futuro de "los NPCs andan raro" se hace en este
-/// archivo y lo heredan todas las secuencias.
+/// NavMeshAgent conduce, y el animator se limita a LEER su velocidad real ya normalizada.
+/// Cualquier arreglo futuro de "los NPCs andan raro" se hace en este archivo y lo heredan todas
+/// las secuencias.
 public static class SequenceMovement
 {
     /// Sin lente válida se conserva el actor: una elipsis necesita probar que está fuera.
@@ -139,12 +138,10 @@ public static class SequenceMovement
                 "recta en vez de navegando. Si esto sale en varios actores de la misma escena, lo " +
                 "que hay que mirar es el bakeado del NavMesh, no el beat.");
 #endif
-            // ANTES SE TELETRANSPORTABA, y es lo que hacía que en el prólogo del 19 sep los diez
-            // aldeanos "no huyeran": aparecían en el puente de un fotograma al siguiente. En una
-            // cinemática eso nunca es aceptable — un personaje que se mueve sin andar se lee como
-            // un fallo, no como una elipsis. Se cae al mismo paseo a mano que usa WalkPathBeat, que
-            // no necesita NavMesh y alimenta la animación con la velocidad real (ver allí por qué
-            // eso no reintroduce el patinaje de INC-209).
+            // En una cinemática eso nunca es aceptable — un personaje que se mueve sin andar se lee
+            // como un fallo, no como una elipsis. Se cae al mismo paseo a mano que usa
+            // WalkPathBeat, que no necesita NavMesh y alimenta la animación con la velocidad real
+            // (ver allí por qué eso no reintroduce el patinaje de INC-209).
             yield return WalkPathBeat.AndarHasta(actor, destination,
                 speedOverride > 0.1f ? speedOverride : 2.2f, timeout, esquivar, ctx, elipsis, esperaMaxima);
             if ((actor.Transform.position - destination).sqrMagnitude < 0.01f

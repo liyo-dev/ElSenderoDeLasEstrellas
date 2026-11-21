@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
 
-/// Mientras algún sistema lo pide, el grupo va agachado y despacio: el cuerpo del jugador y los
-/// compañeros ponen el parámetro «IsCrouching» de su animator y el jugador no pasa de la velocidad
-/// pedida (TopeDeVelocidadDelJugador). Cada sistema empieza y termina con su clave; el grupo se
+/// Mientras algún sistema lo pide, el grupo va agachado: el cuerpo del jugador y los compañeros
+/// ponen el parámetro «IsCrouching» de su animator y, si quien lo pide da una velocidad, el jugador
+/// no pasa de ella (TopeDeVelocidadDelJugador). Cada sistema empieza y termina con su clave; el grupo se
 /// levanta cuando no queda ninguna. Quien lo pida llama a <see cref="Refrescar"/> de vez en cuando
-/// para que lo herede el cuerpo nuevo si cambia el personaje al mando.
+/// para que lo herede el cuerpo nuevo si cambia el personaje al mando. Mientras dura, la situación
+/// <see cref="Situaciones.Sigilo"/> está abierta en el GameContext (lo que no debe salir en pleno
+/// seguimiento, como la presentación de un lugar, cede ante ella).
 public static class SigiloDelGrupo
 {
     private static readonly int HashAgachado = Animator.StringToHash("IsCrouching");
@@ -28,12 +30,14 @@ public static class SigiloDelGrupo
     /// Algún sistema tiene al grupo en sigilo.
     public static bool Activo => s_quienes.Count > 0;
 
-    /// El grupo va agachado y el jugador, como mucho, a 'velocidadDelJugador' m/s.
-    public static void Empezar(object quien, float velocidadDelJugador)
+    /// El grupo va agachado y, con 'velocidadDelJugador' mayor que 0, el jugador va como mucho a
+    /// esa velocidad (m/s). Con 0, a la de siempre.
+    public static void Empezar(object quien, float velocidadDelJugador = 0f)
     {
         if (quien == null) return;
         s_quienes.Add(quien);
-        TopeDeVelocidadDelJugador.Poner(quien, velocidadDelJugador);
+        Kits.Core.GameContext.Enter(Situaciones.Sigilo, quien);
+        if (velocidadDelJugador > 0f) TopeDeVelocidadDelJugador.Poner(quien, velocidadDelJugador);
         Refrescar();
     }
 
@@ -41,8 +45,26 @@ public static class SigiloDelGrupo
     public static void Terminar(object quien)
     {
         if (quien == null || !s_quienes.Remove(quien)) return;
+        Kits.Core.GameContext.Exit(Situaciones.Sigilo, quien);
         TopeDeVelocidadDelJugador.Quitar(quien);
         if (s_quienes.Count > 0) return;
+        foreach (var a in s_agachados)
+            if (a != null) a.SetBool(HashAgachado, false);
+        s_agachados.Clear();
+    }
+
+    /// Levanta al grupo y quita todos los topes de velocidad del sigilo, lo pidiera quien lo pidiera:
+    /// para los puntos en que la sesión vuelve a empezar (Game Over, cargar partida, menú principal),
+    /// por si quien lo pidió no llegó a soltarlo. Ver INC-1331.
+    public static void TerminarTodos()
+    {
+        if (s_quienes.Count == 0 && s_agachados.Count == 0) return;
+        foreach (var quien in s_quienes)
+        {
+            TopeDeVelocidadDelJugador.Quitar(quien);
+            Kits.Core.GameContext.Exit(Situaciones.Sigilo, quien);
+        }
+        s_quienes.Clear();
         foreach (var a in s_agachados)
             if (a != null) a.SetBool(HashAgachado, false);
         s_agachados.Clear();

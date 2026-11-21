@@ -1,4 +1,5 @@
 using System;
+using Liyodev.NarrativeGraph;
 
 /// Punto de enganche genérico para el botón global de "saltar secuencia" (ver
 /// GlobalCinematicSkipController / HoldToSkipUI).
@@ -24,9 +25,6 @@ using System;
 /// que "el botón se ve" y "pulsarlo hace algo" sean SIEMPRE la misma condición — ya no pueden
 /// desincronizarse porque son literalmente el mismo contador.
 ///
-/// CONTRATO para quien implemente un handler (ver auditoría de skip del 16/08/2026 en
-/// Assets/Scripts/Cinematics/*.cs — EstelaAppearsSequencer.OnSkipCleanup,
-/// LiamCrystalBallSequencer.OnSkipCleanup, etc. como referencia, y DialogueManager.
 /// HandleSkipRequested para un ejemplo ya implementado): saltar una secuencia normalmente
 /// significa abortar su corrutina/estado/temporizador a mitad de camino. Eso NO ejecuta el resto
 /// de pasos pendientes por sí solo — cualquier SetActive(true), spawn, cambio de posición, flag
@@ -39,9 +37,8 @@ public static class NarrativeSkipHub
     public static event Action OnSkipRequested;
 
     /// Se dispara cuando AnySkippable cambia (false→true al registrar el primer handler activo,
-    /// true→false al desregistrar el último). Mismo patrón que
-    /// CinematicSequencerBase.OnAnySequenceActiveChanged, pero sobre la señal correcta — ver nota
-    /// FIX arriba. GlobalCinematicSkipController se suscribe aquí para mostrar/ocultar el botón.
+    /// true→false al desregistrar el último). GlobalCinematicSkipController se suscribe aquí para
+    /// mostrar/ocultar el botón.
     public static event Action<bool> OnAnySkippableChanged;
 
     // AnySkippable se deriva directamente de si el delegado multicast tiene algún suscriptor (en

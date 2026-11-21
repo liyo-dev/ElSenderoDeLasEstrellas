@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Several changes to a graph described as data and applied all together, or none if any of
     /// them is wrong. Steps are named by their number ("2.3"), their id, or the "id" given to a
@@ -133,25 +133,25 @@ namespace NarrativeGraphEditor
                 case "add":
                 {
                     var node = NarrativeNode.Create(StepType(op.type));
-                    node.displayTitle = op.title ?? string.Empty;
-                    node.outputs = new List<string>();
+                    node.DisplayTitle = op.title ?? string.Empty;
+                    node.Outputs = new List<string>();
                     var ports = node.GetOutputPorts();
-                    if (ports != null) foreach (var _ in ports) node.outputs.Add(string.Empty);
+                    if (ports != null) foreach (var _ in ports) node.Outputs.Add(string.Empty);
                     var previous = Find(graph, s, op.after, created);
-                    node.position = previous != null ? previous.position + new Vector2(StoryLayout.CardWidth + StoryLayout.ColumnGap, 0f) : Vector2.zero;
+                    node.Position = previous != null ? previous.Position + new Vector2(StoryLayout.CardWidth + StoryLayout.ColumnGap, 0f) : Vector2.zero;
                     SetFields(node, op.fields);
                     graph.nodes.Add(node);
                     if (!string.IsNullOrEmpty(op.id)) created[op.id] = node;
                     if (previous != null) Connect(previous, node, op.port);
-                    if (string.IsNullOrEmpty(graph.startNodeGuid)) graph.startNodeGuid = node.guid;
-                    done.Add($"added {node.KindType.Name} '{node.displayTitle}' ({node.guid})");
+                    if (string.IsNullOrEmpty(graph.startNodeGuid)) graph.startNodeGuid = node.Guid;
+                    done.Add($"added {node.KindType.Name} '{node.DisplayTitle}' ({node.Guid})");
                     break;
                 }
                 case "set":
                 {
                     var node = Find(graph, s, op.step, created);
                     SetFields(node, op.fields);
-                    done.Add($"changed '{node.displayTitle}'");
+                    done.Add($"changed '{node.DisplayTitle}'");
                     break;
                 }
                 case "connect":
@@ -159,23 +159,23 @@ namespace NarrativeGraphEditor
                     var from = Find(graph, s, op.from, created);
                     var to = Find(graph, s, op.to, created);
                     Connect(from, to, op.port);
-                    done.Add($"connected '{from.displayTitle}' → '{to.displayTitle}'");
+                    done.Add($"connected '{from.DisplayTitle}' → '{to.DisplayTitle}'");
                     break;
                 }
                 case "disconnect":
                 {
                     var from = Find(graph, s, op.from, created);
                     int index = PortIndex(from, op.port);
-                    if (from.HasNamedOutputs) { if (index >= 0 && index < from.outputs.Count) from.outputs[index] = string.Empty; }
-                    else from.outputs.Clear();
-                    done.Add($"disconnected '{from.displayTitle}'");
+                    if (from.HasNamedOutputs) { if (index >= 0 && index < from.Outputs.Count) from.Outputs[index] = string.Empty; }
+                    else from.Outputs.Clear();
+                    done.Add($"disconnected '{from.DisplayTitle}'");
                     break;
                 }
                 case "section":
                 {
                     var node = Find(graph, s, op.step, created);
-                    node.section = op.value ?? string.Empty;
-                    done.Add($"'{node.displayTitle}' opens section '{node.section}'");
+                    node.Section = op.value ?? string.Empty;
+                    done.Add($"'{node.DisplayTitle}' opens section '{node.Section}'");
                     break;
                 }
                 case "delete":
@@ -183,16 +183,16 @@ namespace NarrativeGraphEditor
                     var node = Find(graph, s, op.step, created);
                     foreach (var other in graph.nodes)
                     {
-                        if (other?.outputs == null) continue;
+                        if (other?.Outputs == null) continue;
                         if (other.HasNamedOutputs)
                         {
-                            for (int i = 0; i < other.outputs.Count; i++) if (other.outputs[i] == node.guid) other.outputs[i] = string.Empty;
+                            for (int i = 0; i < other.Outputs.Count; i++) if (other.Outputs[i] == node.Guid) other.Outputs[i] = string.Empty;
                         }
-                        else other.outputs.RemoveAll(g => g == node.guid);
+                        else other.Outputs.RemoveAll(g => g == node.Guid);
                     }
                     graph.nodes.Remove(node);
-                    if (graph.startNodeGuid == node.guid) graph.startNodeGuid = null;
-                    done.Add($"deleted '{node.displayTitle}'");
+                    if (graph.startNodeGuid == node.Guid) graph.startNodeGuid = null;
+                    done.Add($"deleted '{node.DisplayTitle}'");
                     break;
                 }
             }
@@ -216,14 +216,14 @@ namespace NarrativeGraphEditor
             var names = from.GetOutputPorts();
             if (names == null)
             {
-                if (!from.outputs.Contains(to.guid)) from.outputs.Add(to.guid);
+                if (!from.Outputs.Contains(to.Guid)) from.Outputs.Add(to.Guid);
                 return;
             }
-            while (from.outputs.Count < names.Length) from.outputs.Add(string.Empty);
+            while (from.Outputs.Count < names.Length) from.Outputs.Add(string.Empty);
             int index = PortIndex(from, port);
-            if (index < 0) index = from.outputs.FindIndex(string.IsNullOrEmpty);
-            if (index < 0) throw new InvalidOperationException($"'{from.displayTitle}' has no free way out.");
-            from.outputs[index] = to.guid;
+            if (index < 0) index = from.Outputs.FindIndex(string.IsNullOrEmpty);
+            if (index < 0) throw new InvalidOperationException($"'{from.DisplayTitle}' has no free way out.");
+            from.Outputs[index] = to.Guid;
         }
 
         static int PortIndex(NarrativeNode node, string port)
@@ -248,7 +248,7 @@ namespace NarrativeGraphEditor
             if (type == null || fields == null) return;
             foreach (var f in fields)
             {
-                var info = OwnerTypes(type).Select(t => t.GetField(f.name ?? string.Empty, BindingFlags.Instance | BindingFlags.Public)).FirstOrDefault(i => i != null);
+                var info = OwnerTypes(type).Select(t => NarrativeGraphText.SerializedField(t, f.name ?? string.Empty)).FirstOrDefault(i => i != null);
                 if (info == null) { errors.Add($"{where}: '{type.Name}' has no field '{f.name}'."); continue; }
                 if (!TryConvert(info.FieldType, f.value, out _, out var why)) errors.Add($"{where}: field '{f.name}': {why}");
             }
@@ -269,7 +269,7 @@ namespace NarrativeGraphEditor
             {
                 foreach (var owner in node.FieldOwners())
                 {
-                    var info = owner.GetType().GetField(f.name, BindingFlags.Instance | BindingFlags.Public);
+                    var info = NarrativeGraphText.SerializedField(owner.GetType(), f.name);
                     if (info == null) continue;
                     TryConvert(info.FieldType, f.value, out var value, out _);
                     info.SetValue(owner, value);

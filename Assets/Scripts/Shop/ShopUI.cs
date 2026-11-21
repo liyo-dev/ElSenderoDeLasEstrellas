@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using Core;
+using Liyodev.NarrativeGraph;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -501,8 +502,8 @@ public class ShopUI : MonoBehaviour
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // PERF (revisión rendimiento 24/08): RebuildItemList() se llama tras cada compra/venta, no
-        // solo al abrir la tienda — este log no aporta nada en build final.
+        // PERF: RebuildItemList() se llama tras cada compra/venta, no solo al abrir la tienda —
+        // este log no aporta nada en build final.
         Debug.Log($"[ShopUI] RebuildItemList: Stock tiene {shopController.Stock.Count} items");
 #endif
 

@@ -1,3 +1,4 @@
+using Liyodev.NarrativeGraph;
 #if UNITY_EDITOR
 using System.Collections;
 using UnityEditor;

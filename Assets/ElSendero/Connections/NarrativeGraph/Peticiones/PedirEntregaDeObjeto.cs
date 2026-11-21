@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Game.NPC;
+using Liyodev.NarrativeGraph;
 
 /// Espera a que el jugador entregue por proximidad, llevándolo en brazos, un objeto concreto a un
 /// NPC, y hace la entrega: el objeto desaparece con VFX y SFX, el NPC se gira y hace un gesto, y

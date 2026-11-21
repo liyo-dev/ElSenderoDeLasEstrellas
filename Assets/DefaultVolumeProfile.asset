@@ -139,43 +139,6 @@ MonoBehaviour:
   highlightsEnd:
     m_OverrideState: 1
     m_Value: 1
---- !u!114 &-5129258312144645505
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d653aa3890562044bab030c6922827c, type: 3}
-  m_Name: ContornoDeTinta
-  m_EditorClassIdentifier: Assembly-CSharp::ContornoDeTinta
-  active: 1
-  intensidad:
-    m_OverrideState: 1
-    m_Value: 1
-  tinta:
-    m_OverrideState: 1
-    m_Value: {r: 0.2, g: 0.15, b: 0.22, a: 1}
-  grosor:
-    m_OverrideState: 1
-    m_Value: 2
-  umbralDeSilueta:
-    m_OverrideState: 1
-    m_Value: 0.06
-  umbralDePliegue:
-    m_OverrideState: 1
-    m_Value: 0.45
-  pesoDePliegues:
-    m_OverrideState: 1
-    m_Value: 0.55
-  inicioDelDesvanecido:
-    m_OverrideState: 1
-    m_Value: 22
-  finDelDesvanecido:
-    m_OverrideState: 1
-    m_Value: 60
 --- !u!114 &-2267409623457658866
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -301,7 +264,6 @@ MonoBehaviour:
   - {fileID: -7440789863112028915}
   - {fileID: 5745129919547576932}
   - {fileID: 1993674019126124936}
-  - {fileID: -5129258312144645505}
 --- !u!114 &404500167042659258
 MonoBehaviour:
   m_ObjectHideFlags: 3

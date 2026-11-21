@@ -179,6 +179,10 @@ public static class ModelosDeLasZonas
         asiento.puntoAlLevantarse = alLevantarse;
         asiento.requiredProximity = 2.2f;
         asiento.soloJugador = true;
+        // La cadera, sobre la tabla; y el jugador sentado, con plano de cámara quieto (INC-1327).
+        asiento.apoyarLaCadera = true;
+        asiento.apoyoDeLaCadera = new Vector3(0f, BajoLaTabla, -DelanteDeLaTabla);
+        asiento.planoFijo = true;
         var interactuable = uso.AddComponent<Interactable>();
         IconoDeInteractuar(interactuable, uso.transform, InteractableMode.UseWorldPoint, informe);
 

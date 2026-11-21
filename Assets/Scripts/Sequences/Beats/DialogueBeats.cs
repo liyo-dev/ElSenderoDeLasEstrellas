@@ -12,8 +12,8 @@ using UnityEngine;
 /// para casi todo menos para contenido que el jugador deba poder leer con calma (ver DialogueBeat).
 ///
 /// Sobre los gestos: el gesto específico ('gesture') se reproduce las primeras 'gestureRepeats'
-/// veces y después el actor pasa a variaciones genéricas de hablar (Talk01/02/03), para que no se
-/// quede repitiendo "enfadado" en bucle durante todo el párrafo ni congelado en una pose. Subir
+/// veces y después el actor pasa a variaciones genéricas de hablar, para que no se quede
+/// repitiendo "enfadado" en bucle durante todo el párrafo ni congelado en una pose. Subir
 /// 'gestureRepeats' a 2 sirve, por ejemplo, para un saludo al principio de una escena, cuando el
 /// primer ciclo se pierde con la transición de entrada y apenas se ve.
 [Serializable]
@@ -44,9 +44,8 @@ public class SayBeat : SequenceBeat
 
     [Tooltip("Si 'actorId' está vacío, el bocadillo sale anclado a esta marca de posición del " +
              "SequenceStage en vez de a un actor — para una voz que viene de fuera de plano " +
-             "(alguien tras una ventana, algo que habla sin personaje en escena). Añadido para " +
-             "SEQ_DiscusionVentana (17 sep 2026): dos voces discutiendo que Will oye desde la " +
-             "cama, sin que haga falta tener ya colocados los NPCs que discuten. Una marca no " +
+             "(alguien tras una ventana, algo que habla sin personaje en escena). Sirve, p. ej., para " +
+             "dos voces discutiendo que Will oye desde la cama, sin tener colocados a los NPCs que discuten. Una marca no " +
              "anima nada — sin gestos, sin pose de conversación.")]
     public string markName;
 
@@ -637,8 +636,7 @@ public class DialogueBeat : SequenceBeat, IConfigurableDesdeGuion
             if (conservarCamaraDeLaSecuencia && DialogueManager.Instance != null)
                 DialogueManager.Instance.ConservarCamaraDeSecuencia = false;
 
-            // FIX 16 sep 2026 (Raúl: "al acabar el diálogo del tutorial se ve el cabezón de Will",
-            // y seguía viéndose tras el primer intento): devolver la cámara a la secuencia YA.
+            // , y seguía viéndose tras el primer intento): devolver la cámara a la secuencia YA.
             //
             // DialogueManager llama a EndCinematic(), que NO apaga nada — espera
             // `chainDialogueGracePeriod` (0,5 s) por si viene otro diálogo encadenado, y durante ese

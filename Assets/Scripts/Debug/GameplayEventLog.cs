@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Registro ligero de "qué está pasando en el juego" (batalla, teletransporte, cinemática, clima,
-/// menús, diálogo...), pensado para acompañar a una captura de PerformanceCapture (ver
-/// PerformanceCapture.cs, F9 para grabar/parar). Mientras hay una captura en curso, cualquier
-/// sistema del juego puede anotar aquí un evento con GameplayEventLog.Log(...) y queda guardado en
-/// el mismo .json que ya genera PerformanceCapture, con el mismo reloj (segundos desde que empezó la
-/// grabación) que usan las muestras de rendimiento por segundo — así, para revisar una sesión, basta
-/// con jugar y grabar (F9 al empezar, F9 al terminar): el .json resultante ya cuenta qué estaba
-/// pasando en cada momento (¿en combate? ¿acaba de teletransportar? ¿está lloviendo?), sin que haga
-/// falta jugar, parar y explicarlo aparte para poder interpretar los números.
+/// Mientras hay una captura en curso, cualquier sistema del juego puede anotar aquí un evento con
+/// GameplayEventLog.Log(...) y queda guardado en el mismo .json que ya genera PerformanceCapture,
+/// con el mismo reloj (segundos desde que empezó la grabación) que usan las muestras de rendimiento
+/// por segundo — así, para revisar una sesión, basta con jugar y grabar (F9 al empezar, F9 al
+/// terminar): el .json resultante ya cuenta qué estaba pasando en cada momento (¿en combate? ¿acaba
+/// de teletransportar? ¿está lloviendo?), sin que haga falta jugar, parar y explicarlo aparte para
+/// poder interpretar los números.
 ///
 /// Es una clase estática pasiva: no vive en ninguna escena ni requiere ninguna referencia — cualquier
 /// script del proyecto puede llamar a GameplayEventLog.Log("Categoria", "detalle opcional") en
@@ -32,8 +30,8 @@ using UnityEngine;
 public static class GameplayEventLog
 {
     // Límite defensivo: una sesión larga con muchísimo diálogo/menús no debe generar un .json
-    // desproporcionado. Subido de 500 a 2000 (24/08) a la vez que maxDurationSeconds pasó de 5 a 45
-    // min en PerformanceCapture.cs, pensado para poder cubrir una demo entera (~30 min, bastante
+    // desproporcionado. Subido de 500 a 2000 a la vez que maxDurationSeconds pasó de 5 a 45 min en
+    // PerformanceCapture.cs, pensado para poder cubrir una demo entera (~30 min, bastante
     // diálogo/menús incluidos) sin recortar eventos en el caso normal (ver
     // picosRecortados/MaxSpikesRecorded en PerformanceCapture.cs, mismo patrón de "cap con aviso").
     const int MaxEventsRecorded = 2000;

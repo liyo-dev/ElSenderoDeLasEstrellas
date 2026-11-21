@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Encuentra los dibujos propios del proyecto y los sirve a las tarjetas y al mapa. El asset
     /// es opcional: si no existe, se usan los dibujos vectoriales y los retratos.

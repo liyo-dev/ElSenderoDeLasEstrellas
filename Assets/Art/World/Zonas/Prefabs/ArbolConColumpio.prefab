@@ -81,6 +81,13 @@ MonoBehaviour:
   propHandRotation: {x: 0, y: 0, z: 0}
   minOccupationDuration: 15
   maxOccupationDuration: 90
+  apoyarLaCadera: 1
+  apoyoDeLaCadera: {x: 0, y: 0.2, z: -0.25}
+  holguraDeLaCadera: 0.1
+  planoFijo: 1
+  alturaDelPlano: 0.75
+  distanciaDelPlano: 3.6
+  inclinacionDelPlano: 10
 --- !u!114 &3933598035217570873
 MonoBehaviour:
   m_ObjectHideFlags: 0

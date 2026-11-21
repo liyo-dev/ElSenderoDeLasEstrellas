@@ -7,6 +7,8 @@ using UnityEngine;
 /// Además del daño, pone el estado de su elemento (aturdir, dormir…: <see cref="EfectosDeLaDevolucion"/>).
 /// El guiado aprieta con el tiempo y, cerca del objetivo, va derecho y le da seguro: antes podía
 /// quedarse dando vueltas alrededor de quien la lanzó (radio de giro mayor que la distancia). INC-1165.
+/// Puede quedarse sostenida en un punto (<see cref="Sostener"/>) hasta que se suelta
+/// (<see cref="Soltar"/>): la coreografía del contraataque la sujeta sobre la cabeza. INC-1352.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class ProyectilDevuelto : MonoBehaviour
@@ -34,6 +36,13 @@ public sealed class ProyectilDevuelto : MonoBehaviour
     private bool _terminado;
     private Rigidbody _rb;
     private readonly RaycastHit[] _barrido = new RaycastHit[32];
+    private Transform _ancla;
+    private float _sostenidaDesde = -1f;
+    private float _quietaHasta = -1f;
+    private const float SostenerComoMucho = 3f;
+
+    /// <summary>Está sujeta en un punto, sin volar.</summary>
+    public bool Sostenida => _ancla != null;
 
     // Un solo material para todas las estelas; el color va en los vértices (startColor/endColor).
     private static Material _materialDeEstela;
@@ -56,8 +65,11 @@ public sealed class ProyectilDevuelto : MonoBehaviour
         original.enabled = false;
         if (original is IAmenazaEntrante amenaza) AmenazasAlJugador.Quitar(amenaza);
         _dueno = dueno; _objetivo = objetivo; _dano = dano; _impacto = impacto;
-        // Las bolas hostiles sin elemento propio cuentan como magia oscura.
-        _elemento = original is MagicProjectile magia ? magia.Elemento : MagicElement.Dark;
+        // Las bolas hostiles sin elemento propio cuentan como magia oscura; las que lo traen
+        // (EnemyProjectile con elemento, escudos de colores) vuelven con el suyo.
+        if (original is MagicProjectile magia) _elemento = magia.Elemento;
+        else if (original is EnemyProjectile enemiga && enemiga.TryGetElemento(out var suyo)) _elemento = suyo;
+        else _elemento = MagicElement.Dark;
         _direccion = direccion.sqrMagnitude > 0.001f ? direccion.normalized : -transform.forward;
         if (objetivo != null) _direccion = (objetivo.position + Vector3.up - transform.position).normalized;
         _velocidad = Mathf.Max(1f, velocidad) * multiplicadorDeVelocidad;
@@ -101,9 +113,46 @@ public sealed class ProyectilDevuelto : MonoBehaviour
         estela.emitting = true;
     }
 
+    /// <summary>
+    /// Deja la bola sujeta: se queda quieta donde la han parado <paramref name="quietaAntes"/>
+    /// segundos y luego va hacia <paramref name="ancla"/> y la sigue (en tiempo real, para que la
+    /// cámara lenta no la frene) hasta <see cref="Soltar"/>. Como mucho 3 s; luego sale sola.
+    /// </summary>
+    public void Sostener(Transform ancla, float quietaAntes = 0f)
+    {
+        if (_terminado || ancla == null) return;
+        _ancla = ancla;
+        _sostenidaDesde = Time.unscaledTime;
+        _quietaHasta = Time.unscaledTime + Mathf.Max(0f, quietaAntes);
+    }
+
+    /// <summary>Suelta la bola sostenida: sale hacia el objetivo desde donde está.</summary>
+    public void Soltar()
+    {
+        if (_ancla == null) return;
+        _ancla = null;
+        _inicio = Time.time;
+        if (_objetivo != null)
+        {
+            Vector3 hacia = PuntoDelObjetivo() - transform.position;
+            if (hacia.sqrMagnitude > 0.001f) _direccion = hacia.normalized;
+        }
+    }
+
     private void Update()
     {
         if (_terminado) return;
+        if (_ancla != null)
+        {
+            if (Time.unscaledTime - _sostenidaDesde > SostenerComoMucho) Soltar();
+            else if (Time.unscaledTime < _quietaHasta) return;
+            else
+            {
+                float k = 1f - Mathf.Exp(-14f * Time.unscaledDeltaTime);
+                transform.position = Vector3.Lerp(transform.position, _ancla.position, k);
+                return;
+            }
+        }
         float edad = Time.time - _inicio;
         transform.localScale = _escala * (1f + (edad < 0.12f ? Mathf.Sin(edad / 0.12f * Mathf.PI) * 0.25f : 0f));
         if (edad >= vidaMaxima) { Terminar(transform.position); return; }
@@ -149,7 +198,7 @@ public sealed class ProyectilDevuelto : MonoBehaviour
         if (tipo == 2)
         {
             GolpeandoAhora = true;
-            try { MagicProjectile.AplicarImpactoDirecto(col, punto, _dueno, _dano); }
+            try { MagicProjectile.AplicarImpactoDirecto(col, punto, _dueno, _dano, _elemento); }
             finally { GolpeandoAhora = false; }
             EfectosDeLaDevolucion.Aplicar(MagicProjectile.EncontrarReceptor(col), _elemento, punto);
         }

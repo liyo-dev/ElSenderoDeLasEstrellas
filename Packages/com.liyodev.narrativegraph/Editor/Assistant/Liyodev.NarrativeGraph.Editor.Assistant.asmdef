@@ -1,0 +1,30 @@
+{
+    "name": "Liyodev.NarrativeGraph.Editor.Assistant",
+    "rootNamespace": "",
+    "references": [
+        "Liyodev.NarrativeGraph",
+        "Liyodev.NarrativeGraph.Editor",
+        "Liyodev.Assistant.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "LIYODEV_ASSISTANT"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.liyodev.assistant",
+            "expression": "0.1.0",
+            "define": "LIYODEV_ASSISTANT"
+        }
+    ],
+    "noEngineReferences": false
+}

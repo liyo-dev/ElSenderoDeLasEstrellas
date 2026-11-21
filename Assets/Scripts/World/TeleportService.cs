@@ -98,7 +98,6 @@ public class TeleportService : MonoBehaviour
         _inst = this;
         ServiceLocator.Register(this);
         //DontDestroyOnLoad(gameObject);
-        //Debug.Log($"[TeleportService] Awake in '{name}' | TransitionSettings: {(teleportTransition ? teleportTransition.name : "<null>")}");
     }
 
     private void OnDestroy()
@@ -328,23 +327,18 @@ public class TeleportService : MonoBehaviour
         // OJO: usamos la versión SIN cambio de escena del plugin (la estable)
         tm.Transition(teleportTransition, transitionDelay);
 
-        // FIX (12 sep 2026, reporte de Raúl — "la transición se queda pillada al entrar/salir de
-        // interiores, ahora que son cargas aditivas"): _sTransitionInProgress SOLO se libera en el
-        // callback tm.onTransitionEnd (ver comentario de ForceResetTransitionLock más arriba). Si
-        // ese callback nunca llega a dispararse — p. ej. porque InteriorPortalTrigger descarga en
-        // aditivo la propia escena del interior (WillHouse) mientras la corrutina Timer() de
-        // TransitionManager sigue en marcha, y esa corrutina (o el propio TransitionManager, o el
-        // GameObject de Transition instanciado) acaba destruyéndose por una carrera con esa
-        // descarga — el flag se queda "colgado" en true para siempre: todos los teleports con
-        // fundido futuros de TODA la sesión caen en silencio a "teletransporte inmediato"
-        // (canTransition=false más arriba), y si además el overlay visual de EasyTransition se
-        // quedó a mitad de tapar la pantalla, el jugador ve la transición congelada ahí. Antes de
-        // este fix, el único punto que liberaba el flag a mano era
-        // GameBootService.ResetTransientSessionState() (solo al (re)iniciar partida vía
-        // WorldBootstrap) — nada lo recuperaba durante la sesión en curso.
-        // Igual que el timeout de cinemática de arranque que ya usa WorldBootstrap
-        // (bootCinematicTimeout/WaitForBootCinematicOrTimeout), esta corrutina vive en
-        // TeleportService (que sigue vivo mientras la escena de mundo persistente — MainWorld —
+        // _sTransitionInProgress SOLO se libera en el callback tm.onTransitionEnd (ver comentario
+        // de ForceResetTransitionLock más arriba). Si ese callback nunca llega a dispararse — p.
+        // ej. porque InteriorPortalTrigger descarga en aditivo la propia escena del interior
+        // (WillHouse) mientras la corrutina Timer() de TransitionManager sigue en marcha, y esa
+        // corrutina (o el propio TransitionManager, o el GameObject de Transition instanciado)
+        // acaba destruyéndose por una carrera con esa descarga — el flag se queda "colgado" en
+        // true para siempre: todos los teleports con fundido futuros de TODA la sesión caen en
+        // silencio a "teletransporte inmediato" (canTransition=false más arriba), y si además el
+        // overlay visual de EasyTransition se quedó a mitad de tapar la pantalla, el jugador ve la
+        // transición congelada ahí. Igual que el timeout de cinemática de arranque que ya usa
+        // WorldBootstrap (bootCinematicTimeout/WaitForBootCinematicOrTimeout), esta corrutina vive
+        // en TeleportService (que sigue vivo mientras la escena de mundo persistente — MainWorld —
         // esté cargada, algo que las cargas/descargas aditivas de interiores nunca tocan) y no
         // depende de que TransitionManager siga vivo para poder actuar.
         StartCoroutine(Co_TransitionWatchdog(tm, teleportTransition));

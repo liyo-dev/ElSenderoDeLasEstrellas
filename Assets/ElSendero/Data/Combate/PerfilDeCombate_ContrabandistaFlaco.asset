@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505b709263e653344a3fa268f29aa1a3, type: 3}
+  m_Name: PerfilDeCombate_ContrabandistaFlaco
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Combate.PerfilDeCombate
+  acciones:
+  - nombre: "Tiro r\xE1pido"
+    proyectil: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+    animacion: MagicRight
+    distanciaMinima: 4
+    distanciaMaxima: 14
+    segundosDeAviso: 0.5
+    segundosDeRecuperacion: 0.45
+    enfriamiento: 2
+    costeDeMana: 12
+    dano: 8
+    velocidad: 0
+    peso: 1.3
+    funcion: 1
+    sePuedeDevolver: 1
+    conElemento: 0
+    elemento: 0
+  - nombre: Tiro preciso
+    proyectil: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
+    animacion: MagicLeft
+    distanciaMinima: 6
+    distanciaMaxima: 15
+    segundosDeAviso: 0.8
+    segundosDeRecuperacion: 0.7
+    enfriamiento: 4.5
+    costeDeMana: 22
+    dano: 15
+    velocidad: 0
+    peso: 0.9
+    funcion: 0
+    sePuedeDevolver: 1
+    conElemento: 0
+    elemento: 0
+  - nombre: Tiro sucio
+    proyectil: {fileID: 7541299261854152833, guid: 71b502122a0cfe640969b5a2538bcdc1, type: 3}
+    animacion: MagicSpecial
+    distanciaMinima: 3
+    distanciaMaxima: 12
+    segundosDeAviso: 1
+    segundosDeRecuperacion: 1.2
+    enfriamiento: 9
+    costeDeMana: 35
+    dano: 22
+    velocidad: 0
+    peso: 0.4
+    funcion: 2
+    sePuedeDevolver: 0
+    conElemento: 0
+    elemento: 0
+  defensas:
+    esquivar: 1
+    distanciaDeEsquiva: 3.5
+    recuperacionDeEsquiva: 1.4
+    escudo: 1
+    duracionDelEscudo: 1.5
+    enfriamientoDelEscudo: 10
+    escudoElemental: 0
+    elementoDelEscudo: 2
+    cubrirseParaRecargar: 1
+    radioDeCobertura: 16
+    recargaACubierto: 1.6
+    leerLaRepeticion: 0.5
+    repeticionesParaLeerla: 3
+    segundosDeRepeticion: 12
+  caracter:
+    agresividad: 0.45
+    cautela: 0.7
+    movilidad: 0.85
+    paciencia: 0.65
+    distanciaPreferida: 9
+    distanciaMinima: 5
+    distanciaMaxima: 14
+    velocidadAndando: 3
+    velocidadCorriendo: 6.5
+    atacantesALaVez: 1
+    umbralDeVueltasContinuas: 0.7
+    leeLaDefensaDelJugador: 1
+  dificultad: 0.5
+  fases: []
+  afinidades: []

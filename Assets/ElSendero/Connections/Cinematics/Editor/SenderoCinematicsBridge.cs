@@ -11,13 +11,13 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// El enchufe del Director con El Sendero: le contesta lo que la mesa necesita (qué cinemáticas hay,
 /// sus fotos, sus frases, sus voces y el parte del último horneado) y hace lo que sabe hacer el juego
 /// (hornear con el horneador de siempre, abrir el taller, la página anotable, el storyboard).
 ///
-/// El paquete `Liyodev.Cinematics` no conoce nada de esto: solo ve el contrato. Ver
-/// `docs/plan-director-2026-11-16.md`.
+/// El paquete `Liyodev.Cinematics` no conoce nada de esto: solo ve el contrato.
 public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinematicsLivePreview, ICinematicsPlayControl
 {
     private const string CarpetaGuiones = "Assets/_SEQUENCES/Guiones";
@@ -1400,6 +1400,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
                     t1 = Mathf.Max(orden.t + 0.25f, fin),
                     etiqueta = que,
                     elemento = actor.id,
+                    clase = ClaseDe(orden),
                 });
             }
             if (animacion.clips.Count > 0) pistas.Add(animacion);
@@ -1489,6 +1490,21 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
 
     private static float VolumenDe(SequenceBeat beat)
         => beat is SfxBeat sfx ? Mathf.Clamp01(sfx.volume) : 1f;
+
+    /// Para la vista de pistas: lo que pone el horno solo y, de lo escrito, si es acción o reacción.
+    private static readonly HashSet<string> GestosDeReaccion = new()
+    {
+        "TakeDamage", "TakeDamage_2", "DefendHit_NoWeapon", "Defend_NoWeapon", "Sobresalto01", "Fear01", "SenseSomethingStart_NoWeapon",
+        "CastingDamage01", "Knockdown01_Ground", "Knockdown01_StandUp", "Pain01", "Stun01", "Dizzy_NoWeapon", "HeadNod01",
+        "Landing", "GetUp_NoWeapon", "Cry01", "Cry01_Loop",
+    };
+
+    private static CinemaClipClase ClaseDe(OrdenDeAnimacion orden)
+    {
+        if (orden.origen == 1) return CinemaClipClase.Automatica;
+        if (orden.origen == 2) return CinemaClipClase.Vida;
+        return !string.IsNullOrEmpty(orden.estado) && GestosDeReaccion.Contains(orden.estado) ? CinemaClipClase.Reaccion : CinemaClipClase.Accion;
+    }
 
     private static CinemaTrackKind TipoDeEfecto(SequenceBeat beat)    {
         string clase = beat.GetType().Name;

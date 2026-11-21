@@ -39,10 +39,10 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         // Elemento de magia (para interacciones con puzzle)
     public MagicElement element;     // Elemento que reciben las piezas del mundo.
 
-        // Modo preciso (Paso 5/6 del refactor Tramo 1): true si este proyectil concreto es la
-        // variante "precisa" de un hechizo con MagicSpellSO.supportsPreciseMode (mantener el
-        // botón), construida por MagicSpellSO.BuildPreciseVariant(). La lee, por ejemplo,
-        // RuneCollar (Paso 6) para decidir si un impacto rompe el aro del demonio o no.
+        // Modo preciso: true si este proyectil concreto es la variante "precisa" de un
+        // hechizo con MagicSpellSO.supportsPreciseMode (mantener el botón), construida por
+        // MagicSpellSO.BuildPreciseVariant(). La lee, por ejemplo, RuneCollar (Paso 6) para
+        // decidir si un impacto rompe el aro del demonio o no.
         public bool isPrecise;
     }
 
@@ -573,9 +573,9 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             }
             if (IsAlreadyHit(other)) return; // INC-497
 
-            // FIX M8 + INC-640: Si coincide con hitLayers, objetivo directo. Si no coincide
-            // pero tiene Damageable, se permite siempre que no sea un aliado del grupo
-            // (evita que dummies de prueba o enemigos en layer Default sean inmunes al daño).
+            // Si coincide con hitLayers, objetivo directo. Si no coincide pero tiene
+            // Damageable, se permite siempre que no sea un aliado del grupo (evita que
+            // dummies de prueba o enemigos en layer Default sean inmunes al daño).
             bool capaValida = _cfg.hitLayers.value == 0 || ((1 << other.gameObject.layer) & _cfg.hitLayers.value) != 0;
             if (!capaValida)
             {
@@ -678,7 +678,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
     {
         // La protección se abre antes del daño, para que el propio golpe ya entre (INC-724).
         if (_abreProteccion > 0f) AbrirProteccion(col);
-        AplicarImpactoDirecto(col, hitPoint, _instigator, _cfg.damage, _cfg.knockbackForce, _statusSpell);
+        AplicarImpactoDirecto(col, hitPoint, _instigator, _cfg.damage, _cfg.element, _cfg.knockbackForce, _statusSpell);
     }
 
     /// Abre la protección de lo alcanzado (en el collider, sus padres o junto a su Damageable).
@@ -703,8 +703,12 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
                col.GetComponentInChildren<Damageable>(true) ?? col.transform.root.GetComponentInChildren<Damageable>(true);
     }
 
-    /// <summary>Camino compartido de daño, defensa, estados y empuje de los proyectiles del jugador.</summary>
-    public static void AplicarImpactoDirecto(Collider col, Vector3 hitPoint, GameObject instigador, float dano, float empuje = 0f, MagicSpellSO estado = null)
+    /// <summary>
+    /// Camino compartido de daño, defensa, estados y empuje de los proyectiles del jugador. El
+    /// elemento cuenta contra las criaturas con <see cref="AfinidadElemental"/> (débil o resiste);
+    /// a las personas les hace lo mismo cualquier elemento.
+    /// </summary>
+    public static void AplicarImpactoDirecto(Collider col, Vector3 hitPoint, GameObject instigador, float dano, MagicElement elemento, float empuje = 0f, MagicSpellSO estado = null)
     {
         // Si el objetivo está defendiendo con escudo NPC, no recibe daño ni knockback.
         if (col != null && TryGetDefendingNpcShield(col, out var defendingShield))
@@ -725,8 +729,12 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
 
             if (d != null)
             {
-                // Con el ataque de quien lo lanzó (FormulasDeCombate, INC-470).
-                d.TakeDamage(FormulasDeCombate.DanoDe(instigador, dano), instigador);
+                // Con el ataque de quien lo lanzó (FormulasDeCombate, INC-470) y la afinidad elemental de la criatura.
+                AfinidadElemental.Golpear(d, FormulasDeCombate.DanoDe(instigador, dano), instigador, elemento);
+                // Empujar: si levita o va por el aire, sale despedido mucho más lejos (en vez del
+                // empujón por el suelo).
+                if (estado != null && estado.empujeEnElAire > 0f && EmpujarEnElAire(d, instigador, hitPoint, estado.empujeEnElAire))
+                    estado = null;
                 if (estado != null)
                     EstadosDeCombate.Aplicar(d, estado.statusEffect, estado.statusDuration,
                                              estado.statusStrength, hitPoint != Vector3.zero ? hitPoint : col.transform.position,
@@ -751,6 +759,14 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
                 rb.AddForce(dir * empuje, ForceMode.Impulse);
             }
         }
+    }
+
+    private static bool EmpujarEnElAire(Damageable d, GameObject instigador, Vector3 punto, float fuerza)
+    {
+        var levitable = d.GetComponentInParent<LevitationTarget>() ?? d.GetComponentInChildren<LevitationTarget>();
+        if (levitable == null || !levitable.EnElAire) return false;
+        Vector3 desde = instigador != null ? instigador.transform.position : punto;
+        return levitable.EmpujarEnElAire(levitable.transform.position - desde, fuerza);
     }
 
     // ==== Fin de vida ==========================================================

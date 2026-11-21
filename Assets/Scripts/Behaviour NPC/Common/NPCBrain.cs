@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 using Game.NPC; // Para NPCBehaviourManagerV2 (PersistenceId)
 using Game.NPC.Modules; // Para acceder a los Executors
 

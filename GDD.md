@@ -34,6 +34,7 @@ Esta es la biblia de diseño del juego: historia, personajes, recorrido, reglas 
 - Los personajes no gritan el nombre de los hechizos. Los nombres sirven al jugador en menús y tutoriales.
 - El doblaje es solo en español. Los textos se localizan en español e inglés.
 - Los interiores no tienen clima. La lluvia y la nieve aparecen con cielo encapotado; las transiciones del clima son lentas y realistas.
+- Solo nieva en el norte del mundo (el pueblo de la ladera norte, las montañas y el Reino). En el resto puede llover, haber tormenta, viento o niebla, pero no nieve.
 - Cada hechizo tiene VFX propio y reconocible.
 - Quien encarga una misión tiene una frase para cuando se le habla mientras sigue en curso.
 - Al seguir a un NPC, el jugador avanza más lento que él. El guía espera cuando el jugador se retrasa.
@@ -54,7 +55,7 @@ Esta es la biblia de diseño del juego: historia, personajes, recorrido, reglas 
 
 ### Premisa
 
-Will cumple dieciocho años en el pueblo donde lo ha criado Eldran. El ataque de un Demonio despierta su magia. Liam busca una cura para Tobías, su hermano menor, y necesita a alguien capaz de abrir el Sendero de las Estrellas. Provoca el ataque para encontrar a una persona de buen corazón y utiliza a Will sin contarle la verdad. Estela se une al viaje. Los tres aprenden a cooperar sin decidir por los demás.
+Will cumple dieciocho años en el pueblo donde lo ha criado Eldran. El ataque de un Demonio despierta su magia. Liam busca una cura para Tobías, su hermano menor, y necesita a alguien capaz de abrir el Sendero de las Estrellas. Ve por los ojos de las criaturas que somete con sus aros y las reparte por caminos y bosques buscando a una persona de magia y corazón puro. El primer Demonio ataca a Will por casualidad, pero a partir de ahí Liam lo utiliza sin contarle la verdad (adaptación del juego, 19 nov 2026; § 5.5). Estela se une al viaje. Los tres aprenden a cooperar sin decidir por los demás.
 
 ### La Luz primera y el Sendero
 
@@ -72,7 +73,7 @@ La magia de sometimiento está ligada al camino corrompido. Cada runa abre una p
 
 ### Arco y desenlace
 
-El grupo se prepara en el Reino, encuentra a Silas, cruza el mar hasta la Piedra, recupera el Libro en la cueva que emerge del agua y abre el Sendero en el cielo. En el Sendero afronta las pruebas de Will y Estela en compañía. La Caja separa a Liam y muestra a sus amigos la verdad sobre los ataques. La confianza se rompe. Will decide continuar por convicción propia; después encuentra a Estela y ambos rescatan a Liam. Vuelven a viajar con límites claros, sin fingir un perdón inmediato.
+El grupo se prepara en el Reino, encuentra a Silas, cruza el mar hasta la Piedra, recupera el Libro en la cueva que emerge del agua y abre el Sendero en el cielo. En el Sendero afronta las pruebas de Will y Estela en compañía. La Caja separa a Liam y muestra a sus amigos la verdad sobre los aros, el gólem y el segundo ataque. La confianza se rompe. Will decide continuar por convicción propia; después encuentra a Estela y ambos rescatan a Liam. Vuelven a viajar con límites claros, sin fingir un perdón inmediato.
 
 En la batalla final, el Mago regenera su vida. Will retrocede diez segundos con el Hechizo del Tiempo y reúne a sus compañeros bajo el escudo para resistir la Marea. Queda exhausto. Liam se interpone ante la hoja de sombra dirigida a Will y muere. Pide que cuide de su hermano y le da las gracias.
 
@@ -92,7 +93,9 @@ Su hechizo inicial es Llama Astral. Desarrolla herramientas de Luz, Mente y tiem
 
 ### Liam
 
-Liam ama a su hermano Tobías y teme perderlo. Esa desesperación explica su conducta, pero no la absuelve: organizó los ataques y utilizó a Will sin contarle la verdad. La prueba de la Caja le obliga a reconocer que esas decisiones fueron suyas, sin culpar a una sombra ni a su necesidad de curar a Tobías.
+Liam ama a su hermano Tobías y teme perderlo. Esa desesperación explica su conducta, pero no la absuelve: organizó los ataques del gólem y del segundo demonio y utilizó a Will sin contarle la verdad. **Adaptación del juego (19 nov 2026):** el primer Demonio **no** lo orquesta: es casualidad (§ 5.5). La prueba de la Caja le obliga a reconocer que esas decisiones fueron suyas, sin culpar a una sombra ni a su necesidad de curar a Tobías.
+
+**Los aros son los ojos de Liam (adaptación del juego, decidido por Raúl, 19 nov 2026).** Con la magia de pacto somete criaturas con un aro de runas y ve por sus ojos en la bola de cristal. Las reparte por caminos y bosques buscando a alguien con magia y corazón puro, porque sin esa persona no hay Sendero; los contrabandistas le llevan criaturas en jaulas, ojos nuevos. Romper un aro deja a Liam un poco más ciego. **Orquesta él** el Gólem y el segundo Demonio; **el primer Demonio no** (§ 5.5).
 
 Liam posee magia propia, centrada en pactos, invocación y trampas. El límite narrativo que lo lleva a buscar a Will es que no puede abrir el Sendero por sí solo, no que carezca de magia. Tras la revelación, su redención es gradual: responde preguntas, acepta límites y deja de decidir por el grupo.
 
@@ -138,32 +141,34 @@ Pidió que ningún poder pudiera destruirlo. Su deseo desató la Marcha de Conqu
 | Boticaria | Regala la poción de preparación de Will. |
 | Roberto, Manuel, Nora, tabernera y tendera | Historias y encargos opcionales del Reino. |
 | Guardia del Bosque | Plaga de arañas y acceso al bosque. |
-| Niño Pez y Rudolfo | Secundarias que enseñan nado y salto. |
+| Pez | **Niño** de la aldea del mar, fanático de los peces como otros lo son de los dinosaurios: solo habla de peces, con datos y listas, muy literal; el respiro cómico y tierno del Cap. 3 (decidido por Raúl el 21 nov 2026; antes era un adulto que se creía medio pez; INC-1395). Lleva puesta una cabeza (casco o máscara) que simula un pez. Está en la playa, junto al camino de boyas. Se trata con cariño, sin burla. Will le ayuda con un recado: va a su casa, su madre le da un juguete, se lo lleva de vuelta y Pez se pone a hablar con el pez; entonces Will aprende a nadar (INC-1396; sustituye el recado a Doña Lubina). Al despedirse dice algo cuerdo sobre Candela. Es el antiguo «Niño Pez». |
+| Candela | Pescadora de la aldea del mar; vive en la casa apartada, a la que solo se llega nadando. Su marido, Andrés, salió a pescar hace diez años y no volvió; cada noche enciende un farol en la ventana por si ve su barca. Por eso vio pasar de noche el carro de los contrabandistas hacia el bosque, con algo que brillaba en las jaulas. |
+| Rudolfo | Secundaria que enseña el salto. |
 
 ### Enemigos y jefes
 
-El daño depende de la mecánica, la posición y la ventana del enemigo. Las reglas generales de elementos y estados se definen en 6.1.
+El daño depende de la mecánica, la posición y la ventana del enemigo. Las reglas generales de elementos y estados se definen en 6.1. Las criaturas tienen además un elemento que les duele más (columna «Débil a»); en los jefes la debilidad multiplica el golpe que ya entra por su mecánica, nunca abre una ventana nueva.
 
-| Enemigo | Qué enseña | Cómo se le hace daño |
+| Enemigo | Qué enseña | Cómo se le hace daño | Débil a |
+|---|---|---|---|
+| Demonio 1 | Leer el aro, esquivar y castigar la recuperación; Eldran guía el aprendizaje. | Solo con el aro encendido, durante el aviso, ataque y agotamiento. Fuera de esa ventana no recibe daño y **no se cura**. El aro admite impactos precisos mientras brilla; romperlo ofrece el final de Demonio caído. Tres fases: garras/embestida, fuego y sombras/subsuelo/combos. | Luz |
+| Demonio 2 | Usar a los tres personajes y el espacio del castillo al defender el Reino. | **Aro de tres runas**, una por personaje (Will, Estela, Liam): cada runa solo la rompe su personaje, así que obliga a cambiar de personaje o a usar dúos; rotas las tres, queda expuesto. **Guerra en el aire:** en la fase 2 sube a las almenas y ataca desde arriba; el jugador sube (plataformas, levitación, vuelo si ya lo tiene) para alcanzarlo. Desde la fase 2, algunas ráfagas se sustituyen por una carga de plasma ocasional: cae donde estaba Will, queda fija y cambia de azul a amarillo y rojo antes de explotar con daño de área. La cuenta atrás da tiempo para apartarse. (Hoy el prefab recibe daño normal: falta construirlo.) | Luz |
+| Gólem | Rodear una armadura, alternar objetivos y coordinar un remate. | Recibe el **20 %** del daño por delante/lados y el daño completo por detrás. Estela atrae su atención y protege al grupo. Lluvia de rocas y salto con onda amplían los patrones. **El fuego de frente lo hace crecer** (regla propia de este jefe; su debilidad general es el Viento). Llevarlo al **barro** del arroyo lo hunde unos segundos y abre la ventana de la fase 2. El sello final exige el dúo Will + Estela; la magia normal no lo remata. | Viento |
+| Araña | Distancia, esquiva y control de grupos pequeños. | Daño normal al cuerpo, sin armadura frontal especial; el fuego le duele más. Su acercamiento y preparación del ataque dejan leer cuándo apartarse y responder. | Fuego |
+| Guardián de la Piedra | Cooperar, leer el escenario reflejado y la marea. | Jefe final de la mazmorra bajo el mar; custodia el Libro (§ 5.13). Jefe-puzle de agua y reflejo: se le alcanza a través de su reflejo y la marea cambia el terreno en cada fase (se concreta al construirlo). Will sostiene, Estela presiona y Liam busca aperturas. En este combate Will aprende a volar. **Adaptación del juego:** en la novela examina a Will y se aparta. | — (se fija al construirlo) |
+| Mago Oscuro | Dominio del arsenal, defensa que devuelve proyectiles y uso del espacio. | Las espinas reducen el daño; devolver rayos rompe espinas y aturde. Sin espinas queda expuesto. En los pilares, romper anclas lo derriba; **Liam hace ×2,5 de daño a las anclas** por su personaje, no por su elemento. Tras regenerarse no recibe daño hasta Amanecer. El tramo completo está en 5.19. | — (persona: el elemento no cambia el daño) |
+
+**Enemigos del mundo abierto (decididos, por construir).** La variedad está en el comportamiento: cada uno pide una respuesta distinta. Además, cada criatura tiene un elemento que le duele más (§ 6.1).
+
+| Enemigo | Comportamiento | Débil a |
 |---|---|---|
-| Demonio 1 | Leer el aro, esquivar y castigar la recuperación; Eldran guía el aprendizaje. | Solo con el aro encendido, durante el aviso, ataque y agotamiento. Fuera de esa ventana no recibe daño y **no se cura**. El aro admite impactos precisos mientras brilla; romperlo ofrece el final de Demonio caído. Tres fases: garras/embestida, fuego y sombras/subsuelo/combos. |
-| Demonio 2 | Usar a los tres personajes y el espacio del castillo al defender el Reino. | **Aro de tres runas**, una por personaje (Will, Estela, Liam): cada runa solo la rompe su personaje, así que obliga a cambiar de personaje o a usar dúos; rotas las tres, queda expuesto. **Guerra en el aire:** en la fase 2 sube a las almenas y ataca desde arriba; el jugador sube (plataformas, levitación, vuelo si ya lo tiene) para alcanzarlo. Desde la fase 2, algunas ráfagas se sustituyen por una carga de plasma ocasional: cae donde estaba Will, queda fija y cambia de azul a amarillo y rojo antes de explotar con daño de área. La cuenta atrás da tiempo para apartarse. (Hoy el prefab recibe daño normal: falta construirlo.) |
-| Gólem | Rodear una armadura, alternar objetivos y coordinar un remate. | Recibe el **20 %** del daño por delante/lados y el daño completo por detrás. Estela atrae su atención y protege al grupo. Lluvia de rocas y salto con onda amplían los patrones. **El fuego de frente lo hace crecer** (regla propia de este jefe, no una debilidad elemental general). Llevarlo al **barro** del arroyo lo hunde unos segundos y abre la ventana de la fase 2. El sello final exige el dúo Will + Estela; la magia normal no lo remata. |
-| Araña | Distancia, esquiva y control de grupos pequeños. | Daño normal al cuerpo; no tiene una ventana elemental ni armadura frontal especial. Su acercamiento y preparación del ataque dejan leer cuándo apartarse y responder. |
-| Guardián de la Piedra | Cooperar, leer el escenario reflejado y la marea. | Jefe final de la mazmorra bajo el mar; custodia el Libro (§ 5.13). Jefe-puzle de agua y reflejo: se le alcanza a través de su reflejo y la marea cambia el terreno en cada fase (se concreta al construirlo). Will sostiene, Estela presiona y Liam busca aperturas. En este combate Will aprende a volar. **Adaptación del juego:** en la novela examina a Will y se aparta. |
-| Mago Oscuro | Dominio del arsenal, defensa que devuelve proyectiles y uso del espacio. | Las espinas reducen el daño; devolver rayos rompe espinas y aturde. Sin espinas queda expuesto. En los pilares, romper anclas lo derriba; **Liam hace ×2,5 de daño a las anclas** por su personaje, no por su elemento. Tras regenerarse no recibe daño hasta Amanecer. El tramo completo está en 5.19. |
-
-**Enemigos del mundo abierto (decididos, por construir).** La variedad está en el comportamiento: cada uno pide una respuesta distinta, sin debilidades elementales.
-
-| Enemigo | Comportamiento |
-|---|---|
-| Fantasma | Intangible salvo bajo la luz; aparece de noche. |
-| Beholder | Torreta que dispara rayos; se le devuelven con la defensa (B). También es pieza de puzle. |
-| Mímico | Algún cofre de tesoro o de prueba muerde. |
-| Imp ladrón | Volador que roba un objeto y huye. |
-| Rocas | Embisten; si chocan contra un muro lo rompen. |
-| Slime | Se divide al golpearlo; cerca del agua. Pack gratuito de Dungeon Mason. |
-| Tortuga | Bloquea de frente; un empujón (Ráfaga, Nova de Luz) la voltea y queda expuesta. Pack gratuito de Dungeon Mason. |
+| Fantasma | Intangible salvo bajo la luz; aparece de noche. | Luz (resiste Oscuro) |
+| Beholder | Torreta que dispara rayos; se le devuelven con la defensa (B). También es pieza de puzle. | Mente |
+| Mímico | Algún cofre de tesoro o de prueba muerde. | Fuego |
+| Imp ladrón | Volador que roba un objeto y huye. | Viento |
+| Rocas | Embisten; si chocan contra un muro lo rompen. | Viento |
+| Slime | Se divide al golpearlo; cerca del agua. Pack gratuito de Dungeon Mason. | se fija al construirlo |
+| Tortuga | Bloquea de frente; un empujón (Ráfaga, Nova de Luz) la voltea y queda expuesta. Pack gratuito de Dungeon Mason. | se fija al construirlo |
 
 **Regla de diseño de encuentros (no colocar enemigos al azar):**
 En *MainWorld* y mazmorras **nunca se colocan enemigos sueltos simplemente para rellenar espacio vacío o patrullar caminos sin sentido**. Se diseñan **encuentros situacionales** con cuatro pilares obligatorios:
@@ -235,9 +240,11 @@ Tras la victoria, una escena aparte muestra a Liam observando a Will en la bola 
 
 Después de la victoria se completa el encargo de Eldran y se vuelve a un punto de guardado.
 
-**ADAPTACIÓN DEL JUEGO frente a la novela V:** Liam provoca el ataque para encontrar a alguien de buen corazón, con el tono de la novela. En la escena del cristal no se ríe; se levanta cuando Will cae y ve en la bola que lo ha vencido. Su frase clave: «No hace falta que me caiga bien. Solo tengo que llevarlo hasta allí.» En la novela manda al lobo por error, creyendo que Will es un ladrón; en el juego no hay cuneta ni trozo robado.
+**ADAPTACIÓN DEL JUEGO frente a la novela V (corregida el 19 nov 2026, decidido por Raúl):** Liam **no** provoca el primer ataque. El primer Demonio es casualidad: es una de las criaturas con aro que Liam reparte por el bosque para vigilarlo, y ataca a Will como a cualquier intruso cuando entra a por la caja. Liam lo ve por los ojos del Demonio y descubre, tan sorprendido como Will, que el chico tiene magia y no huye. El plan de usar a Will nace ahí, no antes. (Antes decía: «Liam provoca el ataque para despertar su magia»; queda sustituido.) En la escena del cristal no se ríe; se levanta cuando Will cae y ve en la bola que lo ha vencido. Su frase clave: «No hace falta que me caiga bien. Solo tengo que llevarlo hasta allí.» En la novela manda al lobo por error, creyendo que Will es un ladrón; en el juego no hay cuneta ni trozo robado.
 
-**ADAPTACIÓN DEL JUEGO frente a la novela: el aro de runas (decidido por Raúl, 12 nov 2026).** El lore del aro se simplifica: el aro se lo puso Liam al Demonio con una invocación, para que el Demonio hiciera lo que él quería. **No existe ninguna llave del aro**: nada se calienta, se enciende ni se apaga cuando Will está cerca. Liam sabe de Will porque lo ve en la bola de cristal, y le sigue de cerca porque Will se ha llevado un trozo de su aro. Cuando Estela lee el aro (4.1) solo reconoce las runas de sometimiento y la invocación; no habla de llaves.
+**ADAPTACIÓN DEL JUEGO frente a la novela: la aldea del mar sin zorro ni perro (decidido por Raúl, 19 nov 2026).** En la novela, Lucía vio un zorro con aro detrás del molino y el posadero encontró un perro que intentaba quitárselo. En el juego no salen: lo que llevan los contrabandistas son pájaros de luz, y animales con aro sueltos por la aldea no encajaban. Las pistas son las luces que vio el posadero, lo que vio Candela desde su farol y la cerca rota por la que salió el carro. La novela no cambia.
+
+**ADAPTACIÓN DEL JUEGO frente a la novela: el aro de runas (decidido por Raúl, 12 nov 2026).** El lore del aro se simplifica: el aro se lo puso Liam al Demonio con una invocación, para que el Demonio hiciera lo que él quería. **No existe ninguna llave del aro**: nada se calienta, se enciende ni se apaga cuando Will está cerca. Liam sabe de Will porque lo ve en la bola de cristal, y le sigue de cerca porque Will se ha llevado un trozo de su aro. **Ampliación (19 nov 2026): los aros son los ojos de Liam.** Cada criatura con aro es un ojo suyo en la bola de cristal; por eso hay animales con aro por los caminos y el bosque, y por eso los contrabandistas le llevan criaturas enjauladas (ojos nuevos). Romper un aro lo deja un poco más ciego. El Demonio 1 era uno de esos ojos puesto a vigilar el bosque; el Gólem y el Demonio 2 sí los invoca y dirige a propósito. Cuando Estela lee el aro (4.1) solo reconoce las runas de sometimiento y la invocación; no habla de llaves.
 
 ### 5.6. Capítulo 2: Prepárate para el viaje — novelas III–IV
 
@@ -245,7 +252,7 @@ El capítulo empieza al ganar al Demonio 1 y abarca la recuperación y preparaci
 
 | Bloque | Qué pasa | Tipo | Qué enseña o pone a prueba |
 |---|---|---|---|
-| **2.1** | Liam observa a Will en el cristal | Cinemática | El jugador sabe más que Will (Liam busca a alguien de buen corazón; no es villano típico). |
+| **2.1** | Liam observa a Will en el cristal | Cinemática | El jugador sabe más que Will (Liam busca a alguien de buen corazón; no es villano típico). Adaptación 19 nov 2026: lo ve por casualidad, por los ojos del Demonio 1; se sorprende al descubrir que Will tiene magia. |
 | **2.2** | La mañana después: vela, origen de Will y trozo del aro | Cinemática con interacción | Control fino de la magia con la vela. Eldran revela el origen de Will y le entrega el **Trozo del aro** (guardando el resto en sal). Meta: encontrar a Estela. |
 | **2.3** | Cuatro encargos de preparación en orden libre | Gameplay / Tutoriales | **Victoria:** Capa de viaje (+3 defensa).<br>**Boticaria:** Poción de vida regalada (uso de consumibles).<br>**Erika:** Le da a Will su **grimorio** (de parte de Eldran; hasta entonces no lo tiene), con la Llama Astral ya escrita y la Bola Prisma como página nueva; reto, combate de entrenamiento (defensa/lectura corporal con escudo B) y entrega del **Pañuelo**.<br>**Eldran:** Tiro a cubos y piedras en la plaza; aprende **Bola Prisma** y túnica de viaje. «¿Debes hacerlo?» |
 | **2.4** | Los motivos y la despedida | Cinemática / Diálogo | Eldran le pregunta a Will por qué se va (sus motivos: encontrar a Estela y entender qué le pasa; «son tuyos, no míos»). Sin brújula: la idea de volver ya la llevan el pañuelo de Erika y la despedida de Eldran. Al acabar, Eldran le manda a despedirse («te espero en la salida del pueblo»): misión «Hora de partir». Despedirse de Oliver es obligatorio (se queda en el pueblo y le pide algo raro para su colección); Victoria, Erika, la boticaria y Tomasa tienen frase si se les habla. Checkpoint `CAP2_FIN` en la salida del pueblo (INC-967). |
@@ -265,8 +272,8 @@ Will viaja en solitario hacia la costa buscando pistas sobre los aros y las pers
 |---|---|---|---|
 | **3.0** | La despedida en la salida del pueblo | Cinemática | Eldran explica por qué ir antes a la aldea del mar: Estela no acepta aprendices; si Will le lleva pruebas de los aros, le escuchará. Él se va al Reino a contárselo al Rey: «es un hasta pronto». Empieza «Las marcas de hierro». (INC-967) |
 | **3.1** | Camino del puerto a pie; al pasar por la mitad del camino, interludio: Liam habla con Tobías por el espejo (sin rótulos ni cambio de hora) | Exploración + cinemática de interludio | Sin saltos a la costa: se va andando. Para quién busca la cura Liam y su dilema interno. Pendiente (INC-967, tanda 2): animal con aro, puzle con Llama Astral, mago rival, enemigos y cofres en el camino. |
-| **3.2** | Will reúne pistas en la aldea del mar | Investigación | Escuchar, inspeccionar y unir pistas en la hoja de avistamientos. |
-| **3.3** | Sigue el carro de los contrabandistas y decide cómo actuar | Sigilo ligero y decisión | Aplicar la lección de Eldran: combate opcional, evitable, con consecuencias según la elección (avisar a la guardia o combatir; jaulas quemadas). |
+| **3.2** | Will reúne pistas en la aldea del mar: el posadero (luces de noche en el camino del bosque), Pez, niño fan de los peces (aprende a nadar tras llevarle un juguete de su casa, INC-1396), Candela, la del farol (vio el carro con las jaulas que brillaban) y la cerca rota del huerto (rodadas y paja que brilla), de salida hacia el bosque | Investigación y nado | Escuchar, inspeccionar y unir pistas en la hoja de avistamientos; aprende a **nadar** y lo usa en el acto para llegar a la casa del farol. Recorrido sin ir y volver (plaza, punta del muelle, a nado a la casa, playa, cerca, camino). |
+| **3.3** | Sigue el carro de los contrabandistas (pasado el puente miran atrás hasta que Will llega a la otra orilla: se cruza nadando bajo el tablero) hasta su claro, se contiene y coge la pluma de un pájaro de luz como prueba para Estela | Sigilo ligero y nado | Aplicar la lección de Eldran: Will podría entrar, pero son dos y el fuego quemaría las jaulas («que puedas hacer algo no quiere decir que debas»). Sin pelea en el claro ni aviso a la guardia (decidido por Raúl, 14 nov 2026). Solo hay combate, contra los dos, si le pillan en el seguimiento; si gana, huyen a su campamento y Will sigue hasta el claro. Los contrabandistas se quedan en su campamento («al amanecer, al barco») y el Cap. 4 sigue de seguido, sin salto de tiempo. Adaptación 19 nov 2026: las criaturas enjauladas son ojos nuevos que llevan a Liam. |
 
 ---
 
@@ -278,7 +285,7 @@ Will se adentra en el bosque, encuentra a Estela y se enfrentan a la primera gra
 |---|---|---|---|
 | **4.1** | Explora el Bosque Prohibido; Estela lee el aro y la hoja | Exploración y cinemática | Estela reconoce las runas de sometimiento y entra en el grupo. |
 | **4.2** | Descanso en la casa entre raíces y primera receta | Respiro cómico y tutorial | Aprende el combo mágico **Cúpula Estelar** (Y → X → B → A). |
-| **4.3** | Prueba de la campana en cuatro rondas | Puzle de combate por rondas | Aprende **Levitación**: gestión de maná, cambio de personaje, fuego amigo y áreas. |
+| **4.3** | Prueba de la campana en cuatro rondas | Puzle de combate por rondas | Gestión de maná, cambio de personaje, fuego amigo y áreas. (La Levitación ya no se aprende aquí: es de Liam desde el 20 nov 2026.) |
 | **4.4** | Liam invoca al Gólem; Will y Estela lo vencen | Combate de Jefe | Mecánica de armadura, Cúpula Estelar, zona de barro y remate en dúo. |
 | **4.5** | Comparten la manzana harinosa y continúan apoyándose | Respiro | Aceptar ayuda sin imponerla. |
 | **4.6** | Bifurcación, entrada de Liam al grupo y bota en el vado | Cinemática y gameplay | Los tres viajan juntos; fin de la Primera Parte y de la demo jugable. |
@@ -396,7 +403,7 @@ Después de las pruebas, los amigos descansan en una isla segura y luego visitan
 
 La tercera prueba es la única que separa al grupo. Liam entra solo en la Caja, un laberinto de espejos; Will y Estela ven parte de la prueba desde fuera a través de una superficie de luz. La Caja muestra primero un recuerdo feliz de Liam con Tobías y después el deterioro de sus decisiones: el diagnóstico, el libro robado, el pacto y el uso de Will como cebo.
 
-Liam se enfrenta a una sombra que representa sus propias decisiones. La salida no consiste en negar la desesperación ni culpar a una parte separada de sí mismo: debe reconocer que fue él quien tomó esas decisiones y rechazar la última oportunidad de volver a sacrificar a Will a cambio de salvar a Tobías. La Voz Ancestral pregunta por el precio real. La visión revela al grupo la emboscada del bosque y las manipulaciones posteriores.
+Liam se enfrenta a una sombra que representa sus propias decisiones. La salida no consiste en negar la desesperación ni culpar a una parte separada de sí mismo: debe reconocer que fue él quien tomó esas decisiones y rechazar la última oportunidad de volver a sacrificar a Will a cambio de salvar a Tobías. La Voz Ancestral pregunta por el precio real. La visión revela al grupo los aros como ojos de Liam, la emboscada del gólem y las manipulaciones posteriores (adaptación 19 nov 2026: el primer Demonio fue casualidad; lo que Liam hizo a propósito fue aprovechar a Will después).
 
 **Diseño jugable:** tramo de Liam en solitario que combina navegación, combate y recuerdos interactivos. Cada espejo ofrece contexto y también una decisión de Liam. Evitar que el combate venza a la responsabilidad moral: la sombra se supera admitiendo la autoría de los actos. Alternar control de Liam con la observación de Will y Estela solo en momentos que añadan contexto.
 
@@ -470,7 +477,16 @@ La escena termina con el abrazo. Corte a «Semanas después»: pescan desde el b
 
 Acción mágica en tiempo real. El jugador lee señales, esquiva, se defiende, devuelve proyectiles y castiga aperturas. Puede cambiar entre Will, Estela y Liam; los compañeros actúan con IA. La carga de equipo es compartida y permite dúos y trío con LT+RT. Cada encuentro introduce una regla legible, permite practicarla y después la combina con una conocida. El espacio y los patrones cambian antes de limitarse a subir la vida del enemigo.
 
-Los elementos son **identidad y herramientas de puzle**. No hay debilidades ni resistencias elementales en combate. Las restricciones de daño de los jefes son mecánicas. El bonus de Liam contra las anclas depende del personaje. Los estados ralentizar, inmovilizar, atraer y empujar añaden control; en jefes duran la mitad.
+Los elementos son **identidad y herramientas de puzle**, y cuentan en combate solo contra las criaturas (decidido el 19 nov 2026; sustituye a «no hay debilidades elementales en combate»):
+- **Personas (NPCs, Mago Oscuro):** el elemento no cambia el daño. Lo que cuenta es el efecto al devolverles su hechizo con la B (luz aturde, mente duerme, viento aparta…).
+- **Criaturas (enemigos, arañas, bestias, jefes):** cada una tiene un elemento que le duele más: **débil ×1,5**, el resto ×1, **resistencia ×0,6** solo en casos concretos (el Fantasma con lo Oscuro). **Nunca ×0:** no hay inmunidades.
+- **Los jefes-puzle siguen igual:** la debilidad multiplica el golpe que ya entra por su mecánica (aro del Demonio, armadura del Gólem), no lo sustituye.
+- **Escudos elementales: solo personas (decidido el 20 nov 2026).** Un NPC puede llevar un escudo de un elemento; mientras está, lo demás rebota, y al romperse estalla y deja al NPC vendido unos segundos. Las criaturas no llevan escudo elemental (una araña es débil al fuego, sin escudo). Daño y escudo son reglas distintas: con personas el elemento sigue sin cambiar el daño; solo decide qué rompe el escudo. **Qué lo rompe (decidido el 20 nov 2026, sustituye a la tabla de opuestos): la magia de su mismo elemento, que se reconoce por el color** (el escudo lleva el color de los hechizos de ese elemento: Fuego naranja, Viento verde menta, Luz dorado, Mente lavanda, Oscuro ciruela). Se lee al instante en un combate de grupo, como en Hogwarts Legacy. Con el reparto del grupo, cada escudo tiene su especialista: Will rompe Luz (y Fuego con su llama); Estela, Fuego y Viento; Liam, Mente y Oscuro. La lección del escudo de Erika (Cap. 2) usa un escudo de Fuego que Will rompe con la Llama Astral.
+- **El escudo del jugador también tiene color (decidido el 20 nov 2026; INC-1367).** Misma regla para los dos bandos: el escudo (B) lo rompe la magia de su mismo color y quien lo pierde queda **aturdido 2 s** sin poder hacer nada. Will lo lleva siempre de Luz; Estela y Liam, del elemento del rápido elegido en la X (cambia con LB). La burbuja se tiñe de ese color. Lo de otro color lo para; lo que no es magia (golpes, rocas, criaturas sin elemento) nunca lo rompe. Devolver en el momento justo vale con cualquier color, pero solo con los hechizos que se pueden devolver. La pregunta en combate es «¿quién de mi grupo puede parar esto?»: cambiar de personaje o de rápido es la respuesta.
+- **Contraataque (toque de B), corregido el 20 nov 2026 (INC-1368).** La burbuja es solo la primera parte: nos protegemos, el impacto nos empuja hacia atrás y hace saltar el hechizo hacia arriba (la burbuja se apaga); subimos al aire con un impulso, lo atrapamos arriba y lo devolvemos desde el aire.
+- **Se enseña sin números:** al acertar la debilidad, el cuerpo destella del color del elemento con su sonido de impacto grande y una pausa mínima; la resistencia, con un destello apagado. Lo descubierto queda apuntado en la partida para el Grimorio. Erika lo anuncia en el Cap. 2.
+
+Las restricciones de daño de los jefes son mecánicas. El bonus de Liam contra las anclas depende del personaje. Los estados ralentizar, inmovilizar, atraer y empujar añaden control; en jefes duran la mitad.
 
 **El grupo en combate (decidido 8 oct).** Will, Estela y Liam tienen **vida y maná propios**, igual al mando que con IA. Los enemigos reparten a quién atacan, así que proteger al compañero tiene sentido. Un personaje que llega a 0 queda **caído** en el suelo y deja de luchar; si era el que llevaba el jugador, el control pasa solo a otro que siga en pie. **Game Over solo si caen los tres.** Se revive de cuatro formas: otro personaje se acerca y **mantiene A** unos segundos (expuesto mientras lo hace); un **objeto** raro (pluma o elixir); **Brisa Sanadora** levanta a los caídos de su zona; y **al ganar el combate** los caídos se levantan con poca vida. La muerte de Liam en la batalla final es historia, no una caída de combate.
 
@@ -491,9 +507,25 @@ Elementos: **Fuego, Viento (Storm), Luz, Mente (Mind) y Oscuro (Dark)**. Fuego p
 
 **Cómo se consiguen (decidido): mixto.** Los hechizos de la historia se aprenden en su momento (tabla de progresión). El resto de **básicos** se encuentran como **páginas del grimorio** repartidas por el mundo (son tesoros, con su requisito). Los **combos de la Y** los enseñan personajes o momentos de la historia; qué personaje enseña cada uno se fija al construir su capítulo.
 
-**Familias:** Will empieza con Llama Astral y desarrolla Luz, manipulación y recursos narrativos de tiempo. Estela combina Fuego y Viento para presión, zonas y apoyo. Liam usa Mente y magia del pacto para preparar y controlar el encuentro. El Mago utiliza Oscuro. Excepciones decididas: Huracán es un hechizo de Viento de Will y se queda. Los hechizos del Mago son arsenal enemigo y no están en ningún grimorio.
+**Familias:** Will empieza con Llama Astral y desarrolla Luz, manipulación y recursos narrativos de tiempo. Estela combina Fuego y Viento para presión, zonas y apoyo. Liam usa Mente y magia del pacto para preparar y controlar el encuentro; **la magia del pacto es Oscuro** (decidido el 20 nov 2026: Garra, Sello, Cadenas y Juicio del Pacto y Paso Sombrío pasan de Mente a Oscuro, INC-1351). El Mago utiliza Oscuro; Liam es el único del grupo que lo usa, a través del pacto. Excepciones decididas: Huracán es un hechizo de Viento de Will y se queda. Los hechizos del Mago son arsenal enemigo y no están en ningún grimorio.
 
 **Controles:** X lanza la serie básica; mantenerla permite el modo preciso cuando el hechizo lo admite. Y inicia la composición de un combo y después se introduce la secuencia A/B/X/Y del hechizo. La secuencia vacía no es un combo. Ninguna secuencia puede ser prefijo de otra. El personaje al mando determina qué combos puede lanzar.
+
+### Sets de magia: 4 rápidos y 4 combos por personaje (decidido el 20 nov 2026)
+
+Cada personaje tiene **4 hechizos rápidos (X; LB pasa al siguiente) y 4 combos (Y)**, todos de sus elementos, siempre puestos: ya no se eligen. Aparte, cada uno aprende **un especial con una misión**, que no ocupa hueco. Estela y Liam necesitan al menos un rápido de cada uno de sus dos elementos, porque el rápido elegido decide el color de su escudo (§ 6.1).
+
+| Personaje | 4 rápidos (X) | 4 combos (Y) | Especial con misión | Escudo (B) |
+|---|---|---|---|---|
+| Will (Luz) | Llama Astral, Bola Prisma, Estrella Fugaz, Lluvia de Chispas | Corazón Estelar, Cúpula Estelar, Meteoro, Nova de Luz | Amanecer (combate final) | Luz siempre |
+| Estela (Fuego y Viento) | Bola de Fuego, Chispa Ígnea, Ráfaga, Ciclón | Brisa Sanadora, Muro de Fuego, Remolino, Tormenta de Fuego | Postgame, por diseñar | Fuego o Viento, según el rápido |
+| Liam (Mente y Oscuro) | Levitación, Empujar, Eco, Garra del Pacto | Velo Mental, Paso Sombrío, Cadenas del Pacto, Juicio del Pacto | Postgame, por diseñar | Mente u Oscuro, según el rápido |
+
+- **La Llama Astral es de Luz** («una llama de luz»). La lección del escudo de Erika (Cap. 2) usa un escudo de Luz: «solo lo rompe otra luz».
+- **La Levitación pasa de Will a Liam** (ya no se aprende en la campana del Cap. 4: Liam la trae al unirse).
+- **Empujar** (Liam, Mente, nuevo): empuja siempre. En el suelo echa al blanco hacia atrás contra lo que tenga detrás; si levita o va por el aire, sale volando mucho más lejos.
+- **Salen del grimorio** y se quedan como hechizos de enemigo (`enGrimorio = false`): Huracán, Aura Estelar, Dardo Mental y Sello del Pacto.
+- **Pendiente (Raúl, 20 nov 2026): bestiario.** Un apartado de enemigos en el grimorio o un libro propio, con su tipo, sus debilidades y resistencias y, en las personas, el color de su escudo. Sin diseñar todavía.
 
 ### Catálogo de hechizos
 
@@ -501,34 +533,35 @@ Lectura de `Assets/_SPELLS/*.asset` y `MagicSpellSO`, 8 de octubre de 2026. Los 
 
 | Nombre | Personaje | Elemento | Tipo | Daño | Maná | Combo de la Y | Cómo se aprende |
 |---|---|---|---|---:|---:|---|---|
-| Aura Estelar | Liam | Mente | Proyectil | 30 | 10 | Sin combo | Página del grimorio |
+| Aura Estelar | — (antes Liam) | Mente | Proyectil | 30 | 10 | Sin combo | Fuera del grimorio desde el 20 nov 2026 |
 | Bola de Fuego | Estela | Fuego | Proyectil | 10 | 5 | Sin combo | Kit de Estela; punto de obtención no fijado |
 | Bola Prisma | Will | Luz | Proyectil | 25 | 10 | Sin combo | Eldran, 2.3; desbloqueo aún no conectado en Cap2 |
 | Brisa Sanadora | Estela | Viento | Zona | 0 | 30 | Y → A → A | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
-| Cadenas del Pacto | Liam | Mente | Zona | 4 | 30 | B → X → Y | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
+| Cadenas del Pacto | Liam | Oscuro | Zona | 4 | 30 | B → X → Y | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Chispa Ígnea | Estela | Fuego | Proyectil | 10 | 10 | Sin combo | Página del grimorio |
 | Chispa Ígnea (fuego en el suelo) | Estela | Fuego | Zona | 6 | 0 | Sin combo | Efecto secundario de Chispa Ígnea; no se aprende aparte |
 | Corazón Estelar | Will | Luz | Especial | 100 | 25 | X → Y → B | El Rey tras defender el castillo; aún no conectado en los grafos activos |
 | Cúpula Estelar | Will | Luz | Zona | 0 | 30 | X → B → A | Primera receta, 2.9; aún no conectado en Cap2 |
-| Dardo Mental | Liam | Mente | Proyectil | 12 | 7 | Sin combo | Página del grimorio |
+| Dardo Mental | — (antes Liam) | Mente | Proyectil | 12 | 7 | Sin combo | Fuera del grimorio desde el 20 nov 2026 |
+| Empujar | Liam | Mente | Proyectil | 10 | 8 | Sin combo | Kit de Liam (20 nov 2026) |
 | Eco | Liam | Mente | Proyectil | 20 | 12 | Sin combo | Página del grimorio |
 | Estrella Fugaz | Will | Luz | Proyectil | 14 | 8 | Sin combo | Página del grimorio |
-| Garra del Pacto | Liam | Mente | Proyectil | 35 | 15 | Sin combo | Página del grimorio |
-| Huracán | Will | Viento | Proyectil | 55 | 20 | Sin combo | Página del grimorio |
-| Juicio del Pacto | Liam | Mente | Zona | 20 | 40 | B → X → A → Y | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
-| Levitación | Will | Mente | Levitación | 10 | 5 | Sin combo | Campana, 2.10; aún no conectado en Cap2 |
-| Llama Astral | Will | Fuego | Proyectil | 10 | 5 | Sin combo | Despertar (Cap1, ID 1) |
+| Garra del Pacto | Liam | Oscuro | Proyectil | 35 | 15 | Sin combo | Página del grimorio |
+| Huracán | — (antes Will) | Viento | Proyectil | 55 | 20 | Sin combo | Fuera del grimorio desde el 20 nov 2026 |
+| Juicio del Pacto | Liam | Oscuro | Zona | 20 | 40 | B → X → A → Y | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
+| Levitación | Liam | Mente | Levitación | 10 | 5 | Sin combo | Kit de Liam (antes Will, en la campana del Cap. 4) |
+| Llama Astral | Will | Luz | Proyectil | 10 | 5 | Sin combo | Despertar (Cap1, ID 1) |
 | Lluvia de Chispas | Will | Luz | Proyectil | 9 | 9 | Sin combo | Página del grimorio |
 | Golpe del Sendero Corrompido | Mago Oscuro | Oscuro | Proyectil | 25 | 20 | Sin combo | Arsenal enemigo (fuera del grimorio); no se aprende |
 | Grieta del Sendero | Mago Oscuro | Oscuro | Zona | 15 | 30 | Sin combo | Arsenal enemigo (fuera del grimorio); no se aprende |
-| Amanecer | Will | Luz | Especial | 120 | 40 | X → A → B → Y | Batalla final (aún sin asset; valores de partida, se ajustan en el LAB) |
+| Amanecer | Will | Luz | Especial con misión | 120 | 40 | X → A → B → Y | Batalla final (no ocupa hueco de combo) |
 | Meteoro | Will | Luz | Zona | 15 | 30 | X → A → Y | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Muro de Fuego | Estela | Fuego | Zona | 10 | 25 | Y → X → X | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Nova de Luz | Will | Luz | Zona | 30 | 30 | X → Y → A → B | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
-| Paso Sombrío | Liam | Mente | Teletransporte | 0 | 20 | B → Y → B | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
+| Paso Sombrío | Liam | Oscuro | Teletransporte | 0 | 20 | B → Y → B | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Ráfaga | Estela | Viento | Proyectil | 15 | 8 | Sin combo | Página del grimorio |
 | Remolino | Estela | Viento | Zona | 6 | 30 | Y → B → X | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
-| Sello del Pacto | Liam | Mente | Zona | 12 | 25 | B → A → X | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
+| Sello del Pacto | — (antes Liam) | Oscuro | Zona | 12 | 25 | B → A → X | Fuera del grimorio desde el 20 nov 2026 |
 | Tormenta de Fuego | Estela | Fuego | Zona | 18 | 40 | Y → X → B → A | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Ciclón | Estela | Viento | Proyectil | 30 | 5 | Sin combo | Página del grimorio |
 
@@ -563,7 +596,7 @@ Son el tercer golpe de la serie de X en el aire: voltereta y lanzamiento en pica
 | Piedra Ancestral | Tiempo, Resurrección y vuelo | Aprendizaje de historia aún sin conexión en estos grafos. |
 | Batalla final | Amanecer | Pendiente de construir, sin asset ni desbloqueo en estos grafos. |
 | Rudolfo | Salto | Secundary: nodo «Desbloqueo el Salto». |
-| Niño Pez | Nado | Secundary: nodo «Desbloqueo la habilidad de nadar». |
+| Pez (Cap. 3, aldea del mar) | Nado | Cap3: paso «3.2 · Pez de honor: aprende a nadar» (`PedirDesbloqueo` Swim, con su aviso). El nodo viejo «Desbloqueo la habilidad de nadar» de Secundary queda sin uso. |
 | Silas | Barco y mapas | Entrega decidida, sin evento acreditado en estos grafos. |
 
 El seguimiento de las conexiones pendientes está en TRACKER.md; la tabla distingue evidencia de diseño para no dar por implementado un aprendizaje.
@@ -598,7 +631,7 @@ Disponibles desde el comienzo. Cada tesoro tiene un requisito declarado y una re
 
 ### 6.5. Secundarias
 
-Son opcionales para comprender la historia. Salto y nado se obtienen en ellas. Cada encargo aporta una historia local, mecánica o recompensa perceptible. Evitar muchas entregas iguales y objetos aleatorios para recompensas básicas; compartir progreso cuando dos pedidos usan lo mismo y facilitar el regreso al NPC.
+Son opcionales para comprender la historia. El salto se obtiene en una de ellas; el nado, en la historia (Pez, Cap. 3). Cada encargo aporta una historia local, mecánica o recompensa perceptible. Evitar muchas entregas iguales y objetos aleatorios para recompensas básicas; compartir progreso cuando dos pedidos usan lo mismo y facilitar el regreso al NPC.
 
 Las variantes de la tabla son propuestas de diseño conservadas; no cambian las quests por aparecer aquí.
 
@@ -610,7 +643,7 @@ Las variantes de la tabla son propuestas de diseño conservadas; no cambian las 
 | Tabernera — resaca | Dos algas y pago. | Ruta costera, elección de calidad/cantidad y preparación cómica del remedio. |
 | Tendera — remedios | Intercambio de maná y algas. | Abastecimiento del mercado; comunicar el resultado de guardar o intercambiar algas. |
 | Guardia del Bosque | Plaga de arañas. | Localizar nidos, elegir cómo despejar y cerrar con un encuentro; compartir progreso en lugar de veinte recados. |
-| Niño Pez | Algas para aprender a nadar; búsqueda de caracola. | Ruta submarina corta con corriente y recompensa de colección; nado sigue siendo secundaria. |
+| Pez | Búsqueda de caracola (opcional, después del Cap. 3; el nado ya lo enseña en la historia). | Ruta submarina corta con corriente y recompensa de colección. |
 | Rudolfo | Reto de salto y botas. | Enseñar antes del cronómetro, circuito con atajos y puntos de control; recompensa visible. |
 
 **Ritmo:** cada tramo cambia su actividad dominante antes de repetir por tercera vez el mismo patrón. Cada zona define verbo principal, novedad, reutilización, respiro y recompensa. Una habilidad debe cambiar o facilitar una situación; si no aporta durante varios niveles, se revisa antes de añadir otra.
@@ -654,7 +687,7 @@ La **Laguna de la Era** es natural y de ribera, al sureste de la subida a las gr
 - **Cuevas y templos** repartidos por el mundo son el sitio de los puzles (Pruebas de las Estrellas, § 4). La entrada de un templo puede cargar un nivel aparte. Su aspecto es propio (piedra clara con musgo, arco apuntado, aros de bronce) y no imita las Ruinas del Libro.
 - **En MainWorld** (TDD § 23.7d): cueva de la cascada (de la poza a la repisa alta, pasando por detrás del agua), subida en repisas, paso secreto del suroeste, cuatro entradas de templo (salto, nado, vuelo y a pie) y mirador en la cumbre como destino de vuelo.
 
-**Abierto:** salto y nado se obtienen hoy en dos secundarias (Rudolfo y Niño Pez, § 6); si hay zonas obligatorias que dependen de ellas, o pasan a la historia principal o lo obligatorio se resuelve con el salto básico. Y la prueba de escalada de Chuchelandia (§ 5) se cambia por otra, sin decidir cuál.
+**Decidido (19 nov 2026):** el nado pasa a la historia principal (Pez, Cap. 3), porque el seguimiento de los contrabandistas cruza el puente a nado. **Abierto:** el salto sigue en una secundaria (Rudolfo, § 6); si hay zonas obligatorias que dependen de él, o pasa a la historia principal o lo obligatorio se resuelve con el salto básico. Y la prueba de escalada de Chuchelandia (§ 5) se cambia por otra, sin decidir cuál.
 
 ## 8. Anexos
 
@@ -681,7 +714,7 @@ Cerrado el 8 oct 2026: contrabandistas, extras del capítulo 2, Gólem, Demonio 
 
 - **Decidido e implementado (17 nov 2026):** el ciclo de día completo pasa a **30 min** (`DayNightCycle.duracionTotalDelDia`; las transiciones van aparte). El resto de la propuesta no está implementado.
 - **Propuesta:** reloj e icono del tiempo en el HUD, pestaña «Mundo» en el menú y, a futuro, que el clima modifique hechizos y enemigos (sol, lluvia, tormenta, niebla y nieve) para que un mago del clima pueda preparar combos.
-- **Canon vigente:** no hay debilidades ni resistencias elementales en combate (§ 6.1); los elementos son identidad y puzle. Esta propuesta no cambia esa regla hasta que se apruebe y se actualice este GDD.
+- **Canon vigente (19 nov 2026):** las criaturas tienen debilidad elemental (×1,5) y, en casos concretos, resistencia (×0,6); las personas no (§ 6.1). La parte de clima de esta propuesta sigue sin aprobar.
 - **Sin Agua:** los cinco elementos son Fuego, Viento/Tormenta, Luz, Mente y Oscuro. Lluvia y tormenta se asocian a Viento/Tormenta; «soleado» sería un estado Despejado, no un elemento.
-- **Pendiente de decidir:** multiplicadores (x1,5–x2 con tope frente a x4), si las debilidades son generales o rasgos concretos, y qué pasa con los jefes-puzle.
+- **Pendiente de decidir:** si el clima suma algo a la afinidad elemental (con tope). Los multiplicadores base, que las debilidades sean por criatura y que los jefes-puzle conserven su mecánica ya están decididos (§ 6.1).
 - Detalle, matriz propuesta y etapas: `docs/clima-reloj-y-efectos-2026-11-17.md` (INC-1276).

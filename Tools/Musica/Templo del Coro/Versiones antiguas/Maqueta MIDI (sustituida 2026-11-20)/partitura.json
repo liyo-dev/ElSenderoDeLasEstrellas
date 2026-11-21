@@ -1,0 +1,4155 @@
+{
+ "bpm": 140,
+ "compas": "4/4",
+ "compases": 104,
+ "segundos_por_compas": 1.714286,
+ "secciones": [
+  {
+   "nombre": "afinacion",
+   "desde_compas": 1,
+   "compases": 8,
+   "segundo": 0.0
+  },
+  {
+   "nombre": "estrofa1",
+   "desde_compas": 9,
+   "compases": 16,
+   "segundo": 13.7143
+  },
+  {
+   "nombre": "estrofa2",
+   "desde_compas": 25,
+   "compases": 16,
+   "segundo": 41.1429
+  },
+  {
+   "nombre": "preestribillo",
+   "desde_compas": 41,
+   "compases": 8,
+   "segundo": 68.5714
+  },
+  {
+   "nombre": "estribillo1",
+   "desde_compas": 49,
+   "compases": 16,
+   "segundo": 82.2857
+  },
+  {
+   "nombre": "parteC",
+   "desde_compas": 65,
+   "compases": 24,
+   "segundo": 109.7143
+  },
+  {
+   "nombre": "estribillo_final",
+   "desde_compas": 89,
+   "compases": 16,
+   "segundo": 150.8571
+  }
+ ],
+ "eventos": [
+  {
+   "voz": "BASE",
+   "compas": 1,
+   "tiempo": 1,
+   "segundo": 0.0,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 1,
+   "tiempo": 3,
+   "segundo": 0.8571,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 2,
+   "tiempo": 1,
+   "segundo": 1.7143,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 2,
+   "tiempo": 3,
+   "segundo": 2.5714,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 3,
+   "tiempo": 1,
+   "segundo": 3.4286,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 3,
+   "tiempo": 3,
+   "segundo": 4.2857,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CORO",
+   "compas": 3,
+   "tiempo": 3,
+   "segundo": 4.2857,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CORO",
+   "compas": 3,
+   "tiempo": 3.5,
+   "segundo": 4.5,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CORO",
+   "compas": 3,
+   "tiempo": 4,
+   "segundo": 4.7143,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 4,
+   "tiempo": 1,
+   "segundo": 5.1429,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 4,
+   "tiempo": 3,
+   "segundo": 6.0,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CORO",
+   "compas": 4,
+   "tiempo": 3,
+   "segundo": 6.0,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CORO",
+   "compas": 4,
+   "tiempo": 3.5,
+   "segundo": 6.2143,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CORO",
+   "compas": 4,
+   "tiempo": 4,
+   "segundo": 6.4286,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 5,
+   "tiempo": 1,
+   "segundo": 6.8571,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 5,
+   "tiempo": 1,
+   "segundo": 6.8571,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 5,
+   "tiempo": 3,
+   "segundo": 7.7143,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 5,
+   "tiempo": 3.5,
+   "segundo": 7.9286,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 6,
+   "tiempo": 1,
+   "segundo": 8.5714,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 6,
+   "tiempo": 1,
+   "segundo": 8.5714,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 6,
+   "tiempo": 3,
+   "segundo": 9.4286,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 6,
+   "tiempo": 3.5,
+   "segundo": 9.6429,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 7,
+   "tiempo": 1,
+   "segundo": 10.2857,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 7,
+   "tiempo": 3,
+   "segundo": 11.1429,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 8,
+   "tiempo": 1,
+   "segundo": 12.0,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 8,
+   "tiempo": 1,
+   "segundo": 12.0,
+   "seccion": "afinacion",
+   "sale": {
+    "compas": 7,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "BASE",
+   "compas": 8,
+   "tiempo": 3,
+   "segundo": 12.8571,
+   "seccion": "afinacion"
+  },
+  {
+   "voz": "BASE",
+   "compas": 9,
+   "tiempo": 1,
+   "segundo": 13.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 9,
+   "tiempo": 1,
+   "segundo": 13.7143,
+   "seccion": "estrofa1",
+   "sale": {
+    "compas": 8,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "BASE",
+   "compas": 9,
+   "tiempo": 3,
+   "segundo": 14.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 10,
+   "tiempo": 1,
+   "segundo": 15.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 10,
+   "tiempo": 3,
+   "segundo": 16.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 10,
+   "tiempo": 3,
+   "segundo": 16.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 10,
+   "tiempo": 3.5,
+   "segundo": 16.5,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 10,
+   "tiempo": 4,
+   "segundo": 16.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 11,
+   "tiempo": 1,
+   "segundo": 17.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 11,
+   "tiempo": 3,
+   "segundo": 18.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 12,
+   "tiempo": 1,
+   "segundo": 18.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 12,
+   "tiempo": 3,
+   "segundo": 19.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 12,
+   "tiempo": 3,
+   "segundo": 19.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 12,
+   "tiempo": 3.5,
+   "segundo": 19.9286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 12,
+   "tiempo": 4,
+   "segundo": 20.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 13,
+   "tiempo": 1,
+   "segundo": 20.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 13,
+   "tiempo": 3,
+   "segundo": 21.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 14,
+   "tiempo": 1,
+   "segundo": 22.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 14,
+   "tiempo": 3,
+   "segundo": 23.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 14,
+   "tiempo": 3,
+   "segundo": 23.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 14,
+   "tiempo": 3.5,
+   "segundo": 23.3571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 14,
+   "tiempo": 4,
+   "segundo": 23.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 15,
+   "tiempo": 1,
+   "segundo": 24.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 15,
+   "tiempo": 3,
+   "segundo": 24.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 16,
+   "tiempo": 1,
+   "segundo": 25.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 16,
+   "tiempo": 3,
+   "segundo": 26.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 16,
+   "tiempo": 3,
+   "segundo": 26.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 16,
+   "tiempo": 3.5,
+   "segundo": 26.7857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 16,
+   "tiempo": 4,
+   "segundo": 27.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 17,
+   "tiempo": 1,
+   "segundo": 27.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 17,
+   "tiempo": 2,
+   "segundo": 27.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 17,
+   "tiempo": 3,
+   "segundo": 28.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 17,
+   "tiempo": 4,
+   "segundo": 28.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 18,
+   "tiempo": 1,
+   "segundo": 29.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 18,
+   "tiempo": 1.5,
+   "segundo": 29.3571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 18,
+   "tiempo": 3,
+   "segundo": 30.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 18,
+   "tiempo": 3,
+   "segundo": 30.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 18,
+   "tiempo": 4,
+   "segundo": 30.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 19,
+   "tiempo": 1,
+   "segundo": 30.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 19,
+   "tiempo": 2,
+   "segundo": 31.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 19,
+   "tiempo": 3,
+   "segundo": 31.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 19,
+   "tiempo": 4,
+   "segundo": 32.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 20,
+   "tiempo": 1,
+   "segundo": 32.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 20,
+   "tiempo": 1.5,
+   "segundo": 32.7857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 20,
+   "tiempo": 3,
+   "segundo": 33.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 20,
+   "tiempo": 3,
+   "segundo": 33.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 20,
+   "tiempo": 4,
+   "segundo": 33.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 21,
+   "tiempo": 1,
+   "segundo": 34.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 21,
+   "tiempo": 2,
+   "segundo": 34.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 21,
+   "tiempo": 3,
+   "segundo": 35.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 21,
+   "tiempo": 4,
+   "segundo": 35.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 22,
+   "tiempo": 1,
+   "segundo": 36.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 22,
+   "tiempo": 1.5,
+   "segundo": 36.2143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 22,
+   "tiempo": 3,
+   "segundo": 36.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 22,
+   "tiempo": 3,
+   "segundo": 36.8571,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 22,
+   "tiempo": 4,
+   "segundo": 37.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 23,
+   "tiempo": 1,
+   "segundo": 37.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 23,
+   "tiempo": 2,
+   "segundo": 38.1429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 23,
+   "tiempo": 3,
+   "segundo": 38.5714,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 23,
+   "tiempo": 4,
+   "segundo": 39.0,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 24,
+   "tiempo": 1,
+   "segundo": 39.4286,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 24,
+   "tiempo": 1.5,
+   "segundo": 39.6429,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 24,
+   "tiempo": 3,
+   "segundo": 40.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 24,
+   "tiempo": 3,
+   "segundo": 40.2857,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 24,
+   "tiempo": 4,
+   "segundo": 40.7143,
+   "seccion": "estrofa1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 25,
+   "tiempo": 1,
+   "segundo": 41.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 25,
+   "tiempo": 1,
+   "segundo": 41.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 25,
+   "tiempo": 3,
+   "segundo": 42.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 26,
+   "tiempo": 1,
+   "segundo": 42.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 26,
+   "tiempo": 1,
+   "segundo": 42.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 26,
+   "tiempo": 3,
+   "segundo": 43.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 26,
+   "tiempo": 3,
+   "segundo": 43.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 26,
+   "tiempo": 4,
+   "segundo": 44.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 27,
+   "tiempo": 1,
+   "segundo": 44.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 27,
+   "tiempo": 1,
+   "segundo": 44.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 27,
+   "tiempo": 3,
+   "segundo": 45.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 28,
+   "tiempo": 1,
+   "segundo": 46.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 28,
+   "tiempo": 1,
+   "segundo": 46.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 28,
+   "tiempo": 3,
+   "segundo": 47.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 28,
+   "tiempo": 3,
+   "segundo": 47.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 28,
+   "tiempo": 4,
+   "segundo": 47.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 29,
+   "tiempo": 1,
+   "segundo": 48.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 29,
+   "tiempo": 1,
+   "segundo": 48.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 29,
+   "tiempo": 3,
+   "segundo": 48.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 30,
+   "tiempo": 1,
+   "segundo": 49.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 30,
+   "tiempo": 1,
+   "segundo": 49.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 30,
+   "tiempo": 3,
+   "segundo": 50.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 30,
+   "tiempo": 3,
+   "segundo": 50.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 30,
+   "tiempo": 4,
+   "segundo": 51.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 31,
+   "tiempo": 1,
+   "segundo": 51.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 31,
+   "tiempo": 1,
+   "segundo": 51.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 31,
+   "tiempo": 3,
+   "segundo": 52.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 32,
+   "tiempo": 1,
+   "segundo": 53.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 32,
+   "tiempo": 1,
+   "segundo": 53.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 32,
+   "tiempo": 3,
+   "segundo": 54.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 32,
+   "tiempo": 3,
+   "segundo": 54.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 32,
+   "tiempo": 4,
+   "segundo": 54.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 33,
+   "tiempo": 1,
+   "segundo": 54.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 33,
+   "tiempo": 1,
+   "segundo": 54.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 33,
+   "tiempo": 3,
+   "segundo": 55.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 33,
+   "tiempo": 3.5,
+   "segundo": 55.9286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 34,
+   "tiempo": 1,
+   "segundo": 56.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 34,
+   "tiempo": 1,
+   "segundo": 56.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 34,
+   "tiempo": 3,
+   "segundo": 57.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 34,
+   "tiempo": 3,
+   "segundo": 57.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 34,
+   "tiempo": 3.5,
+   "segundo": 57.6429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 34,
+   "tiempo": 4,
+   "segundo": 57.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 35,
+   "tiempo": 1,
+   "segundo": 58.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 35,
+   "tiempo": 1,
+   "segundo": 58.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 35,
+   "tiempo": 3,
+   "segundo": 59.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 35,
+   "tiempo": 3.5,
+   "segundo": 59.3571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 36,
+   "tiempo": 1,
+   "segundo": 60.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 36,
+   "tiempo": 1,
+   "segundo": 60.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 36,
+   "tiempo": 3,
+   "segundo": 60.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 36,
+   "tiempo": 3,
+   "segundo": 60.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 36,
+   "tiempo": 3.5,
+   "segundo": 61.0714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 36,
+   "tiempo": 4,
+   "segundo": 61.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 37,
+   "tiempo": 1,
+   "segundo": 61.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 37,
+   "tiempo": 1,
+   "segundo": 61.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 37,
+   "tiempo": 3,
+   "segundo": 62.5714,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 37,
+   "tiempo": 3.5,
+   "segundo": 62.7857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 38,
+   "tiempo": 1,
+   "segundo": 63.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 38,
+   "tiempo": 1,
+   "segundo": 63.4286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 38,
+   "tiempo": 3,
+   "segundo": 64.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 38,
+   "tiempo": 3,
+   "segundo": 64.2857,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 38,
+   "tiempo": 3.5,
+   "segundo": 64.5,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 38,
+   "tiempo": 4,
+   "segundo": 64.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 39,
+   "tiempo": 1,
+   "segundo": 65.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 39,
+   "tiempo": 1,
+   "segundo": 65.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 39,
+   "tiempo": 3,
+   "segundo": 66.0,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 39,
+   "tiempo": 3.5,
+   "segundo": 66.2143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 40,
+   "tiempo": 1,
+   "segundo": 66.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 40,
+   "tiempo": 1,
+   "segundo": 66.8571,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 40,
+   "tiempo": 3,
+   "segundo": 67.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 40,
+   "tiempo": 3,
+   "segundo": 67.7143,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 40,
+   "tiempo": 3.5,
+   "segundo": 67.9286,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "CORO",
+   "compas": 40,
+   "tiempo": 4,
+   "segundo": 68.1429,
+   "seccion": "estrofa2"
+  },
+  {
+   "voz": "BASE",
+   "compas": 41,
+   "tiempo": 1,
+   "segundo": 68.5714,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 41,
+   "tiempo": 1,
+   "segundo": 68.5714,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 41,
+   "tiempo": 3,
+   "segundo": 69.4286,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 42,
+   "tiempo": 1,
+   "segundo": 70.2857,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 42,
+   "tiempo": 1,
+   "segundo": 70.2857,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 42,
+   "tiempo": 3,
+   "segundo": 71.1429,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 43,
+   "tiempo": 1,
+   "segundo": 72.0,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 43,
+   "tiempo": 1,
+   "segundo": 72.0,
+   "seccion": "preestribillo",
+   "sale": {
+    "compas": 42,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 43,
+   "tiempo": 1,
+   "segundo": 72.0,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 43,
+   "tiempo": 3,
+   "segundo": 72.8571,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 44,
+   "tiempo": 1,
+   "segundo": 73.7143,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 44,
+   "tiempo": 1,
+   "segundo": 73.7143,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 44,
+   "tiempo": 3,
+   "segundo": 74.5714,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 45,
+   "tiempo": 1,
+   "segundo": 75.4286,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 45,
+   "tiempo": 1,
+   "segundo": 75.4286,
+   "seccion": "preestribillo",
+   "sale": {
+    "compas": 44,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 45,
+   "tiempo": 1,
+   "segundo": 75.4286,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 45,
+   "tiempo": 3,
+   "segundo": 76.2857,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 46,
+   "tiempo": 1,
+   "segundo": 77.1429,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 46,
+   "tiempo": 1,
+   "segundo": 77.1429,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 46,
+   "tiempo": 3,
+   "segundo": 78.0,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 47,
+   "tiempo": 1,
+   "segundo": 78.8571,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 47,
+   "tiempo": 1,
+   "segundo": 78.8571,
+   "seccion": "preestribillo",
+   "sale": {
+    "compas": 46,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 47,
+   "tiempo": 1,
+   "segundo": 78.8571,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 47,
+   "tiempo": 3,
+   "segundo": 79.7143,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 48,
+   "tiempo": 1,
+   "segundo": 80.5714,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 48,
+   "tiempo": 1,
+   "segundo": 80.5714,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 48,
+   "tiempo": 3,
+   "segundo": 81.4286,
+   "seccion": "preestribillo"
+  },
+  {
+   "voz": "BASE",
+   "compas": 49,
+   "tiempo": 1,
+   "segundo": 82.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 49,
+   "tiempo": 1,
+   "segundo": 82.2857,
+   "seccion": "estribillo1",
+   "sale": {
+    "compas": 48,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 49,
+   "tiempo": 1,
+   "segundo": 82.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 49,
+   "tiempo": 2.5,
+   "segundo": 82.9286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 49,
+   "tiempo": 3,
+   "segundo": 83.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 49,
+   "tiempo": 4.5,
+   "segundo": 83.7857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 50,
+   "tiempo": 1,
+   "segundo": 84.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 50,
+   "tiempo": 1,
+   "segundo": 84.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 50,
+   "tiempo": 1.5,
+   "segundo": 84.2143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 50,
+   "tiempo": 3,
+   "segundo": 84.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 50,
+   "tiempo": 3.5,
+   "segundo": 85.0714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 51,
+   "tiempo": 1,
+   "segundo": 85.7143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 51,
+   "tiempo": 1,
+   "segundo": 85.7143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 51,
+   "tiempo": 2.5,
+   "segundo": 86.3571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 51,
+   "tiempo": 3,
+   "segundo": 86.5714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 51,
+   "tiempo": 4.5,
+   "segundo": 87.2143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 52,
+   "tiempo": 1,
+   "segundo": 87.4286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 52,
+   "tiempo": 1,
+   "segundo": 87.4286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 52,
+   "tiempo": 1.5,
+   "segundo": 87.6429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 52,
+   "tiempo": 3,
+   "segundo": 88.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 52,
+   "tiempo": 3.5,
+   "segundo": 88.5,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 53,
+   "tiempo": 1,
+   "segundo": 89.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 53,
+   "tiempo": 1,
+   "segundo": 89.1429,
+   "seccion": "estribillo1",
+   "sale": {
+    "compas": 52,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 53,
+   "tiempo": 1,
+   "segundo": 89.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 53,
+   "tiempo": 2.5,
+   "segundo": 89.7857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 53,
+   "tiempo": 3,
+   "segundo": 90.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 53,
+   "tiempo": 4.5,
+   "segundo": 90.6429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 54,
+   "tiempo": 1,
+   "segundo": 90.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 54,
+   "tiempo": 1,
+   "segundo": 90.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 54,
+   "tiempo": 1.5,
+   "segundo": 91.0714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 54,
+   "tiempo": 3,
+   "segundo": 91.7143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 54,
+   "tiempo": 3.5,
+   "segundo": 91.9286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 55,
+   "tiempo": 1,
+   "segundo": 92.5714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 55,
+   "tiempo": 1,
+   "segundo": 92.5714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 55,
+   "tiempo": 2.5,
+   "segundo": 93.2143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 55,
+   "tiempo": 3,
+   "segundo": 93.4286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 55,
+   "tiempo": 4.5,
+   "segundo": 94.0714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 56,
+   "tiempo": 1,
+   "segundo": 94.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 56,
+   "tiempo": 1,
+   "segundo": 94.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 56,
+   "tiempo": 1.5,
+   "segundo": 94.5,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 56,
+   "tiempo": 3,
+   "segundo": 95.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 56,
+   "tiempo": 3.5,
+   "segundo": 95.3571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 57,
+   "tiempo": 1,
+   "segundo": 96.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 57,
+   "tiempo": 1,
+   "segundo": 96.0,
+   "seccion": "estribillo1",
+   "sale": {
+    "compas": 56,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 57,
+   "tiempo": 1,
+   "segundo": 96.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 57,
+   "tiempo": 2.5,
+   "segundo": 96.6429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 57,
+   "tiempo": 3,
+   "segundo": 96.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 57,
+   "tiempo": 4.5,
+   "segundo": 97.5,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 58,
+   "tiempo": 1,
+   "segundo": 97.7143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 58,
+   "tiempo": 1,
+   "segundo": 97.7143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 58,
+   "tiempo": 1.5,
+   "segundo": 97.9286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 58,
+   "tiempo": 3,
+   "segundo": 98.5714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 58,
+   "tiempo": 3.5,
+   "segundo": 98.7857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 59,
+   "tiempo": 1,
+   "segundo": 99.4286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 59,
+   "tiempo": 1,
+   "segundo": 99.4286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 59,
+   "tiempo": 2.5,
+   "segundo": 100.0714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 59,
+   "tiempo": 3,
+   "segundo": 100.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 59,
+   "tiempo": 4.5,
+   "segundo": 100.9286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 60,
+   "tiempo": 1,
+   "segundo": 101.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 60,
+   "tiempo": 1,
+   "segundo": 101.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 60,
+   "tiempo": 1.5,
+   "segundo": 101.3571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 60,
+   "tiempo": 3,
+   "segundo": 102.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 60,
+   "tiempo": 3.5,
+   "segundo": 102.2143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 61,
+   "tiempo": 1,
+   "segundo": 102.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 61,
+   "tiempo": 1,
+   "segundo": 102.8571,
+   "seccion": "estribillo1",
+   "sale": {
+    "compas": 60,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 61,
+   "tiempo": 1,
+   "segundo": 102.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 61,
+   "tiempo": 2.5,
+   "segundo": 103.5,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 61,
+   "tiempo": 3,
+   "segundo": 103.7143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 61,
+   "tiempo": 4.5,
+   "segundo": 104.3571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 62,
+   "tiempo": 1,
+   "segundo": 104.5714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 62,
+   "tiempo": 1,
+   "segundo": 104.5714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 62,
+   "tiempo": 1.5,
+   "segundo": 104.7857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 62,
+   "tiempo": 3,
+   "segundo": 105.4286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 62,
+   "tiempo": 3.5,
+   "segundo": 105.6429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 63,
+   "tiempo": 1,
+   "segundo": 106.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 63,
+   "tiempo": 1,
+   "segundo": 106.2857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 63,
+   "tiempo": 2.5,
+   "segundo": 106.9286,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 63,
+   "tiempo": 3,
+   "segundo": 107.1429,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 63,
+   "tiempo": 4.5,
+   "segundo": 107.7857,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 64,
+   "tiempo": 1,
+   "segundo": 108.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 64,
+   "tiempo": 1,
+   "segundo": 108.0,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 64,
+   "tiempo": 1.5,
+   "segundo": 108.2143,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 64,
+   "tiempo": 3,
+   "segundo": 108.8571,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "CORO",
+   "compas": 64,
+   "tiempo": 3.5,
+   "segundo": 109.0714,
+   "seccion": "estribillo1"
+  },
+  {
+   "voz": "BASE",
+   "compas": 65,
+   "tiempo": 1,
+   "segundo": 109.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 65,
+   "tiempo": 1,
+   "segundo": 109.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "OLEADA",
+   "compas": 65,
+   "tiempo": 1,
+   "segundo": 109.7143,
+   "seccion": "parteC",
+   "oleada": 1
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 65,
+   "tiempo": 2,
+   "segundo": 110.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 65,
+   "tiempo": 2,
+   "segundo": 110.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 65,
+   "tiempo": 3,
+   "segundo": 110.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 65,
+   "tiempo": 3,
+   "segundo": 110.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 65,
+   "tiempo": 4,
+   "segundo": 111.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 66,
+   "tiempo": 1,
+   "segundo": 111.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 66,
+   "tiempo": 1,
+   "segundo": 111.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 66,
+   "tiempo": 2,
+   "segundo": 111.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 66,
+   "tiempo": 3,
+   "segundo": 112.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 66,
+   "tiempo": 3,
+   "segundo": 112.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 66,
+   "tiempo": 4,
+   "segundo": 112.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 67,
+   "tiempo": 1,
+   "segundo": 113.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 67,
+   "tiempo": 1,
+   "segundo": 113.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 67,
+   "tiempo": 2,
+   "segundo": 113.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 67,
+   "tiempo": 2,
+   "segundo": 113.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 67,
+   "tiempo": 3,
+   "segundo": 114.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 67,
+   "tiempo": 3,
+   "segundo": 114.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 67,
+   "tiempo": 4,
+   "segundo": 114.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 68,
+   "tiempo": 1,
+   "segundo": 114.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 68,
+   "tiempo": 1,
+   "segundo": 114.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 68,
+   "tiempo": 2,
+   "segundo": 115.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 68,
+   "tiempo": 3,
+   "segundo": 115.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 68,
+   "tiempo": 3,
+   "segundo": 115.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 68,
+   "tiempo": 4,
+   "segundo": 116.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 69,
+   "tiempo": 1,
+   "segundo": 116.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 69,
+   "tiempo": 1,
+   "segundo": 116.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 69,
+   "tiempo": 2,
+   "segundo": 117.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 69,
+   "tiempo": 2,
+   "segundo": 117.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 69,
+   "tiempo": 3,
+   "segundo": 117.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 69,
+   "tiempo": 3,
+   "segundo": 117.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 69,
+   "tiempo": 4,
+   "segundo": 117.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 69,
+   "tiempo": 4,
+   "segundo": 117.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 70,
+   "tiempo": 1,
+   "segundo": 118.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 70,
+   "tiempo": 1,
+   "segundo": 118.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 70,
+   "tiempo": 2,
+   "segundo": 118.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 70,
+   "tiempo": 2,
+   "segundo": 118.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 70,
+   "tiempo": 3,
+   "segundo": 119.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 70,
+   "tiempo": 3,
+   "segundo": 119.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 70,
+   "tiempo": 4,
+   "segundo": 119.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 70,
+   "tiempo": 4,
+   "segundo": 119.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 71,
+   "tiempo": 1,
+   "segundo": 120.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 71,
+   "tiempo": 1,
+   "segundo": 120.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "OLEADA",
+   "compas": 71,
+   "tiempo": 1,
+   "segundo": 120.0,
+   "seccion": "parteC",
+   "oleada": 2
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 71,
+   "tiempo": 2,
+   "segundo": 120.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 71,
+   "tiempo": 2,
+   "segundo": 120.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 71,
+   "tiempo": 3,
+   "segundo": 120.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 71,
+   "tiempo": 3,
+   "segundo": 120.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 71,
+   "tiempo": 4,
+   "segundo": 121.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 71,
+   "tiempo": 4,
+   "segundo": 121.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 72,
+   "tiempo": 1,
+   "segundo": 121.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 72,
+   "tiempo": 1,
+   "segundo": 121.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 72,
+   "tiempo": 2,
+   "segundo": 122.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 72,
+   "tiempo": 2,
+   "segundo": 122.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 72,
+   "tiempo": 3,
+   "segundo": 122.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 72,
+   "tiempo": 3,
+   "segundo": 122.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 72,
+   "tiempo": 4,
+   "segundo": 123.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 72,
+   "tiempo": 4,
+   "segundo": 123.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 73,
+   "tiempo": 1,
+   "segundo": 123.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 73,
+   "tiempo": 1,
+   "segundo": 123.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 73,
+   "tiempo": 2,
+   "segundo": 123.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 73,
+   "tiempo": 2,
+   "segundo": 123.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 73,
+   "tiempo": 3,
+   "segundo": 124.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 73,
+   "tiempo": 3,
+   "segundo": 124.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 73,
+   "tiempo": 4,
+   "segundo": 124.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 73,
+   "tiempo": 4,
+   "segundo": 124.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 74,
+   "tiempo": 1,
+   "segundo": 125.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 74,
+   "tiempo": 1,
+   "segundo": 125.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 74,
+   "tiempo": 2,
+   "segundo": 125.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 74,
+   "tiempo": 2,
+   "segundo": 125.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 74,
+   "tiempo": 3,
+   "segundo": 126.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 74,
+   "tiempo": 3,
+   "segundo": 126.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 74,
+   "tiempo": 4,
+   "segundo": 126.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 74,
+   "tiempo": 4,
+   "segundo": 126.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 75,
+   "tiempo": 1,
+   "segundo": 126.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 75,
+   "tiempo": 1,
+   "segundo": 126.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 75,
+   "tiempo": 2,
+   "segundo": 127.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 75,
+   "tiempo": 2,
+   "segundo": 127.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 75,
+   "tiempo": 3,
+   "segundo": 127.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 75,
+   "tiempo": 3,
+   "segundo": 127.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 75,
+   "tiempo": 4,
+   "segundo": 128.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 75,
+   "tiempo": 4,
+   "segundo": 128.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 76,
+   "tiempo": 1,
+   "segundo": 128.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 76,
+   "tiempo": 1,
+   "segundo": 128.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 76,
+   "tiempo": 2,
+   "segundo": 129.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 76,
+   "tiempo": 2,
+   "segundo": 129.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 76,
+   "tiempo": 3,
+   "segundo": 129.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 76,
+   "tiempo": 3,
+   "segundo": 129.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 76,
+   "tiempo": 4,
+   "segundo": 129.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 76,
+   "tiempo": 4,
+   "segundo": 129.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 77,
+   "tiempo": 1,
+   "segundo": 130.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 77,
+   "tiempo": 1,
+   "segundo": 130.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "OLEADA",
+   "compas": 77,
+   "tiempo": 1,
+   "segundo": 130.2857,
+   "seccion": "parteC",
+   "oleada": 3
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 77,
+   "tiempo": 2,
+   "segundo": 130.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 77,
+   "tiempo": 2,
+   "segundo": 130.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 77,
+   "tiempo": 3,
+   "segundo": 131.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 77,
+   "tiempo": 3,
+   "segundo": 131.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 77,
+   "tiempo": 4,
+   "segundo": 131.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 77,
+   "tiempo": 4,
+   "segundo": 131.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 78,
+   "tiempo": 1,
+   "segundo": 132.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 78,
+   "tiempo": 1,
+   "segundo": 132.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 78,
+   "tiempo": 2,
+   "segundo": 132.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 78,
+   "tiempo": 2,
+   "segundo": 132.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 78,
+   "tiempo": 3,
+   "segundo": 132.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 78,
+   "tiempo": 3,
+   "segundo": 132.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 78,
+   "tiempo": 4,
+   "segundo": 133.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 78,
+   "tiempo": 4,
+   "segundo": 133.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 79,
+   "tiempo": 1,
+   "segundo": 133.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 79,
+   "tiempo": 1,
+   "segundo": 133.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 79,
+   "tiempo": 2,
+   "segundo": 134.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 79,
+   "tiempo": 2,
+   "segundo": 134.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 79,
+   "tiempo": 3,
+   "segundo": 134.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 79,
+   "tiempo": 3,
+   "segundo": 134.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 79,
+   "tiempo": 4,
+   "segundo": 135.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 79,
+   "tiempo": 4,
+   "segundo": 135.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 80,
+   "tiempo": 1,
+   "segundo": 135.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 80,
+   "tiempo": 1,
+   "segundo": 135.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 80,
+   "tiempo": 2,
+   "segundo": 135.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 80,
+   "tiempo": 2,
+   "segundo": 135.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 80,
+   "tiempo": 3,
+   "segundo": 136.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 80,
+   "tiempo": 3,
+   "segundo": 136.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 80,
+   "tiempo": 4,
+   "segundo": 136.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 80,
+   "tiempo": 4,
+   "segundo": 136.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 81,
+   "tiempo": 1,
+   "segundo": 137.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 81,
+   "tiempo": 1,
+   "segundo": 137.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 81,
+   "tiempo": 2,
+   "segundo": 137.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 81,
+   "tiempo": 2,
+   "segundo": 137.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 81,
+   "tiempo": 3,
+   "segundo": 138.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 81,
+   "tiempo": 3,
+   "segundo": 138.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 81,
+   "tiempo": 4,
+   "segundo": 138.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 81,
+   "tiempo": 4,
+   "segundo": 138.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 82,
+   "tiempo": 1,
+   "segundo": 138.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 82,
+   "tiempo": 1,
+   "segundo": 138.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 82,
+   "tiempo": 2,
+   "segundo": 139.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 82,
+   "tiempo": 2,
+   "segundo": 139.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 82,
+   "tiempo": 3,
+   "segundo": 139.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 82,
+   "tiempo": 3,
+   "segundo": 139.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 82,
+   "tiempo": 4,
+   "segundo": 140.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 82,
+   "tiempo": 4,
+   "segundo": 140.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 83,
+   "tiempo": 1,
+   "segundo": 140.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 83,
+   "tiempo": 1,
+   "segundo": 140.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "OLEADA",
+   "compas": 83,
+   "tiempo": 1,
+   "segundo": 140.5714,
+   "seccion": "parteC",
+   "oleada": 4
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 83,
+   "tiempo": 2,
+   "segundo": 141.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 83,
+   "tiempo": 2,
+   "segundo": 141.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 83,
+   "tiempo": 3,
+   "segundo": 141.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 83,
+   "tiempo": 3,
+   "segundo": 141.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 83,
+   "tiempo": 4,
+   "segundo": 141.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 83,
+   "tiempo": 4,
+   "segundo": 141.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 84,
+   "tiempo": 1,
+   "segundo": 142.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 84,
+   "tiempo": 1,
+   "segundo": 142.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 84,
+   "tiempo": 2,
+   "segundo": 142.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 84,
+   "tiempo": 2,
+   "segundo": 142.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 84,
+   "tiempo": 3,
+   "segundo": 143.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 84,
+   "tiempo": 3,
+   "segundo": 143.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 84,
+   "tiempo": 4,
+   "segundo": 143.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 84,
+   "tiempo": 4,
+   "segundo": 143.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 85,
+   "tiempo": 1,
+   "segundo": 144.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 85,
+   "tiempo": 1,
+   "segundo": 144.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 85,
+   "tiempo": 2,
+   "segundo": 144.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 85,
+   "tiempo": 2,
+   "segundo": 144.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 85,
+   "tiempo": 3,
+   "segundo": 144.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 85,
+   "tiempo": 3,
+   "segundo": 144.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 85,
+   "tiempo": 4,
+   "segundo": 145.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 85,
+   "tiempo": 4,
+   "segundo": 145.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 86,
+   "tiempo": 1,
+   "segundo": 145.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 86,
+   "tiempo": 1,
+   "segundo": 145.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 86,
+   "tiempo": 2,
+   "segundo": 146.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 86,
+   "tiempo": 2,
+   "segundo": 146.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 86,
+   "tiempo": 3,
+   "segundo": 146.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 86,
+   "tiempo": 3,
+   "segundo": 146.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 86,
+   "tiempo": 4,
+   "segundo": 147.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 86,
+   "tiempo": 4,
+   "segundo": 147.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 87,
+   "tiempo": 1,
+   "segundo": 147.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 87,
+   "tiempo": 1,
+   "segundo": 147.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 87,
+   "tiempo": 2,
+   "segundo": 147.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 87,
+   "tiempo": 2,
+   "segundo": 147.8571,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 87,
+   "tiempo": 3,
+   "segundo": 148.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 87,
+   "tiempo": 3,
+   "segundo": 148.2857,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 87,
+   "tiempo": 4,
+   "segundo": 148.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 87,
+   "tiempo": 4,
+   "segundo": 148.7143,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 88,
+   "tiempo": 1,
+   "segundo": 149.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 88,
+   "tiempo": 1,
+   "segundo": 149.1429,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 88,
+   "tiempo": 2,
+   "segundo": 149.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 88,
+   "tiempo": 2,
+   "segundo": 149.5714,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 88,
+   "tiempo": 3,
+   "segundo": 150.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 88,
+   "tiempo": 3,
+   "segundo": 150.0,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "FUEGO",
+   "compas": 88,
+   "tiempo": 4,
+   "segundo": 150.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 88,
+   "tiempo": 4,
+   "segundo": 150.4286,
+   "seccion": "parteC"
+  },
+  {
+   "voz": "BASE",
+   "compas": 89,
+   "tiempo": 1,
+   "segundo": 150.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 89,
+   "tiempo": 1,
+   "segundo": 150.8571,
+   "seccion": "estribillo_final",
+   "sale": {
+    "compas": 88,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 89,
+   "tiempo": 1,
+   "segundo": 150.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 89,
+   "tiempo": 2.5,
+   "segundo": 151.5,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 89,
+   "tiempo": 3,
+   "segundo": 151.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 89,
+   "tiempo": 3.5,
+   "segundo": 151.9286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 89,
+   "tiempo": 4.5,
+   "segundo": 152.3571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 90,
+   "tiempo": 1,
+   "segundo": 152.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 90,
+   "tiempo": 1,
+   "segundo": 152.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 90,
+   "tiempo": 1.5,
+   "segundo": 152.7857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 90,
+   "tiempo": 3,
+   "segundo": 153.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 90,
+   "tiempo": 3,
+   "segundo": 153.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 90,
+   "tiempo": 3.5,
+   "segundo": 153.6429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 90,
+   "tiempo": 4,
+   "segundo": 153.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 91,
+   "tiempo": 1,
+   "segundo": 154.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 91,
+   "tiempo": 1,
+   "segundo": 154.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 91,
+   "tiempo": 2.5,
+   "segundo": 154.9286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 91,
+   "tiempo": 3,
+   "segundo": 155.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 91,
+   "tiempo": 3.5,
+   "segundo": 155.3571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 91,
+   "tiempo": 4.5,
+   "segundo": 155.7857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 92,
+   "tiempo": 1,
+   "segundo": 156.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 92,
+   "tiempo": 1,
+   "segundo": 156.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 92,
+   "tiempo": 1.5,
+   "segundo": 156.2143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 92,
+   "tiempo": 3,
+   "segundo": 156.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 92,
+   "tiempo": 3,
+   "segundo": 156.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 92,
+   "tiempo": 3.5,
+   "segundo": 157.0714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 92,
+   "tiempo": 4,
+   "segundo": 157.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 93,
+   "tiempo": 1,
+   "segundo": 157.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 93,
+   "tiempo": 1,
+   "segundo": 157.7143,
+   "seccion": "estribillo_final",
+   "sale": {
+    "compas": 92,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 93,
+   "tiempo": 1,
+   "segundo": 157.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 93,
+   "tiempo": 2.5,
+   "segundo": 158.3571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 93,
+   "tiempo": 3,
+   "segundo": 158.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 93,
+   "tiempo": 3.5,
+   "segundo": 158.7857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 93,
+   "tiempo": 4.5,
+   "segundo": 159.2143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 94,
+   "tiempo": 1,
+   "segundo": 159.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 94,
+   "tiempo": 1,
+   "segundo": 159.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 94,
+   "tiempo": 1.5,
+   "segundo": 159.6429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 94,
+   "tiempo": 3,
+   "segundo": 160.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 94,
+   "tiempo": 3,
+   "segundo": 160.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 94,
+   "tiempo": 3.5,
+   "segundo": 160.5,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 94,
+   "tiempo": 4,
+   "segundo": 160.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 95,
+   "tiempo": 1,
+   "segundo": 161.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 95,
+   "tiempo": 1,
+   "segundo": 161.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 95,
+   "tiempo": 2.5,
+   "segundo": 161.7857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 95,
+   "tiempo": 3,
+   "segundo": 162.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 95,
+   "tiempo": 3.5,
+   "segundo": 162.2143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 95,
+   "tiempo": 4.5,
+   "segundo": 162.6429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 96,
+   "tiempo": 1,
+   "segundo": 162.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 96,
+   "tiempo": 1,
+   "segundo": 162.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 96,
+   "tiempo": 1.5,
+   "segundo": 163.0714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 96,
+   "tiempo": 3,
+   "segundo": 163.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 96,
+   "tiempo": 3,
+   "segundo": 163.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 96,
+   "tiempo": 3.5,
+   "segundo": 163.9286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 96,
+   "tiempo": 4,
+   "segundo": 164.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 97,
+   "tiempo": 1,
+   "segundo": 164.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 97,
+   "tiempo": 1,
+   "segundo": 164.5714,
+   "seccion": "estribillo_final",
+   "sale": {
+    "compas": 96,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 97,
+   "tiempo": 1,
+   "segundo": 164.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 97,
+   "tiempo": 2.5,
+   "segundo": 165.2143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 97,
+   "tiempo": 3,
+   "segundo": 165.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 97,
+   "tiempo": 3.5,
+   "segundo": 165.6429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 97,
+   "tiempo": 4.5,
+   "segundo": 166.0714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 98,
+   "tiempo": 1,
+   "segundo": 166.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 98,
+   "tiempo": 1,
+   "segundo": 166.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 98,
+   "tiempo": 1.5,
+   "segundo": 166.5,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 98,
+   "tiempo": 3,
+   "segundo": 167.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 98,
+   "tiempo": 3,
+   "segundo": 167.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 98,
+   "tiempo": 3.5,
+   "segundo": 167.3571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 98,
+   "tiempo": 4,
+   "segundo": 167.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 98,
+   "tiempo": 4,
+   "segundo": 167.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 99,
+   "tiempo": 1,
+   "segundo": 168.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 99,
+   "tiempo": 1,
+   "segundo": 168.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 99,
+   "tiempo": 2.5,
+   "segundo": 168.6429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 99,
+   "tiempo": 3,
+   "segundo": 168.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 99,
+   "tiempo": 3.5,
+   "segundo": 169.0714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 99,
+   "tiempo": 4.5,
+   "segundo": 169.5,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 100,
+   "tiempo": 1,
+   "segundo": 169.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 100,
+   "tiempo": 1,
+   "segundo": 169.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 100,
+   "tiempo": 1.5,
+   "segundo": 169.9286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 100,
+   "tiempo": 3,
+   "segundo": 170.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 100,
+   "tiempo": 3,
+   "segundo": 170.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 100,
+   "tiempo": 3.5,
+   "segundo": 170.7857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 100,
+   "tiempo": 4,
+   "segundo": 171.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 100,
+   "tiempo": 4,
+   "segundo": 171.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 101,
+   "tiempo": 1,
+   "segundo": 171.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CUERDAS",
+   "compas": 101,
+   "tiempo": 1,
+   "segundo": 171.4286,
+   "seccion": "estribillo_final",
+   "sale": {
+    "compas": 100,
+    "tiempo": 4.0
+   }
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 101,
+   "tiempo": 1,
+   "segundo": 171.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 101,
+   "tiempo": 2.5,
+   "segundo": 172.0714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 101,
+   "tiempo": 3,
+   "segundo": 172.2857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 101,
+   "tiempo": 3.5,
+   "segundo": 172.5,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 101,
+   "tiempo": 4.5,
+   "segundo": 172.9286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 102,
+   "tiempo": 1,
+   "segundo": 173.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 102,
+   "tiempo": 1,
+   "segundo": 173.1429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 102,
+   "tiempo": 1.5,
+   "segundo": 173.3571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 102,
+   "tiempo": 3,
+   "segundo": 174.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 102,
+   "tiempo": 3,
+   "segundo": 174.0,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 102,
+   "tiempo": 3.5,
+   "segundo": 174.2143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 102,
+   "tiempo": 4,
+   "segundo": 174.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 102,
+   "tiempo": 4,
+   "segundo": 174.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 103,
+   "tiempo": 1,
+   "segundo": 174.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 103,
+   "tiempo": 1,
+   "segundo": 174.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 103,
+   "tiempo": 2.5,
+   "segundo": 175.5,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 103,
+   "tiempo": 3,
+   "segundo": 175.7143,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 103,
+   "tiempo": 3.5,
+   "segundo": 175.9286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 103,
+   "tiempo": 4.5,
+   "segundo": 176.3571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 104,
+   "tiempo": 1,
+   "segundo": 176.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 104,
+   "tiempo": 1,
+   "segundo": 176.5714,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 104,
+   "tiempo": 1.5,
+   "segundo": 176.7857,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "BASE",
+   "compas": 104,
+   "tiempo": 3,
+   "segundo": 177.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 104,
+   "tiempo": 3,
+   "segundo": 177.4286,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "ORGANO",
+   "compas": 104,
+   "tiempo": 3.5,
+   "segundo": 177.6429,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "CORO",
+   "compas": 104,
+   "tiempo": 4,
+   "segundo": 177.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "RAYOS",
+   "compas": 104,
+   "tiempo": 4,
+   "segundo": 177.8571,
+   "seccion": "estribillo_final"
+  },
+  {
+   "voz": "FIN",
+   "compas": 105,
+   "tiempo": 1,
+   "segundo": 178.2857,
+   "seccion": "cola",
+   "nota": "el suelo cede; salto al vacío y vuelve el vuelo"
+  }
+ ]
+}

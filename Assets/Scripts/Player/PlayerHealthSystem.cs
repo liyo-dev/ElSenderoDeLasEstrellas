@@ -57,7 +57,7 @@ public class PlayerHealthSystem : MonoBehaviour
     [Header("Reacciones vocales")]
     [Tooltip("Personaje de las reacciones. Vacío desactiva las reacciones vocales.")]
     [SerializeField] private string reactionCharacter = "Will";
-    [Tooltip("Desactivado de momento (petición de Raúl, 7 oct 2026): Will no se queja al recibir daño. Marcar para volver a oír la reacción 'hurt'.")]
+    [Tooltip("Desactivado: Will no se queja al recibir daño. Marcar para volver a oír la reacción 'hurt'.")]
     [SerializeField] private bool playDamageReaction = false;
     [Tooltip("Reacción al recibir daño. Vacío la desactiva.")]
     [SerializeField] private string damageReactionKind = "hurt";
@@ -76,11 +76,13 @@ public class PlayerHealthSystem : MonoBehaviour
     // Property IDs para optimización de materiales (URP y Standard)
     private static readonly int BaseColorPropertyID = Shader.PropertyToID("_BaseColor"); // URP
     private static readonly int ColorPropertyID = Shader.PropertyToID("_Color");         // Standard
+    // El shader de dibujo de los personajes tiñe con _Tinte; su _BaseColor no pinta nada.
+    private static readonly int TintePropertyID = Shader.PropertyToID("_Tinte");
     
     // Componentes
     private Animator _animator;
     private Renderer[] _renderers;
-    private WardrobeInventory _wardrobeInventory; // FIX 4 sep 2026, ver Awake()/RefreshRenderersForWardrobeChange
+    private WardrobeInventory _wardrobeInventory;
     private Material[] _originalMaterials;
     // resuelto en Awake para god-frame en Cinematic (TakeDamage)
     // y para vaciar la pila de modos en Die()/ReviveInternal (ver comentarios más abajo).
@@ -153,12 +155,12 @@ public class PlayerHealthSystem : MonoBehaviour
         _renderers = GetComponentsInChildren<Renderer>();
         CacheOriginalMaterials();
 
-        // FIX 4 sep 2026: _renderers se cacheaba una sola vez aquí, en Awake(). Si el jugador
-        // equipaba una prenda de WardrobeInventory (capa, gafas...) DESPUÉS de este momento, su
-        // Renderer nunca entraba en el array — el cuerpo parpadeaba al recibir daño pero la prenda
-        // se quedaba fija, quedando raro (reportado por Raúl). Nos suscribimos a
-        // WardrobeInventory.OnWardrobeChanged para añadir al array cualquier Renderer nuevo que
-        // aparezca al equipar (ver RefreshRenderersForWardrobeChange).
+        // _renderers se cacheaba una sola vez aquí, en Awake(). Si el jugador equipaba una prenda
+        // de WardrobeInventory (capa, gafas...) DESPUÉS de este momento, su Renderer nunca entraba
+        // en el array — el cuerpo parpadeaba al recibir daño pero la prenda se quedaba fija,
+        // quedando raro. Nos suscribimos a WardrobeInventory.OnWardrobeChanged para añadir al
+        // array cualquier Renderer nuevo que aparezca al equipar (ver
+        // RefreshRenderersForWardrobeChange).
     }
 
     // Reemplaza Start/Coroutine por evento del boot service
@@ -212,7 +214,6 @@ public class PlayerHealthSystem : MonoBehaviour
             _isDead = _currentHp <= 0;
             _lastNotifiedHealth = _currentHp;
             
-            // Debug.Log($"[PlayerHealthSystem] Inicializado con vida: {_currentHp:0.1f}/{_maxHp:0.1f} ({HealthPercentage:P1}) - Estado: {(_isDead ? "MUERTO" : "VIVO")}");
         }
         else
         {
@@ -233,17 +234,17 @@ public class PlayerHealthSystem : MonoBehaviour
         GameBootService.OnProfileReady -= HandleProfileReady;
     }
     
-    // FIX Bajos: `renderer.material` (getter) ya auto-instancia una copia
-    // única del material la primera vez que se accede, y esa copia se descarta inmediatamente al
-    // envolverla en `new Material(...)` — una fuga por renderer cada vez que se llama a este
-    // método. Se usa `sharedMaterial` como origen (no instancia nada) y se destruyen instancias
-    // previas si el método se llegara a llamar más de una vez en la vida del componente.
+    // `renderer.material` (getter) ya auto-instancia una copia única del material la primera vez
+    // que se accede, y esa copia se descarta inmediatamente al envolverla en `new Material(...)`
+    // — una fuga por renderer cada vez que se llama a este método. Se usa `sharedMaterial` como
+    // origen (no instancia nada) y se destruyen instancias previas si el método se llegara a
+    // llamar más de una vez en la vida del componente.
     /// <summary>
-    /// FIX 4 sep 2026: llamado desde WardrobeInventory.OnWardrobeChanged. En vez de recapturar y
-    /// recachear TODOS los renderers (lo que destruiría y recrearía instancias de material para
-    /// piezas que ya llevaban rato con su parpadeo funcionando con normalidad), solo AÑADE al
-    /// array los Renderer nuevos que no estuvieran ya trackeados — típicamente los de la prenda
-    /// recién equipada — y les crea su propia instancia de material igual que hace
+    /// Llamado desde WardrobeInventory.OnWardrobeChanged. En vez de recapturar y recachear TODOS
+    /// los renderers (lo que destruiría y recrearía instancias de material para piezas que ya
+    /// llevaban rato con su parpadeo funcionando con normalidad), solo AÑADE al array los
+    /// Renderer nuevos que no estuvieran ya trackeados — típicamente los de la prenda recién
+    /// equipada — y les crea su propia instancia de material igual que hace
     /// CacheOriginalMaterials() para el resto.
     /// </summary>
     private void RefreshRenderersForWardrobeChange()
@@ -934,9 +935,12 @@ public class PlayerHealthSystem : MonoBehaviour
     private void SetMaterialColor(Material material, Color color)
     {
         if (material == null) return;
-        
-        // Intentar URP primero (_BaseColor)
-        if (material.HasProperty(BaseColorPropertyID))
+
+        if (material.HasProperty(TintePropertyID))
+        {
+            material.SetColor(TintePropertyID, color);
+        }
+        else if (material.HasProperty(BaseColorPropertyID))
         {
             material.SetColor(BaseColorPropertyID, color);
         }
@@ -953,8 +957,11 @@ public class PlayerHealthSystem : MonoBehaviour
     private Color GetMaterialColor(Material material)
     {
         if (material == null) return Color.white;
-        
-        // Intentar URP primero (_BaseColor)
+
+        if (material.HasProperty(TintePropertyID))
+        {
+            return material.GetColor(TintePropertyID);
+        }
         if (material.HasProperty(BaseColorPropertyID))
         {
             return material.GetColor(BaseColorPropertyID);
@@ -1254,8 +1261,8 @@ public class PlayerHealthSystem : MonoBehaviour
             // Normalizar y comprobar NaN por seguridad
             if (!float.IsNaN(knockbackDirection.x) && !float.IsNaN(knockbackDirection.y) && !float.IsNaN(knockbackDirection.z))
             {
-                Vector3 impulse = knockbackDirection.normalized * fuerza;
-                rb.AddForce(impulse, ForceMode.Impulse);
+                Vector3 impulse = SinEmpujarAlBorde(knockbackDirection.normalized * fuerza);
+                if (impulse.sqrMagnitude > 0.0001f) rb.AddForce(impulse, ForceMode.Impulse);
             }
             yield break;
         }
@@ -1279,6 +1286,22 @@ public class PlayerHealthSystem : MonoBehaviour
         }
     }
     
+    // Un golpe no tira al jugador por un borde (un puente, una cornisa, la orilla de un río): si el
+    // suelo se acaba o baja de golpe en la dirección del empuje, el empuje se queda sin la parte
+    // horizontal. Ver INC-1331.
+    private const float AlcanceDelEmpuje = 1.2f;
+    private const float CaidaMaximaAlEmpujar = 0.8f;
+
+    private Vector3 SinEmpujarAlBorde(Vector3 impulso)
+    {
+        Vector3 plano = new Vector3(impulso.x, 0f, impulso.z);
+        if (plano.sqrMagnitude < 0.0001f) return impulso;
+        float libre = Kits.Core.GroundProbe.DistanceToEdge(transform.position, plano, AlcanceDelEmpuje,
+            CaidaMaximaAlEmpujar, Physics.DefaultRaycastLayers, transform);
+        if (libre >= AlcanceDelEmpuje) return impulso;
+        return new Vector3(0f, impulso.y, 0f);
+    }
+
     // Métodos públicos para configuración
     public void SetGodMode(bool isEnabled)
     {

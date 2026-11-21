@@ -157,7 +157,7 @@ public class StarAwakeningModule : SequenceModule
     ///
     /// La posición de salida se calcula alrededor de Will en vez de ser un punto fijo del mapa —
     /// mismo motivo que los planos de cámara: un punto fijo deja de valer en cuanto la escena
-    /// ocurre en otro sitio, y eso ya pasó una vez ("se ve por debajo del mundo", 14 sept 2026).
+    /// ocurre en otro sitio, y eso ya pasó una vez.
     private IEnumerator Co_LanzarProyectil(SequenceContext ctx)
     {
         var will = ctx.GetActor(SequenceActor.PlayerId);

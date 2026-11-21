@@ -49,6 +49,22 @@
 - **Sentado sin piernas** (Will en el columpio, 13 nov 2026): `chequeo_huecos.py` mide los muslos de frente sentado
   (mínimo 15 %). Will da 70 %: sus muslos no están tapados; de frente se ven en escorzo y la bota alta ocupa toda la
   pierna. Eso es pose y cámara, no el modelo (ver TRACKER INC-1170).
+- **Tiras y adornos sobre el faldón, sentado** (Eldran en el filo de la cama, 20 nov 2026, INC-1376): la solapa del abrigo
+  (una tira oscura del cuello al bajo) con un botón en la punta, sentado y con la mano en el regazo, se leía como un palo en
+  la mano. Dos causas: cada pieza que cuelga se pesa como faldón **hasta su propio bajo**, así que una pieza pegada sobre
+  el faldón que copia los pesos del cuerpo sigue al muslo distinto que él y se despega; y una tira estrecha por delante,
+  por debajo de la cintura, sentado queda de canto sobre el regazo.
+  - Al diseñar: lo que va pegado sobre otra prenda (solapas, ribetes, bajos, botones, bordados) lleva
+    `rl.Zona(sobre=<prenda>)` (y `rigida=True` si es un adorno pequeño). Las tiras de delante (solapas, cabos de faja o
+    de cordón) y los adornos (botones, frascos) acaban en el cinturón; por debajo, el faldón va limpio.
+  - Al comprobar: `tl.revisar_antes_de_exportar` avisa de las dos cosas («Pegada sin "sobre"»: sienta al personaje y mide
+    si la pieza se separa de su prenda más de 8 mm; «Tira por delante del faldón»: más estrecha de 8 cm y más de 6 cm por
+    debajo de la cintura). `chequeo_choques.py` lleva la pose `sentado_hablando` (tronco adelante, manos al centro del
+    regazo) y se puede fotografiar con `--fotos-de sentado,sentado_hablando`.
+  - Barrido del 20 nov (solo la revisión antes de exportar, sin volver a exportar nada): con «Tira por delante del faldón»
+    salen el cabo de la faja del Archimago, el frasco de la boticaria, los dos cabos de la faja de Liora y un cabo del
+    cordón de Oliver; con «Pegada sin "sobre"», ninguno (Eldran ya arreglado). Pendiente de decidir con Raúl cuáles
+    se sientan en el juego y se recortan.
 
 ## Cómo se comprueba un personaje (los dos chequeos, más la revisión antes de exportar)
 Los chequeos se pasan sobre el `.blend` recién hecho por su script, nunca sobre uno guardado de otro día: el de Will
@@ -57,7 +73,9 @@ era del 11 nov y no tenía los arreglos posteriores (14 nov 2026).
 2. `python chequeo_huecos.py -- personaje.blend salida --piezas pelo.fbx` → `huecos.md` / `huecos.png` (desde abajo:
    rayos desde 25 direcciones por debajo, en reposo y andando; en rojo, lo que en Unity se ve a través; además,
    manos con los brazos caídos y muslos sentado de frente).
-Los dos tienen que dar PASA antes de meter el personaje en Unity.
+Los dos tienen que dar PASA antes de meter el personaje en Unity, y la revisión antes de exportar (`REVISAR:` al
+pasar el script del personaje) no debe dejar avisos de «Pegada sin "sobre"» ni de «Tira por delante del faldón» sin mirar.
+Para ver las poses sentadas: `--fotos-de sentado,sentado_hablando` (las fotos de todas las poses tardan más de 3 minutos).
 
 ## Taller de piezas (`taller.py`, 13 nov 2026)
 Las funciones de modelado (`tubo`, `torno`, `toro`, `esfera`, `caja`, `estrella`…) estaban copiadas en 18 scripts:
@@ -93,3 +111,30 @@ un arreglo en uno no llegaba a los demás. Ahora están una vez en `taller.py`, 
 - Un **ribete o puño de manga que se hunde en otra prenda** (la manga en el costado de la camiseta, por la axila) es
   grave a partir del 10 % de la pieza: por la espalda se ve la tela del tronco atravesando la manga y el contorno se
   corta ahí. Will (`Body23_Aventurero`) da NO PASA por esto en `brazos_bajados` (RibeteManga dentro de Camiseta).
+- Poses de tronco (`tronco_adelante`, `tronco_atras`, `tronco_girado`: pecho doblado y girado como en los gestos de
+  charla) y medida **tela tendida sobre otra** (a menos de 3 mm y en paralelo, no un borde que solo toca): a unos
+  metros de cámara parpadea. Aviso desde el 12 % de la pieza, grave desde el 25 %. Victoria: el peto no llega a meterse
+  en la blusa en ninguna pose (su cara de dentro queda a 2,5–3,3 mm en el borde de arriba); sí avisa de la falda sobre la
+  blusa y de los hombros sobre las mangas (Will y Victoria).
+
+## Piel en la ropa, pelo por el gorro, tumbado y un cuerpo cada vez (19 nov 2026, INC-1340)
+- `chequeo_choques.py --solo Body23_Aventurero[,Hair16_Heroe]`: mide solo esas mallas del `.blend` (más `--piezas`). El
+  `.blend` de Will lleva dos cuerpos (con y sin chaqueta) y el pelo del script: medidos juntos salía «tela sobre tela»
+  falsa (cada camiseta sobre su gemela). `chequeo_huecos.py` acepta lo mismo. Pasar siempre un cuerpo cada vez.
+- **Piel propia en la ropa**: la piel hecha a medida (brazos de piel) que se mete en una prenda del cuerpo al moverse
+  (Raúl: «de espaldas se ve que la camiseta se mete en la carne de los brazos»). Grave desde el 6 % de la pieza; las
+  manos del pack (con nombre de pieza o sin él) solo avisan: una mano sobre el pecho o el cinturón es un gesto.
+- **Pelo por fuera del gorro**: desde el centro del cráneo hacia cada punto del pelo; si el gorro o la capucha está antes,
+  el pelo lo atraviesa (Liam: un pincho por encima de la capucha). Grave desde 2 puntos. Arreglo:
+  `../Pelo/pelo_bajo_el_gorro.py -- pelo.fbx gorro.fbx salida.fbx` (o lo mismo dentro del script del personaje).
+- Pose **tumbado** (boca arriba, piernas dobladas, brazos junto a la cabeza, cabeza atrás: Will en la cama de Eldran,
+  «SÚPER ROTO») y la animación `Sleeping_NoWeapon`. Las fotos de tumbado salen siempre y una de ellas desde los pies.
+  Con ella salió el `Fondo` de Will (disco bajo la camiseta) atravesando la camiseta con las piernas dobladas.
+- Barrido de todos los modelos propios con las medidas nuevas: `barrido_choques_2026-11-19.md`. Pasan Will, Liam (con su
+  script actual), Oliver y la boticaria; el resto tiene graves que no son de hoy (ver el informe).
+
+## Adornos rígidos (19 nov 2026, INC-1338)
+- `ropa_lib`: una pieza de tronco sin zona dicha que cabe en una caja de 8 cm (`ADORNO_MAX`: hebilla, botón, broche) va
+  **rígida** (`Zona(..., rigida=True)`: toda la pieza con los mismos pesos, la media de los que copia). Antes copiaba los pesos
+  vértice a vértice y, entre la pelvis y el pecho, se estiraba: la hebilla de Eldran y la de Erika daban grave en `tronco_atras`.
+- Con esto Eldran vuelve a PASA. Erika tiene el mismo grave y se arregla al volver a pasar su script (no hecho).

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Liyodev.NarrativeGraph;
 
 /// Misiones del grafo narrativo atendidas por <see cref="QuestManager"/>. Es un componente porque
 /// difiere un fotograma los avisos de misión completada (corrutina); lo crea y lo registra

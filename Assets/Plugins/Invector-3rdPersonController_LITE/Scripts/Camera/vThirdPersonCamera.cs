@@ -37,6 +37,20 @@ public class vThirdPersonCamera : MonoBehaviour
     public float suavizadoAlChocarConElSuelo = 0.08f;
     [Tooltip("Segundos que tarda en volver a su distancia y altura cuando el suelo deja de estorbar.")]
     public float suavizadoAlSoltarElSuelo = 0.45f;
+    [Tooltip("Piezas finas del suelo (barandillas, pilotes, postes) que no acercan la cámara: lo que mide menos que esto de grueso en planta y es bajo, o es fino en las dos direcciones. 0 = todas cuentan.")]
+    public float grosorDePiezaFina = 0.4f;
+    [Tooltip("Altura por debajo de la cual una pieza fina en una sola dirección (una barandilla) no acerca la cámara, en metros. Una pared fina y alta sí la acerca.")]
+    public float alturaDePiezaFina = 1.5f;
+
+    [Header("Distancia")]
+    [Tooltip("Multiplica la distancia de la cámara de juego (defaultDistance, también la que dejan las zonas de ambiente). No toca los planos fijos ni las cinemáticas. 1 = la de siempre.")]
+    public float multiplicadorDeDistancia = 1.2f;
+
+    [Header("Agua")]
+    [Tooltip("Capas del agua (volúmenes con la superficie arriba): la cámara no se mete por debajo de su superficie. Vacío = capa Water. Ver INC-1331")]
+    public LayerMask capasDeAgua = 0;
+    [Tooltip("Altura mínima de la cámara sobre la superficie del agua, en metros.")]
+    public float holguraConElAgua = 0.35f;
 
     [Header("Anulación de Lock-On")]
     public float overrideTargetHeightOffset = 1.5f;
@@ -46,6 +60,8 @@ public class vThirdPersonCamera : MonoBehaviour
     #region Estado oculto
     
     [HideInInspector] public Transform currentTarget;
+
+    private readonly RaycastHit[] _golpesDelSuelo = new RaycastHit[8];
     
     // Variable privada para el target de bloqueo
     [SerializeField]
@@ -61,9 +77,12 @@ public class vThirdPersonCamera : MonoBehaviour
     private float forward = -1f;
     private CameraOcclusionShadowsOnly _occlusionFader;
     private int _mascaraDeSuelo;
+    private int _mascaraDeAgua;
     // Ajuste por el suelo, suavizado (ver AjustarAlSuelo): distancia acortada y elevación de la cámara.
     private float _distanciaPorSuelo = -1f, _velocidadDistanciaPorSuelo;
     private float _elevacionPorSuelo, _velocidadElevacionPorSuelo;
+    // Altura del pivote bajo un techo bajo (suavizada, ver AlturaBajoTecho); -1 = sin calcular.
+    private float _alturaBajoTecho = -1f, _velocidadAlturaBajoTecho;
     public static bool lockCameraForCinematic = false;
 
     // Override de zona ambiental
@@ -80,6 +99,15 @@ public class vThirdPersonCamera : MonoBehaviour
     private Quaternion _snapFromRot;
     private bool _wasCinematicLocked;
     private const float SnapBlendDuration = 0.35f;
+
+    // Plano fijo (un asiento que se mueve, como un columpio): la cámara deja de seguir al objetivo y
+    // encuadra un punto quieto desde un ángulo dado; entra y sale mezclando. Ver INC-1327.
+    private bool _planoFijo;
+    private Vector3 _pivoteFijo;
+    private float _giroFijo, _inclinacionFija, _distanciaFija;
+    private float _mezclaDelPlano;
+    private const float DuracionMezclaDelPlano = 1.2f;
+    private const float RitmoDeGiroDelPlano = 2.5f;
 
     #endregion
 
@@ -124,6 +152,7 @@ public class vThirdPersonCamera : MonoBehaviour
         _occlusionFader = GetComponent<CameraOcclusionShadowsOnly>();
         if (_occlusionFader == null) _occlusionFader = gameObject.AddComponent<CameraOcclusionShadowsOnly>();
         _mascaraDeSuelo = capasDeSuelo.value != 0 ? capasDeSuelo.value : LayerMask.GetMask("Floor");
+        _mascaraDeAgua = capasDeAgua.value != 0 ? capasDeAgua.value : LayerMask.GetMask("Water");
         // El suelo nunca se disuelve: la cámara se queda por delante de él (ver AjustarAlSuelo).
         _occlusionFader.SetMask(obstructionMask & ~_mascaraDeSuelo);
         _occlusionFader.SetRadius(obstructionCheckRadius);
@@ -182,6 +211,23 @@ public class vThirdPersonCamera : MonoBehaviour
         zoneRotationLocked = false;
     }
 
+    /// <summary>Encuadra <paramref name="pivote"/> desde un ángulo fijo (giro e inclinación de la cámara, en
+    /// grados) a <paramref name="distancia"/> metros, sin seguir al objetivo ni atender al ratón, hasta
+    /// <see cref="SoltarPlano"/>. Entra mezclando desde donde esté.</summary>
+    public void FijarPlano(Vector3 pivote, float giro, float inclinacion, float distancia)
+    {
+        _planoFijo = true;
+        _pivoteFijo = pivote;
+        _giroFijo = giro;
+        _inclinacionFija = vExtensions.ClampAngle(inclinacion, yMinLimit, yMaxLimit);
+        _distanciaFija = distancia;
+    }
+
+    /// <summary>Vuelve a seguir al objetivo desde el ángulo en que quedó el plano, mezclando.</summary>
+    public void SoltarPlano() => _planoFijo = false;
+
+    public bool HayPlanoFijo => _planoFijo;
+
     public void SetMainTarget(Transform newTarget)
     {
         target = newTarget;
@@ -215,7 +261,7 @@ public class vThirdPersonCamera : MonoBehaviour
         // que se veía como cámara a trompicones justo tras cerrar el inventario, hasta que dejar
         // de mover la cámara le daba tiempo a converger.
         // En lock-on no bloqueamos el input del jugador: le permitimos ajustar suavemente la orientación
-        if (!isActiveAndEnabled || lockCameraForCinematic || zoneRotationLocked) return;
+        if (!isActiveAndEnabled || lockCameraForCinematic || zoneRotationLocked || _planoFijo) return;
 
         mouseX += x * xMouseSensitivity;
         mouseY -= y * yMouseSensitivity;
@@ -235,34 +281,87 @@ public class vThirdPersonCamera : MonoBehaviour
         float dt = Time.deltaTime;
 
         float objetivo = distanciaDeseada;
-        if (Physics.SphereCast(pivote, holguraConElSuelo, direccion, out RaycastHit hit,
-                               distanciaDeseada, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
-            objetivo = Mathf.Max(0.5f, hit.distance);
+        int golpes = Physics.SphereCastNonAlloc(pivote, holguraConElSuelo, direccion, _golpesDelSuelo,
+                                                distanciaDeseada, _mascaraDeSuelo, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < golpes; i++)
+        {
+            var g = _golpesDelSuelo[i];
+            // distance 0 = la esfera ya empieza tocándolo: no da dónde, se ignora como antes.
+            if (g.distance <= 0f || EsPiezaFina(g.collider)) continue;
+            objetivo = Mathf.Min(objetivo, Mathf.Max(0.5f, g.distance));
+        }
         if (_distanciaPorSuelo < 0f) _distanciaPorSuelo = objetivo;
         _distanciaPorSuelo = Mathf.SmoothDamp(_distanciaPorSuelo, objetivo, ref _velocidadDistanciaPorSuelo,
             objetivo < _distanciaPorSuelo ? suavizadoAlChocarConElSuelo : suavizadoAlSoltarElSuelo, Mathf.Infinity, dt);
         float distancia = Mathf.Min(distanciaDeseada, _distanciaPorSuelo);
 
-        // Elevación: el suelo justo debajo de la cámara (el rayo sale de poco por encima, para no
-        // tomar como suelo un puente o un piso de arriba).
+        // Elevación: el suelo justo debajo de la cámara. El rayo sale de poco por encima de la
+        // cámara, pero nunca de más arriba que el pivote: lo que queda por encima de la cabeza del
+        // personaje (el tablero de un puente con él debajo, un piso de arriba) es techo, no suelo,
+        // y subir la cámara por encima la dejaba al otro lado del tablero (INC-1331).
         Vector3 camara = pivote + direccion * distancia;
         float subir = 0f;
-        if (Physics.Raycast(camara + Vector3.up, Vector3.down, out RaycastHit abajo, 3f, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
+        float origenY = Mathf.Min(camara.y + 1f, pivote.y);
+        if (Physics.Raycast(new Vector3(camara.x, origenY, camara.z), Vector3.down, out RaycastHit abajo, origenY - camara.y + 2f, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
             subir = Mathf.Max(0f, abajo.point.y + holguraConElSuelo - camara.y);
+        // El agua: la cámara se queda por encima de la superficie (nadando, o con el personaje en la
+        // orilla y la cámara sobre el río); bajo el agua solo se veía el fondo oscuro.
+        if (_mascaraDeAgua != 0)
+        {
+            float alto = Mathf.Max(pivote.y, camara.y) + 2f;
+            if (Physics.Raycast(new Vector3(camara.x, alto, camara.z), Vector3.down, out RaycastHit agua, alto - camara.y + holguraConElAgua, _mascaraDeAgua, QueryTriggerInteraction.Collide))
+                subir = Mathf.Max(subir, agua.point.y + holguraConElAgua - camara.y);
+        }
         _elevacionPorSuelo = Mathf.SmoothDamp(_elevacionPorSuelo, subir, ref _velocidadElevacionPorSuelo,
             subir > _elevacionPorSuelo ? suavizadoAlChocarConElSuelo : suavizadoAlSoltarElSuelo, Mathf.Infinity, dt);
         return distancia;
+    }
+
+    // Barandillas, pilotes y postes: pasan por delante un momento y no deben pegar la cámara al
+    // personaje. Se mira la caja del collider, sin buscar componentes.
+    private bool EsPiezaFina(Collider c)
+    {
+        if (c == null || grosorDePiezaFina <= 0f) return false;
+        Vector3 t = c.bounds.size;
+        bool finoEnX = t.x < grosorDePiezaFina, finoEnZ = t.z < grosorDePiezaFina;
+        if (finoEnX && finoEnZ) return true;
+        return (finoEnX || finoEnZ) && t.y < alturaDePiezaFina;
+    }
+
+    /// <summary>
+    /// Con un techo bajo encima del personaje (nadando bajo un puente, un pasadizo), el pivote baja
+    /// para quedarse por debajo: si no, la cámara miraba desde encima del tablero y el personaje
+    /// quedaba tapado. Suavizado como el ajuste al suelo. Ver INC-1331.
+    /// </summary>
+    private float AlturaBajoTecho(Vector3 pies, float alturaDeseada)
+    {
+        if (_mascaraDeSuelo == 0) return alturaDeseada;
+        const float desdeElPecho = 0.5f, alturaMinima = 0.6f;
+        float objetivo = alturaDeseada;
+        float alcance = alturaDeseada - desdeElPecho + holguraConElSuelo;
+        if (alcance > 0f && Physics.Raycast(pies + Vector3.up * desdeElPecho, Vector3.up, out RaycastHit techo, alcance, _mascaraDeSuelo, QueryTriggerInteraction.Ignore))
+            objetivo = Mathf.Clamp(desdeElPecho + techo.distance - holguraConElSuelo, alturaMinima, alturaDeseada);
+        if (_alturaBajoTecho < 0f) _alturaBajoTecho = objetivo;
+        _alturaBajoTecho = Mathf.SmoothDamp(_alturaBajoTecho, objetivo, ref _velocidadAlturaBajoTecho,
+            objetivo < _alturaBajoTecho ? suavizadoAlChocarConElSuelo : suavizadoAlSoltarElSuelo, Mathf.Infinity, Time.deltaTime);
+        return _alturaBajoTecho;
     }
 
     void CameraMovement()
     {
         if (currentTarget == null) return;
 
-        distance = Mathf.Lerp(distance, defaultDistance, smoothFollow * Time.deltaTime);
-        currentHeight = height;
+        _mezclaDelPlano = Mathf.MoveTowards(_mezclaDelPlano, _planoFijo ? 1f : 0f, Time.deltaTime / DuracionMezclaDelPlano);
+        float pesoDelPlano = _mezclaDelPlano * _mezclaDelPlano * (3f - 2f * _mezclaDelPlano);
+
+        float distanciaDeJuego = defaultDistance * multiplicadorDeDistancia;
+        float distanciaDeseada = pesoDelPlano > 0f ? Mathf.Lerp(distanciaDeJuego, _distanciaFija, pesoDelPlano) : distanciaDeJuego;
+        distance = Mathf.Lerp(distance, distanciaDeseada, smoothFollow * Time.deltaTime);
+        currentHeight = AlturaBajoTecho(currentTarget.position, height);
         
         Vector3 targetPos = new Vector3(currentTarget.position.x, currentTarget.position.y, currentTarget.position.z);
         Vector3 current_cPos = targetPos + new Vector3(0, currentHeight, 0);
+        if (pesoDelPlano > 0f) current_cPos = Vector3.Lerp(current_cPos, _pivoteFijo, pesoDelPlano);
         
         Quaternion newRot;
 
@@ -296,6 +395,12 @@ public class vThirdPersonCamera : MonoBehaviour
             {
                 mouseX = Mathf.LerpAngle(mouseX, _zoneLockedMouseX, smoothCameraRotation * Time.deltaTime);
                 mouseY = Mathf.Lerp(mouseY, _zoneLockedMouseY, smoothCameraRotation * Time.deltaTime);
+            }
+            if (_planoFijo)
+            {
+                float k = 1f - Mathf.Exp(-RitmoDeGiroDelPlano * Time.deltaTime);
+                mouseX = Mathf.LerpAngle(mouseX, _giroFijo, k);
+                mouseY = Mathf.LerpAngle(mouseY, _inclinacionFija, k);
             }
             var camDir = (forward * targetLookAt.forward) + (rightOffset * targetLookAt.right);
             camDir = camDir.normalized;

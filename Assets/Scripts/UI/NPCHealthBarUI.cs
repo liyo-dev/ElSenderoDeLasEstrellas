@@ -40,9 +40,16 @@ namespace Game.UI
                  "Además, un relleno sin sprite no se recorta (Unity lo pinta entero): por eso la barra cambiaba de color pero no bajaba. Ver INC-1161.")]
         [SerializeField] private bool vestirDePapel = true;
 
+        // Radio de las esquinas del marco, en fracción del alto de la barra.
+        private const float RadioDeEsquina = 0.35f;
+        // Radio en píxeles de la esquina dibujada en PiezasDeUI.RectanguloRedondeado.
+        private const float RadioDelSpriteEnPixeles = 30f;
+
         private static Sprite s_blanco;
         
         private Canvas _canvas;
+        private Vector3 _escalaDelPrefab = Vector3.one;
+        private bool _marcasPuestas;
         private Damageable _npcDamageable;
         private Transform _npcTransform;
         private float _hideTimer;
@@ -53,6 +60,7 @@ namespace Game.UI
         {
             // Obtener canvas
             _canvas = GetComponent<Canvas>();
+            _escalaDelPrefab = transform.localScale;
             
             // Auto-buscar fillImage si no está asignado
             if (fillImage == null)
@@ -130,6 +138,7 @@ namespace Game.UI
             
             // Aplicar offset local
             transform.localPosition = offset;
+            CompensarEscalaDelPadre();
             
             // Inicializar fill amounts
             _currentFillAmount = 1f;
@@ -169,8 +178,7 @@ namespace Game.UI
                 imagen.type = Image.Type.Sliced;
                 imagen.color = PaletaUI.Tinta;
                 float alto = imagen.rectTransform.rect.height > 0f ? imagen.rectTransform.rect.height : 0.2f;
-                // Esquinas de un tercio del alto.
-                imagen.pixelsPerUnitMultiplier = Mathf.Max(1f, 32f / (100f * alto * 0.35f));
+                imagen.pixelsPerUnitMultiplier = MultiplicadorParaEsquinas(imagen.sprite, _canvas, alto * RadioDeEsquina);
                 // El relleno, metido dentro del marco.
                 var marco = imagen.rectTransform;
                 rtRelleno.anchorMin = marco.anchorMin; rtRelleno.anchorMax = marco.anchorMax; rtRelleno.pivot = marco.pivot;
@@ -178,6 +186,38 @@ namespace Game.UI
                 rtRelleno.sizeDelta = marco.sizeDelta - new Vector2(alto * 0.3f, alto * 0.3f);
                 break;
             }
+        }
+
+        /// <summary>
+        /// Multiplicador de píxeles por unidad para que la esquina del sprite troceado mida 'radio'
+        /// unidades del lienzo. Si el borde del sprite no cabe en la barra, Unity lo encoge en
+        /// proporción al tamaño y la esquina sale estirada (un óvalo a lo ancho).
+        /// </summary>
+        private static float MultiplicadorParaEsquinas(Sprite sprite, Canvas lienzo, float radio)
+        {
+            if (sprite == null || radio <= 0f) return 1f;
+            float referencia = lienzo != null && lienzo.referencePixelsPerUnit > 0f ? lienzo.referencePixelsPerUnit : 100f;
+            float ppuDelSprite = sprite.pixelsPerUnit > 0f ? sprite.pixelsPerUnit : 100f;
+            // Unidades de lienzo de un píxel del sprite = referencia / (ppuDelSprite * multiplicador).
+            return Mathf.Max(0.01f, RadioDelSpriteEnPixeles * referencia / (ppuDelSprite * radio));
+        }
+
+        /// <summary>
+        /// La barra cuelga del NPC: si su raíz tiene escala (talla, un modelo escalado a mano, una
+        /// escala desigual), la barra la heredaría y saldría encogida o estirada. Se deshace para que
+        /// se vea igual sobre cualquier personaje.
+        /// </summary>
+        private void CompensarEscalaDelPadre()
+        {
+            var padre = transform.parent;
+            if (padre == null) return;
+            Vector3 escala = padre.lossyScale;
+            if (Mathf.Abs(escala.x) < 0.0001f || Mathf.Abs(escala.y) < 0.0001f || Mathf.Abs(escala.z) < 0.0001f) return;
+            Vector3 propia = transform.localScale;
+            // La escala propia del prefab manda; lo heredado se divide.
+            float x = _escalaDelPrefab.x / escala.x, y = _escalaDelPrefab.y / escala.y, z = _escalaDelPrefab.z / escala.z;
+            if (Mathf.Abs(propia.x - x) > 0.0001f || Mathf.Abs(propia.y - y) > 0.0001f || Mathf.Abs(propia.z - z) > 0.0001f)
+                transform.localScale = new Vector3(x, y, z);
         }
 
         private void OnDestroy()
@@ -278,6 +318,37 @@ namespace Game.UI
             if (_canvas != null && !_canvas.enabled)
             {
                 _canvas.enabled = true;
+            }
+            PonerMarcasDeFase();
+        }
+
+        /// <summary>
+        /// Si el NPC pelea por fases (<see cref="IJefeConFases"/>), una raya de tinta en la barra
+        /// marca dónde empieza cada una. Se pone una vez, al enseñarse la barra (las fases se conocen
+        /// cuando ya ha empezado el combate).
+        /// </summary>
+        private void PonerMarcasDeFase()
+        {
+            if (_marcasPuestas || fillImage == null || _npcTransform == null) return;
+            var fases = _npcTransform.GetComponent<IJefeConFases>();
+            if (fases == null || fases.UmbralesDeFase == null || fases.UmbralesDeFase.Count == 0) return;
+            _marcasPuestas = true;
+            var relleno = fillImage.rectTransform;
+            float alto = relleno.rect.height > 0f ? relleno.rect.height : 0.2f;
+            for (int i = 0; i < fases.UmbralesDeFase.Count; i++)
+            {
+                var marca = new GameObject("MarcaDeFase", typeof(RectTransform), typeof(Image));
+                var rt = (RectTransform)marca.transform;
+                rt.SetParent(relleno.parent, false);
+                rt.SetSiblingIndex(relleno.GetSiblingIndex() + 1);
+                rt.anchorMin = relleno.anchorMin; rt.anchorMax = relleno.anchorMax; rt.pivot = new Vector2(0.5f, 0.5f);
+                float x = (fases.UmbralesDeFase[i] - relleno.pivot.x) * relleno.rect.width;
+                rt.anchoredPosition = relleno.anchoredPosition + new Vector2(x, 0f);
+                rt.sizeDelta = new Vector2(alto * 0.18f, alto * 1.25f);
+                var img = marca.GetComponent<Image>();
+                img.color = PaletaUI.Tinta;
+                img.raycastTarget = false;
+                if (fillImage.material != null) img.material = fillImage.material;
             }
         }
         

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Escribe el estado proyectado del grafo (NarrativeStateProjector) en un PlayerPresetSO, con las
 /// mismas convenciones de flags que usa el guardado: QUEST_ACTIVE:{id}, QUEST_STEP_DONE:{id}:{paso}
@@ -202,7 +203,7 @@ public sealed class PresetNarrativeStateWriter : INarrativeStateWriter, IPlayerL
     // ── INarrativePlayerValuesState ─────────────────────────────────────────
 
     /// Un punto de arranque pasado por la historia pone sus valores aquí, en su sitio.
-    public void ApplyPlayerValues(NarrativePlayerValues values) => NarrativeGraphEditor.NarrativePlayerValuesEditor.Apply(values, _dst);
+    public void ApplyPlayerValues(NarrativePlayerValues values) => Liyodev.NarrativeGraph.Editor.NarrativePlayerValuesEditor.Apply(values, _dst);
 
     // ── IPlayerLoadoutState ─────────────────────────────────────────────────
 

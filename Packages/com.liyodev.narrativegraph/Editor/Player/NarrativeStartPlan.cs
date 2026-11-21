@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Cómo empieza una prueba desde un paso: la partida nueva de la ficha, la historia hasta el
     /// paso (los capítulos anteriores, terminados) con los puntos de arranque (◆, dónde aparece)
@@ -174,7 +174,7 @@ namespace NarrativeGraphEditor
         }
 
         public static string Title(NarrativeNode node)
-            => node == null ? "?" : string.IsNullOrWhiteSpace(node.displayTitle) ? NarrativeNodeCatalog.TitleOf(node) : node.displayTitle;
+            => node == null ? "?" : string.IsNullOrWhiteSpace(node.DisplayTitle) ? NarrativeNodeCatalog.TitleOf(node) : node.DisplayTitle;
     }
 
     /// La rama elegida en las decisiones del camino cuando varias llevan al paso (de cualquier

@@ -22,7 +22,6 @@ public static class PasoAlAspectoDeDibujo
     private const string CarpetaDelRegistro = "Assets/Settings/AspectoDeDibujo";
     private const string RutaDelRegistro = CarpetaDelRegistro + "/MaterialesAntesDelDibujo.json";
     private const string RutaDelAspecto = "Assets/Resources/" + AspectoDeDibujo.RutaEnResources + ".asset";
-    private const string RutaDelPerfilDelContorno = "Assets/DefaultVolumeProfile.asset";
 
     /// Shaders de luz corriente cuyos materiales se pasan al de dibujo.
     private static readonly string[] ShadersDeOrigen =
@@ -38,9 +37,6 @@ public static class PasoAlAspectoDeDibujo
 
     private static readonly Regex EsPelo = new Regex("pelo|hair|cabello|coleta|flequillo", RegexOptions.IgnoreCase);
 
-    private static readonly Color TintaDelContorno = new Color(0.20f, 0.15f, 0.22f, 1f);
-    private const float IntensidadDelContorno = 1f;
-    private const float GrosorDelContorno = 2f;
 
     [Serializable]
     private sealed class Registro
@@ -61,7 +57,16 @@ public static class PasoAlAspectoDeDibujo
     }
 
     [InitializeOnLoadMethod]
-    private static void AlCargarElEditor() => EditorApplication.delayCall += () => AspectoDeDibujo.AplicarElDelJuego();
+    private static void AlCargarElEditor()
+    {
+        EditorApplication.delayCall += () => AspectoDeDibujo.AplicarElDelJuego();
+        // Al salir de Play los valores globales de shader (la textura de golpes de hoja, entre ellos) no
+        // siempre vuelven: se aplican otra vez para que la escena y las fotos del Editor salgan como en el juego.
+        EditorApplication.playModeStateChanged += estado =>
+        {
+            if (estado == PlayModeStateChange.EnteredEditMode) AspectoDeDibujo.AplicarElDelJuego();
+        };
+    }
 
     [MenuItem("El Sendero/Aspecto de dibujo/Abrir los ajustes del aspecto")]
     private static void AbrirLosAjustes()
@@ -139,7 +144,6 @@ public static class PasoAlAspectoDeDibujo
             porOrigen[origen] = n + 1;
         }
 
-        bool contorno = MarcarElContorno(registro);
         GuardarElRegistro(registro);
         AsegurarElAspecto().Aplicar();
         AssetDatabase.SaveAssets();
@@ -153,8 +157,9 @@ public static class PasoAlAspectoDeDibujo
         if (transparentes > 0) informe.Append($" · {transparentes} transparentes de URP sin tocar");
         if (conDegradadoDeAltura > 0) informe.Append($" · {conDegradadoDeAltura} tenían degradado de altura (no se conserva)");
         if (conTexturaSumada > 0) informe.Append($" · {conTexturaSumada} sumaban la textura (ahora la multiplican)");
-        informe.Append(contorno ? " · contorno marcado" : " · no encontré el contorno en el perfil por defecto");
         OrdenesDelEditor.Avisar("Aspecto de dibujo", informe.ToString());
+        // Lo que se acaba de pasar y tenía hojas, flores o rejas con hueco, recorta ya.
+        RecortarTransparencias();
     }
 
     /// Materiales del dibujo cuya textura tiene partes transparentes (hojas, flores, enredaderas) y
@@ -167,6 +172,7 @@ public static class PasoAlAspectoDeDibujo
         if (shader == null) { OrdenesDelEditor.Avisar("Aspecto de dibujo", $"No encuentro el shader «{NombreDelShader}»."); return; }
         var cache = new Dictionary<Texture2D, float>();
         var nombres = new List<string>();
+        var texturasCambiadas = new List<string>();
         int revisados = 0;
         foreach (string guid in AssetDatabase.FindAssets("t:Material", new[] { "Assets" }))
         {
@@ -174,9 +180,22 @@ public static class PasoAlAspectoDeDibujo
             if (!ruta.EndsWith(".mat", StringComparison.OrdinalIgnoreCase)) continue;
             if (CarpetasQueNoSeTocan.Any(c => ruta.StartsWith(c, StringComparison.OrdinalIgnoreCase))) continue;
             var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-            if (mat == null || mat.shader != shader || mat.IsKeywordEnabled("_ALPHATEST_ON")) continue;
+            if (mat == null || mat.shader != shader) continue;
             var tex = mat.GetTexture("_BaseMap") as Texture2D;
+            if (tex == null) continue;
+            // La fuente tiene transparencia pero la importación la tiraba: se recupera para poder recortar.
+            if (!GraphicsFormatUtility.HasAlphaChannel(tex.graphicsFormat)
+                && AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(tex)) is TextureImporter impSinAlfa
+                && impSinAlfa.DoesSourceTextureHaveAlpha() && impSinAlfa.alphaSource == TextureImporterAlphaSource.None)
+            {
+                impSinAlfa.alphaSource = TextureImporterAlphaSource.FromInput;
+                impSinAlfa.alphaIsTransparency = true;
+                impSinAlfa.SaveAndReimport();
+                texturasCambiadas.Add(tex.name + " (alfa recuperado)");
+                tex = mat.GetTexture("_BaseMap") as Texture2D;
+            }
             if (tex == null || !GraphicsFormatUtility.HasAlphaChannel(tex.graphicsFormat)) continue;
+            if (mat.IsKeywordEnabled("_ALPHATEST_ON")) { ConservarElRecorteDeLejos(tex, mat.GetFloat("_Cutoff"), texturasCambiadas); continue; }
             revisados++;
             if (!cache.TryGetValue(tex, out float hueco)) cache[tex] = hueco = FraccionTransparente(tex);
             // Casi nada transparente: no hace falta. Casi todo: el alfa no se usa (se borraría la pieza).
@@ -188,13 +207,27 @@ public static class PasoAlAspectoDeDibujo
             if (mat.renderQueue < (int)RenderQueue.AlphaTest) mat.renderQueue = (int)RenderQueue.AlphaTest;
             EditorUtility.SetDirty(mat);
             nombres.Add(mat.name);
+            ConservarElRecorteDeLejos(tex, mat.GetFloat("_Cutoff"), texturasCambiadas);
         }
         AssetDatabase.SaveAssets();
-        OrdenesDelEditor.Avisar("Aspecto de dibujo", $"{nombres.Count} de {revisados} materiales con textura con alfa pasan a recortar: {string.Join(", ", nombres.Take(60))}");
+        OrdenesDelEditor.Avisar("Aspecto de dibujo", $"{nombres.Count} de {revisados} materiales con textura con alfa pasan a recortar: {string.Join(", ", nombres.Take(60))} · {texturasCambiadas.Count} texturas recortadas conservan el hueco de lejos: {string.Join(", ", texturasCambiadas.Take(40))}");
+    }
+
+    /// Una textura recortada (rejas, redes, hojas) conserva de lejos la misma parte hueca que de cerca: sin
+    /// esto, sus mips más pequeños promedian el alfa y los huecos se rellenan o la pieza se borra según la
+    /// distancia, y las rejas finas centellean al moverse.
+    private static void ConservarElRecorteDeLejos(Texture2D tex, float umbral, List<string> cambiadas)
+    {
+        if (!(AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(tex)) is TextureImporter imp) || !imp.mipmapEnabled) return;
+        if (imp.mipMapsPreserveCoverage && Mathf.Approximately(imp.alphaTestReferenceValue, umbral)) return;
+        imp.mipMapsPreserveCoverage = true;
+        imp.alphaTestReferenceValue = umbral;
+        imp.SaveAndReimport();
+        cambiadas.Add(tex.name);
     }
 
     /// Fracción de píxeles casi transparentes de una textura (la lee aunque no sea legible).
-    private static float FraccionTransparente(Texture2D tex)
+    internal static float FraccionTransparente(Texture2D tex)
     {
         int w = Mathf.Min(tex.width, 256), h = Mathf.Min(tex.height, 256);
         var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
@@ -237,15 +270,6 @@ public static class PasoAlAspectoDeDibujo
             mat.renderQueue = entrada.cola;
             EditorUtility.SetDirty(mat);
             devueltos++;
-        }
-
-        if (registro.hayContorno && Contorno(out var perfil, out var ajustes))
-        {
-            ajustes.intensidad.value = registro.contornoIntensidad;
-            ajustes.grosor.value = registro.contornoGrosor;
-            ajustes.tinta.value = registro.contornoTinta;
-            EditorUtility.SetDirty(ajustes);
-            EditorUtility.SetDirty(perfil);
         }
 
         GuardarElRegistro(new Registro());
@@ -317,31 +341,6 @@ public static class PasoAlAspectoDeDibujo
         }
         if (luzClara > 1e-4f) sombra = luzOscura / luzClara;
         return claro;
-    }
-
-    private static bool Contorno(out VolumeProfile perfil, out ContornoDeTinta ajustes)
-    {
-        ajustes = null;
-        perfil = AssetDatabase.LoadAssetAtPath<VolumeProfile>(RutaDelPerfilDelContorno);
-        return perfil != null && perfil.TryGet(out ajustes);
-    }
-
-    private static bool MarcarElContorno(Registro registro)
-    {
-        if (!Contorno(out var perfil, out var ajustes)) return false;
-        if (!registro.hayContorno)
-        {
-            registro.hayContorno = true;
-            registro.contornoIntensidad = ajustes.intensidad.value;
-            registro.contornoGrosor = ajustes.grosor.value;
-            registro.contornoTinta = ajustes.tinta.value;
-        }
-        ajustes.intensidad.value = IntensidadDelContorno;
-        ajustes.grosor.value = GrosorDelContorno;
-        ajustes.tinta.value = TintaDelContorno;
-        EditorUtility.SetDirty(ajustes);
-        EditorUtility.SetDirty(perfil);
-        return true;
     }
 
     private static AspectoDeDibujo AsegurarElAspecto()

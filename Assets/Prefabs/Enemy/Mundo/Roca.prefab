@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 8862451723734377910}
   - component: {fileID: 1984165707350445513}
   - component: {fileID: 6218547180044450076}
+  - component: {fileID: 6009060610601286123}
   m_Layer: 7
   m_Name: Roca
   m_TagString: Untagged
@@ -214,6 +215,7 @@ MonoBehaviour:
   animacionDeMuerte: 
   segundosHastaDesaparecer: 2.5
   vfxAlDesaparecer: {fileID: 1758473627833946668, guid: 9b21333b068a5084ba09535839bee3c8, type: 3}
+  puntosDeSintonia: 20
   cuerpo: {fileID: 3669404885282754965}
   radio: 0.8
   suelo:
@@ -254,6 +256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 8
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &1984165707350445513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &6218547180044450076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,6 +292,21 @@ MonoBehaviour:
   soloConLaMision: 
   radioDeProximidad: 0
   debugLogs: 0
+--- !u!114 &6009060610601286123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4507980539914460729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_ROCA
+  debilidades: 02000000i
+  resistencias: 
 --- !u!1 &6319743399808122585
 GameObject:
   m_ObjectHideFlags: 0

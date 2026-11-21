@@ -154,9 +154,9 @@ public class SequenceActor
                 IsPlayer = true,
                 Transform = playerTransform,
                 PlayerAnimator = playerTransform.GetComponentInChildren<PlayerDialogueAnimator>(true),
-                // FIX 16 sep 2026: Will lleva DOS NPCEmotionController en el mismo GameObject y
-                // solo uno tiene los meshes de ojos/boca puestos — coger el primero a secas hacía
-                // que su cara no cambiara nunca, en silencio. Ver EmotionControllerResolver.
+                // Will lleva DOS NPCEmotionController en el mismo GameObject y solo uno tiene los
+                // meshes de ojos/boca puestos — coger el primero a secas hacía que su cara no
+                // cambiara nunca, en silencio. Ver EmotionControllerResolver.
                 Emotion = EmotionControllerResolver.Resolve(playerTransform.gameObject),
                 NpcAnimator = playerTransform.GetComponentInChildren<NPCSimpleAnimator>(true),
             };
@@ -368,7 +368,7 @@ public class SequenceActor
 
     private Coroutine _poseDelJugador;
     /// `fundirAlFinal`: con `alFinal`, en vez de saltar a la pose final se funde hacia ella durante
-    /// `fundido` segundos, reproduciendo el final del clip (recostarse en la cama sin tirarse de golpe).
+    /// `fundido` segundos desde la pose de antes (recostarse en la cama sin tirarse de golpe).
     public void HoldPose(string stateName, bool congelarAlFinal = false, float fundido = 0.12f, bool alFinal = false, bool fundirAlFinal = false)
     {
         if (string.IsNullOrEmpty(stateName)) return;
@@ -386,10 +386,11 @@ public class SequenceActor
         bool fundeAlFinal = alFinal && fundirAlFinal && fundido > 0f;
         if (fundeAlFinal)
         {
-            // El clip entra a falta de `fundido` segundos de la pose final y llega a ella justo al
-            // acabar el fundido; ahí la sostiene la corrutina.
+            // El clip entra ya en su pose final y el fundido lleva el cuerpo hasta ella: se ve un
+            // paso suave de la pose de antes a la final, sin reproducir el movimiento del clip (con
+            // una caída como Knockdown, el personaje se tiraba de golpe). Ver INC-1336.
             float largo = LargoDelClip(animador, stateName);
-            float desde = largo > 0f ? Mathf.Max(0f, targetNorm * largo - fundido) : 0f;
+            float desde = largo > 0f ? targetNorm * largo : 0f;
             animador.CrossFadeInFixedTime(Animator.StringToHash(rutaEstado), fundido, capa, desde);
         }
         else if (alFinal)
@@ -711,9 +712,9 @@ public class SequenceActor
     /// que es la altura de la cabeza de una persona de verdad. Estos personajes miden metro y pico:
     /// el bocadillo salía flotando casi un cuerpo entero por encima del pelo, suelto en vez de
     /// apoyado en la cabeza, y en los planos generales se iba además muy hacia un lado, porque un
-    /// punto tan alto se separa mucho del personaje en perspectiva. Se ve en toda la grabación del
-    /// prólogo del 19 sep 2026. Es la misma familia de error que DefaultFrameHeight y que el plano
-    /// sobre el hombro: números de proporciones humanas en un arte que no las tiene.
+    /// punto tan alto se separa mucho del personaje en perspectiva. Es la misma familia de error
+    /// que DefaultFrameHeight y que el plano sobre el hombro: números de proporciones humanas en un
+    /// arte que no las tiene.
     ///
     /// Se mide de los Renderer una sola vez y se cachea, igual que SafeRadius.
     public float HeadTopHeight
@@ -750,7 +751,7 @@ public class SequenceActor
     /// Hace falta porque un actor no siempre es una persona: el proyectil del Despertar de la
     /// Estrella es una esfera de varios metros, y el solver, que calculaba la distancia solo a
     /// partir de cuantos metros de sujeto deben entrar en cuadro, lo dejaba a dos metros y medio
-    /// del centro — es decir, dentro. En el video del 16 sep se ve la pantalla entera rosa.
+    /// del centro — es decir, dentro.
     ///
     /// Se mide de los Renderer del objeto, una sola vez, y se cachea.
     public float SafeRadius
@@ -820,10 +821,8 @@ public class SequenceActor
     ///   1. `ApplySmoothRotation` empieza con `if (_disableAutoRotation || AllowManualRotation)
     ///      return;`. Durante y justo después de una caminata cinemática esas banderas están
     ///      puestas, así que el giro NO OCURRÍA NUNCA. En silencio: ni error ni aviso.
-    ///   2. Cuando sí ocurría, tardaba (360°/s) y competía con cualquiera que escribiera la
-    ///      rotación directamente — `FaceBeat.Co_TurnSmoothly` lo hace. Dos sistemas escribiendo
-    ///      la misma rotación cada frame es exactamente lo que Raúl describió como «da la
-    ///      sensación de que hay sistemas en conflicto».
+    /// 2. Cuando sí ocurría, tardaba (360°/s) y competía con cualquiera que escribiera la
+    /// rotación directamente — `FaceBeat.Co_TurnSmoothly` lo hace.
     ///
     /// Así que ahora se escribe la rotación y ADEMÁS se sincroniza el objetivo del animador. Lo
     /// segundo no es opcional: el propio comentario de `SyncTargetRotation` (INC-028) avisa de que
@@ -1011,12 +1010,10 @@ public class SequenceActor
 
         if (speedOverride > 0f) Agent.speed = speedOverride;
 
-        // Quien ANDA esquiva; quien está parado no se aparta (INC-400). Antes la caminata iba sin
-        // esquivar, y en la grabación del 24 sep un aldeano atraviesa a otro al empezar: «los
-        // NPCs no se pueden atravesar entre sí». En el crowd de Unity un agente sin avoidance
-        // sigue contando como obstáculo para los que sí esquivan, así que basta con que esquive
-        // el que se mueve: rodea a los parados, y los parados (sin avoidance, ver Hold) no se
-        // apartan a empujones, que era lo que arreglaba INC-301.
+        // Quien ANDA esquiva; quien está parado no se aparta (INC-400). En el crowd de Unity un
+        // agente sin avoidance sigue contando como obstáculo para los que sí esquivan, así que
+        // basta con que esquive el que se mueve: rodea a los parados, y los parados (sin
+        // avoidance, ver Hold) no se apartan a empujones, que era lo que arreglaba INC-301.
         Agent.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.HighQualityObstacleAvoidance;
     }
 

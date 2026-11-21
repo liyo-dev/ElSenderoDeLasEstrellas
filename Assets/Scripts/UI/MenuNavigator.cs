@@ -200,7 +200,11 @@ public class MenuNavigator : MonoBehaviour
         if (!es) { UpdateCursor(null); _lastSelectedGo = null; return; }
 
         var selected = es.currentSelectedGameObject;
-        
+
+        // Una selección sobre un objeto apagado o no interactuable deja el mando muerto (el
+        // EventSystem no navega desde él): se trata como «sin selección» para recuperar el foco.
+        if (selected != null && !SeleccionUtil(selected)) selected = null;
+
         // Si no hay nada seleccionado, seleccionar el primer botón automáticamente
         if (selected == null)
         {
@@ -235,6 +239,16 @@ public class MenuNavigator : MonoBehaviour
         }
     }
 
+    bool SeleccionUtil(GameObject go)
+    {
+        if (!go.activeInHierarchy) return false;
+        if (!go.TryGetComponent<Selectable>(out var sel)) return true;
+        if (!sel.enabled || !sel.interactable) return false;
+        // Un botón de este menú sin navegación (la pastilla de idioma, solo para ratón) no puede
+        // tener el foco: el mando no sale de él.
+        return sel.navigation.mode != Navigation.Mode.None || !go.transform.IsChildOf(transform);
+    }
+
     void SelectFirstButton()
     {
         var buttons = GetComponentsInChildren<Button>(false);
@@ -247,7 +261,8 @@ public class MenuNavigator : MonoBehaviour
         // Seleccionar el primero que esté activo e interactable
         foreach (var btn in buttons)
         {
-            if (btn.interactable && btn.gameObject.activeInHierarchy)
+            // Mismo criterio que Update: si no, se elige un botón que Update rechaza y se repite cada 0,25 s.
+            if (SeleccionUtil(btn.gameObject))
             {
                 btn.Select();
                 if (EventSystem.current != null)

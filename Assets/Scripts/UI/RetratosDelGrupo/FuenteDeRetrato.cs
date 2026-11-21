@@ -55,6 +55,14 @@ namespace Sendero.UI
         bool TryObtener(PartyControlManager.CharacterSlot personaje, ExpresionDeRetrato expresion, out ImagenDeRetrato imagen);
     }
 
+    public static class FuentesDeRetrato
+    {
+        /// Una fuente que es un componente o un asset de Unity puede estar destruida aunque la
+        /// referencia por interfaz no sea null (al descargar la escena, p. ej.): eso no cuenta.
+        public static bool Existe(object fuente) =>
+            fuente != null && !(fuente is UnityEngine.Object unidad && unidad == null);
+    }
+
     /// Algo puntual que el retrato quiere que el personaje haga (además de cambiar de cara).
     public enum ReaccionDeRetrato { Golpe = 0, Saludo = 1, Victoria = 2 }
 

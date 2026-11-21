@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 🔧 INSTALADOR AUTOMÁTICO DE DIAGNÓSTICO
+/// INSTALADOR AUTOMÁTICO DE DIAGNÓSTICO
 /// 
 /// Este script se ejecuta automáticamente al iniciar el juego (en modo desarrollo)
 /// y crea los GameObjects necesarios para el diagnóstico de sincronización.
@@ -48,7 +48,7 @@ public static class ProfileReadyDiagnosticsInstaller
             diagnosticsGO.AddComponent<ProfileReadyDiagnostics>();
             Object.DontDestroyOnLoad(diagnosticsGO);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[ProfileReadyDiagnosticsInstaller] ✅ ProfileReadyDiagnostics instalado automáticamente");
+            Debug.Log("[ProfileReadyDiagnosticsInstaller] ProfileReadyDiagnostics instalado automáticamente");
 #endif
         }
 
@@ -59,7 +59,7 @@ public static class ProfileReadyDiagnosticsInstaller
             analyzerGO.AddComponent<ProfileReadySubscriptionAnalyzer>();
             Object.DontDestroyOnLoad(analyzerGO);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[ProfileReadyDiagnosticsInstaller] ✅ ProfileReadySubscriptionAnalyzer instalado automáticamente");
+            Debug.Log("[ProfileReadyDiagnosticsInstaller] ProfileReadySubscriptionAnalyzer instalado automáticamente");
 #endif
         }
     }

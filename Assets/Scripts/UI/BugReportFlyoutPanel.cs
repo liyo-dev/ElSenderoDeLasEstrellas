@@ -16,10 +16,7 @@ using DG.Tweening;
 /// PatchNotesFlyoutPanel/CreditsFlyoutPanel. Al pulsar ENVIAR, los datos se mandan directamente al
 /// Google Form real por HTTP (UnityWebRequest.Post contra su endpoint /formResponse) — el jugador
 /// nunca sale del juego, y las respuestas siguen cayendo en el mismo Google Form / hoja de cálculo
-/// de siempre. Decisión tomada con Raúl el 24 ago 2026: quería que se sintiera "dentro del juego"
-/// como en la captura de referencia de Billie Bust Up (que usa un WebView embebido real — aquí se
-/// optó por replicar el formulario con UI nativa en vez de añadir una dependencia de pago para un
-/// WebView de verdad, ver conversación para el resto de opciones consideradas).
+/// de siempre.
 ///
 /// Los IDs de entry.* y la URL de envío (<see cref="formResponseUrl"/>, <see cref="EntrySeveridad"/>
 /// y compañía) se obtuvieron inspeccionando el formulario publicado
@@ -34,16 +31,12 @@ using DG.Tweening;
 /// opciones reales de la pregunta "Severidad del Fallo" en el Google Form — es lo que Google valida
 /// contra la lista de opciones del campo al recibir el POST.
 ///
-/// Localización (24 ago 2026, a petición de Raúl): título, etiquetas de campo, placeholders,
-/// severidad y el botón ENVIAR usan claves de <see cref="LocalizedText"/> (mismo sistema que el
-/// resto del menú, catálogos ui_es.json/ui_en.json) y se refrescan solos si el idioma cambia con el
-/// panel abierto. Los mensajes de estado (validación/envío/éxito/error) se traducen al vuelo con
-/// <see cref="Loc"/> cada vez que se muestran. EL GOOGLE FORM EN SÍ (documento externo de Google, no
-/// pasa por este sistema de localización) también se hizo bilingüe ese mismo día, a elección de Raúl
-/// ("Preguntas bilingües en el mismo Form"): título, descripción, las 4 preguntas y las 4 opciones de
-/// severidad llevan ahora el texto en español seguido de " / " y su traducción al inglés, todo dentro
-/// de la misma pregunta — en vez de dejarlo solo en español o crear un Form en inglés aparte. Por eso
-/// <see cref="SeverityOptions"/> también lleva ambos idiomas: ver su comentario más abajo.
+/// Localización: título, etiquetas de campo, placeholders, severidad y el botón ENVIAR usan claves de
+/// <see cref="LocalizedText"/> (mismo sistema que el resto del menú, catálogos ui_es.json/ui_en.json)
+/// y se refrescan solos si el idioma cambia con el panel abierto. Los mensajes de estado
+/// (validación/envío/éxito/error) se traducen al vuelo con <see cref="Loc"/> cada vez que se
+/// muestran. Por eso <see cref="SeverityOptions"/> también lleva ambos idiomas: ver su comentario más
+/// abajo.
 ///
 /// Construye toda su UI por código en Awake, no toca MainMenu.unity ni el botón REPORTAR UN FALLO
 /// existente en el Editor: en Start() se localiza el botón por nombre/texto (o por
@@ -62,7 +55,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
     [SerializeField] Button bugReportButtonOverride;
 
     [Header("Envío del Google Form")]
-    [Tooltip("Endpoint /formResponse del Google Form real (no la URL de 'ver formulario'). Sacado de FB_PUBLIC_LOAD_DATA_ del formulario publicado el 24 ago 2026.")]
+    [Tooltip("Endpoint /formResponse del Google Form real (no la URL de 'ver formulario').")]
     [SerializeField] string formResponseUrl =
         "https://docs.google.com/forms/d/e/1FAIpQLSdv0YjEGQFM1tRp3_B2vomj3eFXliErIc1FtAPe4cLAY2FMlg/formResponse";
 
@@ -71,13 +64,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
     const string EntryDescripcion = "entry.78895582";
     const string EntryPasos = "entry.64206919";
 
-    // Texto EXACTO de cada opción tal cual está en el Google Form (ver comentario de clase). Desde
-    // el 24 ago 2026 el Form es bilingüe (ES / EN en la misma pregunta, ver AskUserQuestion de Raúl:
-    // "Preguntas bilingües en el mismo Form"), así que cada opción real ahora incluye AMBOS idiomas
-    // separados por " / " — es el string completo el que hay que enviar por POST, sea cual sea el
-    // idioma activo del juego. Re-extraído el 24 ago 2026 vía FB_PUBLIC_LOAD_DATA_ tras el edit del
-    // Form; cambiar este texto sin cambiar también las opciones del Form real haría que el envío
-    // fallara (Google valida el value del POST contra la lista de opciones configuradas).
+    // Texto EXACTO de cada opción tal cual está en el Google Form (ver comentario de clase).
     static readonly string[] SeverityOptions =
     {
         "Game Breaking (un fallo que hace imposible continuar) / Game Breaking (a bug that makes it impossible to continue)",
@@ -434,7 +421,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
         // constantes a mano, se mide la tinta renderizada de verdad (bounds real del mesh de TMP tras
         // forzar su generación) y se centra el RectTransform contra eso — válido para cualquier fuente
         // o carácter, sin depender de métricas de fuente que no coinciden con los píxeles pintados.
-        // Mismo fix aplicado en los otros dos paneles.
+        // Los otros dos paneles centran igual.
         CenterGlyphOnRenderedInk(closeLabel);
 
         var closeIconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
@@ -668,13 +655,13 @@ public class BugReportFlyoutPanel : MonoBehaviour
         placeholderLabel.color = new Color(PaletaUI.Tinta.r, PaletaUI.Tinta.g, PaletaUI.Tinta.b, 0.6f);
         placeholderLabel.fontStyle = FontStyles.Italic;
         placeholderLabel.alignment = multiline ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
-        // Bug (24 ago 2026, capturas de Raúl): ConfigureLabel deja el wrap en Normal para todos los
-        // labels, pero un campo de una sola línea (multiline: false, p. ej. "Número de Build") mide
-        // solo fontSize*2.1 de alto — si el placeholder es largo ("Puedes encontrarlo en la esquina
-        // inferior izquierda de la pantalla"), envuelve a 2 líneas y el RectMask2D de TextArea recorta
-        // la mitad de abajo, dejándolo cortado a la vista. En campos de una línea el placeholder no
-        // debe envolver: mejor que se recorte por la derecha (comportamiento estándar de un input de
-        // una línea) que perder la mitad inferior del texto.
+        // Bug: ConfigureLabel deja el wrap en Normal para todos los labels, pero un campo de una sola
+        // línea (multiline: false, p. ej. "Número de Build") mide solo fontSize*2.1 de alto — si el
+        // placeholder es largo ("Puedes encontrarlo en la esquina inferior izquierda de la pantalla"),
+        // envuelve a 2 líneas y el RectMask2D de TextArea recorta la mitad de abajo, dejándolo cortado
+        // a la vista. En campos de una línea el placeholder no debe envolver: mejor que se recorte por
+        // la derecha (comportamiento estándar de un input de una línea) que perder la mitad inferior
+        // del texto.
         if (!multiline)
         {
             placeholderLabel.textWrappingMode = TextWrappingModes.NoWrap;

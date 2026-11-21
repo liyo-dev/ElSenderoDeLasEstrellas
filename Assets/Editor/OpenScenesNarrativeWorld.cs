@@ -2,6 +2,7 @@ using System;
 using Game.NPC;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Resuelve lugares y actores del estado proyectado contra las escenas abiertas en el Editor
 /// (sin Play Mode). Lo usa Quick Test para convertir «Eldran está en la marca X» en la posición

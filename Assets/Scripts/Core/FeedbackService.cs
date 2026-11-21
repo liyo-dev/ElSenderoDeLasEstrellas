@@ -212,8 +212,7 @@
             //
             // Cubrir la pantalla arrancando siempre en alfa 0 significa que, si ya estaba negra,
             // el primer fotograma la deja transparente y se ve la escena antes de volver a
-            // taparla. Es exactamente lo que Raul reporto en la novena grabacion: «cuando nos
-            // vamos a negro vuelve a enfocarse la escena por un momento».
+            // taparla.
             //
             // Pasaba porque hay DOS fundidos seguidos y nadie lo habia mirado: el de la secuencia
             // (fase 8, «A NEGRO, y la explosion se oye DESPUES») y, detras, el cierre del propio

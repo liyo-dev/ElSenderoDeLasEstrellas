@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Liyodev.NarrativeGraph;
 
 /// Tests de EditMode de ChooseByMomentNode: qué opción elige y qué deja en el mundo proyectado.
 public class ChooseByMomentTests
@@ -13,7 +14,7 @@ public class ChooseByMomentTests
         // Sin almacén de flags, ningún flag está puesto: «no X» se cumple, «X» no.
         var node = new ChooseByMomentNode
         {
-            options = new List<ChooseByMomentNode.Option>
+            Options = new List<ChooseByMomentNode.Option>
             {
                 new() { label = "Siempre" },
                 new() { label = "Concreta", conditions = { FlagNo("A"), FlagNo("B") } },
@@ -29,7 +30,7 @@ public class ChooseByMomentTests
     {
         var node = new ChooseByMomentNode
         {
-            options = new List<ChooseByMomentNode.Option> { new() { label = "X", conditions = { Flag("X") } } }
+            Options = new List<ChooseByMomentNode.Option> { new() { label = "X", conditions = { Flag("X") } } }
         };
 
         Assert.AreEqual(1, node.Choose(null));

@@ -62,7 +62,7 @@ public class AmbientZone : MonoBehaviour
     private static vThirdPersonCamera _cachedCamera;
     private static DayNightCycle _cachedDayNightCycle;
 
-    // --- Fondo de cámara (oculta huecos de skybox — 5 sep 2026, ver AmbientPreset.overrideCameraBackground) ---
+    // --- Fondo de cámara ---
     private static Camera _cachedBackgroundCamera;
     private static bool _backgroundOverrideActive;
     private static CameraClearFlags _savedClearFlags;
@@ -113,7 +113,7 @@ public class AmbientZone : MonoBehaviour
 
     private void Start()
     {
-        // BUGFIX: si el jugador ya está dentro del collider al cargar la escena (spawn dentro
+        // si el jugador ya está dentro del collider al cargar la escena (spawn dentro
         // de una zona, p. ej. ambien_woods cubre buena parte del mapa exterior), Unity nunca
         // dispara OnTriggerEnter porque el solapamiento ya existía cuando el trigger se activó.
         // Sin este chequeo la niebla de pies (y el resto del preset) se queda desactivada hasta
@@ -207,8 +207,7 @@ public class AmbientZone : MonoBehaviour
     private void NombrarElLugar()
     {
         if (ambientPreset == null) return;
-        Bounds? caja = ambientPreset.planoAlPresentar && _collider != null ? _collider.bounds : (Bounds?)null;
-        PresentacionDeLugares.Anunciar(ambientPreset.nombreDelLugar, caja);
+        PresentacionDeLugares.Anunciar(ambientPreset.nombreDelLugar);
     }
 
     private System.Collections.IEnumerator DeferredMusicTransition()
@@ -278,9 +277,6 @@ public class AmbientZone : MonoBehaviour
         ShowCameraOverlay();
         ApplyCameraTransition();
         GetOrCacheDayNightCycle()?.SetZoneMistOverride(ambientPreset.forcesMist);
-        // 1 sep 2026 -- ver AmbientCloudDirector.SetZoneCloudBoost: el mismo checkbox 'nubes
-        // bajas' tambien sube la cadencia de nubes sueltas cruzando el cielo mientras se esta en
-        // la zona, no solo la niebla de distancia.
         AmbientCloudDirector.Instance?.SetZoneCloudBoost(ambientPreset.forcesMist);
         ApplyCameraBackgroundOverride();
     }
@@ -509,8 +505,7 @@ public class AmbientZone : MonoBehaviour
         return _cachedCamera;
     }
 
-    // 30 ago 2026 — enlace con el sistema de clima (ver AmbientPreset.forcesMist /
-    // DayNightCycle.SetZoneMistOverride). Mismo patrón de caché estático que GetOrCacheCamera.
+    // Mismo patrón de caché estático que GetOrCacheCamera.
     private static DayNightCycle GetOrCacheDayNightCycle()
     {
         if (_cachedDayNightCycle != null) return _cachedDayNightCycle;
@@ -518,14 +513,11 @@ public class AmbientZone : MonoBehaviour
         return _cachedDayNightCycle;
     }
 
-    // -------------------------------------------------------------------------
-    //  Fondo de cámara (oculta huecos de skybox)
-    // -------------------------------------------------------------------------
-    // 5 sep 2026 -- ver AmbientPreset.overrideCameraBackground. Zona-específico y genérico:
-    // cualquier AmbientZone con el checkbox activo pinta un color sólido en vez de skybox
-    // mientras el jugador está dentro, y restaura el clearFlags/skybox previos al salir.
-    // No usa el sistema de interiores (AnchorEnvironment/EnvironmentController): no oculta el
-    // mundo exterior, no toca luces ni far clip plane, solo el fondo de la cámara de juego.
+    // Zona-específico y genérico: cualquier AmbientZone con el checkbox activo pinta un color
+    // sólido en vez de skybox mientras el jugador está dentro, y restaura el
+    // clearFlags/skybox previos al salir. No usa el sistema de interiores
+    // (AnchorEnvironment/EnvironmentController): no oculta el mundo exterior, no toca luces
+    // ni far clip plane, solo el fondo de la cámara de juego.
 
     private static Camera GetOrCacheBackgroundCamera()
     {
@@ -582,8 +574,8 @@ public class AmbientZone : MonoBehaviour
         // sonando. RestorePreviousMusic() tiene el mismo guard para el camino de salida.
         if (Kits.Core.GameContext.Has(Situaciones.Combate)) return;
 
-        // FIX 16 sep 2026. Mismo
-        // criterio que el guard de combate de aquí al lado: durante una cinemática manda SU música.
+        // Mismo criterio que el guard de combate de aquí al lado: durante una cinemática manda SU
+        // música.
         //
         // Este era el sistema que pisaba la música de la secuencia de Oliver, confirmado con el log
         // de una partida real: la música de secuencia arrancaba bien ('La Marcha del Heroe Torpe' (antes 'Bumbling Hero's March')), y
@@ -597,8 +589,8 @@ public class AmbientZone : MonoBehaviour
         // AudioService ya tenía este guard en cuatro sitios (HandleInteriorEntered,
         // HandleInteriorExited, y las dos restauraciones tras batalla), pero la zona no pasa por
         // ninguno de ellos: llama a PlayMusic() directamente. Al terminar la cinemática, su
-        // RestoreMusic() ya da prioridad a la AmbientZone activa (FIX INC-185), así que la música
-        // de zona entra igual, solo que cuando toca.
+        // RestoreMusic() ya da prioridad a la AmbientZone activa, así que la música de zona entra
+        // igual, solo que cuando toca.
         if (CinematicSequencerBase.AnySequenceActive)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -651,8 +643,8 @@ public class AmbientZone : MonoBehaviour
             return;
         }
 
-        // FIX 16 sep 2026: mismo motivo que en TransitionToZoneMusic() — salir de una zona a mitad
-        // de una cinemática no debe devolver la música anterior por encima de la suya. Cuando la
+        // Mismo motivo que en TransitionToZoneMusic() — salir de una zona a mitad de una
+        // cinemática no debe devolver la música anterior por encima de la suya. Cuando la
         // cinemática acabe, su RestoreMusic() pondrá lo que toque.
         if (CinematicSequencerBase.AnySequenceActive)
         {

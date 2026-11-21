@@ -6,9 +6,9 @@ using UnityEngine;
 /// Singleton service that exposes Player references without repeating expensive lookups.
 /// Allows explicit player registration and performs lazy lookups when needed.
 /// </summary>
-// FIX Bajos: CLAUDE.md documenta -900 para PlayerService; el código tenía
-// -600. Alineado al valor documentado (orden de inicialización temprano respecto a los sistemas
-// que dependen de que el Player ya esté registrado).
+// CLAUDE.md documenta -900 para PlayerService; el código tenía -600. Alineado al valor
+// documentado (orden de inicialización temprano respecto a los sistemas que dependen de que el
+// Player ya esté registrado).
 [DefaultExecutionOrder(-900)]
 [DisallowMultipleComponent]
 public sealed class PlayerService : MonoBehaviour

@@ -12,8 +12,7 @@ using UnityEngine;
 /// de existir del sistema.
 ///
 /// MONTAJE EN EL EDITOR (lo único que no se puede hacer por escrito):
-///   1. Un GameObject propio en la escena — NUNCA dentro del prefab de un NPC (ver
-///      incidencia-oliver-saludo-secuencia-en-prefab-trigger-prematuro-2026-09-15.md).
+/// 1. Un GameObject propio en la escena — NUNCA dentro del prefab de un NPC.
 ///   2. Asignar el asset de la secuencia (_definition) y el SequenceStage (_stage).
 ///   3. Asignar el CinematicCameraDriver y, si la escena lleva música propia, el AudioGraphProfile
 ///      — los dos son campos heredados de CinematicSequencerBase.
@@ -255,6 +254,9 @@ public class SequencePlayer : CinematicSequencerBase
     }
 
     /// Cambia la música a mitad de secuencia. Usado por MusicBeat.
+    /// El clip que suena con ese id de música (regla de secuencia del perfil), o null.
+    public AudioClip ClipDeMusica(string musicId) => ResolveAudioProfile()?.GetSequenceRule(musicId)?.music;
+
     public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = 0f, float desdeSegundo = -1f)
     {
         var regla = ResolveAudioProfile()?.GetSequenceRule(musicId);
@@ -374,6 +376,25 @@ public class SequencePlayer : CinematicSequencerBase
     /// no necesita saber qué tipos de beat existen.
     private static bool EsPreparacion(SequenceBeat beat) => beat != null && beat.SoloColoca;
 
+    /// Da de alta los objetos del decorado de los SequenceStage de las demás escenas cargadas (no de
+    /// la escena de este reproductor) que no estén ya registrados: el propio escenario manda si dos usan el mismo id. Se hace una vez
+    /// por reproducción, antes del primer beat.
+    private void RegistrarPropsDeOtrasEscenas()
+    {
+        foreach (var otro in FindObjectsByType<SequenceStage>())
+        {
+            // Solo de otras escenas: los escenarios de la misma son de otras cinemáticas de esa escena.
+            if (otro == null || otro.Props == null || otro.gameObject.scene == gameObject.scene) continue;
+            foreach (var prop in otro.Props)
+            {
+                if (prop.target == null || string.IsNullOrWhiteSpace(prop.id)) continue;
+                string id = prop.id.Trim();
+                if (_context.EstaRegistrado(id)) continue;
+                _context.RegisterActor(id, prop.target, prop.eyeHeight);
+            }
+        }
+    }
+
     protected override IEnumerator Co_Sequence()
     {
         if (_definition == null)
@@ -410,6 +431,11 @@ public class SequencePlayer : CinematicSequencerBase
                 _context.RegisterActor(prop.id.Trim(), prop.target, prop.eyeHeight);
             }
         }
+
+        // El decorado de otra escena cargada (un interior que el grafo carga en aditivo, como la
+        // torre de Liam) también se puede encender y encuadrar aunque el reproductor viva en otra:
+        // se dan de alta sus objetos que este escenario no tenga ya con el mismo id. Ver INC-1335.
+        RegistrarPropsDeOtrasEscenas();
 
         // EndSequenceBeat escribe estos campos para cerrar por una rama concreta. Si la secuencia
         // se relanza (p.ej. retry tras fallo de panic input), deben partir de cero o la segunda
@@ -571,8 +597,7 @@ public class SequencePlayer : CinematicSequencerBase
 
         // Red de seguridad del tiempo: si la escena iba en cámara lenta y su beat de vuelta no se
         // llegó a ejecutar (una rama que salió antes, un beat mal puesto), la partida se quedaría
-        // al 20% de velocidad para siempre. Se suelta la petición de la secuencia (TimeScaleBeat
-        // pide con el reproductor como clave), sin tocar las pausas de otros sistemas.
+        // al 20% de velocidad para siempre.
         TimeScaleArbiterService.Release(this);
 
         // Dejar a todos los actores parados y en Idle antes de devolver el control a la FSM.
@@ -723,7 +748,6 @@ public class SequencePlayer : CinematicSequencerBase
             DialogueManager.Instance.Close();
 
         SpeechBubbleUI.Instance?.Hide();
-        // Antes de soltar nada: el guion en marcha cumple lo suyo al cerrarse (ReleaseAllActors).
         _context?.MarcarSalto();
         CumplirLoQueQuedaba();
         ReleaseAllActors();

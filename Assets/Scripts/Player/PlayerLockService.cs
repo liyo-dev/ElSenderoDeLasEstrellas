@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Centraliza el bloqueo de movimiento del jugador con referencia por solicitante.

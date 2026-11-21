@@ -5,7 +5,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Cómo está la historia, contado igual para la persona (pestaña «En vivo») y para el
     /// asistente o las herramientas externas (ToText): por dónde va, qué espera, cómo debería
@@ -69,7 +69,7 @@ namespace NarrativeGraphEditor.Story
 
             // La historia hasta el paso no cambia mientras no cambie el grafo: en Play solo se
             // vuelve a mirar la partida.
-            var story = StoryCache.Get($"live:{graph.GetEntityId()}:{step.guid}", () => Project(graph, step));
+            var story = StoryCache.Get($"live:{graph.GetEntityId()}:{step.Guid}", () => Project(graph, step));
             r.ReachedStep = story.Reached;
             r.Previous.AddRange(story.Previous);
             var recorder = story.Recorder;
@@ -88,14 +88,14 @@ namespace NarrativeGraphEditor.Story
         static Projected Project(NarrativeGraph graph, NarrativeNode step)
         {
             var recorder = new RecordingStateWriter();
-            var previous = NarrativeChapterChain.Before(graph, step.guid);
+            var previous = NarrativeChapterChain.Before(graph, step.Guid);
             foreach (var chapter in previous)
             {
                 recorder.Graph = chapter.Graph;
                 NarrativeStateProjector.Project(chapter.Graph, chapter.BridgeGuid, recorder);
             }
             recorder.Graph = graph;
-            var result = NarrativeStateProjector.Project(graph, step.guid, recorder);
+            var result = NarrativeStateProjector.Project(graph, step.Guid, recorder);
             if (!result.ReachedTarget) { recorder = new RecordingStateWriter(); previous.Clear(); }
             return new Projected { Recorder = recorder, Reached = result.ReachedTarget, Previous = previous.Select(c => c.Graph).ToList() };
         }
@@ -176,7 +176,7 @@ namespace NarrativeGraphEditor.Story
                 if (live)
                 {
                     var now = NarrativeActorStates.Active(e.Actor);
-                    Judge(c, now == e.Node.guid, string.IsNullOrEmpty(now) ? StoryText.T("sin pieza", "no piece") : StoryText.T("otra pieza", "another piece"));
+                    Judge(c, now == e.Node.Guid, string.IsNullOrEmpty(now) ? StoryText.T("sin pieza", "no piece") : StoryText.T("otra pieza", "another piece"));
                 }
             }
             foreach (var category in s.Facts.Where(f => f.Key != NarrativeCoreFacts.ActorState && f.Key != NarrativeCoreFacts.ActorUsual))

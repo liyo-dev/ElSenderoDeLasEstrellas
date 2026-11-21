@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Las líneas de un diálogo en claro (quién, emoción, texto), leídas con DescribeLines: el
     /// kit no conoce el formato de las líneas de cada juego.

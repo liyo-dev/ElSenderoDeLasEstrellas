@@ -33,13 +33,12 @@ namespace Game.NPC.Modules
     }
     
     /// <summary>
-    /// Configuración de combate para NPCs
-    /// Última actualización: 28/12/2024 - Agregado fieldOfView
+    /// Configuración de combate de un NPC: cerebro, rangos, maná, defensa y coordinación de equipo.
     /// </summary>
     [CreateAssetMenu(fileName = "NPC_Combat_Config", menuName = "El Sendero/NPCs/Módulos/Combat Config", order = 2)]
     public class NPCCombatConfig : NPCModuleConfigBase
     {
-        [Header("🧠 Cerebro de combate")]
+        [Header("Cerebro de combate")]
         [Tooltip("Clásico = la máquina de estados de siempre (NPCCombatBrain). Por puntuación = el cerebro nuevo (CerebroDeCombatePorPuntuacion), que decide con el perfil de abajo y pelea en grupo.")]
         public TipoDeCerebroDeCombate cerebro = TipoDeCerebroDeCombate.Clasico;
 
@@ -51,7 +50,7 @@ namespace Game.NPC.Modules
         [Tooltip("Puntos de vida del NPC")]
         public float health = 100f;
         
-        [Header("🎯 Rangos de Combate (CRÍTICO)")]
+        [Header("Rangos de Combate (CRÍTICO)")]
         [Min(0f)]
         [Tooltip("DETECTION RANGE: Radio de detección para iniciar combate (metros)\n• Debe ser MAYOR que Max Attack Distance\n• Recomendado: 10-15m para magos, 8-10m para melee")]
         public float detectionRange = 10f;
@@ -70,10 +69,10 @@ namespace Game.NPC.Modules
         
         // DEPRECATED: Propiedades obsoletas para compatibilidad con assets antiguos
         // NO USAR: Solo existen para migración automática
-        [System.Obsolete("❌ OBSOLETO: Usar minAttackDistance en su lugar. Esta propiedad será eliminada.", true)]
+        [System.Obsolete("OBSOLETO: Usar minAttackDistance en su lugar. Esta propiedad será eliminada.", true)]
         public float meleeRange { get => minAttackDistance; set => minAttackDistance = value; }
         
-        [System.Obsolete("❌ OBSOLETO: Usar maxAttackDistance en su lugar. Esta propiedad será eliminada.", true)]
+        [System.Obsolete("OBSOLETO: Usar maxAttackDistance en su lugar. Esta propiedad será eliminada.", true)]
         public float combatRange { get => maxAttackDistance; set => maxAttackDistance = value; }
         
         [Header("Behavior")]
@@ -138,7 +137,7 @@ namespace Game.NPC.Modules
                  + "para no tener dos sistemas de detección corriendo en paralelo sobre el mismo NPC.")]
         public bool freezePlayerOnAlert = true;
         
-        [Header("🎭 Comportamiento Post-Muerte")]
+        [Header("Comportamiento Post-Muerte")]
         [Tooltip("¿Qué sucede cuando el NPC muere?\n• DESAPARECER: El NPC desaparece con VFX después de la animación de muerte\n• MAREARSE: El NPC se levanta mareado y muestra un diálogo")]
         public PostDeathBehavior postDeathBehavior = PostDeathBehavior.Disappear;
         
@@ -230,7 +229,7 @@ namespace Game.NPC.Modules
         [Tooltip("Probabilidad de usar hechizo 3 especial (0-1)")]
         public float spell3Chance = 0.2f;
         
-        [Header("🔋 Maná (NPC)")]
+        [Header("Maná (NPC)")]
         [Min(1f)]
         [Tooltip("Maná máximo del NPC")]
         public float maxMana = 100f;
@@ -272,7 +271,7 @@ namespace Game.NPC.Modules
         [Tooltip("Umbral de maná bajo para priorizar cobertura/defensa")]
         public float lowManaRetreatThreshold = 0.25f;
         
-        [Header("🛡️ Escudo Defensivo")]
+        [Header("Escudo Defensivo")]
         [Tooltip("¿El NPC puede usar escudo para defenderse cuando no puede atacar?")]
         public bool useShield = false;
         
@@ -291,7 +290,7 @@ namespace Game.NPC.Modules
         [Tooltip("Cooldown del escudo después de usarlo")]
         public float shieldCooldown = 10f;
         
-        [Header("🏃 Huida Táctica y Cobertura")]
+        [Header("Huida Táctica y Cobertura")]
         [Tooltip("¿El NPC puede buscar cobertura cuando está en desventaja?")]
         public bool useTacticalRetreat = false;
         
@@ -325,10 +324,9 @@ namespace Game.NPC.Modules
         [Tooltip("Si true, prioriza usar escudo sobre buscar cobertura")]
         public bool preferShieldOverCover = false;
 
-        [Header("👥 Coordinación de Equipo (opcional)")]
-        [Tooltip("PROPUESTA (4 sep 2026, inspirado en el patrón 'Attack Slot' de juegos de acción con "
-                 + "varios enemigos): máximo de compañeros de equipo que pueden estar atacando al MISMO "
-                 + "objetivo a la vez. 0 = sin límite (comportamiento idéntico al de antes). Solo tiene "
+        [Header("Coordinación de Equipo (opcional)")]
+        [Tooltip("Máximo de compañeros de equipo que pueden estar atacando al MISMO "
+                 + "objetivo a la vez. 0 = sin límite (sin tope). Solo tiene "
                  + "efecto real en NPCs que comparten objetivo dentro de un NPCCombatTeam (p.ej. Lety+"
                  + "Vicky vs. el jugador): con un valor de 1, no atacan a la vez — el que no consigue "
                  + "turno flanquea en vez de sumarse al aluvión o quedarse plantado. Recomendado: 1 para "
@@ -336,20 +334,17 @@ namespace Game.NPC.Modules
         [Range(0, 4)]
         public int maxConcurrentAttackersOnTarget = 0;
 
-        [Header("🎭 Dificultad y Engaño Táctico")]
+        [Header("Dificultad y Engaño Táctico")]
         [Range(0f, 1f)]
         [Tooltip("Nivel de dificultad táctica del NPC (0=Torpe, 1=Experto). Afecta el tiempo de reacción,\n" +
                  "la probabilidad de decisiones tácticas inteligentes y la probabilidad de engaño (deceptionChance).\n" +
-                 "✅ FIX #13 (auditoría combate, 15 ago 2026): antes estaba hardcodeado a 0.7 para TODOS los NPCs\n" +
-                 "en CombatState.cs — ahora es configurable por NPC desde aquí.")]
+                 "Se configura por NPC.")]
         public float difficultyLevel = 0.7f;
 
         [Range(0f, 1f)]
         [Tooltip("Probabilidad de que el NPC finja quedarse sin maná para emboscar al jugador cuando le\n" +
                  "quedan pocos ataques listos. La probabilidad real aplicada es deceptionChance × difficultyLevel.\n" +
-                 "✅ FIX #5 (auditoría combate, 15 ago 2026): campo añadido — antes no existía en el SO, así que\n" +
-                 "el mapeo a NPCCombatBrain.Settings siempre dejaba este valor en 0 y la estrategia de\n" +
-                 "engaño/emboscada nunca se activaba pese a tener ~150 líneas de lógica ya implementadas.")]
+                 "Se pasa a NPCCombatBrain.Settings para activar la estrategia de engaño/emboscada.")]
         public float deceptionChance = 0.3f;
 
         [Range(1, 3)]
@@ -357,7 +352,7 @@ namespace Game.NPC.Modules
                  "(fingir quedarse sin maná). Ver deceptionChance.")]
         public int minAttacksToKeepForAmbush = 1;
 
-        [Header("🔍 Sistema de Búsqueda del Jugador")]
+        [Header("Sistema de Búsqueda del Jugador")]
         [Tooltip("Si TRUE, el NPC se mueve activamente buscando al jugador (5 intentos de movimiento)\nSi FALSE, se queda quieto durante 'passiveSearchDuration' segundos antes de abandonar")]
         public bool activelySearchForPlayer = true;
         
@@ -400,7 +395,7 @@ namespace Game.NPC.Modules
             
             if (minAttackDistance >= maxAttackDistance)
             {
-                errorMessage = "⚠️ CRÍTICO: Max Attack Distance debe ser MAYOR que Min Attack Distance, o el NPC NUNCA atacará. " +
+                errorMessage = "CRÍTICO: Max Attack Distance debe ser MAYOR que Min Attack Distance, o el NPC NUNCA atacará. " +
                               $"Actual: min={minAttackDistance}, max={maxAttackDistance}";
                 return false;
             }
@@ -408,7 +403,7 @@ namespace Game.NPC.Modules
             // Verificar que al menos un hechizo esté configurado
             if (spell1Prefab == null && spell2Prefab == null && spell3Prefab == null)
             {
-                errorMessage = "⚠️ CRÍTICO: Al menos un hechizo (spell1, spell2 o spell3) debe estar configurado para que el NPC pueda atacar.\n" +
+                errorMessage = "CRÍTICO: Al menos un hechizo (spell1, spell2 o spell3) debe estar configurado para que el NPC pueda atacar.\n" +
                               "Ve al NPCCombatConfig y asigna prefabs de hechizos en la sección 'Spells / Attacks (3 Slots)'";
                 return false;
             }
@@ -509,10 +504,10 @@ namespace Game.NPC.Modules
         /// <returns>Índice del hechizo seleccionado (0-2) o -1 si ninguno está disponible</returns>
         public int SelectRandomSpell()
         {
-            // FIX #24: antes se alocaba una List<(int,float)>
-            // nueva en cada llamada. Al ser como máximo 3 elementos fijos, se sustituye por
-            // variables locales sin heap allocation — este método puede llamarse varias veces
-            // por combate (una por decisión de ataque).
+            // Antes se alocaba una List<(int,float)> nueva en cada llamada. Al ser como
+            // máximo 3 elementos fijos, se sustituye por variables locales sin heap
+            // allocation — este método puede llamarse varias veces por combate (una por
+            // decisión de ataque).
             bool has0 = spell1Prefab != null;
             bool has1 = spell2Prefab != null;
             bool has2 = spell3Prefab != null;

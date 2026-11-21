@@ -73,6 +73,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: a63884258dc521b4085d9bc96fe60c86, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MascaraDeFollaje:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -113,8 +117,10 @@ Material:
     m_Floats:
     - _AdditionalLightCutoffPoint: 0.8
     - _AlphaClip: 0
+    - _Aplanar: 0
     - _BaseMapPremultiply: 1
     - _Blend: 0
+    - _BordeDeLuz: 0
     - _Brillo: 0
     - _BumpScale: 1
     - _CameraDistanceImpact: 0.5
@@ -133,6 +139,8 @@ Material:
     - _FlatRimSize: 0.774
     - _FlatSpecularEdgeSmoothness: 1
     - _FlatSpecularSize: 1
+    - _Follaje: 0
+    - _FollajeMip: 5
     - _Glossiness: 1
     - _GradientAngle: 0
     - _GradientCenterX: 0
@@ -142,6 +150,7 @@ Material:
     - _LightContribution: 1
     - _LightmapDirectionPitch: 0
     - _LightmapDirectionYaw: 0
+    - _LuzDePersonaje: 0
     - _Metallic: 0
     - _Mode: 1
     - _OcclusionStrength: 1
@@ -156,6 +165,7 @@ Material:
     - _PaintbrushStrokesAngle: 40
     - _PaintbrushStrokesSize: 1
     - _Parallax: 0.02
+    - _Pincel: 0
     - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 0
@@ -164,9 +174,13 @@ Material:
     - _SelfShadingSize: 0
     - _ShadowsFloor: 0.25
     - _Smoothness: 0.4
+    - _SombraSinRecorte: 0
     - _SpecularEnabled: 0
     - _SpecularNoiseSize: 1
     - _SrcBlend: 1
+    - _StencilComp: 8
+    - _StencilPass: 2
+    - _StencilRef: 2
     - _StrongRimStrength: 1
     - _Surface: 0
     - _TextureBlendingMode: 0

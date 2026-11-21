@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// <summary>
     /// Construye el resumen legible que se muestra DENTRO de la tarjeta de cada nodo (texto real de
@@ -220,7 +220,7 @@ namespace NarrativeGraphEditor
         {
             int shown = 0;
             foreach (var owner in node.FieldOwners())
-                foreach (var f in owner.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+                foreach (var f in NarrativeGraphText.SerializedFields(owner.GetType()))
                 {
                     if (f.DeclaringType == typeof(NarrativeNode) || typeof(NarrativeRequest).IsAssignableFrom(f.FieldType)) continue;
                     if (f.GetCustomAttribute<HideInInspector>() != null) continue;
@@ -299,13 +299,13 @@ namespace NarrativeGraphEditor
             if (node == null) return issues;
 
             foreach (var owner in node.FieldOwners())
-            foreach (var f in owner.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            foreach (var f in NarrativeGraphText.SerializedFields(owner.GetType()))
             {
                 var key = f.GetCustomAttribute<NarrativeKeyAttribute>();
                 if (key == null) continue;
                 string questId = null;
                 if (key.Kind == NarrativeKeyKind.QuestStep && !string.IsNullOrEmpty(key.QuestIdField))
-                    questId = owner.GetType().GetField(key.QuestIdField)?.GetValue(owner) as string;
+                    questId = NarrativeGraphText.SerializedField(owner.GetType(), key.QuestIdField)?.GetValue(owner) as string;
 
                 object val = f.GetValue(owner);
                 if (val is string s)
@@ -325,18 +325,18 @@ namespace NarrativeGraphEditor
 
             // Puertos con nombre sin conectar (aviso, no error: puede ser fin de flujo a propósito)
             var ports = node.GetOutputPorts();
-            if (ports != null && node.outputs != null)
+            if (ports != null && node.Outputs != null)
             {
                 for (int i = 0; i < ports.Length; i++)
                 {
-                    var g = i < node.outputs.Count ? node.outputs[i] : null;
+                    var g = i < node.Outputs.Count ? node.Outputs[i] : null;
                     if (!string.IsNullOrEmpty(g) && graph != null && graph.FindNode(g) == null)
                         issues.Add($"Salida '{ports[i]}' apunta a un nodo borrado");
                 }
             }
-            else if (node.outputs != null && graph != null)
+            else if (node.Outputs != null && graph != null)
             {
-                foreach (var g in node.outputs)
+                foreach (var g in node.Outputs)
                     if (!string.IsNullOrEmpty(g) && graph.FindNode(g) == null)
                         issues.Add("Una salida apunta a un nodo borrado");
             }

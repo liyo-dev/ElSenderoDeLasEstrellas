@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using UnityEngine;
 
@@ -37,6 +37,7 @@ public static class PlayerSettings
         public float masterVolume = 1f;
         public float sfxVolume = 1f;
         public float musicVolume = 1f;
+        public float dialogueVolume = 1f;
         public bool invertLook = false;
         public float lookSensitivity = 1f;
         public bool vibration = true;
@@ -96,6 +97,12 @@ public static class PlayerSettings
             EnsureLoaded();
             return _data.musicVolume;
         }
+    }
+
+    /// <summary>Volumen de las voces (bus de diálogo), de 0 a 1.</summary>
+    public static float DialogueVolume
+    {
+        get { EnsureLoaded(); return _data.dialogueVolume; }
     }
 
     public static bool InvertLook
@@ -215,6 +222,18 @@ public static class PlayerSettings
         ApplyVolume(AudioBus.Music, clamped);
     }
 
+    public static void SetDialogueVolume(float value01)
+    {
+        EnsureLoaded();
+        float clamped = Mathf.Clamp01(value01);
+        if (Mathf.Approximately(_data.dialogueVolume, clamped))
+            return;
+
+        _data.dialogueVolume = clamped;
+        SaveToDisk();
+        ApplyVolume(AudioBus.Dialogue, clamped);
+    }
+
     public static void SetInvertLook(bool invert)
     {
         EnsureLoaded();
@@ -292,6 +311,7 @@ public static class PlayerSettings
         service.SetVolume(AudioBus.Master, _data.masterVolume);
         service.SetVolume(AudioBus.Sfx, _data.sfxVolume);
         service.SetVolume(AudioBus.Music, _data.musicVolume);
+        service.SetVolume(AudioBus.Dialogue, _data.dialogueVolume);
     }
 
     private static void ApplyVolume(AudioBus bus, float value)

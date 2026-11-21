@@ -99,7 +99,6 @@ public sealed class ClimaDelLab : MonoBehaviour, ISeccionDelLab
         PanelDelLab.Aviso("Cielo despejándose");
     }
 
-    /// Hora y clima actuales en una línea, para el reporte de la Ayuda.
     public static string Resumen()
     {
         var ciclo = DayNightCycle.Instance;

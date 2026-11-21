@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.NPC;
 using Game.NPC.Common;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Un NPC de escena visto por el grafo narrativo. No es una identidad nueva: su ActorId es el

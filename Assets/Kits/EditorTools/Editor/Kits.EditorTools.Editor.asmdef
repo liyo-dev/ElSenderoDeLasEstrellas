@@ -1,7 +1,9 @@
 {
     "name": "Kits.EditorTools.Editor",
     "rootNamespace": "Kits.EditorTools",
-    "references": [],
+    "references": [
+        "Kits.Core"
+    ],
     "includePlatforms": [
         "Editor"
     ],

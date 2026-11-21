@@ -3,10 +3,11 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Capítulo 3, «La pista del mar» (GDD § 5.7, novelas V–VI): Liam habla con Tobías por el espejo,
-/// Will reúne tres pistas en la aldea del mar (el pueblo pesquero) y sigue a escondidas al
+/// Will reúne pistas en la aldea del mar (el pueblo pesquero: lo que vio el posadero, la cerca y la casa de las nasas) y sigue a escondidas al
 /// los dos contrabandistas por el puente del camino 5, el caserío abandonado y la linde del bosque (si le
 /// ven, pelea contra los dos: ganar sigue la historia, perder repite el seguimiento); en el claro Will se
 /// contiene y se lleva la pluma como prueba para Estela.
@@ -25,21 +26,26 @@ public static partial class MontajeDeLosCapitulos
         public const string Aldea = "CAP3_ALDEA_EMPIEZA";
         public const string LlegadaAldea = "CAP3_LLEGADA_ALDEA";
         public const string Pistas = "CAP3_PISTAS_EMPIEZA";
-        public const string PistaPosadero = "CAP3_PISTA_POSADERO";
+        public const string Recado = "CAP3_RECADO_DE_PEZ";
+        public const string Lubina = "CAP3_RECADO_LUBINA";
+        public const string Nada = "CAP3_NADA_AL_FAROL";
+        public const string Boya1 = "CAP3_BOYA_1";
+        public const string Boya2 = "CAP3_BOYA_2";
+        public const string Cerca = "CAP3_CERCA_EMPIEZA";
         public const string PistaHuerto = "CAP3_PISTA_HUERTO";
-        public const string PistaCobertizo = "CAP3_PISTA_COBERTIZO";
-        public const string PistaHecha = "CAP3_PISTA_HECHA";
         public const string Noche = "CAP3_NOCHE_EMPIEZA";
         public const string LlegadaBosque = "CAP3_LLEGADA_BOSQUE";
         public const string CaeLaNoche = "CAP3_CAE_LA_NOCHE";
         public const string Decide = "CAP3_DECIDE_EMPIEZA";
         public const string ContrabandistasFin = "CAP3_CONTRABANDISTAS_FIN";
         public const string CarreteroVencido = "CAP3_CARRETERO_VENCIDO";
+        public const string Huyen = "CAP3_HUYEN_AL_CAMPAMENTO";
         public const string LlegaAlClaro = "CAP3_LLEGA_AL_CLARO";
         public const string EnElClaro = "CAP3_EN_EL_CLARO";
     }
 
     private const string Posadero = "NPC_Posadero", Lucia = "NPC_Lucia", Sargento = "NPC_Sargento";
+    private const string Pez = "NPC_Pez", Candela = "NPC_Candela";
     private const string Guardia1 = "NPC_GuardiaCruce1", Guardia2 = "NPC_GuardiaCruce2";
     private const string Contra1 = "NPC_Contrabandista1", Contra2 = "NPC_Contrabandista2";
     private const string RutaHoja = CarpetaItems + "/IT_HojaDeAvistamientos.asset";
@@ -47,12 +53,16 @@ public static partial class MontajeDeLosCapitulos
     private const string CombateDeLosContrabandistas = "Assets/_NPCs/Combat/NPC_Combat_Config_BoyPirate.asset";
     /// Música del seguimiento a escondidas. Si aún no está en el proyecto, el tramo no cambia la música.
     private const string MusicaDelSigilo = "Assets/Audio/Music/Zonas/Tras el carro.mp3";
-    private const string CarroDeLasJaulas = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Cart07.prefab";
+    /// El carro del pack es una sola malla: el montaje saca de él una copia con las ruedas sueltas
+    /// (que giran al avanzar, Kits.Core.WheelSpin) y es esa la que se pone en la escena.
+    private const string CarroDelPack = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Cart07.prefab";
+    private const string CarroDeLasJaulas = "Assets/ElSendero/Content/Mundo/Atrezo/Carro de las jaulas (ruedas sueltas).prefab";
     private const string Matorral = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Vegetation/Tree07_b01.prefab";
 
     private static Capitulo MontarAssetsCap3(StringBuilder informe)
     {
         AsegurarContrabandistas(informe);
+        AsegurarCarroConRuedas(informe);
 
         // Nombres de los personajes nuevos.
         foreach (var (clave, es, en) in new[]
@@ -60,6 +70,7 @@ public static partial class MontajeDeLosCapitulos
             ("CHAR_POSADERO", "Posadero", "Innkeeper"), ("CHAR_LUCIA", "Lucía", "Lucía"),
             ("CHAR_SARGENTO", "Sargento", "Sergeant"), ("CHAR_GUARDIA_CRUCE", "Guardia", "Guard"),
             ("CHAR_CONTRABANDISTA", "Contrabandista", "Smuggler"), ("CHAR_TOBI", "Tobías", "Tobías"),
+            ("CHAR_PEZ", "Pez", "Fish"), ("CHAR_CANDELA", "Candela", "Candela"),
         }) TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Dialogos, clave, es, en);
 
         Objeto("IT_HojaDeAvistamientos", "hoja_avistamientos", "Hoja de avistamientos", "Sightings sheet",
@@ -71,44 +82,82 @@ public static partial class MontajeDeLosCapitulos
             "Estela doesn't take apprentices. Eldran thinks she'll listen if you bring her proof about the collars, and at the seaside village they've seen collared animals.",
             ("CAP3_LLEGAR", "Llega a la aldea del mar", "Reach the seaside village"),
             ("CAP3_POSADA", "Pregunta en la posada", "Ask at the inn"),
-            ("CAP3_PISTA_1", "Escucha lo que vio el posadero", "Hear what the innkeeper saw"),
-            ("CAP3_PISTA_2", "Mira la cerca del huerto", "Look at the garden fence"),
-            ("CAP3_PISTA_3", "Mira la casa de las nasas", "Look at the house with the lobster pots"),
-            ("CAP3_HOJA", "Cuéntaselo al posadero", "Tell the innkeeper"),
+            ("CAP3_PEZ", "Busca a Pez en el muelle", "Find Pez on the pier"),
+            ("CAP3_LUBINA", "Lleva el recado de Pez a Doña Lubina, al final del muelle", "Take Pez's message to Doña Lubina, at the end of the pier"),
+            ("CAP3_FAROL", "Nada hasta la casa del farol", "Swim to the house with the lantern"),
+            ("CAP3_CERCA", "Mira la cerca del huerto, camino del bosque", "Look at the garden fence, on the way to the forest"),
             ("CAP3_BOSQUE", "Ve por el camino hacia el Bosque Prohibido", "Take the road toward the Forbidden Forest"),
             ("CAP3_NOCHE", "Espera el carro de noche junto al fuego", "Wait for the cart by the fire at night"),
             ("CAP3_CARRO", "Sigue al carro sin que te vea", "Follow the cart without being seen"),
-            ("CAP3_CLARO", "Decide qué hacer en el claro", "Decide what to do in the clearing"));
+            ("CAP3_CLARO", "Averigua qué llevan en el claro", "Find out what they're carrying in the clearing"));
 
         // ── Diálogos ────────────────────────────────────────────────────────────────────────
+        // La charla sigue a la cinemática sin volver a hablarle (INC-1320): lo que vio, los carros y a quién preguntar.
         string dlgLuces = DialogoDeCaja("DLG_CAP3_POSADERO_LUCES", "DLG_CAP3_LUCES",
-            W("¿Y usted ha visto alguno de esos animales?", "Have you seen any of those animals yourself?"),
-            L("CHAR_POSADERO", "Animales no. Pero hace unas semanas, una noche que no podía dormir, vi luces en el camino del bosque.", "Animals, no. But a few weeks back, one night I couldn't sleep, I saw lights on the forest road."),
-            L("CHAR_POSADERO", "No eran faroles. Iban casi a ras de suelo, todas juntas.", "They weren't lanterns. They were almost at ground level, all bunched together."),
+            W("¿Qué cosas raras?", "What strange things?", NPCEmotion.Thinking),
+            L("CHAR_POSADERO", "Hace unas semanas, una noche que no podía dormir, vi luces en el camino del bosque. No eran faroles. Iban casi a ras de suelo, todas juntas.", "A few weeks back, one night I couldn't sleep, I saw lights on the forest road. They weren't lanterns. They were almost at ground level, all bunched together."),
             W("¿Luciérnagas?", "Fireflies?", NPCEmotion.Thinking),
-            L("CHAR_POSADERO", "Las luciérnagas no se encienden todas a la vez. Aquello subía y bajaba despacio… como algo que respira dormido.", "Fireflies don't all light up at once. That rose and fell, slowly… like something breathing in its sleep.", NPCEmotion.Worried));
-        string dlgZorro = DialogoDeCaja("DLG_CAP3_LUCIA_ZORRO", "DLG_CAP3_ZORRO",
-            L("CHAR_LUCIA", "¿Tú también buscas al zorro del collar? ¡Yo lo vi!", "Are you looking for the fox with the collar too? I saw it!", NPCEmotion.Excited),
-            L("CHAR_LUCIA", "Estaba en la cerca del huerto, rascándose el cuello contra la madera. Así, mira.", "It was at the garden fence, rubbing its neck against the wood. Like this, look."),
-            L("CHAR_LUCIA", "Le dije «ven, bonito» y salió corriendo. Creo que tenía más miedo que yo.", "I said \"here, boy\" and it ran off. I think it was more scared than me.", NPCEmotion.Sad));
-        string dlgHuerto = DialogoDeCaja("DLG_CAP3_PISTA_HUERTO", "DLG_CAP3_HUERTO",
-            W("Pelo rojizo enganchado en la madera… Aquí es donde Lucía vio al zorro.", "Reddish fur caught on the wood… This is where Lucía saw the fox.", NPCEmotion.Thinking),
-            W("Se ha rascado aquí hasta arrancarse el pelo. Como si el collar le hiciera daño.", "It rubbed itself here until the fur came off. As if the collar hurt it.", NPCEmotion.Sad));
-        string dlgCobertizo = DialogoDeCaja("DLG_CAP3_PISTA_COBERTIZO", "DLG_CAP3_COBERTIZO",
-            W("Mira qué arañazos. Aquí se ha rascado otro animal, uno más grande que el zorro.", "Look at these scratches. Another animal rubbed itself here, one bigger than the fox.", NPCEmotion.Thinking),
-            W("Y esto… son restos de hierro. Tienen las mismas rayas que mi trozo de aro.", "And this… it's bits of iron. They have the same lines as my piece of the collar."),
-            W("Todavía brillan.", "They're still glowing.", NPCEmotion.Surprised));
-        string dlgHoja = DialogoDeCaja("DLG_CAP3_POSADERO_HOJA", "DLG_CAP3_HOJA",
-            L("CHAR_POSADERO", "¿Qué, chico? ¿Has sacado algo en claro?", "Well, lad? Found anything?"),
-            W("El zorro de Lucía se rascaba contra la cerca hasta arrancarse el pelo. Y en la casa de las nasas, otro animal más grande ha dejado restos de hierro.", "Lucía's fox rubbed itself on the fence until its fur came off. And at the house with the lobster pots, a bigger animal left bits of iron.", NPCEmotion.Thinking),
-            W("Con las mismas rayas que esto. Y todavía brillan.", "With the same lines as this. And they're still glowing."),
+            L("CHAR_POSADERO", "Las luciérnagas no se encienden todas a la vez. Aquello subía y bajaba despacio… como algo que respira dormido.", "Fireflies don't all light up at once. That rose and fell, slowly… like something breathing in its sleep.", NPCEmotion.Worried),
             L("CHAR_POSADERO", "Llevo semanas contándolo y nadie me hace caso. Ni los guardias del cruce.", "I've been telling people for weeks and nobody listens. Not even the guards at the crossroads.", NPCEmotion.Annoyed),
-            L("CHAR_POSADERO", "Y ahora apareces tú con un trozo de esos aros en el bolsillo.", "And now you turn up with a piece of one of those collars in your pocket."),
-            W("Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido. Con todo esto, a lo mejor me escucha.", "I'm taking it to Estela, the sorceress of the Forbidden Forest. With all this, maybe she'll listen to me.", NPCEmotion.Determined),
-            L("CHAR_POSADERO", "¿Al Bosque Prohibido? Entonces vas por el camino del bosque… ¿Te acuerdas de las luces que te conté?", "The Forbidden Forest? Then you'll take the forest road… Remember the lights I told you about?", NPCEmotion.Worried),
-            L("CHAR_POSADERO", "Desde entonces he visto pasar carros por ese camino, siempre de noche y con la carga tapada. Las luces iban con ellos.", "Since then I've seen carts on that road, always at night and with their loads covered. The lights went with them.", NPCEmotion.Worried),
-            L("CHAR_POSADERO", "Si quieres saber de dónde salen esos aros, espera junto al fuego del camino y míralo con tus propios ojos.", "If you want to know where those collars come from, wait by the fire on the road and see it with your own eyes."),
-            W("Si esos carros llevan animales con aro, a Estela le llevaré algo más que un trozo de hierro.", "If those carts carry collared animals, I'll bring Estela more than a piece of iron.", NPCEmotion.Determined));
+            W("Yo sí le creo. Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido… pero antes quiero estar seguro.", "I believe you. I'm taking this to Estela, the sorceress of the Forbidden Forest… but first I want to be sure.", NPCEmotion.Determined),
+            L("CHAR_POSADERO", "Entonces habla con Candela, la del farol. No duerme: cada noche enciende un farol en la ventana, por si vuelve la barca de su Andrés. Si algo pasó por ese camino, ella lo vio.", "Then talk to Candela, the one with the lantern. She doesn't sleep: every night she lights a lantern in her window, in case her Andrés's boat comes back. If something went down that road, she saw it."),
+            L("CHAR_POSADERO", "Vive en la casa del agua, y allí no hay pasarela. O nadas, o nada.", "She lives in the house on the water, and there's no walkway out there. Either you swim, or nothing."),
+            L("CHAR_POSADERO", "Pez te enseña, si le aguantas. Está en el muelle, hablándole a los peces.", "Pez will teach you, if you can put up with him. He's on the pier, talking to the fish."));
+        string dlgLuciaCerca = DialogoDeCaja("DLG_CAP3_LUCIA_CERCA", "DLG_CAP3_LUCIA_CERCA",
+            L("CHAR_LUCIA", "¡Yo también vi un carro! Bueno… vi la cerca rota por la mañana.", "I saw a cart too! Well… I saw the broken fence in the morning.", NPCEmotion.Excited),
+            L("CHAR_LUCIA", "Mi padre dice que fue una vaca. ¡Las vacas no dejan paja que brilla!", "My dad says it was a cow. Cows don't leave glowing straw!", NPCEmotion.Annoyed));
+        // Pez: el respiro cómico del capítulo. Enseña a nadar a cambio de un recado a Doña Lubina (un pez).
+        string dlgPez = DialogoDeCaja("DLG_CAP3_PEZ", "DLG_CAP3_PEZ",
+            L("CHAR_PEZ", "Shh. Estoy en una reunión.", "Shh. I'm in a meeting."),
+            L("CHAR_PEZ", "…Sí, sí, ya se lo digo.", "…Yes, yes, I'll tell him.", NPCEmotion.Thinking),
+            L("CHAR_PEZ", "Dicen las sardinas que hueles a tierra. ¿Quieres nadar? Todo el mundo quiere nadar. Nadie quiere escuchar.", "The sardines say you smell of land. Want to swim? Everybody wants to swim. Nobody wants to listen."),
+            W("Necesito llegar a la casa del farol.", "I need to get to the house with the lantern.", NPCEmotion.Determined),
+            L("CHAR_PEZ", "Te enseño, pero un favor por un favor. Doña Lubina, la del último pilar, no me habla desde el martes.", "I'll teach you, but a favour for a favour. Doña Lubina, by the last post, hasn't spoken to me since Tuesday.", NPCEmotion.Sad),
+            L("CHAR_PEZ", "Dile que lo del martes fue un malentendido. Ella sabrá.", "Tell her Tuesday was a misunderstanding. She'll know."));
+        string dlgLubina = DialogoDeCaja("DLG_CAP3_LUBINA", "DLG_CAP3_LUBINA",
+            W("Ejem… ¿Doña Lubina? Dice Pez que lo del martes fue un malentendido.", "Ahem… Doña Lubina? Pez says Tuesday was a misunderstanding.", NPCEmotion.Confused),
+            W("¡Puaj!", "Ugh!", NPCEmotion.Surprised),
+            L("CHAR_PEZ", "¿Y bien? ¿Qué ha dicho?", "Well? What did she say?", NPCEmotion.Excited),
+            W("…Me ha escupido.", "…She spat at me.", NPCEmotion.Annoyed),
+            L("CHAR_PEZ", "¡Eso es que sí! Una dama.", "That means yes! A true lady.", NPCEmotion.Happy));
+        string dlgLeccion = DialogoDeCaja("DLG_CAP3_PEZ_LECCION", "DLG_CAP3_PEZ_LECCION",
+            L("CHAR_PEZ", "Un trato es un trato. Lección de natación. Primero: piensa como un pez.", "A deal's a deal. Swimming lesson. First: think like a fish."),
+            L("CHAR_PEZ", "…No. Todavía piensas como un chico. Se te nota en las orejas.", "…No. You're still thinking like a boy. It shows in your ears.", NPCEmotion.Thinking),
+            L("CHAR_PEZ", "Brazos como si aplaudieras a una sardina muy lejos. Piernas como si no te importara nada.", "Arms like you're applauding a sardine very far away. Legs like you don't care about anything."),
+            L("CHAR_PEZ", "Y respira cuando el mar no mire.", "And breathe when the sea isn't looking."),
+            W("¿Y ya está?", "And that's it?", NPCEmotion.Confused),
+            L("CHAR_PEZ", "Por la autoridad que me dieron unas almejas que no recuerdo… ¡te nombro pez de honor!", "By the authority granted to me by some clams I can't remember… I name you honorary fish!", NPCEmotion.Excited));
+        string dlgPezAdios = DialogoDeCaja("DLG_CAP3_PEZ_ADIOS", "DLG_CAP3_PEZ_ADIOS",
+            L("CHAR_PEZ", "Sigue los barriles que flotan: te llevan a la casa del farol. Los peces los llaman boyas. Los peces son muy finos.", "Follow the floating barrels: they'll take you to the lantern house. The fish call them buoys. Fish are very refined."),
+            L("CHAR_PEZ", "Candela lleva diez años encendiendo ese farol. Los peces dicen que Andrés no va a volver.", "Candela has been lighting that lantern for ten years. The fish say Andrés isn't coming back.", NPCEmotion.Sad),
+            L("CHAR_PEZ", "Yo no se lo digo. Hay cosas que se oyen mejor con la luz encendida.", "I don't tell her. Some things are easier to hear with the light on."));
+        // Candela, la del farol: la pista fuerte. Vio el carro cruzar hacia el bosque con algo que brillaba en las jaulas.
+        string dlgCandela = DialogoDeCaja("DLG_CAP3_CANDELA", "DLG_CAP3_CANDELA",
+            L("CHAR_CANDELA", "¿Andrés?… No. Perdona, muchacho. Cada vez que alguien sube esos escalones pienso que es él.", "Andrés?… No. Forgive me, lad. Every time someone climbs those steps I think it's him.", NPCEmotion.Sad),
+            W("El posadero dice que usted ve el camino del bosque de noche.", "The innkeeper says you can see the forest road at night."),
+            L("CHAR_CANDELA", "Desde aquí se ve todo: el mar, el puerto y el camino que sube al bosque. Enciendo el farol cada noche, por si Andrés busca la casa.", "From here you can see everything: the sea, the harbour and the road up to the forest. I light the lantern every night, in case Andrés is looking for the house."),
+            L("CHAR_CANDELA", "Hace tres noches pasó un carro sin farol. Dos hombres: uno grande, metido entre las varas, y otro delante, mirando a todos lados.", "Three nights ago a cart went by with no lantern. Two men: a big one, between the shafts, and another in front, looking every which way.", NPCEmotion.Worried),
+            L("CHAR_CANDELA", "Bajo la manta llevaban jaulas. Y dentro algo brillaba, se apagaba y volvía a brillar. Como mi farol cuando le falta aceite.", "Under the blanket they had cages. And inside, something glowed, went dark and glowed again. Like my lantern when it's low on oil.", NPCEmotion.Worried),
+            L("CHAR_CANDELA", "Salieron por el huerto, por donde la cerca, y subieron hacia el fuego del camino del bosque.", "They went out past the garden, by the fence, and up toward the fire on the forest road."),
+            W("Esta noche iré a verlo.", "Tonight I'll go and see.", NPCEmotion.Determined),
+            L("CHAR_CANDELA", "Ve. Y vuelve. Que aquí ya esperamos bastante.", "Go. And come back. We've done enough waiting here."));
+        string dlgHuerto = DialogoDeCaja("DLG_CAP3_PISTA_HUERTO", "DLG_CAP3_HUERTO",
+            W("Rodadas hondas que salen hacia el camino del bosque… Un carro muy cargado, y sin camino.", "Deep ruts heading out toward the forest road… A heavily loaded cart, and off the track.", NPCEmotion.Thinking),
+            W("Paja enganchada en la tabla rota. Todavía brilla un poco… como respira la luz que vio el posadero.", "Straw caught on the broken board. It's still glowing a little… the way the light the innkeeper saw breathes.", NPCEmotion.Surprised));
+        // Al ver la cerca Will ata cabos allí mismo, ya camino del bosque (sin volver a la posada, INC-1311).
+        string dlgCabos = DialogoDeCaja("DLG_CAP3_ATA_CABOS", "DLG_CAP3_CABOS",
+            W("Lo que vio Candela. Las luces del posadero viajan en esas jaulas.", "What Candela saw. The innkeeper's lights travel in those cages.", NPCEmotion.Determined),
+            W("Lo apunto todo en la hoja. Esta noche espero el carro junto al fuego del camino del bosque.", "I'll write it all down on the sheet. Tonight I'll wait for the cart by the fire on the forest road.", NPCEmotion.Determined));
+        string fPosaderoPistas = DialogoDeCaja("DLG_CAP3_POSADERO_PISTAS", "DLG_CAP3_POSADERO_PISTAS",
+            L("CHAR_POSADERO", "Pez está en el muelle, hablándole a los peces. Si te enseña, nada hasta la casa del farol. Candela no muerde… casi nunca.", "Pez is on the pier, talking to the fish. If he teaches you, swim to the lantern house. Candela doesn't bite… hardly ever."));
+        string fPezRecado = DialogoDeCaja("DLG_CAP3_PEZ_RECADO", "DLG_CAP3_PEZ_RECADO",
+            L("CHAR_PEZ", "¿Ya has hablado con Doña Lubina? Es muy suya. El último pilar, al final del muelle.", "Have you spoken to Doña Lubina yet? She's very particular. The last post, at the end of the pier."));
+        string fPezBoyas = DialogoDeCaja("DLG_CAP3_PEZ_BOYAS", "DLG_CAP3_PEZ_BOYAS",
+            L("CHAR_PEZ", "¡Pez de honor! Sigue los barriles hasta la casa del farol. Y no le hables a Candela de peces: no le gustan.", "Honorary fish! Follow the barrels to the lantern house. And don't talk to Candela about fish: she doesn't like them.", NPCEmotion.Happy));
+        string fPezDespues = DialogoDeCaja("DLG_CAP3_PEZ_DESPUES", "DLG_CAP3_PEZ_DESPUES",
+            L("CHAR_PEZ", "Los peces dicen que esta noche vas a hacer algo valiente. Los peces exageran mucho.", "The fish say you're going to do something brave tonight. Fish exaggerate a lot."));
+        string fCandela = DialogoDeCaja("DLG_CAP3_CANDELA_DESPUES", "DLG_CAP3_CANDELA_DESPUES",
+            L("CHAR_CANDELA", "Ve. Y vuelve. Que aquí ya esperamos bastante.", "Go. And come back. We've done enough waiting here."));
         string fPosadero = DialogoDeCaja("DLG_CAP3_POSADERO_DESPUES", "DLG_CAP3_POSADERO_DESPUES",
             L("CHAR_POSADERO", "Cuando sepas quién hace esos aros, vuelve y me lo cuentas. La sopa la pongo yo.", "When you find out who makes those collars, come back and tell me. The soup's on me."));
         string fLucia = DialogoDeCaja("DLG_CAP3_LUCIA_DESPUES", "DLG_CAP3_LUCIA_DESPUES",
@@ -147,7 +196,7 @@ public static partial class MontajeDeLosCapitulos
         TextoDeCine("CAP3_POSADA_01", "Perdone… ¿sabe qué es esto?", "Excuse me… do you know what this is?");
         TextoDeCine("CAP3_POSADA_02", "¿De dónde has sacado eso?", "Where did you get that?");
         TextoDeCine("CAP3_POSADA_03", "Lo llevaba puesto el demonio que atacó mi pueblo.", "The demon that attacked my village was wearing it.");
-        TextoDeCine("CAP3_POSADA_04", "Demonios por aquí, no. Pero animales con un aro como ese… unos cuantos.", "No demons around here. But animals with a collar like that… quite a few.");
+        TextoDeCine("CAP3_POSADA_04", "Demonios por aquí, no. Pero cosas raras de noche… unas cuantas.", "No demons around here. But strange things at night… quite a few.");
         TextoDeCine("CAP3_POSADA_05", "…¿Eso han sido tus tripas?", "…Was that your stomach?");
         TextoDeCine("CAP3_POSADA_06", "Se me acabó la comida ayer… ¿Me llega con esto para una sopa?", "My food ran out yesterday… Is this enough for a soup?");
         TextoDeCine("CAP3_POSADA_07", "Para sopa, sí. Para pan, no.", "For soup, yes. For bread, no.");
@@ -191,6 +240,13 @@ public static partial class MontajeDeLosCapitulos
         M(Cap3, "Cap3_Ronda_Caserio3", -172.5f, -186.5f);
         M(Cap3, "Cap3_Ronda_Linde1", -185f, -177.5f);
         M(Cap3, "Cap3_Puente", -129f, -235f);
+        // El puente se cruza a nado (INC-1320): pasado el puente se paran mirando atrás, hacia él, hasta que
+        // Will llega a la orilla de enfrente (a su escondite) pasando por debajo del tablero, que le tapa.
+        // La parada y la orilla, a comprobar en Play; el hueco bajo el puente lo mide ColocarLoDelAgua
+        // sobre el tablero (la marca Cap3_BajoElPuente solo vale si no encuentra el puente).
+        M(Cap3, "Cap3_TrasElPuente", -138f, -233f);
+        M(Cap3, "Cap3_OrillaOeste", -135f, -240f);
+        M(Cap3, "Cap3_BajoElPuente", -126f, -235f, 0f);
         M(Cap3, "Cap3_Ruta1", -150f, -222f);
         M(Cap3, "Cap3_Caserio", -171f, -200f);
         M(Cap3, "Cap3_Ruta2", -186f, -186f);
@@ -201,8 +257,10 @@ public static partial class MontajeDeLosCapitulos
         M(Cap3, "Cap3_Claro", -215f, -125f, 315f);
         // Fuera de la mata de hojas grandes del suelo vegetal: si no, la cámara del primer plano se mete en ella (INC-1038).
         M(Cap3, "Cap3_Matorral", -208f, -134f, 315f);
+        // Su sitio en el campamento, el mismo que les da la cinemática del claro (p_c1, p_c2).
+        M(Cap3, "Cap3_Campamento_Grandote", -213f, -128.5f, 254f);
+        M(Cap3, "Cap3_Campamento_Vigia", -216.5f, -129.5f, 74f);
         M(Cap3, "Cap3_Puesto", -90f, -124f, 270f);
-        M(Cap3, "Cap3_Amanecer", -96f, -126f, 270f);
 
         s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_Posadero", Pos = new Vector3(281.2f, float.NaN, -424.6f), Rumbo = 250f });
         s_puntos.Add(new PuntoDeRoster { Cap = Cap3, SpawnId = "SPAWN_Lucia", Pos = new Vector3(277.2f, float.NaN, -425.0f), Rumbo = 100f });
@@ -220,10 +278,11 @@ public static partial class MontajeDeLosCapitulos
         s_papeles.Add(new Papel { SpawnId = "SPAWN_Sargento", Prefab = "Assets/_NPCs/Guard.prefab", Nombre = "Sargento", Id = Sargento, Flag = FlagCap3Iniciado });
         s_papeles.Add(new Papel { SpawnId = "SPAWN_GuardiaCruce1", Prefab = "Assets/_NPCs/Guard.prefab", Nombre = "GuardiaCruce1", Id = Guardia1, Flag = FlagCap3Iniciado });
         s_papeles.Add(new Papel { SpawnId = "SPAWN_GuardiaCruce2", Prefab = "Assets/_NPCs/Guard.prefab", Nombre = "GuardiaCruce2", Id = Guardia2, Flag = FlagCap3Iniciado });
-        s_papeles.Add(new Papel { SpawnId = "SPAWN_Contrabandista1", Prefab = "Assets/_NPCs/Pueblo/Jorge.prefab", Nombre = "Contrabandista1", Id = Contra1, Flag = FlagCap3Iniciado, NavMesh = false });
+        s_papeles.Add(new Papel { SpawnId = "SPAWN_Contrabandista1", Prefab = GrandoteContrabandista, Nombre = "Contrabandista1", Id = Contra1, Flag = FlagCap3Iniciado, NavMesh = false });
         s_papeles.Add(new Papel { SpawnId = "SPAWN_Contrabandista2", Prefab = VigiaContrabandista, Nombre = "Contrabandista2", Id = Contra2, Flag = FlagCap3Iniciado, NavMesh = false });
 
-        // Los dos contrabandistas aparecen cuando anochece con Will junto al fuego; después, detenidos o huidos.
+        // Los dos contrabandistas aparecen cuando anochece con Will junto al fuego. Si le pillan y pierden,
+        // huyen a su campamento; se van del claro cuando Will ya está lejos (al llegar al claro de Estela).
         foreach (var c in new[] { Contra1, Contra2 })
             s_personajes.Add(new SituacionesDe
             {
@@ -231,19 +290,42 @@ public static partial class MontajeDeLosCapitulos
                 Entradas =
                 {
                     ("Cap. 3 · antes de la noche", Tramo(null, S3.CaeLaNoche), ActorPresence.Away, null, null),
-                    ("Cap. 3 · detenidos", Tramo(S3.ContrabandistasFin), ActorPresence.Away, null, null),
+                    ("Cap. 3 · huyen al campamento", Tramo(S3.Huyen, S3.EnElClaro), ActorPresence.AtMark,
+                        c == Contra1 ? "Cap3_Campamento_Grandote" : "Cap3_Campamento_Vigia", null),
+                    ("Cap. 3–4 · se han ido del claro", Tramo(S3.ContrabandistasFin), ActorPresence.Away, null, null),
                 },
             });
-        s_personajes.Add(new SituacionesDe { Actor = Posadero, Entradas = { ("Cap. 3 · tras la hoja", Tramo(S3.Noche), ActorPresence.Unchanged, null, fPosadero) } });
+        s_personajes.Add(new SituacionesDe
+        {
+            Actor = Posadero,
+            Entradas =
+            {
+                // Mientras Will busca pistas, el posadero recuerda dónde mirar (quien encarga tiene frase en curso).
+                ("Cap. 3 · las pistas", Tramo(S3.Pistas, S3.Noche), ActorPresence.Unchanged, null, fPosaderoPistas),
+                ("Cap. 3 · camino del bosque", Tramo(S3.Noche), ActorPresence.Unchanged, null, fPosadero),
+            },
+        });
         s_personajes.Add(new SituacionesDe
         {
             Actor = Lucia,
             Entradas =
             {
-                ("Cap. 3 · las pistas", Tramo(S3.Pistas, S3.Noche), ActorPresence.Unchanged, null, dlgZorro),
+                ("Cap. 3 · las pistas", Tramo(S3.Pistas, S3.Noche), ActorPresence.Unchanged, null, dlgLuciaCerca),
                 ("Cap. 3 · después", Tramo(S3.Noche), ActorPresence.Unchanged, null, fLucia),
             },
         });
+        // Quien encarga tiene frase mientras dura lo suyo: Pez, hasta el recado y luego con las boyas; Candela, después.
+        s_personajes.Add(new SituacionesDe
+        {
+            Actor = Pez,
+            Entradas =
+            {
+                ("Cap. 3 · el recado de Pez", Tramo(S3.Recado, S3.Lubina), ActorPresence.Unchanged, null, fPezRecado),
+                ("Cap. 3 · pez de honor", Tramo(S3.Nada, S3.Noche), ActorPresence.Unchanged, null, fPezBoyas),
+                ("Cap. 3 · esta noche", Tramo(S3.Noche, FinCap3), ActorPresence.Unchanged, null, fPezDespues),
+            },
+        });
+        s_personajes.Add(new SituacionesDe { Actor = Candela, Entradas = { ("Cap. 3 · tras su pista", Tramo(S3.Cerca, FinCap3), ActorPresence.Unchanged, null, fCandela) } });
         s_personajes.Add(new SituacionesDe
         {
             Actor = Sargento,
@@ -263,10 +345,17 @@ public static partial class MontajeDeLosCapitulos
             Pos = new Vector3(-207f, float.NaN, -138f), Radio = 12f, Tramo = Tramo(S3.CarreteroVencido, S3.EnElClaro) });
         s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Llegada al camino del bosque", Senal = S3.LlegadaBosque, Mision = MisionCap3,
             Pos = new Vector3(-102f, float.NaN, -209f), Radio = 18f, Tramo = Tramo(S3.Noche, S3.CaeLaNoche) });
-        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Pista · la cerca del huerto", Dialogo = dlgHuerto, Senal = S3.PistaHuerto, Mision = MisionCap3, Paso = 3,
-            Pos = new Vector3(231f, float.NaN, -399.6f), Tramo = Tramo(S3.Pistas, S3.Noche) });
-        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Pista · el cobertizo de las redes", Dialogo = dlgCobertizo, Senal = S3.PistaCobertizo, Mision = MisionCap3, Paso = 4,
-            Pos = new Vector3(299.6f, float.NaN, -415.9f), Tramo = Tramo(S3.Pistas, S3.Noche) });
+        // La cerca del huerto: la salida de la aldea hacia el bosque, la última pista (tras la de Candela).
+        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Pista · la cerca del huerto", Dialogo = dlgHuerto, Senal = S3.PistaHuerto, Mision = MisionCap3, Paso = 5,
+            Pos = new Vector3(231f, float.NaN, -399.6f), Tramo = Tramo(S3.Cerca, S3.Noche) });
+        // El recado de Pez: el agua del último pilar, en la punta del muelle (la altura de las tablas la pone ColocarLoDelAgua).
+        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Recado · Doña Lubina", Dialogo = dlgLubina, Senal = S3.Lubina, Mision = MisionCap3, Paso = 3,
+            Pos = new Vector3(PuntaDelMuelle.x, 3.8f, PuntaDelMuelle.y - 3.2f), Tramo = Tramo(S3.Recado, S3.Nada) });
+        // Las boyas de Pez, camino de la casa del farol: una tras otra en el minimapa. Su sitio lo pone ColocarLoDelAgua.
+        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Boya 1 (Pez)", Senal = S3.Boya1, Mision = MisionCap3,
+            Pos = new Vector3(PuntaDelMuelle.x - 8f, 0f, PuntaDelMuelle.y), Radio = 3.5f, Tramo = Tramo(S3.Nada, S3.Boya1, S3.Cerca) });
+        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Boya 2 (Pez)", Senal = S3.Boya2, Mision = MisionCap3,
+            Pos = new Vector3(PuntaDelMuelle.x - 16f, 0f, PuntaDelMuelle.y), Radio = 3.5f, Tramo = Tramo(S3.Boya1, S3.Boya2, S3.Cerca) });
 
         // La posada es la casa de pescadores 3; la mesa es la «Mesa de encuentro» de la plaza (279, −427).
         // Hoguera de descanso (CampfireRestInteractable): descansar en ella hace pasar el tiempo hasta la noche.
@@ -281,6 +370,7 @@ public static partial class MontajeDeLosCapitulos
         foreach (var (nombre, x, z, rumbo) in new[]
         {
             ("antes del puente", -108f, -215f, 20f),
+            ("orilla oeste del puente", -135f, -240f, 120f),
             ("bosquete tras el puente", -144f, -219f, 70f),
             ("camino del caserío", -158f, -212f, 140f),
             ("dentro del caserío", -176f, -203f, 200f),
@@ -304,14 +394,31 @@ public static partial class MontajeDeLosCapitulos
             P("paso-llegar", "Paso: llegar a la aldea", Completar(MisionCap3, "CAP3_LLEGAR")),
             P("posadero", "3.2 · Hablar con el posadero", Hablar(Posadero)),
             P("posada", "3.2 · Cinemática: la posada, la cuchara y el trozo del aro", Cinematica("CAP3_POSADA")),
+            // La charla sigue sin volver a hablarle: lo que vio, los carros y dónde mirar (INC-1320).
+            P("posada-luces", "3.2 · El posadero sigue: las luces que respiran, los carros de noche y dónde mirar", Dialogo(dlgLuces, Posadero)),
             P("paso-posada", "Paso: preguntar en la posada", Completar(MisionCap3, "CAP3_POSADA")),
             P("hoja", "3.2 · Will saca su hoja para apuntar lo que vea", Dar(RutaHoja)),
-            P("pistas", "3.2 · Las tres pistas, en el orden que quiera (probar desde aquí)", Emitir(S3.Pistas)),
-            P("pistas-fork", "3.2 · Pistas en paralelo", new ForkNode(), "pista1-hablar", "pista2", "pista3", "pistas-espera"),
-            P("pistas-espera", "3.2 · Esperar las tres pistas", new WaitSignalCountNode { eventKey = S3.PistaHecha, count = 3 }),
-            P("hoja-volver", "3.2 · Volver con el posadero", Hablar(Posadero)),
-            P("hoja-dlg", "3.2 · El posadero: «Tú eres el primero que trae uno encima»", Dialogo(dlgHoja, Posadero)),
-            P("paso-hoja", "Paso: contárselo al posadero", Completar(MisionCap3, "CAP3_HOJA")),
+            // Pez enseña a nadar a cambio de un recado; Candela, la del farol, da la pista; la cerca, de salida.
+            // Recorrido sin vuelta atrás: plaza → punta del muelle → a nado a la casa del farol → playa del barrio
+            // sobre el agua → oeste, por la cerca del huerto → camino del bosque (INC-1311).
+            P("pistas", "3.2 · Pez, Candela y la cerca (probar desde aquí)", Emitir(S3.Pistas)),
+            P("pez-hablar", "3.2 · Hablar con Pez en la punta del muelle", Hablar(Pez)),
+            P("pez-dlg", "3.2 · Pez: «Doña Lubina no me habla desde el martes»", Dialogo(dlgPez, Pez)),
+            P("paso-pez", "Paso: buscar a Pez", Completar(MisionCap3, "CAP3_PEZ")),
+            P("recado", "3.2 · El recado a Doña Lubina", Emitir(S3.Recado)),
+            P("lubina", "3.2 · Le da el recado a Doña Lubina (el agua del último pilar)", Esperar(S3.Lubina)),
+            P("paso-lubina", "Paso: el recado", Completar(MisionCap3, "CAP3_LUBINA")),
+            P("leccion", "3.2 · La lección de Pez", Dialogo(dlgLeccion, Pez)),
+            P("nadar", "3.2 · Pez de honor: aprende a nadar (aviso de habilidad)", DesbloquearHabilidad(AbilityKey.Swim, "CAP3_NADAR_APRENDIDO")),
+            P("pez-adios", "3.2 · Pez se despide: las boyas y el farol de Candela", Dialogo(dlgPezAdios, Pez)),
+            P("nada", "3.2 · A nado, siguiendo las boyas", Emitir(S3.Nada)),
+            P("candela-hablar", "3.2 · Hablar con Candela en su porche", Hablar(Candela)),
+            P("candela-dlg", "3.2 · Candela: el carro sin farol y las jaulas que brillaban", Dialogo(dlgCandela, Candela)),
+            P("paso-farol", "Paso: la casa del farol", Completar(MisionCap3, "CAP3_FAROL")),
+            P("cerca-empieza", "3.2 · La cerca del huerto, de salida hacia el bosque", Emitir(S3.Cerca)),
+            P("cerca", "3.2 · La cerca rota: rodadas y paja que brilla", Esperar(S3.PistaHuerto)),
+            P("paso-cerca", "Paso: la cerca", Completar(MisionCap3, "CAP3_CERCA")),
+            P("cabos", "3.2 · Will ata cabos donde está (sin volver a la posada)", Dialogo(dlgCabos)),
             // 3.3 · Los contrabandistas
             // Will va andando hasta el fuego del camino del bosque y espera la noche (pasa sola o descansando en la hoguera).
             P("noche", "3.3 · Ir andando al camino del bosque (probar desde aquí)", Emitir(S3.Noche)),
@@ -335,8 +442,8 @@ public static partial class MontajeDeLosCapitulos
             P("punto-noche", "3.3 · Punto de guardado: el camino del bosque", Punto("CAP3_ACAMPADA", "Cap3_Acampada")),
             P("carro", "3.3 · Cinemática: llega el carro que esperaba", Cinematica("CAP3_CARRO")),
             P("seguir-tuto", "3.3 · Aviso: seguir sin que te vean", Tutorial("CAP3_TUTO_SEGUIR",
-                "Síguelos sin que te vean. Cuando se paren a mirar atrás, escóndete en un matorral o detrás de una pared.",
-                "Follow them without being seen. When they stop to look back, hide in a bush or behind a wall.")),
+                "Síguelos sin que te vean. Cuando se paren a mirar atrás, o si a uno le sale un «?» sobre la cabeza, escóndete en un matorral o detrás de una pared antes de que se apague.",
+                "Follow them without being seen. When they stop to look back, or one of them gets a «?» over his head, hide in a bush or behind a wall before it fades.")),
             // Los dos vigilan: el del carro (al que se sigue) y el vigía, que va delante. Tramos: el
             // puente (aprender a esperar la mirada), el caserío (el vigía rodea una casa), la linde (el
             // vigía vuelve sobre sus pasos y pasa junto a un escondite) y la llegada al claro.
@@ -344,8 +451,8 @@ public static partial class MontajeDeLosCapitulos
             P("seguir", "3.3 · Seguir a los contrabandistas a escondidas hasta el claro (probar desde aquí)", GameStepNode.For(new PedirSeguirSinSerVisto
             {
                 npcId = Contra1, anchorId = "Cap3_Sigilo_Fin",
-                puntosDePaso = new List<string> { "Cap3_Puente", "Cap3_Ruta1", "Cap3_Caserio", "Cap3_Ruta2", "Cap3_Linde", "Cap3_Ruta3" },
-                paradasParaMirar = new List<string> { "Cap3_Puente", "Cap3_Caserio", "Cap3_Linde", "Cap3_Ruta3" },
+                puntosDePaso = new List<string> { "Cap3_Puente", "Cap3_TrasElPuente", "Cap3_Ruta1", "Cap3_Caserio", "Cap3_Ruta2", "Cap3_Linde", "Cap3_Ruta3" },
+                paradasParaMirar = new List<string> { "Cap3_TrasElPuente", "Cap3_Caserio", "Cap3_Linde", "Cap3_Ruta3" },
                 acompanantes = new List<PedirSeguirSinSerVisto.Acompanante>
                 {
                     new PedirSeguirSinSerVisto.Acompanante
@@ -358,9 +465,20 @@ public static partial class MontajeDeLosCapitulos
                         },
                     },
                 },
-                segundosMirando = 3f, velocidad = 2.2f, velocidadDelJugador = 1.7f,
-                alcanceDeLaVista = 14f, anguloDeLaVista = 110f, distanciaDeOido = 4f, segundosHastaVerle = 1f,
-                distanciaParaEsperar = 30f, radioDeLlegada = 25f, duracionMaxima = 480f,
+                // Tras el puente miran atrás hasta que Will llega a la orilla de enfrente: por encima le verían.
+                esperas = new List<PedirSeguirSinSerVisto.EsperaEnParada>
+                {
+                    new PedirSeguirSinSerVisto.EsperaEnParada { enLaParada = "Cap3_TrasElPuente", hastaQueElJugadorLlegueA = "Cap3_OrillaOeste", radio = 3f },
+                },
+                // El del carro va entre las varas: en las paradas mira atrás el vigía.
+                elQueSeSigueNoSeVuelve = true,
+                // El carro va a paso de carro. Will solo se agacha: va a su velocidad de siempre y nadie
+                // le espera. Si notan algo, el aviso «?» sobre la cabeza se apaga en 3 s: tiempo para
+                // esconderse. Si Will llega antes al claro, el tramo acaba igual (INC-1402, INC-1404).
+                segundosMirando = 3f, velocidad = 1.8f, velocidadDelJugador = 0f,
+                alcanceDeLaVista = 14f, anguloDeLaVista = 110f, distanciaDeOido = 4f,
+                segundosDeAlerta = 3f, iconoDeAlerta = Cargar<Game.NPC.Modules.NPCCombatConfig>(ConfigDeLosContrabandistas)?.questionIconPrefab,
+                distanciaParaEsperar = 0f, radioDeLlegada = 25f, radioDelJugadorEnLaMarca = 8f, duracionMaxima = 600f,
                 salidaDelNpc = "Cap3_Sigilo_SalidaNpc", salidaDelJugador = "Cap3_Escondite_Hoguera", distanciaParaRecolocar = 20f,
                 musica = AssetDatabase.LoadAssetAtPath<AudioClip>(MusicaDelSigilo),
             }), "paso-carro", "pillado"),
@@ -370,16 +488,13 @@ public static partial class MontajeDeLosCapitulos
             P("decide", "3.3 · Tras el claro: la pluma (probar desde aquí)", Emitir(S3.Decide)),
             P("pista-pluma", "3.3 · Will ve la pluma de la zarza", Bocadillo("CAP3_BOC_ZARZA", "Hay una pluma enganchada en esa zarza…", "There's a feather caught in that bramble…")),
             // Will se contiene: coge la pluma, la prueba que lleva a Estela.
-            P("pluma-0", "3.3 · Coge la pluma brillante", new WaitForItemAddedNode { itemToWaitFor = Cargar<ItemData>(RutaPluma), completeIfAlreadyOwned = true }),
+            P("pluma-0", "3.3 · Coge la pluma brillante", new WaitForItemAddedNode { ItemToWaitFor = Cargar<ItemData>(RutaPluma), CompleteIfAlreadyOwned = true }),
             P("pluma-1", "3.3 · «Con esto, Estela tendrá que escucharme»", Bocadillo("CAP3_BOC_PRUEBA", "Una pluma de pájaro de luz. Con esto, Estela tendrá que escucharme.", "A lightbird feather. With this, Estela will have to listen to me.", 3.5f)),
-            // Final del capítulo
-            P("fin-contrabandistas", "3.3 · Los contrabandistas se van al amanecer", Emitir(S3.ContrabandistasFin)),
+            // Final del capítulo: sigue de seguido, sin rótulo ni salto de hora; el Cap. 4 arranca donde está Will.
+            // Los contrabandistas se quedan en su campamento («al amanecer, al barco»): no desaparecen
+            // delante de Will. Se van cuando él ya está lejos (CAP3_CONTRABANDISTAS_FIN, en el Cap. 4).
             P("paso-claro", "Paso: el claro (cierra la misión)", Completar(MisionCap3, "CAP3_CLARO", cerrar: true)),
-            P("manana-rotulo", "Rótulo: a la mañana siguiente", Rotulo("CAP3_ROTULO_MANANA", "A la mañana siguiente…", "The next morning…")),
-            P("manana-hora", "Amanece", GameStepNode.For(new PedirHoraDelDia { targetTime = DayNightCycle.TimeOfDay.Morning, immediate = true })),
-            P("manana-will", "Will amanece en el cruce", Llevar("Player", "Cap3_Amanecer")),
-            P("manana-destapa", "Se destapa la pantalla en el cruce", Destapar()),
-            P("fin-punto", "Cap. 3 · Fin (punto de guardado)", Punto("CAP3_FIN", "Cap3_Amanecer")),
+            P("fin-punto", "Cap. 3 · Fin (punto de guardado)", Punto("CAP3_FIN", "Cap3_Matorral")),
             P("fin", "Fin del Cap. 3 (" + FinCap3 + ")", Emitir(FinCap3)),
         };
         // La despedida en la salida del pueblo, el camino a pie y la acampada con Tobías (INC-967).
@@ -390,36 +505,18 @@ public static partial class MontajeDeLosCapitulos
         {
             P("pillado", "3.3 · Le han visto: «¿Nos venías siguiendo?»", Dialogo(dlgPillado, Contra1)),
             P("pillado-aviso", "3.3 · Aviso: varios enemigos y cómo cambiar de objetivo", Tutorial("CAP3_TUTO_DOS",
-                "Varios enemigos. Pulsa {BOTON} para cambiar de objetivo.",
-                "Several enemies. Press {BOTON} to switch targets.",
-                Core.InputGlyphs.InputGlyphNames.ShoulderRight)),
+                "Son dos. Cambia de objetivo con {BOTON}.",
+                "There are two of them. Switch targets with {BOTON}.",
+                Core.InputGlyphs.InputGlyphNames.SwitchTarget)),
             P("pillado-combate", "3.3 · Combate contra los dos contrabandistas", GameStepNode.For(new PedirCombateContraNpc
             {
                 npcId = Contra1, otrosNpcs = new List<string> { Contra2 },
                 combatConfig = Cargar<Game.NPC.Modules.NPCCombatConfig>(ConfigDeLosContrabandistas), defeatEventKey = S3.CarreteroVencido,
-                waitForDefeat = true, restorePeacefulOnDefeat = true,
+                waitForDefeat = true, restorePeacefulOnDefeat = true, radioDeArena = 25f,
             }), "pillado-gana", "seguir"),
             P("pillado-gana", "3.3 · Les gana: huyen al campamento", Dialogo(dlgVencido, Contra1)),
+            P("pillado-huyen", "3.3 · Vuelven a su campamento del claro", Emitir(S3.Huyen)),
             P("pillado-claro", "3.3 · Will sigue solo hasta el claro", Esperar(S3.LlegaAlClaro), "paso-carro"),
-        });
-        c3.Ramas.Add(new List<Paso>
-        {
-            P("pista1-hablar", "3.2 · Pista 1 · hablar con el posadero", Hablar(Posadero)),
-            P("pista1-dlg", "3.2 · Pista 1 · las luces que respiran", Dialogo(dlgLuces, Posadero)),
-            P("pista1-paso", "Paso: lo que vio el posadero", Completar(MisionCap3, "CAP3_PISTA_1")),
-            P("pista1-hecha", "3.2 · Pista 1 hecha", Emitir(S3.PistaHecha)),
-        });
-        c3.Ramas.Add(new List<Paso>
-        {
-            P("pista2", "3.2 · Pista 2 · la cerca del huerto (Lucía dice dónde vio al zorro)", Esperar(S3.PistaHuerto)),
-            P("pista2-paso", "Paso: la cerca del huerto", Completar(MisionCap3, "CAP3_PISTA_2")),
-            P("pista2-hecha", "3.2 · Pista 2 hecha", Emitir(S3.PistaHecha)),
-        });
-        c3.Ramas.Add(new List<Paso>
-        {
-            P("pista3", "3.2 · Pista 3 · el cobertizo de las redes", Esperar(S3.PistaCobertizo)),
-            P("pista3-paso", "Paso: el cobertizo", Completar(MisionCap3, "CAP3_PISTA_3")),
-            P("pista3-hecha", "3.2 · Pista 3 hecha", Emitir(S3.PistaHecha)),
         });
         c3.Notas.Add(("nota", "Cap. 3 · La pista del mar (GDD § 5.7). Lo monta El Sendero ▸ Historia ▸ Montar los capítulos 3 y 4: los nodos «cap3-…» se rehacen. " +
                               "Escena: «Capítulos (generado)» en MainWorld (marcas Cap3_*, puntos del roster, pistas, el campamento de los contrabandistas)."));
@@ -462,10 +559,256 @@ public static partial class MontajeDeLosCapitulos
             + DespejarHierba(new Vector3(-215f, 0f, -125f), 12f)
             + DespejarHierba(new Vector3(-208f, 0f, -134f), 3f);
         informe.AppendLine($"Cap. 3: acampada y claro despejados de flores ({despejadas} celdas de hierba).");
+        ColocarLoDelAgua(raiz, marcas, informe);
     }
+
+    /// Lo del agua del Cap. 3, colocado sobre lo que hay de verdad en la escena: Pez en la orilla junto al
+    /// muelle; el recado sobre las tablas de la punta del muelle; Candela en el porche de la casa del farol (el borde que da al muelle),
+    /// con su farol que se enciende de noche (LuzNocturna); las dos boyas a flote entre el muelle y la casa;
+    /// y el hueco bajo el puente del seguimiento, donde no se ve a quien pasa nadando (Escondite).
+    /// La orilla junto al arranque del muelle (a un lado de las tablas): el primer punto de tierra seca
+    /// yendo de la punta hacia el pueblo. Pez se pone ahí, mirando al mar.
+    private static bool OrillaJuntoAlMuelle(out Vector3 orilla)
+    {
+        const float aUnLado = 5f;
+        for (float d = 0f; d < 70f; d += 0.5f)
+        {
+            var q = AlSuelo(new Vector3(PuntaDelMuelle.x + aUnLado, float.NaN, PuntaDelMuelle.y + d));
+            if (q.y <= 0.2f) continue;
+            orilla = AlSuelo(new Vector3(q.x, float.NaN, q.z + 1.5f));
+            return true;
+        }
+        orilla = default;
+        return false;
+    }
+
+    private static void ColocarLoDelAgua(Transform raiz, Dictionary<string, Transform> marcas, StringBuilder informe)
+    {
+        Physics.SyncTransforms();
+        var punta = new Vector3(PuntaDelMuelle.x, 0f, PuntaDelMuelle.y);
+        var pez = raiz.Find(Aldea + " · roster/SP_SPAWN_Pez");
+        if (pez == null) informe.AppendLine("AVISO: no está el punto de Pez en el roster de la aldea.");
+        else if (OrillaJuntoAlMuelle(out var enLaOrilla)) pez.SetPositionAndRotation(enLaOrilla, Quaternion.Euler(0f, 180f, 0f));
+        else informe.AppendLine($"AVISO: no encuentro la orilla junto al muelle para Pez (busco tierra seca al norte de {punta.x:F1}, {punta.z:F1}).");
+        var lubina = raiz.Find(Cap3 + " · inspección/Recado · Doña Lubina/Punto");
+        if (lubina != null && TableroCerca(new Vector3(lubina.position.x, 0f, lubina.position.z), 6f, 1f, out var sobreLubina))
+            lubina.position = sobreLubina;
+
+        // La casa del farol y el borde de su porche que mira al muelle.
+        Transform casa = null;
+        foreach (var r in raiz.gameObject.scene.GetRootGameObjects())
+        {
+            casa = r.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == CasaDelFarol);
+            if (casa != null) break;
+        }
+        if (casa == null) { informe.AppendLine($"AVISO: no está «{CasaDelFarol}» en la escena: Candela, su farol y las boyas se quedan en su sitio de tabla."); }
+        else
+        {
+            var b = Limites(casa.gameObject);
+            var centro = new Vector3(b.center.x, 0f, b.center.z);
+            var hacia = punta - centro; hacia.y = 0f; hacia.Normalize();
+            Vector3 borde = centro; bool hayPorche = false;
+            for (float d = 0f; d < b.extents.magnitude + 4f; d += 0.25f)
+            {
+                var q = centro + hacia * d;
+                if (Tablero(q, 3f, out float y, casa) && y > 0.6f) { borde = new Vector3(q.x, y, q.z); hayPorche = true; }
+                else if (hayPorche) break;
+            }
+            if (!hayPorche) borde = new Vector3(b.center.x, 1.6f, b.center.z) + hacia * Mathf.Max(b.extents.x, b.extents.z);
+            var lado = Vector3.Cross(Vector3.up, hacia);
+            var candela = raiz.Find(Aldea + " · roster/SP_SPAWN_Candela");
+            if (candela != null) candela.SetPositionAndRotation(borde - hacia * 0.9f, Quaternion.LookRotation(hacia));
+
+            // El farol, en el porche junto a Candela: de noche se ve desde el puerto.
+            var padre = Hijo(raiz, Cap3 + " · el agua");
+            var farolPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(FarolDeCandela);
+            if (farolPrefab != null)
+            {
+                var farol = (GameObject)PrefabUtility.InstantiatePrefab(farolPrefab, raiz.gameObject.scene);
+                farol.name = "Farol de Candela";
+                farol.transform.SetParent(padre, true);
+                farol.transform.SetPositionAndRotation(borde - hacia * 0.5f + lado * 1.1f, Quaternion.LookRotation(hacia));
+                var lf = Limites(farol);
+                farol.transform.position += Vector3.up * (borde.y - lf.min.y);
+                lf = Limites(farol);
+                var luzGo = new GameObject("Luz del farol");
+                luzGo.transform.SetParent(farol.transform, true);
+                luzGo.transform.position = new Vector3(lf.center.x, lf.max.y - lf.size.y * 0.3f, lf.center.z);
+                var luz = luzGo.AddComponent<Light>();
+                luz.type = LightType.Point; luz.color = new Color(1f, 0.78f, 0.42f); luz.range = 9f; luz.shadows = LightShadows.None; luz.enabled = false;
+                var nocturna = luzGo.AddComponent<LuzNocturna>();
+                nocturna.intensidad = 3f; nocturna.umbral = 0.02f; nocturna.parpadeo = 0.15f;
+            }
+            else informe.AppendLine($"AVISO: falta el farol ({FarolDeCandela}).");
+
+            // Dos boyas (barriles a flote) entre la punta del muelle y el porche; con ellas, sus llegadas.
+            var barril = AssetDatabase.LoadAssetAtPath<GameObject>(BarrilDeBoya);
+            var desde = punta; var hasta = new Vector3(borde.x, 0f, borde.z);
+            for (int i = 1; i <= 2; i++)
+            {
+                var sitio = Vector3.Lerp(desde, hasta, i / 3f);
+                var llegada = raiz.Find($"{Cap3} · llegadas/Boya {i} (Pez)/Disparador");
+                if (llegada != null) llegada.position = sitio;
+                if (barril == null) continue;
+                var tramo = Hijo(padre, $"Boya {i} (tramo)");
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(barril, raiz.gameObject.scene);
+                go.name = $"Boya {i}";
+                go.transform.SetParent(tramo, true);
+                go.transform.SetPositionAndRotation(sitio, Quaternion.Euler(8f, i * 70f, 0f));
+                foreach (var c in go.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
+                var lb = Limites(go);
+                go.transform.position += Vector3.up * (-0.25f - lb.min.y);
+                EnTramo(tramo, Tramo(S3.Nada, S3.Noche), go);
+            }
+            informe.AppendLine($"Cap. 3: la casa del farol en {casa.position:F1}; porche {(hayPorche ? "medido" : "supuesto")} en {borde:F1}; Candela, su farol y dos boyas.");
+        }
+
+        // El hueco bajo el puente: quien pasa nadando por debajo no se ve. Se mide en el puente de
+        // verdad (el tramo del tablero que va sobre el cauce); si no está, se usa la marca.
+        Vector3 centroHueco, tamanoHueco; Quaternion giroHueco;
+        bool medido = MedirHuecoBajoElPuente(raiz.gameObject.scene, out centroHueco, out giroHueco, out tamanoHueco);
+        if (!medido && marcas.TryGetValue("Cap3_BajoElPuente", out var bajo))
+        {
+            centroHueco = bajo.position - Vector3.up * (HuecoBajoElPuente.y * 0.5f + 0.3f);
+            giroHueco = bajo.rotation; tamanoHueco = HuecoBajoElPuente;
+            medido = true;
+            informe.AppendLine($"AVISO: no encuentro «{PuenteDelSeguimiento}»: el hueco bajo el puente va en la marca Cap3_BajoElPuente.");
+        }
+        if (medido)
+        {
+            var tramo = Hijo(Hijo(raiz, Cap3 + " · el agua"), "Escondite bajo el puente (tramo)");
+            var go = new GameObject("Escondite bajo el puente");
+            go.transform.SetParent(tramo, false);
+            go.transform.SetPositionAndRotation(centroHueco, giroHueco);
+            var caja = go.AddComponent<BoxCollider>();
+            caja.isTrigger = true; caja.size = tamanoHueco;
+            go.AddComponent<Escondite>();
+            EnTramo(tramo, Tramo(S3.CaeLaNoche, S3.EnElClaro), go);
+            informe.AppendLine($"Cap. 3: hueco bajo el puente en {centroHueco:F1}, {tamanoHueco.x:F1} × {tamanoHueco.y:F1} × {tamanoHueco.z:F1} m (ancho × alto × largo sobre el cauce).");
+        }
+    }
+
+    /// Recorre el tablero del puente del seguimiento y busca el tramo donde queda hueco debajo (el
+    /// cauce): ahí va el escondite, de lo que hay debajo hasta el tablero, a lo ancho del puente.
+    private static bool MedirHuecoBajoElPuente(UnityEngine.SceneManagement.Scene escena, out Vector3 centro, out Quaternion giro, out Vector3 tamano)
+    {
+        centro = Vector3.zero; giro = Quaternion.identity; tamano = Vector3.zero;
+        Transform puente = null;
+        foreach (var r in escena.GetRootGameObjects())
+        {
+            puente = r.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name.StartsWith(PuenteDelSeguimiento));
+            if (puente != null) break;
+        }
+        if (puente == null) return false;
+        var tablas = puente.GetComponentsInChildren<Renderer>(true).Where(r => r.name.StartsWith("Tabl")).Select(r => r.bounds.center).ToList();
+        if (tablas.Count < 2) return false;
+        Vector3 a = tablas[0], b = tablas[1];
+        foreach (var p in tablas) foreach (var q in tablas)
+            if ((new Vector2(p.x - q.x, p.z - q.z)).sqrMagnitude > (new Vector2(a.x - b.x, a.z - b.z)).sqrMagnitude) { a = p; b = q; }
+        var eje = b - a; eje.y = 0f;
+        float largo = eje.magnitude;
+        if (largo < 1f) return false;
+        eje /= largo;
+        const float paso = 0.5f, huecoMinimo = 1.5f;
+        float desde = -1f, hasta = -1f, sueloMasBajo = float.PositiveInfinity, tableroMasBajo = float.PositiveInfinity;
+        for (float t = 0f; t <= largo; t += paso)
+        {
+            var p = a + eje * t;
+            if (!Tablero(p, p.y + 5f, out float tablero, puente)) continue;
+            float suelo = float.NegativeInfinity;
+            foreach (var hit in Physics.RaycastAll(new Vector3(p.x, tablero - 0.3f, p.z), Vector3.down, 20f, ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.collider.transform.IsChildOf(puente) && hit.point.y > suelo) suelo = hit.point.y;
+            if (float.IsNegativeInfinity(suelo) || tablero - suelo < huecoMinimo) continue;
+            if (desde < 0f) desde = t;
+            hasta = t;
+            sueloMasBajo = Mathf.Min(sueloMasBajo, suelo);
+            tableroMasBajo = Mathf.Min(tableroMasBajo, tablero);
+        }
+        if (desde < 0f) return false;
+        var medio = a + eje * ((desde + hasta) * 0.5f);
+        float abajo = sueloMasBajo - 0.5f, arriba = tableroMasBajo - 0.25f;
+        centro = new Vector3(medio.x, (abajo + arriba) * 0.5f, medio.z);
+        giro = Quaternion.LookRotation(eje, Vector3.up);
+        tamano = new Vector3(AnchoDelHueco, arriba - abajo, hasta - desde + 1f);
+        return true;
+    }
+
+    /// La superficie más alta bajo un punto (de «por encima» metros hacia abajo), sin triggers. Con
+    /// «solo», solo cuenta lo que cuelga de ese objeto.
+    private static bool Tablero(Vector3 punto, float porEncima, out float y, Transform solo = null)
+    {
+        y = float.NegativeInfinity;
+        foreach (var hit in Physics.RaycastAll(new Vector3(punto.x, porEncima, punto.z), Vector3.down, porEncima + 1f, ~0, QueryTriggerInteraction.Ignore))
+        {
+            if (solo != null && !hit.collider.transform.IsChildOf(solo)) continue;
+            if (hit.point.y > y) y = hit.point.y;
+        }
+        return !float.IsNegativeInfinity(y);
+    }
+
+    /// Como <see cref="Tablero"/>, pero si el punto cae en la rendija entre dos tablones busca el
+    /// tablón más cercano en un radio. Solo vale una superficie por encima del agua (y > 1).
+    private static bool TableroCerca(Vector3 punto, float porEncima, float radio, out Vector3 sobre)
+    {
+        sobre = punto;
+        float mejor = float.PositiveInfinity;
+        for (float dx = -radio; dx <= radio + 0.001f; dx += 0.25f)
+            for (float dz = -radio; dz <= radio + 0.001f; dz += 0.25f)
+            {
+                float d = dx * dx + dz * dz;
+                if (d > radio * radio || d >= mejor) continue;
+                var q = new Vector3(punto.x + dx, 0f, punto.z + dz);
+                if (!Tablero(q, porEncima, out float y) || y <= 1f) continue;
+                mejor = d; sobre = new Vector3(q.x, y, q.z);
+            }
+        return !float.IsPositiveInfinity(mejor);
+    }
+
+    /// La punta del embarcadero de la aldea (x, z): ahí está Pez y de ahí salen las boyas hacia la casa del farol.
+    private static readonly Vector2 PuntaDelMuelle = new Vector2(270f, -491.5f);
+    private const string CasaDelFarol = "Casa apartada (se llega nadando)";
+    private const string BarrilDeBoya = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Barrel01_a01.prefab";
+    private const string FarolDeCandela = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Lighting/Light01_a01.prefab";
+    /// Hueco bajo el tablero del puente donde no se ve a quien nada (ancho, alto, largo) si no se puede medir el puente.
+    private static readonly Vector3 HuecoBajoElPuente = new Vector3(5f, 2.4f, 9f);
+    /// El puente del camino que cruzan los contrabandistas en el seguimiento, y el ancho del escondite
+    /// bajo él (el tablero mide 4 m; un poco más para quien nada pegado al borde).
+    private const string PuenteDelSeguimiento = "Puente_camino_5";
+    private const float AnchoDelHueco = 6f;
+
+    private static NarrativeNode DesbloquearHabilidad(AbilityKey habilidad, string marca) => GameStepNode.For(new PedirDesbloqueo
+    {
+        abilityKeysToUnlock = new List<AbilityKey> { habilidad }, applyPresetAfterUnlock = true, oneShotFlag = marca,
+    });
 
     private const string ConfigDeLosContrabandistas = "Assets/_NPCs/Combat/NPC_Combat_Config_Contrabandistas.asset";
     private const string VigiaContrabandista = "Assets/_NPCs/_GrafoNarrativo/Contrabandista_Vigia.prefab";
+    /// El del carro: más corpulento que el vigía. Los NPC del pack comparten el mismo cuerpo de chibi
+    /// (ninguno es más grueso), así que es una variante de un vecino con la planta ensanchada.
+    private const string GrandoteContrabandista = "Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab";
+    private const string BaseDelGrandote = "Assets/_NPCs/Pueblo/Jorge.prefab";
+    private static readonly Vector3 PlantaDelGrandote = new Vector3(1.22f, 1.1f, 1.22f);
+
+    private static readonly string[] PiezasDelGrandote = { "Head01_Male", "Hair12", "Body15", "AC11_Mustache02", "Eye01", "Mouth02" };
+    private static readonly string[] PiezasDelVigia = { "Head01_Male", "Hair05", "Body16", "AC10_Mustache02", "Eye01", "Mouth02" };
+
+    /// Enciende las piezas del pack modular de un contrabandista (cara de hombre, pelo corto, bigote).
+    private static void VestirContrabandista(string ruta, string[] piezas, StringBuilder informe)
+    {
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(ruta) == null) return;
+        var raiz = PrefabUtility.LoadPrefabContents(ruta);
+        try
+        {
+            GeneradorDeNpcs.SeleccionarPiezas(raiz, piezas);
+            PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
+            informe.AppendLine($"Cap. 3: «{ruta}» con {string.Join(", ", piezas)} (pasar después «Caras de los NPCs»).");
+        }
+        catch (System.InvalidOperationException e)
+        {
+            informe.AppendLine($"AVISO: «{ruta}»: {e.Message}");
+        }
+        finally { PrefabUtility.UnloadPrefabContents(raiz); }
+    }
 
     /// Los contrabandistas no son enemigos de paso (INC-1287): el vigía usaba el prefab del pirata, que
     /// ataca al ver al jugador y suelta su «¿Ves este ojo?» en cuanto Will se acerca al claro. Tienen
@@ -510,7 +853,34 @@ public static partial class MontajeDeLosCapitulos
             if (cambio) so.ApplyModifiedPropertiesWithoutUndo();
         }
         PrefabUtility.SavePrefabAsset(vigia);
+
+        var grandote = AssetDatabase.LoadAssetAtPath<GameObject>(GrandoteContrabandista);
+        if (grandote == null)
+        {
+            var origen = AssetDatabase.LoadAssetAtPath<GameObject>(BaseDelGrandote);
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(origen);
+            grandote = PrefabUtility.SaveAsPrefabAsset(inst, GrandoteContrabandista);
+            Object.DestroyImmediate(inst);
+        }
+        if (grandote.transform.localScale != PlantaDelGrandote)
+        {
+            grandote.transform.localScale = PlantaDelGrandote;
+            PrefabUtility.SavePrefabAsset(grandote);
+        }
+        // Cara y pelo de hombre, con bigote: con el pelo largo del pack parecían mujeres (INC-1406).
+        VestirContrabandista(GrandoteContrabandista, PiezasDelGrandote, informe);
+        VestirContrabandista(VigiaContrabandista, PiezasDelVigia, informe);
+        informe.AppendLine($"Cap. 3: el del carro, «{GrandoteContrabandista}» (variante de {BaseDelGrandote}, planta {PlantaDelGrandote}).");
         informe.AppendLine($"Cap. 3: contrabandistas con config propia (no atacan por su cuenta, cerebro por puntuación); vigía «{VigiaContrabandista}» ({puestas} referencia(s) a la config).");
+    }
+
+    /// La copia del carro del pack con las ruedas sueltas y WheelSpin; solo se hace si falta.
+    private static void AsegurarCarroConRuedas(StringBuilder informe)
+    {
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(CarroDeLasJaulas) != null) return;
+        var origen = AssetDatabase.LoadAssetAtPath<GameObject>(CarroDelPack);
+        Kits.EditorTools.WheelSeparator.Separate(origen, CarroDeLasJaulas, out string parte);
+        informe.AppendLine(parte);
     }
 
     /// El carro que pasa junto al fuego: va tras el contrabandista del seguimiento, sin colisiones (se
@@ -520,8 +890,18 @@ public static partial class MontajeDeLosCapitulos
         var carro = raiz.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PROP_Carro Cap3");
         if (carro == null) { informe.AppendLine("AVISO: falta el carro de las jaulas (PROP_Carro Cap3)."); return; }
         var arrastre = carro.GetComponent<CargaArrastrada>() ?? carro.gameObject.AddComponent<CargaArrastrada>();
-        // Las varas hacia quien tira: con 90° iban hacia atrás y el carro parecía empujado (INC-1287).
-        arrastre.Configurar(Contra1, 2.9f, 270f);
+        // Va sin colliders: que las cámaras de charla lo vean como algo que tapa (INC-1331).
+        if (carro.GetComponent<Kits.Core.CameraOccluder>() == null) carro.gameObject.AddComponent<Kits.Core.CameraOccluder>();
+        // Las varas del modelo van hacia su +Z (giro 0: con 90° o 270° el carro iba de lado). A 1,47 m
+        // del centro del carro, quien tira queda metido entre las varas, entre la caja y el travesaño
+        // de las puntas, agarrándolas (pose «TirarDeLasVaras»). Ver INC-1322.
+        arrastre.Configurar(Contra1, 1.47f, 0f, "TirarDeLasVaras");
+        // Las manos en las varas (INC-1345): un agarre en cada vara, cerca de las puntas y por encima
+        // (espacio del modelo Cart07, en metros: varas a ±0,57 m del centro, arriba a 0,62 m, puntas a
+        // 1,47–1,66 m). Al engancharse, el carro se escala para que queden a la altura de su cadera.
+        arrastre.ConfigurarAgarres(new Vector3(-0.565f, 0.62f, 1.38f), new Vector3(0.565f, 0.62f, 1.38f));
+        // Sólido: la caja (ruedas incluidas, sin las varas) choca y la rodean los demás agentes.
+        arrastre.HacerSolida(new Bounds(new Vector3(0f, 1.175f, -0.49f), new Vector3(2.3f, 2.35f, 2.18f)));
         EditorUtility.SetDirty(arrastre);
 
         var previa = carro.Find("Luz de la carga");

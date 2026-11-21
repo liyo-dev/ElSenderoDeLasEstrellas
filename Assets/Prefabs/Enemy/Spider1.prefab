@@ -413,6 +413,7 @@ GameObject:
   - component: {fileID: 4589410262978653035}
   - component: {fileID: 7021102751427995675}
   - component: {fileID: 9031472481659939320}
+  - component: {fileID: 8318184152050013762}
   m_Layer: 7
   m_Name: Spider1
   m_TagString: Untagged
@@ -597,6 +598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 20
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &2228025990798578823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,6 +644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+  _monedaSoloLaPrimeraVez: 0
 --- !u!114 &4589410262978653035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,6 +701,21 @@ MonoBehaviour:
   soloConLaMision: 
   radioDeProximidad: 0
   debugLogs: 0
+--- !u!114 &8318184152050013762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5572779666037620316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_ARANA
+  debilidades: 00000000i
+  resistencias: 
 --- !u!1 &5572779666037620318
 GameObject:
   m_ObjectHideFlags: 0

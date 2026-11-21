@@ -25,6 +25,30 @@ namespace Game.NPC.Combate
         public float EsperaParaRecargar { get; private set; }
         public float DuracionDeBusqueda { get; private set; }
 
+        /// <summary>Fases a partir de la segunda, de más vida a menos (vacío = una sola fase).</summary>
+        public readonly List<FaseDeCombate> Fases = new List<FaseDeCombate>();
+
+        /// <summary>
+        /// Pasa a pelear como dice la fase: su catálogo (si trae alguno con proyectil), su carácter,
+        /// sus defensas y su dificultad, cada cosa solo si la fase la cambia.
+        /// </summary>
+        public void Aplicar(FaseDeCombate fase)
+        {
+            if (fase == null) return;
+            bool hayAcciones = false;
+            for (int i = 0; i < fase.acciones.Count; i++)
+                if (fase.acciones[i] != null && fase.acciones[i].proyectil != null) { hayAcciones = true; break; }
+            if (hayAcciones)
+            {
+                Acciones.Clear();
+                for (int i = 0; i < fase.acciones.Count; i++)
+                    if (fase.acciones[i] != null && fase.acciones[i].proyectil != null) Acciones.Add(fase.acciones[i]);
+            }
+            if (fase.cambiaCaracter && fase.caracter != null) Caracter = fase.caracter;
+            if (fase.cambiaDefensas && fase.defensas != null) Defensas = fase.defensas;
+            if (fase.dificultad >= 0f) Dificultad = fase.dificultad;
+        }
+
         public static PerfilEnUso Montar(PerfilDeCombate perfil, NPCCombatConfig config)
         {
             var uso = new PerfilEnUso();
@@ -42,6 +66,10 @@ namespace Game.NPC.Combate
                 uso.Dificultad = perfil.dificultad;
                 for (int i = 0; i < perfil.acciones.Count; i++)
                     if (perfil.acciones[i] != null && perfil.acciones[i].proyectil != null) uso.Acciones.Add(perfil.acciones[i]);
+                for (int i = 0; i < perfil.fases.Count; i++)
+                    if (perfil.fases[i] != null) uso.Fases.Add(perfil.fases[i]);
+                // De más vida a menos: es el orden en que se entra en ellas.
+                uso.Fases.Sort((a, b) => b.desdeVida.CompareTo(a.desdeVida));
             }
             else
             {

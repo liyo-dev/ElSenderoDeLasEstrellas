@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Tests de EditMode de <see cref="DefaultNarrativeSignals"/>: entrega «sticky» de señales

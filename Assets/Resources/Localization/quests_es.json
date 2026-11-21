@@ -576,11 +576,11 @@
         },
         {
             "key": "CAP3_PISTA_2_PASO",
-            "value": "Mira la cerca del huerto"
+            "value": "Mira la cerca del huerto, donde Lucía vio al zorro"
         },
         {
             "key": "CAP3_PISTA_3_PASO",
-            "value": "Mira la casa de las nasas"
+            "value": "Mira la casa de las nasas, la del tejado de paja"
         },
         {
             "key": "CAP3_HOJA_PASO",
@@ -592,7 +592,7 @@
         },
         {
             "key": "CAP3_CLARO_PASO",
-            "value": "Decide qué hacer en el claro"
+            "value": "Averigua qué llevan en el claro"
         },
         {
             "key": "CAP4_ENCUENTRA_A_ESTELA_NAME",
@@ -661,6 +661,22 @@
         {
             "key": "CAP3_NOCHE_PASO",
             "value": "Espera el carro de noche junto al fuego"
+        },
+        {
+            "key": "CAP3_PEZ_PASO",
+            "value": "Busca a Pez en el muelle"
+        },
+        {
+            "key": "CAP3_LUBINA_PASO",
+            "value": "Lleva el recado de Pez a Doña Lubina, al final del muelle"
+        },
+        {
+            "key": "CAP3_FAROL_PASO",
+            "value": "Nada hasta la casa del farol"
+        },
+        {
+            "key": "CAP3_CERCA_PASO",
+            "value": "Mira la cerca del huerto, camino del bosque"
         }
     ]
 }

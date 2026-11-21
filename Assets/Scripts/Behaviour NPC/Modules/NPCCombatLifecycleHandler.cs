@@ -1,4 +1,5 @@
-﻿﻿using System.Collections;
+using Liyodev.NarrativeGraph;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using Sendero.Core.Feedback;
@@ -9,19 +10,18 @@ namespace Game.NPC.Modules
 {
     /// <summary>
     /// Maneja el ciclo de vida del combate: Daño, Stun, Muerte, SlowMotion y lógica Post-Batalla.
-    /// Última actualización: 28/12/2024 - Agregado HandlePostDefeatInteraction
     /// </summary>
     [RequireComponent(typeof(Damageable))]
     [RequireComponent(typeof(NPCBehaviourManagerV2))]
     public class NPCCombatLifecycleHandler : MonoBehaviour
     {
         #region Configuration
-        [Header("💥 Damage Feedback")]
+        [Header("Damage Feedback")]
         [SerializeField] private bool playDamageAnimation = true;
         [SerializeField, Range(0f, 2f)] private float damageStunDuration = 0.8f; // Reducido un poco para mayor dinamismo
         [SerializeField, Range(0f, 2f)] private float invulnerabilityDuration = 0.5f;
         
-        [Header("🎥 Camera & Time")]
+        [Header("Camera & Time")]
         [SerializeField] private bool enableCameraShake = true;
         [SerializeField] private float cameraShakeIntensity = 0.2f;
         [SerializeField] private float cameraShakeDuration = 0.15f;
@@ -29,14 +29,14 @@ namespace Game.NPC.Modules
         [SerializeField, Range(0f, 1f)] private float hitStopTimeScale = 0.1f; // Más lento para mayor impacto
         [SerializeField] private float hitStopDuration = 0.15f;
 
-        [Header("💀 Death Sequence")]
+        [Header("Death Sequence")]
         [SerializeField] private bool enableDeathEffects = true;
         [SerializeField] private float deathSlowMoScale = 0.2f;
         [SerializeField] private float deathSlowMoDuration = 1.0f;
         [SerializeField] private GameObject deathVFXPrefab;
         [SerializeField] private Vector3 deathVFXOffset = Vector3.up;
 
-        [Header("💀 Death Sequence - Cámara cinematográfica")]
+        [Header("Death Sequence - Cámara cinematográfica")]
         [Tooltip("Factor de zoom del FOV hacia el enemigo derrotado (1 = sin zoom, <1 = acercar). Comunica que la pausa es intencional en vez de sentirse como un cuelgue.")]
         [SerializeField, Range(0.5f, 1f)] private float deathZoomFactor = 0.85f;
         [Tooltip("Duración del zoom de entrada hacia el enemigo")]
@@ -53,19 +53,18 @@ namespace Game.NPC.Modules
         // El cerebro que pelea ahora (clásico o por puntuación); lo apunta CombatState en el contexto.
         private ICerebroDeCombate Cerebro => _manager != null && _manager.Context != null ? _manager.Context.CerebroDeCombate : null;
         private NPCShieldController _shieldController;
-        // FIX #25: antes se llamaba GetComponent<NPCTeamMember>()
-        // en OnDied/DeathRoutine/HandleGetUpDizzy/HandleMoveToAnchor/MoveTeamMembersToRandomPoints
-        // (5 sitios distintos). Se cachea una sola vez... pero NO en Awake(): NPCTeamMember lo añade
+        // Antes se llamaba GetComponent<NPCTeamMember>() en
+        // OnDied/DeathRoutine/HandleGetUpDizzy/HandleMoveToAnchor/MoveTeamMembersToRandomPoints (5
+        // sitios distintos). Se cachea una sola vez... pero NO en Awake(): NPCTeamMember lo añade
         // dinámicamente NPCCombatTeam.Start() (ver NPCCombatTeam.cs, "AddComponent<NPCTeamMember>()"),
         // y Unity ejecuta TODOS los Awake() de la escena antes que CUALQUIER Start() — así que en el
         // momento de este Awake() el componente todavía no existe en el GameObject y GetComponent
-        // devolvía null para siempre (el campo nunca se refrescaba después).
-        // FIX #26 (16 ago 2026, bug reportado por Raúl - "combate dual"): ese null permanente
-        // hacía que isInTeam fuera SIEMPRE false para cualquier NPC en equipo (dúo o grupo) — la
-        // música/animación de victoria sonaba al derrotar al PRIMER enemigo (no al último) y la
-        // música de combate se restauraba (se quitaba) justo después de esa primera derrota, en vez
-        // de esperar a que cayera todo el equipo. Ahora se resuelve de forma perezosa (lazy) la
-        // primera vez que se necesita, ya con el componente añadido por NPCCombatTeam.
+        // devolvía null para siempre (el campo nunca se refrescaba después). Ese null permanente hacía
+        // que isInTeam fuera SIEMPRE false para cualquier NPC en equipo (dúo o grupo) — la
+        // música/animación de victoria sonaba al derrotar al PRIMER enemigo (no al último) y la música
+        // de combate se restauraba (se quitaba) justo después de esa primera derrota, en vez de
+        // esperar a que cayera todo el equipo. Ahora se resuelve de forma perezosa (lazy) la primera
+        // vez que se necesita, ya con el componente añadido por NPCCombatTeam.
         private NPCTeamMember _teamMember;
 
         /// <summary>
@@ -101,6 +100,10 @@ namespace Game.NPC.Modules
 
         #region State
         public bool IsDefeatedAndInactive { get; private set; }
+
+        /// Ha caído y aún está con lo que viene después (animación de mareo, su frase, la acción
+        /// post-derrota). Mientras tanto no se le puede mandar andar.
+        public bool ProcesandoLaDerrota => _isProcessingDefeat;
         public bool IsStunned { get; private set; }
         
         private bool _isProcessingDefeat;
@@ -110,11 +113,24 @@ namespace Game.NPC.Modules
         #endregion
 
         /// <summary>
-        /// FIX INC-045: un proyectil ya lanzado puede matar a este NPC después de que el
-        /// jugador haya muerto (game over en curso, ej: ambos se golpean casi a la vez).
-        /// En ese caso el combate terminó en derrota, no en victoria: ni la música/animación
-        /// de victoria ni la restauración de música ambiente deben sonar por encima del game over.
+        /// Un proyectil ya lanzado puede matar a este NPC después de que el jugador haya muerto
+        /// (game over en curso, ej: ambos se golpean casi a la vez). En ese caso el combate
+        /// terminó en derrota, no en victoria: ni la música/animación de victoria ni la
+        /// restauración de música ambiente deben sonar por encima del game over.
         /// </summary>
+        // ¿Queda algún enemigo del combate en pie además de este? La celebración y la vuelta de la
+        // música son del último en caer, vaya o no en equipo (dos enemigos sueltos de un mismo
+        // combate celebraban cada uno al caer). Ver INC-1331.
+        private static readonly System.Func<GameObject, bool> s_estaVencido = EstaVencido;
+
+        private static bool EstaVencido(GameObject npc)
+        {
+            var ciclo = npc != null ? npc.GetComponent<NPCCombatLifecycleHandler>() : null;
+            return ciclo != null && ciclo.IsDefeatedAndInactive;
+        }
+
+        private bool QuedanOtrosEnPie() => ActiveCombatRegistry.QuedanOtrosEnPie(gameObject, s_estaVencido);
+
         private static bool IsPlayerDeadOrGameOverActive()
         {
             if (GameOverManager.Instance != null && GameOverManager.Instance.IsShown) return true;
@@ -133,8 +149,8 @@ namespace Game.NPC.Modules
             _animator = GetComponent<NPCSimpleAnimator>();
             _agent = GetComponent<NavMeshAgent>();
             _shieldController = GetComponent<NPCShieldController>();
-            // FIX #26: NO cachear NPCTeamMember aquí — todavía no existe (ver comentario en la
-            // declaración del campo más arriba). Se resuelve perezosamente vía ResolvedTeamMember.
+            // NO cachear NPCTeamMember aquí — todavía no existe (ver comentario en la declaración
+            // del campo más arriba). Se resuelve perezosamente vía ResolvedTeamMember.
 
             // CRÍTICO: Configurar destroyOnDeath=false INMEDIATAMENTE en Awake
             // Esto se aplica tanto si el componente ya existía como si se acaba de añadir
@@ -142,7 +158,6 @@ namespace Game.NPC.Modules
             {
                 _damageable.SetDestroyOnDeath(false);
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                // Debug.Log($"[Lifecycle] destroyOnDeath establecido a FALSE en Awake para {name} (actual valor: {_damageable.GetComponent<Damageable>() != null})");
                 #endif
             }
             else
@@ -181,7 +196,6 @@ namespace Game.NPC.Modules
             // Verificación final: Asegurar que destroyOnDeath esté en false
             _damageable.SetDestroyOnDeath(false);
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Debug.Log($"[Lifecycle] Verificación final en Start: destroyOnDeath=false para {name}");
             #endif
 
             // Suscribirse a eventos
@@ -189,7 +203,6 @@ namespace Game.NPC.Modules
             _damageable.OnDied += OnDied;
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Debug.Log($"[Lifecycle] Suscrito a eventos OnDamaged y OnDied para {name}");
             #endif
         }
 
@@ -202,10 +215,8 @@ namespace Game.NPC.Modules
             }
             // Salvaguarda final por si se destruye durante slow-mo: cancelamos el efecto cinematográfico
             // (restaura FOV y libera _isEffectActive, si no quedaría bloqueado para la próxima muerte).
-            // antes forzaba Time.timeScale=1 "por si acaso", pisando
-            // cualquier otro efecto activo (hitstop, cinemática) que no tuviera relación con esta
-            // muerte. CancelDeathEffect() ya libera la petición de este NPC en TimeScaleArbiterService
-            // (vía DeathCameraEffect.CancelEffect); no hace falta tocar Time.timeScale aquí.
+            // antes forzaba Time.timeScale=1 "por si acaso", pisando cualquier otro efecto activo
+            // (hitstop, cinemática) que no tuviera relación con esta muerte.
             FeedbackService.CancelDeathEffect();
         }
 
@@ -247,11 +258,10 @@ namespace Game.NPC.Modules
                 Debug.Log($"[Lifecycle] Interrumpiendo hechizo por daño!");
                 #endif
                 _isCasting = false;
-                // FIX #19: StopAllCoroutines() detenía el FSM del
-                // brain sin dejar nada que lo reiniciara — un NPC golpeado mientras lanzaba un hechizo
-                // se quedaba con la FSM de combate congelada para siempre (ningún otro código volvía a
-                // llamar a StartCoroutine(FSM_Loop())). InterruptCasting() para la corrutina actual Y
-                // la reinicia desde EVALUATE.
+                // StopAllCoroutines() detenía el FSM del brain sin dejar nada que lo reiniciara — un
+                // NPC golpeado mientras lanzaba un hechizo se quedaba con la FSM de combate congelada
+                // para siempre (ningún otro código volvía a llamar a StartCoroutine(FSM_Loop())).
+                // InterruptCasting() para la corrutina actual Y la reinicia desde EVALUATE.
                 Cerebro?.InterrumpirLanzamiento();
                 // No hacemos return aquí, dejamos que el stun normal ocurra
             }
@@ -314,13 +324,13 @@ namespace Game.NPC.Modules
                 yield return new WaitForSeconds(damageStunDuration);
             }
 
-            // FIX #2: condición de carrera DamageSequence/DeathRoutine.
-            // Un golpe casi simultáneo (o daño en área) puede disparar OnDied() — y por tanto DeathRoutine(),
-            // que pasa a ser dueño del agent/animator para la secuencia cinemática de muerte — mientras
-            // esta corrutina seguía suspendida en el stun de arriba. Sin este guard, al reanudar podía
-            // "pelear" con DeathRoutine (reactivar el agent, forzar Idle) justo cuando necesitaba que el
-            // NPC se quedara quieto. Si ya hay una derrota en curso, no tocamos nada más: DeathRoutine (o
-            // Resurrect(), que resetea _isInvulnerable/IsStunned explícitamente) se encarga del resto.
+            // Condición de carrera DamageSequence/DeathRoutine. Un golpe casi simultáneo (o daño en área)
+            // puede disparar OnDied() — y por tanto DeathRoutine(), que pasa a ser dueño del agent/animator
+            // para la secuencia cinemática de muerte — mientras esta corrutina seguía suspendida en el stun
+            // de arriba. Sin este guard, al reanudar podía "pelear" con DeathRoutine (reactivar el agent,
+            // forzar Idle) justo cuando necesitaba que el NPC se quedara quieto. Si ya hay una derrota en
+            // curso, no tocamos nada más: DeathRoutine (o Resurrect(), que resetea _isInvulnerable/IsStunned
+            // explícitamente) se encarga del resto.
             if (_isProcessingDefeat)
             {
                 yield break;
@@ -413,11 +423,10 @@ namespace Game.NPC.Modules
 
             // 1. DETENER TODO INMEDIATAMENTE
             Cerebro?.Detener();
-            // FIX #12: parada explícita del escudo aquí también.
-            // Detener() ya para el escudo si hay cerebro, pero este NPC puede tener
-            // NPCShieldController sin cerebro (o con el cerebro null por timing) — sin este guard extra,
-            // el NPC podía morir a mitad de una animación de defensa y quedarse con el prefab del
-            // escudo instanciado y visible sobre el cadáver.
+            // Parada explícita del escudo aquí también. Detener() ya para el escudo si hay cerebro, pero
+            // este NPC puede tener NPCShieldController sin cerebro (o con el cerebro null por timing) —
+            // sin este guard extra, el NPC podía morir a mitad de una animación de defensa y quedarse
+            // con el prefab del escudo instanciado y visible sobre el cadáver.
             _shieldController?.StopDefending();
             // mismo guard isOnNavMesh que en DamageSequence (ver comentario
             // arriba) — un NPC muerto por un golpe justo al "despertar" del sueño por distancia
@@ -474,7 +483,7 @@ namespace Game.NPC.Modules
             
             // 6. CELEBRACIÓN DEL JUGADOR
             // Solo celebrar si: NO es equipo, O es el último miembro del equipo
-            bool shouldCelebrate = !isInTeam || isLastTeamMember;
+            bool shouldCelebrate = (!isInTeam || isLastTeamMember) && !QuedanOtrosEnPie();
             
             if (shouldCelebrate)
             {
@@ -556,7 +565,11 @@ namespace Game.NPC.Modules
             // Diálogo final antes de irse
             if (_config?.dialogueOnDefeat != null)
             {
-                yield return RunDialogueRoutine(_config.dialogueOnDefeat);
+                // Si quedan otros enemigos del combate en pie, la frase sale en bocadillo y no corta la pelea.
+                if (QuedanOtrosEnPie())
+                    yield return new CharlaEnBocadillos(_config.dialogueOnDefeat, _manager).Co_Hablar(null, 0f);
+                else
+                    yield return RunDialogueRoutine(_config.dialogueOnDefeat);
             }
 
             // VFX Desaparición
@@ -592,6 +605,7 @@ namespace Game.NPC.Modules
             var teamMember = ResolvedTeamMember;
             bool isInTeam = teamMember != null && teamMember.Team != null;
             bool isLastTeamMember = isInTeam && teamMember.Team.IsTeamDefeated;
+            bool ultimoDelCombate = (!isInTeam || isLastTeamMember) && !QuedanOtrosEnPie();
             
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Lifecycle] DEBUG HandleGetUpDizzy INICIO: isInTeam={isInTeam}, isLastTeamMember={isLastTeamMember}, battleMusicId='{_config?.battleMusicId}'");
@@ -623,15 +637,9 @@ namespace Game.NPC.Modules
                 #endif
             }
             
-            // REDISEÑO (15 ago 2026, a petición de Raúl): cada NPC del equipo ahora dice su
-            // PROPIA frase de derrota y ejecuta su PROPIA acción post-derrota de forma
-            // independiente en cuanto ÉL MISMO muere — ya no espera a que caiga todo el equipo ni
-            // a que el líder termine de hablar. Antes, un miembro no-líder que moría primero se
-            // quedaba congelado en HandleGetUpDizzy hasta 2 minutos esperando al resto del equipo
-            // (o más, esperando encima al diálogo del líder) — eso es justo el bug que describió
-            // Raúl como "se ha ido uno de los dos y el otro seguía luchando": un NPC efectivamente
-            // desaparecía de la pelea (congelado en dizzy o ya desaparecido) mientras su compañero
-            // seguía luchando solo, sin que sonara ninguna frase propia suya.
+            // REDISEÑO: cada NPC del equipo ahora dice su PROPIA frase de derrota y ejecuta su
+            // PROPIA acción post-derrota de forma independiente en cuanto ÉL MISMO muere — ya no
+            // espera a que caiga todo el equipo ni a que el líder termine de hablar.
             //
             // isLastTeamMember (calculado arriba, al ENTRAR a este método) ya nos dice si la
             // muerte de ESTE NPC fue la que completó la derrota del equipo — _defeatedCount se
@@ -670,7 +678,16 @@ namespace Game.NPC.Modules
                     Debug.Log($"[Lifecycle] Iniciando diálogo post-derrota para {name}");
                     #endif
                     bool finished = false;
-                    DialogueManager.Instance.StartDialogue(dialogue, transform, () => finished = true);
+                    // Con otros enemigos del combate aún en pie, la frase va en bocadillo (no abre la caja
+                    // de diálogo, que paraba la pelea). El último en caer sí la dice en caja.
+                    CharlaEnBocadillos enBocadillos = null;
+                    if (QuedanOtrosEnPie())
+                    {
+                        enBocadillos = new CharlaEnBocadillos(dialogue, _manager);
+                        StartCoroutine(Co_ContarEnBocadillos(enBocadillos, () => finished = true));
+                    }
+                    else
+                        DialogueManager.Instance.StartDialogue(dialogue, transform, () => finished = true);
                     
                     // Esperar a que termine el diálogo
                     while (!finished) 
@@ -682,7 +699,8 @@ namespace Game.NPC.Modules
                             Debug.Log($"[Lifecycle] Diálogo interrumpido para {name}");
                             #endif
                             // Cerrar el diálogo si está abierto
-                            if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
+                            if (enBocadillos != null) enBocadillos.Callar();
+                            else if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
                             {
                                 DialogueManager.Instance.Close();
                             }
@@ -714,7 +732,7 @@ namespace Game.NPC.Modules
                     // REDISEÑO: ya no se exige ser el líder — la música/celebración
                     // se restaura una única vez, cuando el NPC cuya muerte completó al equipo
                     // (isLastTeamMember) termina SU PROPIO diálogo. Da igual si es el líder o no.
-                    else if (!isInTeam || isLastTeamMember)
+                    else if (ultimoDelCombate)
                     {
                         if (!string.IsNullOrEmpty(_config?.battleMusicId) && AudioService.Instance != null)
                         {
@@ -760,7 +778,7 @@ namespace Game.NPC.Modules
                         Debug.Log("[Lifecycle] Jugador ya murió (game over en curso) — se omite la restauración de música (sin diálogo).");
                         #endif
                     }
-                    else if (!isInTeam || isLastTeamMember)
+                    else if (ultimoDelCombate)
                     {
                         if (!string.IsNullOrEmpty(_config?.battleMusicId) && AudioService.Instance != null)
                         {
@@ -1715,6 +1733,12 @@ namespace Game.NPC.Modules
 
             var anchorGo = GameObject.Find(anchorIdOrName);
             return anchorGo != null ? anchorGo.transform : null;
+        }
+
+        private IEnumerator Co_ContarEnBocadillos(CharlaEnBocadillos charla, System.Action alAcabar)
+        {
+            yield return charla.Co_Hablar(null, 0f);
+            alAcabar?.Invoke();
         }
 
         private IEnumerator RunDialogueRoutine(DialogueAsset dialogue)

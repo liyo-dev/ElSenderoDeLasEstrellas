@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using Liyodev.NarrativeGraph;
 using Game.NPC; // Necesario para NPCBehaviourManagerV2 (bosses basados en FSM, p.ej. Mago Oscuro)
 
 public class BossArenaController : MonoBehaviour
@@ -183,7 +184,7 @@ public class BossArenaController : MonoBehaviour
     bool _bossDefeatHandled = false;
     bool _bossDeathConfirmed = false;
     bool _pendingStartBattle = false;
-    bool _profileReady = false; // ✅ Flag para rastrear si el perfil está listo
+    bool _profileReady = false; // Flag para rastrear si el perfil está listo
     EnemyMarker _activeBossMarker;
     Damageable _activeBossDamageable;
     GuiaDeCombate _guia;
@@ -240,8 +241,8 @@ public class BossArenaController : MonoBehaviour
     void OnEnable()
     {
         BossProgressTracker.OnProgressRestored += HandleBossProgressRestored;
-        GameBootService.OnProfileReady += HandleProfileReady; // ✅ Suscribirse a OnProfileReady
-        ProfileReadyDiagnostics.RegisterSubscriber(nameof(BossArenaController)); // 🔍 Registrar para diagnósticos
+        GameBootService.OnProfileReady += HandleProfileReady; // Suscribirse a OnProfileReady
+        ProfileReadyDiagnostics.RegisterSubscriber(nameof(BossArenaController)); // Registrar para diagnósticos
 
         // Asegurar registro en OnEnable (por si el orden de Awake/Start causa que el registro aún no exista
         // cuando otros sistemas intenten activarlo). Normalizamos la clave.
@@ -257,11 +258,10 @@ public class BossArenaController : MonoBehaviour
 #endif
                 }
                 s_arenaRegistry[key] = this;
-                //Debug.Log($"[BossArenaController] OnEnable: Registrada arena con BattleId='{key}' (scene='{gameObject.scene.name}', active={gameObject.activeInHierarchy}).");
             }
         }
 
-        // ✅ Verificar si el perfil ya está disponible (caso de reinicio de escena)
+        // Verificar si el perfil ya está disponible (caso de reinicio de escena)
         if (GameBootService.IsAvailable && GameBootService.Profile != null)
         {
             HandleProfileReady();
@@ -289,7 +289,7 @@ public class BossArenaController : MonoBehaviour
         _resultadoDeBatalla = null;
 
         BossProgressTracker.OnProgressRestored -= HandleBossProgressRestored;
-        GameBootService.OnProfileReady -= HandleProfileReady; // ✅ Desuscribirse de OnProfileReady
+        GameBootService.OnProfileReady -= HandleProfileReady; // Desuscribirse de OnProfileReady
         CleanupBossSubscriptions();
 
         // Desregistrar si estaba registrado
@@ -308,10 +308,10 @@ public class BossArenaController : MonoBehaviour
     void Start()
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] 🎬 Start() - Arena BattleId='{battleId}', BossId='{bossId}', ProfileReady={_profileReady}");
+        Debug.Log($"[BossArenaController] Start() - Arena BattleId='{battleId}', BossId='{bossId}', ProfileReady={_profileReady}");
 #endif
         
-        // ✅ CRÍTICO: Solo verificar el estado del boss si el perfil ya está listo
+        // CRÍTICO: Solo verificar el estado del boss si el perfil ya está listo
         // Si no está listo, HandleProfileReady() lo verificará cuando se dispare OnProfileReady
         if (_profileReady)
         {
@@ -320,7 +320,7 @@ public class BossArenaController : MonoBehaviour
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ⏳ Esperando a que el perfil esté listo para verificar el estado del boss");
+            Debug.Log($"[BossArenaController] Esperando a que el perfil esté listo para verificar el estado del boss");
 #endif
         }
     }
@@ -333,14 +333,14 @@ public class BossArenaController : MonoBehaviour
         if (_profileReady)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ⚠️ HandleProfileReady llamado múltiples veces para '{bossId}' - ignorando");
+            Debug.Log($"[BossArenaController] HandleProfileReady llamado múltiples veces para '{bossId}' - ignorando");
 #endif
             return;
         }
         
         _profileReady = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] ✅ Perfil listo para '{bossId}' - verificando estado del boss");
+        Debug.Log($"[BossArenaController] Perfil listo para '{bossId}' - verificando estado del boss");
 #endif
         
         // Desuscribirse para no recibir más notificaciones
@@ -357,20 +357,20 @@ public class BossArenaController : MonoBehaviour
     {
         bool isDefeated = IsBossAlreadyDefeated();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] 🔍 IsBossAlreadyDefeated() = {isDefeated} para BossId='{bossId}'");
+        Debug.Log($"[BossArenaController] IsBossAlreadyDefeated() = {isDefeated} para BossId='{bossId}'");
 #endif
         
         if (isDefeated)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ✅ Boss '{bossId}' ya fue derrotado - desbloqueando área sin spawnearlo");
+            Debug.Log($"[BossArenaController] Boss '{bossId}' ya fue derrotado - desbloqueando área sin spawnearlo");
 #endif
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ⚔️ Boss '{bossId}' NO ha sido derrotado - esperando trigger del player");
+            Debug.Log($"[BossArenaController] Boss '{bossId}' NO ha sido derrotado - esperando trigger del player");
 #endif
         }
     }
@@ -378,7 +378,7 @@ public class BossArenaController : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] 🚪 OnTriggerEnter - Tag: {other.tag}, Started: {started}, BossDefeated: {_bossDefeatHandled}, StartOnEnter: {startBarrierOnPlayerEnter}");
+        Debug.Log($"[BossArenaController] OnTriggerEnter - Tag: {other.tag}, Started: {started}, BossDefeated: {_bossDefeatHandled}, StartOnEnter: {startBarrierOnPlayerEnter}");
 #endif
         
         if (started || _bossDefeatHandled) return;
@@ -386,27 +386,27 @@ public class BossArenaController : MonoBehaviour
         if (!startBarrierOnPlayerEnter) 
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ⏸️ StartBarrierOnPlayerEnter está desactivado - no se inicia batalla automáticamente");
+            Debug.Log($"[BossArenaController] StartBarrierOnPlayerEnter está desactivado - no se inicia batalla automáticamente");
 #endif
             return;
         }
 
         bool isDefeated = IsBossAlreadyDefeated();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] 🔍 Player entró al trigger - IsBossAlreadyDefeated={isDefeated}");
+        Debug.Log($"[BossArenaController] Player entró al trigger - IsBossAlreadyDefeated={isDefeated}");
 #endif
         
         if (isDefeated)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ✅ Boss ya derrotado - aplicando estado cleared");
+            Debug.Log($"[BossArenaController] Boss ya derrotado - aplicando estado cleared");
 #endif
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
             return;
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] ⚔️ Iniciando batalla con boss '{bossId}'");
+        Debug.Log($"[BossArenaController] Iniciando batalla con boss '{bossId}'");
 #endif
         // Usamos el método centralizado para iniciar la batalla
         StartBattleInternal();
@@ -601,14 +601,14 @@ public class BossArenaController : MonoBehaviour
         if (bossIntroPresentation != null || BossIntroPresentationService.Instance != null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ✅ Presentación de boss disponible para '{boss.name}'. Iniciando presentación...");
+            Debug.Log($"[BossArenaController] Presentación de boss disponible para '{boss.name}'. Iniciando presentación...");
 #endif
             StartCoroutine(PlayPresentationAndPlaceBoss(boss));
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ⚠️ No hay presentación de boss disponible para '{boss.name}'. Colocando boss directamente.");
+            Debug.Log($"[BossArenaController] No hay presentación de boss disponible para '{boss.name}'. Colocando boss directamente.");
 #endif
             ColocarJugadorEnArena();
             PlaceBossOnFloor(boss);
@@ -625,7 +625,7 @@ public class BossArenaController : MonoBehaviour
         if (bossCamera == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[BossArenaController] ❌ No se encontró cámara en el boss '{boss.name}' (ni activa ni inactiva). Saltando presentación.");
+            Debug.LogWarning($"[BossArenaController] No se encontró cámara en el boss '{boss.name}' (ni activa ni inactiva). Saltando presentación.");
 #endif
             ColocarJugadorEnArena();
             PlaceBossOnFloor(boss);
@@ -634,7 +634,7 @@ public class BossArenaController : MonoBehaviour
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] 📷 Cámara encontrada: '{bossCamera.name}' en boss '{boss.name}'");
+        Debug.Log($"[BossArenaController] Cámara encontrada: '{bossCamera.name}' en boss '{boss.name}'");
 #endif
         
         if (_playerPendingPlacement)
@@ -652,14 +652,14 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
-            // IMPORTANTE (INC-207 hotfix 2026-09-15): arrancar esta corrutina en el propio
-            // servicio (persistente, DontDestroyOnLoad), no en "this" (la arena). Si se arranca
-            // en la arena y la arena se desactiva/destruye a media presentación (cambio de
-            // escena, ApplyBattleDisables, etc.), Unity aborta la corrutina sin pasar por su
-            // finally — _isPlaying del servicio se queda en true para siempre y ninguna futura
-            // batalla del juego vuelve a revelar la pantalla. Arrancarla en el propio servicio
-            // hace que sobreviva a la arena y garantiza que su finally (fundido de emergencia
-            // incluido) siempre se ejecute.
+            // IMPORTANTE: arrancar esta corrutina en el propio servicio (persistente,
+            // DontDestroyOnLoad), no en "this" (la arena). Si se arranca en la arena y la arena
+            // se desactiva/destruye a media presentación (cambio de escena,
+            // ApplyBattleDisables, etc.), Unity aborta la corrutina sin pasar por su finally —
+            // _isPlaying del servicio se queda en true para siempre y ninguna futura batalla
+            // del juego vuelve a revelar la pantalla. Arrancarla en el propio servicio hace que
+            // sobreviva a la arena y garantiza que su finally (fundido de emergencia incluido)
+            // siempre se ejecute.
             yield return BossIntroPresentationService.Instance.StartCoroutine(
                 BossIntroPresentationService.Instance.PlayIntroduction(boss.transform, bossCamera, GetLocalizedBossName()));
         }
@@ -708,12 +708,12 @@ public class BossArenaController : MonoBehaviour
         var npcManager = boss.GetComponent<NPCBehaviourManagerV2>();
         if (npcManager != null)
         {
-            // FIX (ronda 16): mientras el boss permanezca en su layer ambiente "Interactable",
-            // los hechizos lanzados por aliados (p.ej. Estela) nunca le hacen daño: MagicProjectileSpawner
-            // calcula hitLayers = LayerMask.GetMask("Enemy", "Boss") y MagicProjectil.ResolveHit() descarta
-            // en silencio (sin log) cualquier impacto cuyo layer no esté en esa máscara. NPCCombatLifecycleHandler
-            // ya revierte a "Interactable" al terminar el combate (SetupPostCombatInteraction), así que aquí
-            // hacemos el cambio simétrico de entrada a combate.
+            // Mientras el boss permanezca en su layer ambiente "Interactable", los hechizos lanzados por aliados
+            // (p.ej. Estela) nunca le hacen daño: MagicProjectileSpawner calcula hitLayers =
+            // LayerMask.GetMask("Enemy", "Boss") y MagicProjectil.ResolveHit() descarta en silencio (sin log)
+            // cualquier impacto cuyo layer no esté en esa máscara. NPCCombatLifecycleHandler ya revierte a
+            // "Interactable" al terminar el combate (SetupPostCombatInteraction), así que aquí hacemos el cambio
+            // simétrico de entrada a combate.
             int enemyLayer = LayerMask.NameToLayer("Enemy");
             if (enemyLayer != -1)
             {
@@ -903,14 +903,14 @@ public class BossArenaController : MonoBehaviour
         if (!_bossDeathConfirmed)
         {
             // El boss fue destruido sin haber sido derrotado (p.ej. cambio de escena tras Game
-            // Over, killzone, despawn o limpieza externa). FIX A2 (auditoría 2026-08-07): antes
-            // este camino solo hacía CleanupBossSubscriptions()+started=false, sin reabrir
-            // puertas, desbloquear el área ni parar la música de batalla — el jugador quedaba
-            // encerrado con música de boss infinita y sin poder re-disparar el trigger (started
-            // seguía en el estado de "batalla en curso" a efectos de puertas/barrera). Se reusa
-            // ApplyBossClearedState (misma limpieza que una victoria real) pero sin marcar
-            // derrota real: no cuenta como victoria en BossProgressTracker, no dispara eventos
-            // de Unity ni señales narrativas de "batalla ganada".
+            // Over, killzone, despawn o limpieza externa). Antes este camino solo hacía
+            // CleanupBossSubscriptions()+started=false, sin reabrir puertas, desbloquear el
+            // área ni parar la música de batalla — el jugador quedaba encerrado con música de
+            // boss infinita y sin poder re-disparar el trigger (started seguía en el estado de
+            // "batalla en curso" a efectos de puertas/barrera). Se reusa ApplyBossClearedState
+            // (misma limpieza que una victoria real) pero sin marcar derrota real: no cuenta
+            // como victoria en BossProgressTracker, no dispara eventos de Unity ni señales
+            // narrativas de "batalla ganada".
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
             return;
         }
@@ -969,7 +969,7 @@ public class BossArenaController : MonoBehaviour
         if (string.IsNullOrEmpty(bossId))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] ⚠️ IsBossAlreadyDefeated: bossId está vacío para battleId='{battleId}'");
+            Debug.Log($"[BossArenaController] IsBossAlreadyDefeated: bossId está vacío para battleId='{battleId}'");
 #endif
             return false;
         }
@@ -979,13 +979,13 @@ public class BossArenaController : MonoBehaviour
             bool defeated = tracker.IsDefeated(bossId);
             var allDefeated = tracker.DefeatedBossIds;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[BossArenaController] 🔍 Tracker encontrado - BossId='{bossId}', IsDefeated={defeated}, DefeatedBossIds=[{string.Join(", ", allDefeated)}]");
+            Debug.Log($"[BossArenaController] Tracker encontrado - BossId='{bossId}', IsDefeated={defeated}, DefeatedBossIds=[{string.Join(", ", allDefeated)}]");
 #endif
             return defeated;
         }
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] ⚠️ BossProgressTracker no encontrado - asumiendo boss NO derrotado");
+        Debug.Log($"[BossArenaController] BossProgressTracker no encontrado - asumiendo boss NO derrotado");
 #endif
         return false;
     }
@@ -1666,7 +1666,7 @@ public class BossArenaController : MonoBehaviour
         go.SetActive(true); // Awake + OnEnable → queda registrada en s_arenaRegistry
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[BossArenaController] 🏟️ Arena creada en runtime para battleId='{battleId}' (encounter='{encounter.name}', radio={arena.radiusMeters}m, centro={center}). No hacía falta ningún objeto de arena en la escena.");
+        Debug.Log($"[BossArenaController] Arena creada en runtime para battleId='{battleId}' (encounter='{encounter.name}', radio={arena.radiusMeters}m, centro={center}). No hacía falta ningún objeto de arena en la escena.");
 #endif
         return arena;
     }

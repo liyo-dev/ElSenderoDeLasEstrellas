@@ -49,18 +49,16 @@ public enum SpellId
     Levitation,
     AuraEstelar,
     Cycloneburst,
-    // NUEVO (23/08/2026): hechizo de Liam — ver Assets/_SPELLS/GarraDelPacto.asset,
-    // creado por el menú "El Sendero/Magia/Crear Hechizo de Liam (Garra del Pacto)".
+    // NUEVO: hechizo de Liam — ver Assets/_SPELLS/GarraDelPacto.asset, creado por el menú
+    // "El Sendero/Magia/Crear Hechizo de Liam (Garra del Pacto)".
     GarraDelPacto,
-    // NUEVO (23/08/2026): hechizo de retaguardia creado por Raúl — ver Assets/_SPELLS/Huracan.asset.
-    // Antes de este ID, Huracan.asset tenía spellId:6 (Cycloneburst) duplicado con Tornado.asset.
     Huracan,
-    // NUEVO (30/08/2026): hechizo de zona de Liam — ver Assets/_SPELLS/SelloDelPacto.asset,
-    // creado por el menú "El Sendero/Magia/Crear Hechizo de Liam (Sello del Pacto)". Sale de la
-    // mano (mismo VFX/timing de casteo que un hechizo Projectile normal) pero, en vez de volar,
-    // se materializa al instante como una zona fija en el suelo — ver MagicKind.Zone.
+    // NUEVO: hechizo de zona de Liam — ver Assets/_SPELLS/SelloDelPacto.asset, creado por el
+    // menú "El Sendero/Magia/Crear Hechizo de Liam (Sello del Pacto)". Sale de la mano (mismo
+    // VFX/timing de casteo que un hechizo Projectile normal) pero, en vez de volar, se
+    // materializa al instante como una zona fija en el suelo — ver MagicKind.Zone.
     SelloDelPacto,
-    // NUEVO (30/08/2026): hechizos del Mago Oscuro para la Batalla Final — ver
+    // NUEVO: hechizos del Mago Oscuro para la Batalla Final — ver
     // Assets/_SPELLS/MagoOscuroGolpe.asset y MagoOscuroGrieta.asset, creados por el menu
     // "El Sendero/Magia/Crear Hechizos del Mago Oscuro (Batalla Final)".
     MagoOscuroGolpe,
@@ -89,7 +87,11 @@ public enum SpellId
     // Bola de Fuego de Estela: antes compartía el id Fireball con Llama Astral (INC-503).
     BolaDeFuegoEstela,
     // Hechizo final de Will: abre la protección de lo que la tiene (INC-724).
-    Amanecer
+    Amanecer,
+    // Combo de Mente de Liam: se vuelve invisible (INC-1358).
+    Invisibilidad,
+    // Rápido de Mente de Liam: empuja siempre; si el blanco levita, sale volando (sets de 4 y 4, 20 nov).
+    Empujar
 }
 
 /// <summary>
@@ -121,14 +123,16 @@ public enum MagicKind
     Projectile,
     Special,
     Levitation,
-    // NUEVO (30/08/2026): el hechizo sale de la mano igual que un Projectile (mismo spawnVFX y
+    // NUEVO: el hechizo sale de la mano igual que un Projectile (mismo spawnVFX y
     // castDelaySeconds, para aprovechar la animación de casteo existente), pero en vez de
     // instanciar algo que viaja, se materializa al instante como una zona fija que aplica daño
     // periódico a quien esté dentro mientras dura. Ver MagicZoneEffect.cs y
     // MagicProjectileSpawner.SpawnZoneNow().
     Zone,
     // Paso corto (INC-502): el lanzador se teletransporta hacia delante. Ver MagicProjectileSpawner.Teleport.
-    Teleport
+    Teleport,
+    // El lanzador se vuelve invisible unos segundos (INC-1358). Ver Invisibilidad.
+    Invisibility
 }
 
 /// <summary>Elementos mágicos disponibles.</summary>
@@ -215,9 +219,9 @@ public enum InteractableMode
     OpenDialogueWithOptions,
     HandOffToTarget,
     UseWorldPoint,
-    // FIX INC-048: confirmación Sí/No usando el popup unificado (ConfirmationPopupUI) en lugar
-    // del cuadro de diálogo con opciones. Pensado para casos simples como confirmar el guardado
-    // en un SavePoint, sin diálogo de seguimiento narrativo.
+    // Confirmación Sí/No usando el popup unificado (ConfirmationPopupUI) en lugar del cuadro de
+    // diálogo con opciones. Pensado para casos simples como confirmar el guardado en un
+    // SavePoint, sin diálogo de seguimiento narrativo.
     ConfirmationPopup,
     // El comportamiento lo lleva el componente que acompaña al interactuable (se ha suscrito al
     // evento OnInteract). No hay diálogo ni popup que abrir: el propio evento es todo.

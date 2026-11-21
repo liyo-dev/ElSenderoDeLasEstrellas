@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 750171602551610035}
   - component: {fileID: 1537156226153900752}
   - component: {fileID: 4530748825812582506}
+  - component: {fileID: 4407786304576405878}
   m_Layer: 0
   m_Name: PBR_Golem
   m_TagString: Untagged
@@ -155,43 +156,82 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb1e2868dc149a8b552cd8fd7939c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GolemBossAI
+  segundosHundido: 4
+  profundidadHundido: 0.9
+  frenoEnBarro: 0.5
+  respiroTrasHundirse: 8
+  tinteDeBarro: {r: 0.62, g: 0.5, b: 0.38, a: 1}
   player: {fileID: 0}
   animator: {fileID: 0}
   damageable: {fileID: 0}
   agent: {fileID: 0}
   detectionRange: 25
-  meleeRange: 4
-  rangedMinRange: 8
-  rangedMaxRange: 20
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  punchDamage: 25
-  slamDamage: 35
-  slamRadius: 5
-  rockProjectilePrefab: {fileID: 0}
-  rockSpawnPoint: {fileID: 0}
-  rockDamage: 20
+  attackRange: 15
+  minAttackRange: 5
+  aiUpdateFrequency: 0.1
+  rockPrefab: {fileID: 0}
+  rockHandPoint: {fileID: 0}
+  rockHandPointLeft: {fileID: 0}
   rockSpeed: 15
   rockPickupVFX: {fileID: 0}
-  fallingRockPrefab: {fileID: 0}
+  phase2HealthThreshold: 0.5
   rockRainCount: 5
   rockRainRadius: 8
-  rockRainDamage: 15
-  shockwaveVFX: {fileID: 0}
-  shockwaveDamage: 40
+  rockRainHeight: 15
+  rockRainSpeed: 12
+  rockRainInterval: 0.15
+  rockRainAoeRadius: 3
+  rockRainAoeDamage: 15
+  rockWarningVFX: {fileID: 0}
+  rockLandingVfxScale: 0.6
+  phase3HealthThreshold: 0.25
+  jumpHeight: 8
+  jumpDuration: 1.2
   shockwaveRadius: 10
+  shockwaveDamage: 40
   shockwaveKnockback: 15
-  punchCooldown: 2
-  slamCooldown: 4
-  rockThrowCooldown: 3
+  shockwaveVFX: {fileID: 0}
+  landingDustVFX: {fileID: 0}
+  cameraShakeDuration: 0.5
+  cameraShakeIntensity: 0.3
+  attackCooldown: 3
   rockRainCooldown: 12
-  shockwaveCooldown: 15
-  phase2HealthPercent: 0.66
-  phase3HealthPercent: 0.33
+  jumpAttackCooldown: 12
+  attackRecoveryBeat: 0.35
+  chargeSpeed: 12
+  chargeAnimationSpeedMultiplier: 1.8
+  chargeMinDistance: 5
+  punchDamage: 25
+  punchRadius: 3
+  punchKnockback: 12
+  derribo:
+    activo: 1
+    distancia: 4
+    altura: 2
+    duracion: 0.7
+  punchImpactVFX: {fileID: 0}
+  chargeCooldown: 10
+  chargeOnPhaseChangeChance: 0.7
+  kitingChargeDelay: 2.5
   walkSpeed: 2.5
-  chaseSpeed: 3.5
-  canStartCombat: 0
+  rotationSpeed: 3
+  modelRotationOffset: 0
+  maxLeashDistance: 20
+  leashReturnThreshold: 2
+  enableContactDamage: 1
+  contactDamage: 15
+  contactDamageCooldown: 1.5
+  chargeDamageMultiplier: 1.5
+  contactRadius: 2
+  ataquesAntesDeCambiar: 2
+  segundosConSenuelo: 7
+  distanciaMaxSenuelo: 18
+  pausaAlCambiarObjetivo: 1
+  piezasFusion: 10
+  radioFusion: 9
+  duracionFusion: 1.2
+  escalaFusion: 1.25
+  autoStartOnDetection: 1
   debugMode: 0
 --- !u!65 &750171602551610035
 BoxCollider:
@@ -226,16 +266,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4fad89a3ff4600bf9b5379a88fe8c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar
+  bossNameId: 
   bossName: Boss Golem
-  barSize: {x: 400, y: 40}
-  barPosition: {x: -20, y: 80}
-  healthyColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
-  warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  criticalColor: {r: 1, g: 0, b: 0, a: 1}
-  warningThreshold: 0.5
   criticalThreshold: 0.25
   animateHealthChanges: 1
   animationSpeed: 5
+  fadeInDuration: 0.4
+  fadeOutDuration: 0.5
+  prioridad: 10
 --- !u!114 &4530748825812582506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,6 +288,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 90
   isInActiveCombat: 0
+  esMarcableSiempre: 0
+--- !u!114 &4407786304576405878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067925524328404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c903ab0afe7b74a4580667e35fae6cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfinidadElemental
+  claveDeCriatura: CRIATURA_GOLEM
+  debilidades: 02000000i
+  resistencias: 
 --- !u!1 &1088256926929212
 GameObject:
   m_ObjectHideFlags: 0

@@ -267,6 +267,30 @@ namespace Invector.vCharacterController
             moveDirection = Vector3.zero;
         }
 
+        /// <summary>Entrada suavizada y velocidad de ahora, para devolverlas tras una acción que toma el cuerpo.</summary>
+        public Vector3 EntradaSuavizada => inputSmooth;
+        public float VelocidadDeMovimiento => moveSpeed;
+        public Vector3 VelocidadHorizontal => _rigidbody
+            ? Vector3.ProjectOnPlane(_rigidbody.linearVelocity, Vector3.up)
+            : Vector3.zero;
+
+        /// <summary>
+        /// Devuelve la carrera que llevaba antes de una acción que tomó el cuerpo (una esquiva): sigue
+        /// corriendo en vez de arrancar desde parado. Ver INC-1349.
+        /// </summary>
+        public void RecuperarImpulso(Vector3 entradaSuavizada, float velocidad)
+        {
+            inputSmooth = entradaSuavizada;
+            moveSpeed = velocidad;
+        }
+
+        public void RecuperarVelocidadHorizontal(Vector3 velocidad)
+        {
+            if (!isActiveAndEnabled || lockMovement || !_rigidbody || _rigidbody.isKinematic) return;
+            _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(
+                new Vector3(velocidad.x, _rigidbody.linearVelocity.y, velocidad.z));
+        }
+
         /// <summary>
         /// Fuerza las variables internas de estado en el suelo (isGrounded, groundDistance, verticalVelocity).
         /// Necesario al entrar en cinemáticas, teleports o locks donde CheckGround() queda congelado.
@@ -676,6 +700,32 @@ namespace Invector.vCharacterController
             }
         }
 
+        private Vector3 _direccionDelImpulsoAereo;
+        private float _inicioDelImpulsoAereo, _duracionDelImpulsoAereo, _distanciaDelImpulsoAereo;
+
+        public bool PedirImpulsoAereo(Vector3 direccion, float distancia, float duracion)
+        {
+            if (!isActiveAndEnabled || suppressAirMovement || PisandoSuelo ||
+                !_rigidbody || _rigidbody.isKinematic || direccion.sqrMagnitude < 0.001f ||
+                distancia <= 0f || duracion <= 0f) return false;
+
+            _direccionDelImpulsoAereo = direccion;
+            _distanciaDelImpulsoAereo = distancia;
+            _duracionDelImpulsoAereo = duracion;
+            _inicioDelImpulsoAereo = Time.time;
+            return true;
+        }
+
+        public void SoltarImpulsoAereo()
+        {
+            if (_duracionDelImpulsoAereo <= 0f) return;
+            _duracionDelImpulsoAereo = 0f;
+            if (!_rigidbody || _rigidbody.isKinematic || PisandoSuelo) return;
+            Vector3 velocidad = _rigidbody.linearVelocity;
+            Vector3 horizontal = Vector3.ClampMagnitude(new Vector3(velocidad.x, 0f, velocidad.z), airSpeed);
+            _rigidbody.linearVelocity = horizontal + Vector3.up * velocidad.y;
+        }
+
         /// <summary>
         /// Aplica la velocidad horizontal en el aire siguiendo el transform.forward actual del personaje,
         /// que ya fue rotado por ControlRotationType en este mismo frame. Así velocidad y cuerpo
@@ -691,6 +741,18 @@ namespace Invector.vCharacterController
             Vector3 currentHoriz = new Vector3(currentVel.x, 0f, currentVel.z);
             var     currentY     = currentVel.y;
             float   safeY        = float.IsNaN(currentY) || float.IsInfinity(currentY) ? 0f : currentY;
+
+            if (_duracionDelImpulsoAereo > 0f)
+            {
+                // Integra el frenado durante el fotograma y conserva la velocidad vertical.
+                float paso = Mathf.Max(0.0001f, Time.deltaTime);
+                float desde = Mathf.Clamp01((Time.time - _inicioDelImpulsoAereo) / _duracionDelImpulsoAereo);
+                float hasta = Mathf.Clamp01(desde + paso / _duracionDelImpulsoAereo);
+                float avance = (hasta - desde) * (2f - desde - hasta);
+                _rigidbody.linearVelocity = _direccionDelImpulsoAereo * (_distanciaDelImpulsoAereo * avance / paso)
+                    + Vector3.up * safeY;
+                return;
+            }
 
             if (input.magnitude > 0.01f)
             {

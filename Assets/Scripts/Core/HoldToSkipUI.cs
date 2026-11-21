@@ -12,7 +12,7 @@ public class HoldToSkipUI : MonoBehaviour
     [Header("Referencias UI")]
     [SerializeField] private Image buttonIcon;      // capa de "reposo": el mismo sprite del botón, atenuado (ver IdleIconAlpha) — fallback si InputGlyphService no tiene sprite para la familia activa (ver RefreshIcon)
     [FormerlySerializedAs("progressCircle")]
-    [SerializeField] private Image fillOverlayIcon; // copia exacta de buttonIcon encima, Type=Filled — se "rellena" de opaco sobre el propio icono en vez de usar una barra aparte (ver FIX 15/09/2026, 3ª pasada)
+    [SerializeField] private Image fillOverlayIcon; // Copia exacta de buttonIcon encima, Type=Filled — se "rellena" de opaco sobre el propio icono en vez de usar una barra aparte
     [SerializeField] private CanvasGroup group;     // opcional
     [SerializeField, Tooltip("Orden del lienzo, por encima de las bandas de cine y los bocadillos y por debajo del fundido a negro.")]
     private int ordenDeDibujo = 9997;
@@ -95,13 +95,9 @@ public class HoldToSkipUI : MonoBehaviour
         // sustituyó por una barra de progreso horizontal simple, válida para cualquier forma de
         // icono (rectangular o circular) sin depender de la familia de input activa.
         //
-        // esa barra era un rectángulo plano sin sprite (Image.sprite
-        // vacío) flotando desconectado del icono — y en Start.unity el ProgressBar tenía además un
-        // override de posición roto que lo dejaba pegado a la esquina, por ENCIMA del icono. Se
-        // probó a sustituirla por una pastilla (hp_bar_bg.png + hp_bar_fill.png, la misma pareja que
-        // las barras de HP/MP) pero Raúl la vio descentrada respecto al icono y sin encajar del
-        // todo con el conjunto — una barra aparte, aunque esté bien hecha, sigue siendo un segundo
-        // elemento que hay que alinear a mano contra el primero.
+        // esa barra era un rectángulo plano sin sprite (Image.sprite vacío) flotando desconectado
+        // del icono — y en Start.unity el ProgressBar tenía además un override de posición roto que
+        // lo dejaba pegado a la esquina, por ENCIMA del icono.
         //
         // se elimina la barra por completo. Ahora hay
         // dos copias superpuestas del MISMO sprite de botón: `buttonIcon` de fondo, atenuada a

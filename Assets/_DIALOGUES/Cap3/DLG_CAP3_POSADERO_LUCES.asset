@@ -15,38 +15,66 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_LUCES_01
-    text: "\xBFY usted ha visto alguno de esos animales?"
+    text: "\xBFQu\xE9 cosas raras?"
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
-    emotion: 0
+    emotion: 6
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_LUCES_02
-    text: "Animales no. Pero hace unas semanas, una noche que no pod\xEDa dormir, vi luces en el camino del bosque."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_POSADERO
-    textId: DLG_CAP3_LUCES_03
-    text: No eran faroles. Iban casi a ras de suelo, todas juntas.
+    text: "Hace unas semanas, una noche que no pod\xEDa dormir, vi luces en el camino del bosque. No eran faroles. Iban casi a ras de suelo, todas juntas."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_WILL
-    textId: DLG_CAP3_LUCES_04
+    textId: DLG_CAP3_LUCES_03
     text: "\xBFLuci\xE9rnagas?"
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 6
   - speakerNameId: CHAR_POSADERO
-    textId: DLG_CAP3_LUCES_05
+    textId: DLG_CAP3_LUCES_04
     text: "Las luci\xE9rnagas no se encienden todas a la vez. Aquello sub\xEDa y bajaba despacio\u2026 como algo que respira dormido."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 9
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_LUCES_05
+    text: "Llevo semanas cont\xE1ndolo y nadie me hace caso. Ni los guardias del cruce."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 14
+  - speakerNameId: CHAR_WILL
+    textId: DLG_CAP3_LUCES_06
+    text: "Yo s\xED le creo. Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido\u2026 pero antes quiero estar seguro."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
+    emotion: 10
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_LUCES_07
+    text: "Entonces habla con Candela, la del farol. No duerme: cada noche enciende un farol en la ventana, por si vuelve la barca de su Andr\xE9s. Si algo pas\xF3 por ese camino, ella lo vio."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_LUCES_08
+    text: "Vive en la casa del agua, y all\xED no hay pasarela. O nadas, o nada."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
+  - speakerNameId: CHAR_POSADERO
+    textId: DLG_CAP3_LUCES_09
+    text: "Pez te ense\xF1a, si le aguantas. Est\xE1 en el muelle, habl\xE1ndole a los peces."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
   maxLinesPerPage: 0
   isGroupConversation: 0

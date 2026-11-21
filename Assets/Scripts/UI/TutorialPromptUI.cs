@@ -50,22 +50,19 @@ public class TutorialPromptUI : MonoBehaviour
     bool _hiddenByDialogue;
 
     // Si el aviso activo permite cerrarse desde este botón de la esquina (allowManualClose de
-    // Show()). Se guarda aparte del contenido real del botón porque este último también depende
-    // de la familia de dispositivo activa (ver RefreshCloseButton): en KeyboardMouse se ve la X de
+    // Show()). Se guarda aparte del contenido real del botón porque este último también depende de
+    // la familia de dispositivo activa (ver RefreshCloseButton): en KeyboardMouse se ve la X de
     // toda la vida (clic de ratón); en mando, al no haber cursor virtual en el proyecto, se
-    // sustituye por el icono del botón Cancelar real. INC-201b (15 sept 2026, Raúl): primero la X
-    // se quedaba fija sin adaptarse al cambiar de mando/teclado; después, al ocultarla sin más en
-    // mando, el jugador se quedaba sin ninguna pista de cómo cerrar el aviso.
+    // sustituye por el icono del botón Cancelar real. Primero la X se quedaba fija sin adaptarse
+    // al cambiar de mando/teclado; después, al ocultarla sin más en mando, el jugador se quedaba
+    // sin ninguna pista de cómo cerrar el aviso.
     bool _allowManualClose;
 
     // ── Botón de cerrar (X, esquina superior derecha) ───────────────────────
     //
-    // Petición de Raúl (15 sept 2026): los avisos de tutorial se cerraban con el mismo botón que
-    // avanza diálogo (Confirmar/A/Espacio) — si el aviso aparecía justo después de una conversación,
-    // el jugador lo cerraba sin querer, por inercia, sin llegar a leerlo. Solución de dos partes:
-    // PedirAvisoDeTutorial puede pedir cerrar con Cancelar (mando) en vez de Confirmar — ver
-    // dismissWithCancel ahí — y, para PC/ratón, este botón "X" que aparece en la esquina superior
-    // derecha del aviso, como el cierre de un popup normal.
+    // Solución de dos partes: PedirAvisoDeTutorial puede pedir cerrar con Cancelar (mando) en vez de
+    // Confirmar — ver dismissWithCancel ahí — y, para PC/ratón, este botón "X" que aparece en la
+    // esquina superior derecha del aviso, como el cierre de un popup normal.
     //
     // Se construye por código en Awake, igual que el patrón ya usado para el botón "X" de
     // BugReportFlyoutPanel/CreditsFlyoutPanel/PatchNotesFlyoutPanel.cs — no hace falta editar
@@ -181,14 +178,14 @@ public class TutorialPromptUI : MonoBehaviour
         MenuManager.MenuOpened += OnMenuOpened;
         MenuManager.MenuClosed += OnMenuClosed;
 
-        // INC (12 sep 2026, captura de Raúl): el prompt de movimiento ("Usa WASD para mover a
-        // Will. Inspecciona la habitación.") se quedaba superpuesto al mensaje bloqueante de
-        // RoomExitBlocker ("Antes de salir necesitas leer la carta que hay sobre la mesita.") al
-        // intentar salir de la habitación sin haber leído la carta. RoomExitBlocker muestra ese
-        // mensaje vía DialogueManager.StartDialogue(), un sistema totalmente independiente de
-        // MenuManager — este prompt no estaba suscrito a los eventos de diálogo, así que el aviso
-        // se dibujaba encima en vez de taparlo. Mismo patrón ocultar/restaurar que con los menús,
-        // con su propio flag (_hiddenByDialogue) para no interferir si además hay un menú abierto.
+        // El prompt de movimiento ("Usa WASD para mover a Will. Inspecciona la habitación.") se
+        // quedaba superpuesto al mensaje bloqueante de RoomExitBlocker ("Antes de salir necesitas
+        // leer la carta que hay sobre la mesita.") al intentar salir de la habitación sin haber
+        // leído la carta. RoomExitBlocker muestra ese mensaje vía DialogueManager.StartDialogue(),
+        // un sistema totalmente independiente de MenuManager — este prompt no estaba suscrito a
+        // los eventos de diálogo, así que el aviso se dibujaba encima en vez de taparlo. Mismo
+        // patrón ocultar/restaurar que con los menús, con su propio flag (_hiddenByDialogue) para
+        // no interferir si además hay un menú abierto.
         DialogueManager.OnDialogueStarted += HandleDialogueStarted;
         DialogueManager.OnDialogueClosed += HandleDialogueClosed;
     }
@@ -469,14 +466,13 @@ public class TutorialPromptUI : MonoBehaviour
     }
 
     // La X de toda la vida (texto "X", clic de ratón) solo tiene sentido en KeyboardMouse. En
-    // mando no hay cursor virtual en el proyecto para poder pulsarla — así que, en vez de
-    // ocultar el botón sin más (versión anterior de este fix, INC-201b), mostramos en su lugar
-    // el icono real del botón que SÍ cierra el aviso en mando: Cancelar, que en las 3 familias es
+    // mando no hay cursor virtual en el proyecto para poder pulsarla — así que, en vez de ocultar
+    // el botón sin más (INC-201b), mostramos en su lugar el icono
+    // real del botón que SÍ cierra el aviso en mando: Cancelar, que en las 3 familias es
     // físicamente el mismo botón que East/Ataque mágico derecho (B Xbox, Círculo PS, A Switch —
     // ver PlayerControls.inputactions → UI/Cancel y el comentario de dismissWithCancel en
     // PedirAvisoDeTutorial). Así el jugador siempre ve QUÉ pulsar, en vez de un hueco vacío sin
-    // ninguna pista (reporte de Raúl, 15 sept 2026: "no aparece el boton de cerrar el pop up"
-    // jugando con mando).
+    // ninguna pista.
     void RefreshCloseButton()
     {
         if (_closeButton == null) return;
@@ -573,9 +569,9 @@ public class TutorialPromptUI : MonoBehaviour
     }
 
     // Centra un TMP_Text por la tinta que realmente pinta (bounds del mesh generado), no por las
-    // métricas de fuente — mismo fix ya aplicado a la "X" de cerrar en
-    // BugReportFlyoutPanel/CreditsFlyoutPanel/PatchNotesFlyoutPanel.cs (24 ago 2026): centrar por
-    // métricas dejaba el glifo descuadrado según fuente/carácter.
+    // métricas de fuente (igual que la "X" de cerrar en
+    // BugReportFlyoutPanel/CreditsFlyoutPanel/PatchNotesFlyoutPanel.cs): centrar por métricas
+    // dejaba el glifo descuadrado según fuente/carácter.
     static void CenterGlyphOnRenderedInk(TextMeshProUGUI label)
     {
         Canvas.ForceUpdateCanvases();

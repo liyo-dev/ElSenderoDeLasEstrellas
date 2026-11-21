@@ -9,7 +9,7 @@ using UnityEngine;
 /// orden correcto/incorrecto vive en <see cref="RuneSequencePuzzle"/>, que es quien
 /// escucha a todas las piedras del grupo.
 ///
-/// Se apoya en el mismo patrón que ya usa ChestInteractable.cs: un Interactable en modo
+/// Se apoya en un Interactable en modo
 /// por defecto (OpenDialogue) SIN ningún DialogueAsset asignado. Interactable.Interact()
 /// dispara igualmente OnInteract antes de intentar abrir diálogo, y si no hay
 /// DialogueAsset simplemente registra un aviso en consola y no abre nada — no hace falta

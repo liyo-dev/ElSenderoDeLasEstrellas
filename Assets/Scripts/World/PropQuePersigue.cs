@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Objeto de escena que persigue al jugador a saltitos durante un rato y acaba rindiéndose:

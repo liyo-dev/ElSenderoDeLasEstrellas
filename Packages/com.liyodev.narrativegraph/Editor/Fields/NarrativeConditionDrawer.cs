@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// One condition on one line: what it looks at and, depending on that, only the fields it uses.
     [CustomPropertyDrawer(typeof(NarrativeCondition))]

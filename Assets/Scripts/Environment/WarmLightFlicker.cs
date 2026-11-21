@@ -250,16 +250,16 @@ public class WarmLightFlicker : MonoBehaviour
         }
     }
     
-    [ContextMenu("🕯️ Aplicar Preset: Vela")]
+    [ContextMenu("Aplicar Preset: Vela")]
     private void ApplyPresetCandle() => ApplyPreset(LightPreset.Candle);
     
-    [ContextMenu("🏮 Aplicar Preset: Farol")]
+    [ContextMenu("Aplicar Preset: Farol")]
     private void ApplyPresetLantern() => ApplyPreset(LightPreset.Lantern);
     
-    [ContextMenu("🔥 Aplicar Preset: Chimenea")]
+    [ContextMenu("Aplicar Preset: Chimenea")]
     private void ApplyPresetFireplace() => ApplyPreset(LightPreset.Fireplace);
     
-    [ContextMenu("🔦 Aplicar Preset: Antorcha")]
+    [ContextMenu("Aplicar Preset: Antorcha")]
     private void ApplyPresetTorch() => ApplyPreset(LightPreset.Torch);
 #endif
 }

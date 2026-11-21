@@ -3,6 +3,7 @@ using Game.NPC;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Instancia los NPCs de uno o varios <see cref="NpcRosterSO"/> sobre los

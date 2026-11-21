@@ -36,10 +36,6 @@ public enum NPCEmotion
     [Tooltip("Sonrisa maliciosa/pícara")]
     Smirk = 8,
 
-    // ── Ampliación 17 sep 2026 ────────────────────────────────────────────────────────────────
-    // Los valores se AÑADEN al final y nunca se reordenan: el enum se serializa por número, así
-    // que renumerar una emoción existente cambiaría en silencio la cara de todos los diálogos y
-    // secuencias que ya la usan.
     //
     // El criterio para que una emoción entre aquí es que se pueda DISTINGUIR de las demás con las
     // animaciones que existen en NPC_NoWeapon: media docena de emociones que acaban todas en el
@@ -67,7 +63,6 @@ public enum NPCEmotion
     [Tooltip("Agradecido - da las gracias, reconoce un favor. Cierre natural de una misión.")]
     Grateful = 15,
 
-    // ── Ampliación 4 nov 2026: emociones con símbolos de anime (lágrimas) ──────────────────────
 
     [Tooltip("Llorando - ojos cerrados con cejas de pena y lágrimas que caen. Más fuerte que Sad, " +
              "que no lleva lágrimas: así no llora cada línea triste.")]

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// The words of a chapter: characters, quests, items, flags, signals and counters its steps use,
     /// with how many steps use each one.
@@ -45,9 +45,9 @@ namespace NarrativeGraphEditor.Story
                     foreach (var i in refs.Items) Use(items, i.Item != null ? i.Item.name : null);
                     foreach (var f in refs.Flags) Use(flags, f);
                     foreach (var s in refs.Signals) Use(signals, s.Key);
-                    if (node is ChangeCounterNode c) Use(counters, c.counter);
+                    if (node is ChangeCounterNode c) Use(counters, c.Counter);
                     if (node is ChooseByMomentNode m)
-                        foreach (var cond in m.options.Where(o => o?.conditions != null).SelectMany(o => o.conditions))
+                        foreach (var cond in m.Options.Where(o => o?.conditions != null).SelectMany(o => o.conditions))
                             if (cond != null && cond.kind == NarrativeCondition.Kind.Counter) Use(counters, cond.key);
                 }
 

@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// "What happens now?": searchable list of step types, grouped by family (history or game)
     /// and then by category. Opens where the user dropped a connection, double-clicked or pressed

@@ -1521,6 +1521,98 @@
             "value": "¡En guardia, entonces! A ver cuánto aguantas."
         },
         {
+            "key": "DLG_ERIKA_LECCIONES_01",
+            "value": "¿Así que te vas del pueblo, Will? Pues por esas puertas no sales sin saber defenderte."
+        },
+        {
+            "key": "DLG_ERIKA_LECCIONES_02",
+            "value": "Te voy a lanzar unas bolitas flojas. Sin daño, tranquilo. Tú haz lo que te diga."
+        },
+        {
+            "key": "DLG_ERIKA_LECCIONES_03",
+            "value": "Vale. Enséñame."
+        },
+        {
+            "key": "ERIKA_LECCION_PROTEGERSE_INICIO",
+            "value": "Cuando te lance algo, mantén la Protección y aguanta."
+        },
+        {
+            "key": "ERIKA_LECCION_BIEN",
+            "value": "¡Eso es!"
+        },
+        {
+            "key": "ERIKA_LECCION_CONTRAATACAR_INICIO",
+            "value": "Primero, contraatacar. Te voy a lanzar una bola: pulsa B justo cuando te llegue y se la devuelves."
+        },
+        {
+            "key": "ERIKA_LECCION_CONTRAATACAR_FIN",
+            "value": "¡Uf! Me la has devuelto. Eso es contraatacar."
+        },
+        {
+            "key": "ERIKA_LECCION_LLUVIA_INICIO",
+            "value": "Ahora, protegerte. Voy a hacer llover meteoritos: mantén B pulsada con el escudo y aguanta hasta que pase."
+        },
+        {
+            "key": "ERIKA_LECCION_LLUVIA_FIN",
+            "value": "¡Bien aguantado! Con el escudo puesto no te tumba ni una lluvia."
+        },
+        {
+            "key": "ERIKA_LECCION_ESCUDO_INICIO",
+            "value": "Mi escudo es de luz, ¿ves el color? Solo lo rompe otra luz. Usa la Llama Astral."
+        },
+        {
+            "key": "ERIKA_LECCION_ESCUDO_REBOTE",
+            "value": "¡Eso no lo rompe! Un escudo de luz solo cede a la luz."
+        },
+        {
+            "key": "ERIKA_LECCION_ESCUDO_FIN",
+            "value": "¡Roto! Cada escudo cede ante la magia de su mismo color."
+        },
+        {
+            "key": "ERIKA_LECCION_PROTEGERSE_FIN",
+            "value": "¡Bien aguantado!"
+        },
+        {
+            "key": "ERIKA_LECCION_DEVOLVER_INICIO",
+            "value": "Ahora alza la Protección justo cuando te llegue: se la devuelves."
+        },
+        {
+            "key": "ERIKA_LECCION_DEVOLVER_FIN",
+            "value": "¡Uf! Me ha dejado mareada. Eso es devolver."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_01",
+            "value": "Una cosa más. En este mundo la magia tiene elementos: Fuego, Viento, Luz, Mente y Oscuro."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_02",
+            "value": "Contra la gente da igual el elemento: lo que cuenta es la fuerza del hechizo. Pero si le devuelves el suyo, le pasa algo: el de luz aturde, el de mente duerme…"
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_03",
+            "value": "Con las criaturas del camino es otra historia: cada una tiene un elemento que le duele más. Cuando lo aciertes, lo verás."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_04",
+            "value": "Y esto es para ti: Eldran me pidió que te lo diera. Tu grimorio. Ahí viene todo explicado."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_05",
+            "value": "Mira: se acaba de despertar una página nueva, la Bola Prisma. Pruébala conmigo."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_06",
+            "value": "¡Mi propio grimorio! Vale, Erika. Cuando quieras."
+        },
+        {
+            "key": "DLG_ERIKA_ELEMENTOS_07",
+            "value": "¡En guardia, entonces! Ahora sí, de verdad."
+        },
+        {
+            "key": "ERIKA_DUELO_FASE2",
+            "value": "¡Vale, se acabó el calentamiento!"
+        },
+        {
             "key": "DLG_ERIKA_DESPUES_01",
             "value": "Si quieres otra ronda, ya sabes dónde estoy. Y vuelve entero."
         },
@@ -2042,19 +2134,19 @@
         },
         {
             "key": "DLG_CAP3_LUCES_01",
-            "value": "¿Y usted ha visto alguno de esos animales?"
+            "value": "¿Qué cosas raras?"
         },
         {
             "key": "DLG_CAP3_LUCES_02",
-            "value": "Animales no. Pero hace unas semanas, una noche que no podía dormir, vi luces en el camino del bosque."
+            "value": "Hace unas semanas, una noche que no podía dormir, vi luces en el camino del bosque. No eran faroles. Iban casi a ras de suelo, todas juntas."
         },
         {
             "key": "DLG_CAP3_LUCES_03",
-            "value": "No eran faroles. Iban casi a ras de suelo, todas juntas."
+            "value": "¿Luciérnagas?"
         },
         {
             "key": "DLG_CAP3_LUCES_04",
-            "value": "¿Luciérnagas?"
+            "value": "Las luciérnagas no se encienden todas a la vez. Aquello subía y bajaba despacio… como algo que respira dormido."
         },
         {
             "key": "DLG_CAP3_ZORRO_01",
@@ -2070,11 +2162,11 @@
         },
         {
             "key": "DLG_CAP3_HUERTO_01",
-            "value": "Pelo rojizo enganchado en la madera… Aquí es donde Lucía vio al zorro."
+            "value": "Rodadas hondas que salen hacia el camino del bosque… Un carro muy cargado, y sin camino."
         },
         {
             "key": "DLG_CAP3_HUERTO_02",
-            "value": "Se ha rascado aquí hasta arrancarse el pelo. Como si el collar le hiciera daño."
+            "value": "Paja enganchada en la tabla rota. Todavía brilla un poco… como respira la luz que vio el posadero."
         },
         {
             "key": "DLG_CAP3_COBERTIZO_01",
@@ -2198,7 +2290,7 @@
         },
         {
             "key": "DLG_CAP3_LUCES_05",
-            "value": "Las luciérnagas no se encienden todas a la vez. Aquello subía y bajaba despacio… como algo que respira dormido."
+            "value": "Llevo semanas contándolo y nadie me hace caso. Ni los guardias del cruce."
         },
         {
             "key": "DLG_ELDRAN_MOTIVOS_05",
@@ -2294,7 +2386,7 @@
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_C3_2_01",
-            "value": "Anoche un perro con un collar raro se pasó horas rascándose contra la casa de las nasas, la del tejado de paja. No me dejó pegar ojo."
+            "value": "¿Carros de noche? Yo duermo como un tronco. La que no duerme es Candela, la del farol."
         },
         {
             "key": "DLG_ALDEA_REMEDIOS_1_01",
@@ -2330,7 +2422,7 @@
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_1_01",
-            "value": "Lucía, la cría de la posada, dice que vio un zorro con collar en la cerca del huerto. Esa niña ve muchas cosas… pero esta vez la creo."
+            "value": "Esta mañana la cerca del huerto amaneció rota. Lucía dice que fue un carro. Yo, esta vez, la creo."
         },
         {
             "key": "DLG_ALDEA_EUSEBIO_C3_2_01",
@@ -2414,7 +2506,7 @@
         },
         {
             "key": "DLG_ALDEA_ROSARIO_C3_1_01",
-            "value": "Lucía no habla de otra cosa que del zorro. Y de la cuchara, claro."
+            "value": "Lucía no habla de otra cosa que de la cerca rota. Y de la cuchara, claro."
         },
         {
             "key": "DLG_ALDEA_ROSARIO_C3_2_01",
@@ -2455,6 +2547,222 @@
         {
             "key": "CAP3_BOC_PRUEBA",
             "value": "Una pluma de pájaro de luz. Con esto, Estela tendrá que escucharme."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_06",
+            "value": "Yo sí le creo. Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido… pero antes quiero estar seguro."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_07",
+            "value": "Entonces habla con Candela, la del farol. No duerme: cada noche enciende un farol en la ventana, por si vuelve la barca de su Andrés. Si algo pasó por ese camino, ella lo vio."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_08",
+            "value": "Vive en la casa del agua, y allí no hay pasarela. O nadas, o nada."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_09",
+            "value": "Pez te enseña, si le aguantas. Está en el muelle, hablándole a los peces."
+        },
+        {
+            "key": "DLG_CAP3_LUCES_10",
+            "value": "Y si quieres ver esos carros con tus propios ojos, espéralos de noche junto al fuego del camino del bosque."
+        },
+        {
+            "key": "DLG_CAP3_CABOS_01",
+            "value": "Lo que vio Candela. Las luces del posadero viajan en esas jaulas."
+        },
+        {
+            "key": "DLG_CAP3_CABOS_02",
+            "value": "Lo apunto todo en la hoja. Esta noche espero el carro junto al fuego del camino del bosque."
+        },
+        {
+            "key": "DLG_CAP3_CABOS_03",
+            "value": "Lo apunto todo en la hoja. Esta noche espero el carro junto al fuego del camino del bosque."
+        },
+        {
+            "key": "DLG_CAP3_POSADERO_PISTAS_01",
+            "value": "Pez está en el muelle, hablándole a los peces. Si te enseña, nada hasta la casa del farol. Candela no muerde… casi nunca."
+        },
+        {
+            "key": "PRESENCIA_CAJA_AVISO",
+            "value": "¿Qué ha sido eso…?"
+        },
+        {
+            "key": "PRESENCIA_CAJA_GOLPE",
+            "value": "¡Algo me ha tirado la caja! Si vuelve a sonar, mejor me quedo quieto hasta que se vaya."
+        },
+        {
+            "key": "PRESENCIA_CAJA_ALIVIO",
+            "value": "…Se ha ido. Vamos, que Eldran espera."
+        },
+        {
+            "key": "DLG_CAP3_LUCIA_CERCA_01",
+            "value": "¡Yo también vi un carro! Bueno… vi la cerca rota por la mañana."
+        },
+        {
+            "key": "DLG_CAP3_LUCIA_CERCA_02",
+            "value": "Mi padre dice que fue una vaca. ¡Las vacas no dejan paja que brilla!"
+        },
+        {
+            "key": "DLG_CAP3_PEZ_01",
+            "value": "Shh. Estoy en una reunión."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_02",
+            "value": "…Sí, sí, ya se lo digo."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_03",
+            "value": "Dicen las sardinas que hueles a tierra. ¿Quieres nadar? Todo el mundo quiere nadar. Nadie quiere escuchar."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_04",
+            "value": "Necesito llegar a la casa del farol."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_05",
+            "value": "Te enseño, pero un favor por un favor. Doña Lubina, la del último pilar, no me habla desde el martes."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_06",
+            "value": "Dile que lo del martes fue un malentendido. Ella sabrá."
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_01",
+            "value": "Ejem… ¿Doña Lubina? Dice Pez que lo del martes fue un malentendido."
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_02",
+            "value": "¡Puaj!"
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_03",
+            "value": "¿Y bien? ¿Qué ha dicho?"
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_04",
+            "value": "…Me ha escupido."
+        },
+        {
+            "key": "DLG_CAP3_LUBINA_05",
+            "value": "¡Eso es que sí! Una dama."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_01",
+            "value": "Un trato es un trato. Lección de natación. Primero: piensa como un pez."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_02",
+            "value": "…No. Todavía piensas como un chico. Se te nota en las orejas."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_03",
+            "value": "Brazos como si aplaudieras a una sardina muy lejos. Piernas como si no te importara nada."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_04",
+            "value": "Y respira cuando el mar no mire."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_05",
+            "value": "¿Y ya está?"
+        },
+        {
+            "key": "DLG_CAP3_PEZ_LECCION_06",
+            "value": "Por la autoridad que me dieron unas almejas que no recuerdo… ¡te nombro pez de honor!"
+        },
+        {
+            "key": "DLG_CAP3_PEZ_ADIOS_01",
+            "value": "Sigue los barriles que flotan: te llevan a la casa del farol. Los peces los llaman boyas. Los peces son muy finos."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_ADIOS_02",
+            "value": "Candela lleva diez años encendiendo ese farol. Los peces dicen que Andrés no va a volver."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_ADIOS_03",
+            "value": "Yo no se lo digo. Hay cosas que se oyen mejor con la luz encendida."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_01",
+            "value": "¿Andrés?… No. Perdona, muchacho. Cada vez que alguien sube esos escalones pienso que es él."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_02",
+            "value": "El posadero dice que usted ve el camino del bosque de noche."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_03",
+            "value": "Desde aquí se ve todo: el mar, el puerto y el camino que sube al bosque. Enciendo el farol cada noche, por si Andrés busca la casa."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_04",
+            "value": "Hace tres noches pasó un carro sin farol. Dos hombres: uno grande, metido entre las varas, y otro delante, mirando a todos lados."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_05",
+            "value": "Bajo la manta llevaban jaulas. Y dentro algo brillaba, se apagaba y volvía a brillar. Como mi farol cuando le falta aceite."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_06",
+            "value": "Salieron por el huerto, por donde la cerca, y subieron hacia el fuego del camino del bosque."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_07",
+            "value": "Esta noche iré a verlo."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_08",
+            "value": "Ve. Y vuelve. Que aquí ya esperamos bastante."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_RECADO_01",
+            "value": "¿Ya has hablado con Doña Lubina? Es muy suya. El último pilar, al final del muelle."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_BOYAS_01",
+            "value": "¡Pez de honor! Sigue los barriles hasta la casa del farol. Y no le hables a Candela de peces: no le gustan."
+        },
+        {
+            "key": "DLG_CAP3_PEZ_DESPUES_01",
+            "value": "Los peces dicen que esta noche vas a hacer algo valiente. Los peces exageran mucho."
+        },
+        {
+            "key": "DLG_CAP3_CANDELA_DESPUES_01",
+            "value": "Ve. Y vuelve. Que aquí ya esperamos bastante."
+        },
+        {
+            "key": "CHAR_PEZ",
+            "value": "Pez"
+        },
+        {
+            "key": "CHAR_CANDELA",
+            "value": "Candela"
+        },
+        {
+            "key": "DLG_PEZ_01",
+            "value": "Shh. Los boquerones están contando un chiste."
+        },
+        {
+            "key": "DLG_CANDELA_01",
+            "value": "Cada noche enciendo el farol. Por si acaso."
+        },
+        {
+            "key": "DLG_ALDEA_PEZ_1_01",
+            "value": "Hoy los boquerones están insoportables."
+        },
+        {
+            "key": "DLG_ALDEA_PEZ_2_01",
+            "value": "Si ves a Doña Lubina, dile que sigo esperando una disculpa."
+        },
+        {
+            "key": "DLG_ALDEA_CANDELA_1_01",
+            "value": "Cada noche enciendo el farol. Por si acaso."
+        },
+        {
+            "key": "DLG_ALDEA_CANDELA_2_01",
+            "value": "Desde aquí se ve todo: el mar, el puerto y el camino del bosque."
         }
     ]
 }

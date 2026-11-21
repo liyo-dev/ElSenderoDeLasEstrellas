@@ -12,6 +12,10 @@ public static partial class Partida
 
     static readonly RaycastHit[] s_suelo = new RaycastHit[8];
 
+    // Último sitio jugable conocido en esta sesión: el del último auto-guardado o el de la partida
+    // cargada. Lo usa GuardarEnLaUltimaPosicionSegura.
+    static PlayerSaveData.PosicionGuardada s_ultimaPosicionSegura;
+
     /// <summary>
     /// Posición del jugador para un auto-guardado: el punto del NavMesh bajo sus pies, su rumbo y la
     /// escena del suelo que pisa. No vale (y se aparecerá en el ancla) si no hay NavMesh cerca, si

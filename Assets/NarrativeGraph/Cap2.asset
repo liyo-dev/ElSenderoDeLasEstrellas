@@ -52,14 +52,13 @@ MonoBehaviour:
   - rid: 5630202655468159109
   - rid: 5630202655468159110
   - rid: 5630202655468159111
-  - rid: 5630202718439342302
   - rid: 6540294618706084390
   - rid: 5630202816662077838
   - rid: 5630202816662077843
   - rid: 6540294472562114912
-  - rid: 6540294723586752669
-  - rid: 6540294723586752670
-  - rid: 6540294723586752671
+  - rid: 6540294773546942659
+  - rid: 6540294773546942660
+  - rid: 6540294773546942661
   - rid: 6540294600349712458
   - rid: 6540294600349712459
   - rid: 6540294600349712460
@@ -68,12 +67,19 @@ MonoBehaviour:
   - rid: 6540294600349712463
   - rid: 6540294600349712464
   - rid: 6540294600349712578
+  - rid: 6540294727198835063
+  - rid: 6540294727198835064
+  - rid: 6540294727198835065
+  - rid: 6540294727198835066
+  - rid: 6540294727198835090
+  - rid: 6540294727198835068
+  - rid: 6540294727198835069
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
     - rid: 5630202263296278868
-      type: {class: StartNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: StartNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 0.- Inicio
         chapter: Cap. 2
@@ -88,7 +94,7 @@ MonoBehaviour:
         outputs:
         - a85bfc4c-0b07-4746-8610-48591900d3e1
     - rid: 5630202263296278869
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 1.- Esperar fin del Cap. 1
         chapter: Cap. 2
@@ -107,7 +113,7 @@ MonoBehaviour:
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
     - rid: 5630202263296278870
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "2.- Cap. 2 \xB7 Inicio (tras el Demonio)"
         chapter: Cap. 2
@@ -127,7 +133,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Eldran_PuntoGuardado","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 5630202263296278916
-      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: AdditiveSceneNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 3.- Carga la torre de Liam (TorreDeLiam)
         chapter: Cap. 2
@@ -145,7 +151,7 @@ MonoBehaviour:
         sceneName: TorreDeLiam
         waitForCompletion: 1
     - rid: 5630202263296278917
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 4.- Los planes de Liam (LIAM_CRYSTAL_START)
         chapter: Cap. 2
@@ -161,7 +167,7 @@ MonoBehaviour:
         - f9727755-a7d3-4139-b632-6be36c051717
         eventKey: LIAM_CRYSTAL_START
     - rid: 5630202263296278918
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 5.- Espera fin de la escena de Liam (LIAM_CRYSTAL_DONE)
         chapter: Cap. 2
@@ -180,7 +186,7 @@ MonoBehaviour:
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
     - rid: 5630202263296278919
-      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: AdditiveSceneNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 6.- Descarga la torre de Liam
         chapter: Cap. 2
@@ -198,7 +204,7 @@ MonoBehaviour:
         sceneName: TorreDeLiam
         waitForCompletion: 1
     - rid: 5630202263296279079
-      type: {class: ForkNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ForkNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "16.- Prep\xE1rate para el viaje \xB7 encargos en paralelo"
         chapter: Cap. 2
@@ -216,7 +222,7 @@ MonoBehaviour:
         - cap2-prepara-viaje-erika-0
         - cap2-prepara-viaje-espera
     - rid: 5630202263296279101
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: SetFlagNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 1b.- Comienza el Cap. 2
         chapter: Cap. 2
@@ -233,7 +239,7 @@ MonoBehaviour:
         flagKey: CAP2_INICIADO
         value: 1
     - rid: 5630202263296279102
-      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 17.- Hablar con Victoria
         chapter: Cap. 2
@@ -252,7 +258,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202263296279103
-      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 18.- Victoria entrega la capa
         chapter: Cap. 2
@@ -270,7 +276,7 @@ MonoBehaviour:
         npcId: NPC_Victoria
         oneShotFlag: 
     - rid: 5630202263296279106
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "21.- Completar encargo \xB7 capa"
         chapter: Cap. 2
@@ -293,7 +299,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 5630202263296279107
-      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 22.- Hablar con la boticaria
         chapter: Cap. 2
@@ -312,7 +318,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202263296279108
-      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "23.- La \xFAnica poci\xF3n de vida"
         chapter: Cap. 2
@@ -330,7 +336,7 @@ MonoBehaviour:
         npcId: NPC_Boticaria
         oneShotFlag: 
     - rid: 5630202263296279109
-      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GiveInventoryItemNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "24.- Recibir poci\xF3n de vida"
         chapter: Cap. 2
@@ -349,7 +355,7 @@ MonoBehaviour:
         logWarnings: 1
         onlyOnce: 1
     - rid: 5630202263296279111
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26.- Completar encargo \xB7 poci\xF3n"
         chapter: Cap. 2
@@ -372,7 +378,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 5630202568397029506
-      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 22b.- Hablar con Erika
         chapter: Cap. 2
@@ -385,13 +391,13 @@ MonoBehaviour:
         guid: cap2-prepara-viaje-erika-0
         position: {x: 560, y: 1384}
         outputs:
-        - cap2-prepara-viaje-erika-grimorio
+        - cap2-erika-lecciones-intro
         npcId: NPC_Erika
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202568397029508
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "24b.- Completar encargo \xB7 entrenamiento Erika"
         chapter: Cap. 2
@@ -414,7 +420,7 @@ MonoBehaviour:
         completeQuest: 0
         logWarnings: 1
     - rid: 5630202570100441218
-      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: '26.- Eldran: la lista de motivos'
         chapter: Cap. 2
@@ -432,7 +438,7 @@ MonoBehaviour:
         npcId: NPC_Eldran
         oneShotFlag: 
     - rid: 5630202570100441219
-      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 27.- Hablar con Oliver (despedida)
         chapter: Cap. 2
@@ -451,7 +457,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202570100441220
-      type: {class: PlayDialogueNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: '28.- Oliver: nos vemos pronto'
         chapter: Cap. 2
@@ -469,7 +475,7 @@ MonoBehaviour:
         npcId: NPC_Oliver
         oneShotFlag: 
     - rid: 5630202570100441225
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: SetFlagNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 33.- Cap. 2 completado - Eldran espera en la salida del pueblo
         chapter: Cap. 2
@@ -486,7 +492,7 @@ MonoBehaviour:
         flagKey: CAP2_COMPLETADO
         value: 1
     - rid: 5630202570100441226
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 34.- Cap. 2 - Fin (Checkpoint)
         chapter: Cap. 2
@@ -506,7 +512,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Will_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
     - rid: 5630202655468159109
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "25.- Encargo terminado (se\xF1al)"
         chapter: Cap. 2
@@ -521,7 +527,7 @@ MonoBehaviour:
         outputs: []
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
     - rid: 5630202655468159110
-      type: {class: WaitSignalCountNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitSignalCountNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 25b.- Esperar los 3 encargos
         chapter: Cap. 2
@@ -539,7 +545,7 @@ MonoBehaviour:
         count: 3
         questId: 
     - rid: 5630202655468159111
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26b.- Completar misi\xF3n \xB7 Prep\xE1rate para el viaje"
         chapter: Cap. 2
@@ -561,27 +567,8 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 0
-    - rid: 5630202718439342302
-      type: {class: WaitCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: 23b.- Esperar fin del combate con Erika
-        chapter: Cap. 2
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap2-prepara-viaje-erika-combate
-        position: {x: 1400, y: 1444}
-        outputs:
-        - cap2-prepara-viaje-erika-2
-        eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
     - rid: 5630202816662077838
-      type: {class: WaitNpcInteractionNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 25d.- Volver con Eldran
         chapter: Cap. 2
@@ -600,7 +587,7 @@ MonoBehaviour:
         questIcon: {fileID: 0}
         showMarker: 1
     - rid: 5630202816662077843
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 35.- Fin del Cap. 2 (CH_Cap2_BACK_1)
         chapter: Cap. 2
@@ -616,7 +603,7 @@ MonoBehaviour:
         - pieza-npc_eldran-usual-tras-el-cap-2-en-la-capital-cap2-fin-senal
         eventKey: CH_Cap2_BACK_1
     - rid: 6540294472562114912
-      type: {class: SetFlagNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: SetFlagNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 22b-0.- Erika da el grimorio
         chapter: Cap. 2
@@ -633,7 +620,7 @@ MonoBehaviour:
         flagKey: GRIMORIO_RECIBIDO
         value: 1
     - rid: 6540294589977723077
-      type: {class: AdditiveSceneNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: AdditiveSceneNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "8.- Carga la habitaci\xF3n de Will"
         chapter: Cap. 2
@@ -651,7 +638,7 @@ MonoBehaviour:
         sceneName: WillHouse
         waitForCompletion: 1
     - rid: 6540294589977723078
-      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlaceActorNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
         chapter: Cap. 2
@@ -670,7 +657,7 @@ MonoBehaviour:
         applyPlayerEnvironment: 1
         showActor: 0
     - rid: 6540294589977723079
-      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlaceActorNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "10.- Eldran entra en la habitaci\xF3n"
         chapter: Cap. 2
@@ -689,7 +676,7 @@ MonoBehaviour:
         applyPlayerEnvironment: 0
         showActor: 1
     - rid: 6540294589977723081
-      type: {class: PlaceActorNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: PlaceActorNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "12.- Eldran espera junto a la casa de Will (sale en la cinem\xE1tica)"
         chapter: Cap. 2
@@ -708,7 +695,7 @@ MonoBehaviour:
         applyPlayerEnvironment: 0
         showActor: 1
     - rid: 6540294589977723082
-      type: {class: GiveInventoryItemNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GiveInventoryItemNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 13.- Trozo del aro
         chapter: Cap. 2
@@ -727,7 +714,7 @@ MonoBehaviour:
         logWarnings: 1
         onlyOnce: 1
     - rid: 6540294589977723083
-      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: StartQuestNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "14.- Prep\xE1rate para el viaje"
         chapter: Cap. 2
@@ -746,7 +733,7 @@ MonoBehaviour:
         inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
         noGiver: 0
     - rid: 6540294589977723084
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
         chapter: Cap. 2
@@ -766,7 +753,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Bedroom","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[1],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":true,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294600349712458
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Boticaria desde aqu\xED: Cap. 2 \xB7 despedida de Will"
         chapter: Cap. 2
@@ -787,7 +774,7 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: e68fb6d7f8f019149b87b79ab415a12d, type: 2}
     - rid: 6540294600349712459
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Eldran desde aqu\xED: Cap. 2\u20133 \xB7 espera en la salida del pueblo"
         chapter: Cap. 2
@@ -808,7 +795,7 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: e5a5ab25ade5af24296628615c940816, type: 2}
     - rid: 6540294600349712460
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Erika desde aqu\xED: Cap. 2 \xB7 despedida de Will"
         chapter: Cap. 2
@@ -829,7 +816,7 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: ca36219eba727fb4581ea1315bfcf0a5, type: 2}
     - rid: 6540294600349712461
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Tomasa desde aqu\xED: Cap. 2 \xB7 despedida de Will"
         chapter: Cap. 2
@@ -850,7 +837,7 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: 34c074fff9172384d8a5b3b108b987b6, type: 2}
     - rid: 6540294600349712462
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Oliver desde aqu\xED: Cap. 2 \xB7 tras despedirse de Will"
         chapter: Cap. 2
@@ -871,7 +858,7 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: 2519a5536d17c034f89d950d82a706cf, type: 2}
     - rid: 6540294600349712463
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Victoria desde aqu\xED: Cap. 2 \xB7 despedida de Will"
         chapter: Cap. 2
@@ -892,7 +879,7 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: 1b869c2307cca1545875dceec0e8c70b, type: 2}
     - rid: 6540294600349712464
-      type: {class: ActorStateNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Eldran, lo de siempre: Tras el Cap. 2 \xB7 en la capital"
         chapter: Cap. 2
@@ -911,7 +898,7 @@ MonoBehaviour:
         markId: 
         lines: []
     - rid: 6540294600349712578
-      type: {class: CheckpointNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Will aparece en Salida del pueblo
         chapter: 
@@ -931,7 +918,7 @@ MonoBehaviour:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Eldran_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"climb":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[]}}'
     - rid: 6540294618706084385
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 7.- Amanece tras la noche
         chapter: Cap. 2
@@ -950,7 +937,7 @@ MonoBehaviour:
         ifNobodyAnswers: 0
         timeoutSeconds: 0
     - rid: 6540294618706084386
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
         chapter: Cap. 2
@@ -970,7 +957,7 @@ MonoBehaviour:
         ifNobodyAnswers: 0
         timeoutSeconds: 0
     - rid: 6540294618706084387
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 19.- Desbloquear capa de principiante
         chapter: Cap. 2
@@ -989,7 +976,7 @@ MonoBehaviour:
         ifNobodyAnswers: 0
         timeoutSeconds: 0
     - rid: 6540294618706084388
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "20.- Tutorial \xB7 equipar la capa"
         chapter: Cap. 2
@@ -1008,7 +995,7 @@ MonoBehaviour:
         ifNobodyAnswers: 0
         timeoutSeconds: 0
     - rid: 6540294618706084389
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "25.- Tutorial \xB7 usar consumibles"
         chapter: Cap. 2
@@ -1027,9 +1014,9 @@ MonoBehaviour:
         ifNobodyAnswers: 0
         timeoutSeconds: 0
     - rid: 6540294618706084390
-      type: {class: GameStepNode, ns: , asm: Liyodev.NarrativeGraph}
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "22b-1.- Aprender Protecci\xF3n y Bola Prisma"
+        displayTitle: 22b-1.- Aprender Bola Prisma
         chapter: Cap. 2
         section: 
         blockSaving: 0
@@ -1040,7 +1027,7 @@ MonoBehaviour:
         guid: cap2-prepara-viaje-erika-desbloqueo
         position: {x: 1120, y: 1414}
         outputs:
-        - cap2-prepara-viaje-erika-combate
+        - cap2-erika-duelo
         request:
           rid: 6540294618706084396
         ifNobodyAnswers: 0
@@ -1091,14 +1078,251 @@ MonoBehaviour:
     - rid: 6540294618706084396
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
-        abilityKeysToUnlock: 06000000i
+        abilityKeysToUnlock: 
         spellsToUnlock: 02000000i
         assignSpellsToEmptySlot: 1
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
         applyPresetAfterUnlock: 1
-    - rid: 6540294723586752669
-      type: {class: RaiseCustomEventNode, ns: , asm: Liyodev.NarrativeGraph}
+    - rid: 6540294727198835063
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "22b-a.- Erika: \xABno sales sin saber defenderte\xBB"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-lecciones-intro
+        position: {x: 560, y: 1704}
+        outputs:
+        - cap2-erika-desbloqueo-proteccion
+        dialogue: {fileID: 11400000, guid: 47bca80bad3d6334eb7961e009e2e59f, type: 2}
+        npcId: NPC_Erika
+        oneShotFlag: 
+    - rid: 6540294727198835064
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "22b-b.- Aprender Protecci\xF3n"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-desbloqueo-proteccion
+        position: {x: 840, y: 1704}
+        outputs:
+        - cap2-erika-leccion-devolver
+        request:
+          rid: 6540294727198835070
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294727198835065
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "22b-d.- Lecci\xF3n 2: protegerse (lluvia)"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-leccion-protegerse
+        position: {x: 1400, y: 1704}
+        outputs:
+        - cap2-erika-leccion-escudo
+        request:
+          rid: 6540294727198835071
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294727198835066
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "22b-c.- Lecci\xF3n 1: contraatacar"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-leccion-devolver
+        position: {x: 1120, y: 1704}
+        outputs:
+        - cap2-erika-leccion-protegerse
+        request:
+          rid: 6540294727198835072
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294727198835068
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: '22b-f.- Erika: el grimorio y la Bola Prisma'
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-elementos
+        position: {x: 1960, y: 1704}
+        outputs:
+        - cap2-prepara-viaje-erika-grimorio
+        dialogue: {fileID: 11400000, guid: e39b6281d368271459be4ce0ef09bf12, type: 2}
+        npcId: NPC_Erika
+        oneShotFlag: 
+    - rid: 6540294727198835069
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: 23b.- Duelo con Erika (dos fases)
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-duelo
+        position: {x: 1400, y: 1414}
+        outputs:
+        - cap2-prepara-viaje-erika-2
+        - cap2-erika-duelo
+        request:
+          rid: 6540294727198835074
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294727198835070
+      type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
+      data:
+        abilityKeysToUnlock: 06000000i
+        spellsToUnlock: 
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+    - rid: 6540294727198835071
+      type: {class: PedirLeccionDeCombate, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Erika
+        combatConfig: {fileID: 11400000, guid: b54f3041f65a9eb44b9fd6d038dc206f, type: 2}
+        perfil: {fileID: 11400000, guid: 60af212f6e93f7b42be5239b0dacaca6, type: 2}
+        objetivo: 0
+        veces: 4
+        segundosDePreparacion: 1
+        segundosEntreHechizos: 1
+        segundosDeAviso: 0.8
+        proyectil: {fileID: 0}
+        animacionDelHechizo: 
+        hechizosPorTanda: 5
+        segundosEntreTandas: 2.5
+        alturaDeLaLluvia: 8
+        radioDeLaLluvia: 1.2
+        velocidadDeLaLluvia: 9
+        colorDeLaLluvia: 0
+        elementoDelEscudo: 2
+        claveAlRebotar: 
+        fraseAlRebotar: 
+        claveAlEmpezar: ERIKA_LECCION_LLUVIA_INICIO
+        fraseAlEmpezar: "Ahora, protegerte. Voy a hacer llover meteoritos: mant\xE9n B pulsada con el escudo y aguanta hasta que pase."
+        claveAlAcertar: 
+        fraseAlAcertar: 
+        claveAlAcabar: ERIKA_LECCION_LLUVIA_FIN
+        fraseAlAcabar: "\xA1Bien aguantado! Con el escudo puesto no te tumba ni una lluvia."
+    - rid: 6540294727198835072
+      type: {class: PedirLeccionDeCombate, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Erika
+        combatConfig: {fileID: 11400000, guid: b54f3041f65a9eb44b9fd6d038dc206f, type: 2}
+        perfil: {fileID: 11400000, guid: 60af212f6e93f7b42be5239b0dacaca6, type: 2}
+        objetivo: 1
+        veces: 1
+        segundosDePreparacion: 1
+        segundosEntreHechizos: 2.5
+        segundosDeAviso: 0.8
+        proyectil: {fileID: 0}
+        animacionDelHechizo: 
+        hechizosPorTanda: 5
+        segundosEntreTandas: 2.5
+        alturaDeLaLluvia: 8
+        radioDeLaLluvia: 1.2
+        velocidadDeLaLluvia: 9
+        colorDeLaLluvia: 0
+        elementoDelEscudo: 2
+        claveAlRebotar: 
+        fraseAlRebotar: 
+        claveAlEmpezar: ERIKA_LECCION_CONTRAATACAR_INICIO
+        fraseAlEmpezar: 'Primero, contraatacar. Te voy a lanzar una bola: pulsa B justo cuando te llegue y se la devuelves.'
+        claveAlAcertar: ERIKA_LECCION_BIEN
+        fraseAlAcertar: "\xA1Eso es!"
+        claveAlAcabar: ERIKA_LECCION_CONTRAATACAR_FIN
+        fraseAlAcabar: "\xA1Uf! Me la has devuelto. Eso es contraatacar."
+    - rid: 6540294727198835074
+      type: {class: PedirCombateContraNpc, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Erika
+        otrosNpcs: []
+        combatConfig: {fileID: 0}
+        defeatEventKey: ERIKA_ENTRENAMIENTO_DERROTADA
+        waitForDefeat: 1
+        restorePeacefulOnDefeat: 1
+        llevarATerrenoAbierto: 1
+        distanciaAlTerrenoAbierto: 20
+        radioDeArena: 0
+    - rid: 6540294727198835090
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "22b-e.- Lecci\xF3n 3: romper escudos"
+        chapter: Cap. 2
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-erika-leccion-escudo
+        position: {x: 1680, y: 1704}
+        outputs:
+        - cap2-erika-elementos
+        request:
+          rid: 6540294727198835091
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294727198835091
+      type: {class: PedirLeccionDeCombate, ns: , asm: Assembly-CSharp}
+      data:
+        npcId: NPC_Erika
+        combatConfig: {fileID: 11400000, guid: b54f3041f65a9eb44b9fd6d038dc206f, type: 2}
+        perfil: {fileID: 11400000, guid: 60af212f6e93f7b42be5239b0dacaca6, type: 2}
+        objetivo: 3
+        veces: 1
+        segundosDePreparacion: 4
+        segundosEntreHechizos: 0
+        segundosDeAviso: 0
+        proyectil: {fileID: 0}
+        animacionDelHechizo: 
+        hechizosPorTanda: 5
+        segundosEntreTandas: 2.5
+        alturaDeLaLluvia: 8
+        radioDeLaLluvia: 1.2
+        velocidadDeLaLluvia: 9
+        colorDeLaLluvia: 0
+        elementoDelEscudo: 3
+        claveAlRebotar: ERIKA_LECCION_ESCUDO_REBOTE
+        fraseAlRebotar: "\xA1Eso no lo rompe! Un escudo de luz solo cede a la luz."
+        claveAlEmpezar: ERIKA_LECCION_ESCUDO_INICIO
+        fraseAlEmpezar: "Mi escudo es de luz, \xBFves el color? Solo lo rompe otra luz. Usa la Llama Astral."
+        claveAlAcertar: ERIKA_LECCION_BIEN
+        fraseAlAcertar: 
+        claveAlAcabar: ERIKA_LECCION_ESCUDO_FIN
+        fraseAlAcabar: "\xA1Roto! Cada escudo cede ante la magia de su mismo color."
+    - rid: 6540294773546942659
+      type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
         chapter: Cap. 2
@@ -1113,8 +1337,8 @@ MonoBehaviour:
         outputs:
         - pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         eventKey: CAP2_A_DESPEDIRSE
-    - rid: 6540294723586752670
-      type: {class: StartQuestNode, ns: , asm: Liyodev.NarrativeGraph}
+    - rid: 6540294773546942660
+      type: {class: StartQuestNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26e.- Misi\xF3n: hora de partir"
         chapter: Cap. 2
@@ -1132,8 +1356,8 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294723586752671
-      type: {class: CompleteQuestStepsNode, ns: , asm: Liyodev.NarrativeGraph}
+    - rid: 6540294773546942661
+      type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: '29.- Paso: despedirse de Oliver'
         chapter: Cap. 2

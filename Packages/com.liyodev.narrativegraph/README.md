@@ -37,7 +37,6 @@ Combate, movimiento del jugador, física, cinemáticas, minijuegos, economía, U
   - Dibujos del grafo...
   - Guardar el manual de pasos
   - Comprobar el kit
-  - Permitir herramientas externas (puerto local)
 - **Ayuda ▸ Abrir el manual**
 - **Ejemplos ▸ Montar / Quitar «El faro»**
 
@@ -69,9 +68,19 @@ Cualquier cosa que tu juego sepa hacer se pide con **Pedir al juego**: un id, da
 
 Esto vale para batallas, cinemáticas, minijuegos, viajes, desbloqueos, cambios de grupo o cualquier mecánica propia.
 
+## Código
+
+- Todo el kit vive en `Liyodev.NarrativeGraph` (runtime) y `Liyodev.NarrativeGraph.Editor` (editor; el lienzo y sus paneles en `Liyodev.NarrativeGraph.Editor.Story`). En tu código: `using Liyodev.NarrativeGraph;`.
+- Los datos de cada paso son campos privados con `[SerializeField]`: se leen (y, los que se montan por código, se escriben) con propiedades, p. ej. `new WaitCustomEventNode { EventKey = "PUERTA", AcceptEarlierEvent = true }` o `node.Guid`, `node.Outputs`, `node.Position`. El editor y el asistente los cambian por su nombre de campo (`eventKey`), que es también el que sale en el manual de pasos.
+- Dentro de un namespace propio que empiece por `Liyodev`, pon el `using Liyodev.NarrativeGraph;` dentro del namespace: si no, `NarrativeGraph` se lee como el namespace y no como el asset.
+
+## Asistente de IA (opcional)
+
+El grafo funciona entero sin IA. Si el proyecto tiene **Liyodev Assistant** (`com.liyodev.assistant`), se compila además el ensamblado `Liyodev.NarrativeGraph.Editor.Assistant` y aparecen el chat dentro del editor y las herramientas externas: el contexto `narrative-graph` del servidor MCP del asistente (puerto 47822), que está siempre disponible, también con el editor del grafo cerrado (elige capítulo con `context_select`). Si el asistente está importado como carpeta y no como paquete, añade el símbolo `LIYODEV_ASSISTANT` en *Player ▸ Scripting Define Symbols*.
+
 ## Requisitos
 
-Unity 6 (6000.0 o superior), uGUI/TextMeshPro, Newtonsoft JSON y el asistente de Liyodev (`com.liyodev.assistant`, se instala solo). El paso de reproducir un Timeline usa el paquete Timeline de tu proyecto si lo tienes. El editor es bilingüe español/inglés.
+Unity 6 (6000.0 o superior), uGUI/TextMeshPro y Newtonsoft JSON. El asistente de Liyodev es opcional (ver arriba). El paso de reproducir un Timeline usa el paquete Timeline de tu proyecto si lo tienes. El editor es bilingüe español/inglés.
 
 ## Ejemplo
 
@@ -84,4 +93,4 @@ Unity 6 (6000.0 o superior), uGUI/TextMeshPro, Newtonsoft JSON y el asistente de
 
 ## Versión
 
-0.9.0.
+0.10.0. Cambios en `CHANGELOG.md`.

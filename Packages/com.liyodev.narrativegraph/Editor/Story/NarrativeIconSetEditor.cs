@@ -1,12 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// El asset de dibujos del grafo: botones para traer las categorías y los personajes del
     /// proyecto, y el inspector normal para arrastrar las texturas.
     [CustomEditor(typeof(NarrativeIconSet))]
-    public sealed class NarrativeIconSetEditor : Editor
+    public sealed class NarrativeIconSetEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

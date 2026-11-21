@@ -3,7 +3,8 @@ using UnityEngine;
 
 /// <summary>
 /// Une el kit de puzles rítmicos con el juego: quién pesa en un plato, a quién alcanza una marea,
-/// quién queda detrás de una puerta y quién es el jugador en un tramo lateral. El kit no sabe nada
+/// quién queda detrás de una puerta, a quién golpea lo que cae al compás, quién es el jugador en un tramo lateral y la presencia que
+/// acecha a quien lleva un objeto (<see cref="PresenciaQueAcechaEnElJuego"/>). El kit no sabe nada
 /// de personajes ni de quién lleva el mando; eso se lo dice este enchufe. Ver TDD § 31.
 /// </summary>
 public static class EnchufeDePuzzlesDelJuego
@@ -21,6 +22,21 @@ public static class EnchufeDePuzzlesDelJuego
     }
 
     private static bool EsElJugador(Collider col) => ControlDelJugador.EsElJugador(col);
+
+    /// <summary>Lo que cae al compás (CueDrop) golpea al grupo que pille debajo y lo aparta.</summary>
+    // Lo que cae apuntando apunta a quien lleva el jugador.
+    private static Vector3? PosicionDelJugador()
+    {
+        var cuerpo = ControlDelJugador.CuerpoDelJugador;
+        return cuerpo != null ? cuerpo.transform.position : (Vector3?)null;
+    }
+
+    // Por la mezcla del juego (bus de efectos), en 2D: el golpe va con la música, no con la distancia.
+    private static void SonidoDeLoQueCae(AudioClip sonido, Vector3 donde, float volumen)
+        => AudioService.Instance?.PlaySFX(sonido, volumen);
+
+    private static void GolpeDeLoQueCae(Vector3 centro, float radio, float dano)
+        => DanoEnZona.GolpearEnCilindro(centro, radio, 2.2f, 0.3f, dano, 5f);
 
     private static Transform RaizDelJugador(Collider col)
         => ControlDelJugador.EsElJugador(col) ? ControlDelJugador.CuerpoDelJugador?.transform : null;
@@ -72,9 +88,13 @@ public static class EnchufeDePuzzlesDelJuego
     {
         WeightPlate.ResolveWeightBody = CuerpoQuePesa;
         PulseTide.IsTarget = EsElJugador;
+        CueDrop.Strike = GolpeDeLoQueCae;
+        CueDrop.PlaySound = SonidoDeLoQueCae;
+        CueDrop.TargetPosition = PosicionDelJugador;
         BeatGate.QuedaAlguienDetras = QuedaAlguienDetras;
         SidePlaneZone.ResolvePlayerRoot = RaizDelJugador;
         SidePlaneZone.ZoneEntered += AlEntrarEnElLateral;
         SidePlaneZone.ZoneExited += AlSalirDelLateral;
+        PresenciaQueAcechaEnElJuego.Enchufar();
     }
 }

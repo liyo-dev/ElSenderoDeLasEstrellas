@@ -63,16 +63,12 @@ public static class HechizosConVolumen
         Rehacer("Meteoro_Dibujo_Zona", r => { R.MagicCircle(r, luz, _m, 4f); Hijo(r, "Meteoros", g => R.SkyRain(g, luz, _m, 4f, 10f, 3f, 0.9f, _m.Star)); }, log);
         Rehacer("NovaDeLuz_Dibujo_Zona", r => R.Nova(r, luz, _m, 5f), log);
         Rehacer("CupulaEstelar_Dibujo_Zona", r => R.Dome(r, luz, _m, 6.5f), log);
-        Rehacer("SelloDelPacto_Dibujo_Zona", r => { R.MagicCircle(r, mente, _m, 4.5f); Hijo(r, "Runas", g => R.RisingMotes(g, mente, _m, 4f, _m.Star, 25f, 1.5f, 0.12f)); }, log);
-        Rehacer("CadenasDelPacto_Dibujo_Zona", r => { R.MagicCircle(r, mente, _m, 4f); Hijo(r, "Eslabones", g => R.RisingMotes(g, mente, _m, 3.6f, _m.OrbitRing, 10f, 1.2f, 0.22f)); }, log);
-        Rehacer("CadenasDelPacto_Dibujo_Estado", r => R.Chains(r, mente, _m, 1.4f, 0.55f, 10), log);
-        Rehacer("JuicioDelPacto_Dibujo_Zona", r => { R.MagicCircle(r, mente, _m, 6f); Hijo(r, "Juicio", g => R.Pillar(g, blanco, mente, _m, 1f, 3.2f, 14f, true)); }, log);
+        PactoZonas(log);
         Rehacer("MagoOscuroGrieta_Dibujo_Zona", r => { R.MagicCircle(r, sombra, _m, 5.5f); Hijo(r, "Pinchos", g => R.Spikes(g, sombra, polvoOscuro, _m, 14, 4.5f, 1.2f, 1138)); }, log);
 
         // Levitación y paso sombrío.
         Rehacer("Levitation_Dibujo_Mantener", r => Levitacion(r, mente), log);
         Rehacer("Levitation_Dibujo_Soltar", r => R.Impact(r, mente, _m, 0.9f), log);
-        Rehacer("PasoSombrio_Dibujo_Llegada", r => R.Implosion(r, mente, _m, 0.6f, polvoOscuro), log);
 
         // Hechizo que sale mal (petardea): bocanada de humo de dibujo, una onda y pocas chispas.
         // Lo usan las cinemáticas (Cap1_OliverSaludo). Ver INC-1153.
@@ -80,7 +76,7 @@ public static class HechizosConVolumen
 
         // Escudos del grupo (se sostienen mientras se defiende) y contraataque.
         // Mismo centro y tamaño que tenían (la defensa se mide con ellos).
-        Rehacer("Escudo_Will", r => R.Shield(r, _p["Cielo"], _m, 0.95f, 2.6f, true), log);
+        EscudoDeWill(log);
         Rehacer("Escudo_Npc", r => R.Shield(r, _p["Rosa"], _m, 0.95f, 2.6f, true), log);
         Rehacer("Escudo_Grupo", r => R.Shield(r, luz, _m, 0.95f, 2.6f, true), log);
         Rehacer("Escudo_Contraataque", r => R.Impact(r, luz, _m, 1.0f), log);
@@ -112,6 +108,123 @@ public static class HechizosConVolumen
         Rehacer("Amanecer_ProteccionAbierta", r => ProteccionAbierta(r, luz), log);
     }
 
+    /// Escudo de Will (B mantenida) ligero, como el Protego de Hogwarts Legacy: burbuja casi
+    /// transparente con el borde brillante y vetas que se mueven, sin aros, estrellitas ni luz; y el
+    /// destello y la onda del golpe que se para. Mismo centro y tamaño de antes (la defensa se mide
+    /// con ellos). Ver INC-1350.
+    [MenuItem("El Sendero/Magia/Escudo de Will ligero (INC-1350)")]
+    public static void MenuEscudoDeWill()
+    {
+        if (!Preparar()) return;
+        var log = new System.Text.StringBuilder();
+        EscudoDeWill(log);
+        AssetDatabase.SaveAssets();
+        AsignarGolpeEnElEscudo(log);
+        Debug.Log("[VFX] Escudo de Will ligero: " + log);
+    }
+
+    /// El golpe que se para en el escudo, en el PlayerShieldController del cuerpo común del grupo.
+    private static void AsignarGolpeEnElEscudo(System.Text.StringBuilder log)
+    {
+        const string cuerpo = "Assets/Prefabs/Personajes/_CUERPO_DEL_GRUPO.prefab";
+        var golpe = AssetDatabase.LoadAssetAtPath<GameObject>(RutaGolpeEnElEscudoDeWill);
+        var raiz = PrefabUtility.LoadPrefabContents(cuerpo);
+        if (golpe == null || raiz == null) { log.Append("(falta el golpe o el cuerpo del grupo) "); if (raiz) PrefabUtility.UnloadPrefabContents(raiz); return; }
+        try
+        {
+            var escudo = raiz.GetComponentInChildren<PlayerShieldController>(true);
+            if (escudo == null) { log.Append("(el cuerpo del grupo no tiene escudo) "); return; }
+            var so = new SerializedObject(escudo);
+            var campo = so.FindProperty("golpeEnElEscudo");
+            if (campo == null || campo.objectReferenceValue == golpe) return;
+            campo.objectReferenceValue = golpe;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            PrefabUtility.SaveAsPrefabAsset(raiz, cuerpo);
+            log.Append("golpe asignado al escudo ");
+        }
+        finally { PrefabUtility.UnloadPrefabContents(raiz); }
+    }
+
+    public const string RutaGolpeEnElEscudoDeWill = Carpeta + "/VFX_Hechizo_Escudo_Will_Golpe.prefab";
+
+    private static void EscudoDeWill(System.Text.StringBuilder log)
+    {
+        var cielo = _p["Cielo"];
+        var fina = StylizedVfxAssets.ShellMaterial($"{CarpetaPropia}/Materiales/Cielo_BurbujaFina.mat",
+            new Look(new Color(2.2f, 2.3f, 2.4f), new Color(0.55f, 1.1f, 1.9f), new Color(0.2f, 0.4f, 0.9f), new Color(1.8f, 2.2f, 2.5f),
+                     coreBand: 0.9f, rimBand: 0.8f, noiseAmount: 0.22f, noiseScale: 2.5f), 0.02f, 0.09f, 0.3f);
+        Rehacer("Escudo_Will", r => R.ShieldThin(r, fina, cielo, 0.95f, 2.6f), log);
+        Rehacer("Escudo_Will_Golpe", r => R.Impact(r, cielo, _m, new R.ImpactStyle { Scale = 0.55f, Waves = 2, RisingStars = 0 }), log);
+    }
+
+    // ── Contraataque con coreografía ────────────────────────────────────────────────────────
+
+    public const string RutaEsferaDelContraataque = Carpeta + "/VFX_Hechizo_Contraataque_Esfera.prefab";
+    public const string RutaPolvoDelContraataque = Carpeta + "/VFX_Hechizo_Contraataque_Polvo.prefab";
+    public const string RutaBurbujaDelContraataque = Carpeta + "/VFX_Hechizo_Contraataque_Burbuja.prefab";
+
+    /// La esfera que envuelve la bola sostenida sobre la cabeza (burbuja fina de Will, pequeña) y
+    /// el polvo de dibujo en los pies cuando el golpe arrastra al personaje (en vez de la nube del
+    /// paquete). Ver INC-1352.
+    public static void ConstruirContraataque(System.Text.StringBuilder log)
+    {
+        if (!Preparar()) return;
+        var cielo = _p["Cielo"];
+        var fina = AssetDatabase.LoadAssetAtPath<Material>($"{CarpetaPropia}/Materiales/Cielo_BurbujaFina.mat");
+        if (fina == null) { EscudoDeWill(log); fina = AssetDatabase.LoadAssetAtPath<Material>($"{CarpetaPropia}/Materiales/Cielo_BurbujaFina.mat"); }
+        Rehacer("Contraataque_Esfera", r => { R.ShieldThin(r, fina, cielo, 0f, 0.75f); Hijo(r, "Chispas", g => R.OrbitHalo(g, cielo, _m, 0f, 0.42f, 3)); }, log);
+        // La burbuja que para el golpe: la del escudo de Will, sin colisión (solo se ve).
+        Rehacer("Contraataque_Burbuja", r => R.ShieldThin(r, fina, cielo, 0.95f, 2.6f), log);
+        Rehacer("Contraataque_Polvo", r => R.Impact(r, _p["Polvo"], _m, new R.ImpactStyle { Scale = 0.8f, Waves = 1, Puffs = _p["Polvo"], RisingStars = 0 }), log);
+        AssetDatabase.SaveAssets();
+    }
+
+    // ── Magia del pacto (Liam): Oscuro ──────────────────────────────────────────────────────
+
+    /// La magia del pacto de Liam (Garra, Sello, Cadenas, Juicio y Paso Sombrío) es Oscuro, no
+    /// Mente: cambia su elemento en los assets y rehace sus efectos con la paleta Oscuro.
+    /// Ver INC-1351.
+    [MenuItem("El Sendero/Magia/Pacto de Liam a Oscuro (INC-1351)")]
+    public static void MenuPactoAOscuro()
+    {
+        if (!Preparar()) return;
+        var log = new System.Text.StringBuilder();
+        foreach (var nombre in HechizosDelPacto)
+        {
+            var hechizo = AssetDatabase.LoadAssetAtPath<MagicSpellSO>($"Assets/_SPELLS/{nombre}.asset");
+            if (hechizo == null) { log.Append($"(falta {nombre}) "); continue; }
+            if (hechizo.element == MagicElement.Dark) continue;
+            hechizo.element = MagicElement.Dark;
+            EditorUtility.SetDirty(hechizo);
+            log.Append(nombre).Append("→Oscuro ");
+        }
+        PactoZonas(log);
+        GarraDelPacto(log);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[Magia] Pacto a Oscuro: " + log);
+    }
+
+    private static readonly string[] HechizosDelPacto = { "GarraDelPacto", "SelloDelPacto", "CadenasDelPacto", "JuicioDelPacto", "PasoSombrio" };
+
+    private static void PactoZonas(System.Text.StringBuilder log)
+    {
+        var pacto = _p["Oscuro"]; var blanco = _p["Blanco"];
+        Rehacer("SelloDelPacto_Dibujo_Zona", r => { R.MagicCircle(r, pacto, _m, 4.5f); Hijo(r, "Runas", g => R.RisingMotes(g, pacto, _m, 4f, _m.Star, 25f, 1.5f, 0.12f)); }, log);
+        Rehacer("CadenasDelPacto_Dibujo_Zona", r => { R.MagicCircle(r, pacto, _m, 4f); Hijo(r, "Eslabones", g => R.RisingMotes(g, pacto, _m, 3.6f, _m.OrbitRing, 10f, 1.2f, 0.22f)); }, log);
+        Rehacer("CadenasDelPacto_Dibujo_Estado", r => R.Chains(r, pacto, _m, 1.4f, 0.55f, 10), log);
+        Rehacer("JuicioDelPacto_Dibujo_Zona", r => { R.MagicCircle(r, pacto, _m, 6f); Hijo(r, "Juicio", g => R.Pillar(g, blanco, pacto, _m, 1f, 3.2f, 14f, true)); }, log);
+        Rehacer("PasoSombrio_Dibujo_Llegada", r => R.Implosion(r, pacto, _m, 0.6f, _p["PolvoOscuro"]), log);
+    }
+
+    /// Garra del Pacto: tres tajos curvos que viajan juntos y dejan tres marcas.
+    private static void GarraDelPacto(System.Text.StringBuilder log)
+    {
+        Firma("GarraDelPacto", _p["Oscuro"],
+            new R.ProjectileStyle { Core = 0.75f, Shape = R.ProjectileShape.Claws, TrailRate = 10f },
+            new R.CastStyle { Size = 0.26f, Slashes = 3, VerticalSlashes = true },
+            new R.ImpactStyle { Scale = 1.1f, Marks = 3, Debris = _m.Spike }, log);
+    }
+
     // ── Para otros montajes (dúos y trío, vuelo) ────────────────────────────────────────────
 
     /// Prepara mallas y paletas. Devuelve false si falta algo (ya avisado en la consola).
@@ -120,7 +233,7 @@ public static class HechizosConVolumen
     /// Mallas preparadas por PrepararPaletas.
     public static EnergyMeshes Mallas => _m;
 
-    /// Paleta por nombre (Fuego, Viento, Luz, Mente, Oscuro, Cielo, Rosa, Demonio, Blanco, Polvo, PolvoOscuro).
+    /// Paleta por nombre (Fuego, Viento, Luz, Mente, Oscuro, Cielo, Rosa, Demonio, Blanco, Polvo, PolvoOscuro, Ceniza).
     public static EnergyPalette Paleta(string nombre) => _p.TryGetValue(nombre, out var p) ? p : null;
 
     // ── Paletas y mallas ────────────────────────────────────────────────────────────────────
@@ -158,6 +271,8 @@ public static class HechizosConVolumen
         Paleta("Blanco", new Color(3f, 3f, 3f), new Color(2.2f, 2.1f, 2.0f), new Color(1.5f, 1.35f, 1.6f), new Color(1.5f, 1.6f, 2.2f), Color.white);
         Paleta("Polvo", new Color(0.95f, 0.9f, 0.8f), new Color(0.78f, 0.7f, 0.58f), new Color(0.55f, 0.45f, 0.38f), new Color(0.78f, 0.7f, 0.58f), Color.white, sinBorde: true);
         Paleta("PolvoOscuro", new Color(0.5f, 0.38f, 0.6f), new Color(0.25f, 0.18f, 0.32f), new Color(0.11f, 0.07f, 0.15f), new Color(0.25f, 0.18f, 0.32f), Color.white, sinBorde: true);
+        // Ceniza gris violácea: lo que queda de un enemigo que se esfuma.
+        Paleta("Ceniza", new Color(0.9f, 0.85f, 0.88f), new Color(0.52f, 0.47f, 0.52f), new Color(0.2f, 0.16f, 0.23f), new Color(0.52f, 0.47f, 0.52f), Color.white, sinBorde: true);
         return _p.Values.All(p => p.Energy != null && p.Piece != null && p.Spark != null && p.Shell != null);
     }
 
@@ -294,11 +409,7 @@ public static class HechizosConVolumen
             new R.ProjectileStyle { Core = 0.34f, Rings = 1, Beads = 4, TrailMesh = _m.Star },
             new R.CastStyle { Size = 0.3f, Sparks = 8 },
             new R.ImpactStyle { Scale = 1.1f, Debris = _m.Sphere, RisingStars = 6 }, log);
-        // Garra del Pacto: tres tajos curvos que viajan juntos y dejan tres marcas.
-        Firma("GarraDelPacto", mente,
-            new R.ProjectileStyle { Core = 0.75f, Shape = R.ProjectileShape.Claws, TrailRate = 10f },
-            new R.CastStyle { Size = 0.26f, Slashes = 3, VerticalSlashes = true },
-            new R.ImpactStyle { Scale = 1.1f, Marks = 3, Debris = _m.Spike }, log);
+        GarraDelPacto(log);
 
         // Mago Oscuro (arsenal enemigo): se queda como estaba.
         Proyectil("MagoOscuroGolpe", sombra, new R.ProjectileStyle { Core = 0.32f, Rings = 2 }, log);

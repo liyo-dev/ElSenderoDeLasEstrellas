@@ -166,6 +166,10 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     // Smooth rotation
     private Quaternion _targetRotation;
+    // Rotación con la que ApplySmoothRotation dejó el cuerpo el último fotograma: si al volver no
+    // coincide, otro sistema lo ha girado entretanto y su giro manda (ver ApplySmoothRotation).
+    private Quaternion _rotacionTrasGirar;
+    private bool _hayRotacionTrasGirar;
     private float _rotationVelocity;
 
     // Quién lleva este cuerpo: con el jugador, este animador no toca rotación ni locomoción.
@@ -196,20 +200,19 @@ public class NPCSimpleAnimator : MonoBehaviour
     public bool AllowManualRotation { get; set; }
 
     /// <summary>
-    /// FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia — "otra animación",
-    /// brazos bajados, sin brinquitos de andar, "patinando sobre hielo"): permite a sistemas
-    /// externos (CinematicState durante MoveToAction / LeadPlayerToAnchorSequence) tomar control
-    /// EXPLÍCITO del parámetro InputMagnitude vía SetMovementSpeed(), desactivando el auto-sync de
-    /// velocidad de SyncWithNavMeshAgent() mientras tanto. Sin esto, Update() de este mismo
-    /// componente llama a SyncWithNavMeshAgent() TODOS los frames, sin ninguna comprobación de
-    /// IsInCinematic, y esa función escribe su propio valor en InputMagnitude usando un mapa de
-    /// dos segmentos sobre navAgent.velocity.magnitude — una fórmula de normalización DISTINTA a
-    /// la que usa CinematicState (ComputeWalkGaitSpeedFactor con velocidad de referencia fija).
-    /// Las dos llamadas a SetMovementSpeed() del mismo frame se pisan mutuamente sin coordinación
-    /// (gana la que se ejecute última según el orden de Update() de Unity, no determinista), así
-    /// que el blend tree recibe un valor que salta entre ambos cálculos en vez de seguir una
-    /// progresión coherente — de ahí el aspecto de "otra animación completamente distinta" pese a
-    /// que el Animator sigue correctamente dentro del estado "Free Locomotion" (confirmado con
+    /// Permite a sistemas externos (CinematicState durante MoveToAction /
+    /// LeadPlayerToAnchorSequence) tomar control EXPLÍCITO del parámetro InputMagnitude vía
+    /// SetMovementSpeed(), desactivando el auto-sync de velocidad de SyncWithNavMeshAgent()
+    /// mientras tanto. Sin esto, Update() de este mismo componente llama a SyncWithNavMeshAgent()
+    /// TODOS los frames, sin ninguna comprobación de IsInCinematic, y esa función escribe su
+    /// propio valor en InputMagnitude usando un mapa de dos segmentos sobre
+    /// navAgent.velocity.magnitude — una fórmula de normalización DISTINTA a la que usa
+    /// CinematicState (ComputeWalkGaitSpeedFactor con velocidad de referencia fija). Las dos
+    /// llamadas a SetMovementSpeed() del mismo frame se pisan mutuamente sin coordinación (gana la
+    /// que se ejecute última según el orden de Update() de Unity, no determinista), así que el
+    /// blend tree recibe un valor que salta entre ambos cálculos en vez de seguir una progresión
+    /// coherente — de ahí el aspecto de "otra animación completamente distinta" pese a que el
+    /// Animator sigue correctamente dentro del estado "Free Locomotion" (confirmado con
     /// DebugLocomotionStateCheck(): enLocomotion=True, rootMotion=False, upperBodyW=0 durante todo
     /// el bug). Ver AllowManualRotation arriba para el precedente equivalente ya existente para
     /// rotación; a diferencia de esa, esta bandera NO toca la lógica de rotación de
@@ -223,12 +226,12 @@ public class NPCSimpleAnimator : MonoBehaviour
     public bool IsInBattle => _isInBattle;
 
     /// <summary>
-    /// DEBUG TEMPORAL (5 sep 2026, incidencia animación rota en escolta Eldran/guardia): resumen
-    /// de diagnóstico del estado real del Animator en el momento de la llamada — para confirmar o
-    /// descartar por datos (no suposición) si el problema es: (a) el CrossFade a "locomotionState"
-    /// falló silenciosamente y el layer base sigue en otro estado, (b) applyRootMotion sigue en
-    /// true cuando no debería, o (c) la capa UpperBody tiene peso >0 por una vía distinta a
-    /// _isInBattle. Quitar junto con el resto de logs [ELDRAN_ANIM_DEBUG] cuando se cierre esto.
+    /// DEBUG TEMPORAL: resumen de diagnóstico del estado real del Animator en el momento de la
+    /// llamada — para confirmar o descartar por datos (no suposición) si el problema es: (a) el
+    /// CrossFade a "locomotionState" falló silenciosamente y el layer base sigue en otro estado,
+    /// (b) applyRootMotion sigue en true cuando no debería, o (c) la capa UpperBody tiene peso >0
+    /// por una vía distinta a _isInBattle. Quitar junto con el resto de logs [ELDRAN_ANIM_DEBUG]
+    /// cuando se cierre esto.
     public string DebugLocomotionStateCheck()
     {
         if (animator == null) return "no-animator";
@@ -307,6 +310,8 @@ public class NPCSimpleAnimator : MonoBehaviour
         PosturaDeSentado.Asegurar(gameObject);
         // Al hablar solo se mueve la boca: la cabeza no cabecea con Talk01-03 (INC-1144).
         CabezaQuietaAlHablar.Asegurar(gameObject);
+        // Los giros por código encima de la animación (mirada, sentado) no se acumulan si el Animator no escribe (INC-1308).
+        GiroSobreLaAnimacion.Asegurar(gameObject);
 
         // Get components
         if (animator == null)
@@ -348,7 +353,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 animator.SetFloat(VariacionIdleHash, UnityEngine.Random.Range(1f - variacionVelocidadIdle, 1f + variacionVelocidadIdle));
         }
         
-        // FIX CRÍTICO: Configurar NavMeshAgent para control de rotación correcto
+        // Configurar NavMeshAgent para control de rotación correcto
         if (navAgent != null)
         {
             // Desactivar rotación automática del NavMeshAgent
@@ -371,6 +376,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         _targetRotation = transform.rotation;
 
         SombraDeContacto.Asegurar(gameObject);
+        Kits.InkOutline.InkOutlined.Ensure(gameObject);
         MuelleDeHuesos.AsegurarCapa(gameObject);
 
         // La animación de andar ya no depende de las velocidades de la configuración (walkSpeed,
@@ -498,8 +504,8 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Set animator parameter
         animator.SetFloat(InputMagnitudeHash, _currentMovementSpeed, damp, Time.deltaTime);
         
-        // FIX CRÍTICO: SIEMPRE asegurar que animator.speed sea 1.0 cuando está quieto
-        // Esto previene el temblor en Battle Idle cuando _currentMovementSpeed es muy bajo
+        // SIEMPRE asegurar que animator.speed sea 1.0 cuando está quieto Esto previene el
+        // temblor en Battle Idle cuando _currentMovementSpeed es muy bajo
         if (_currentMovementSpeed <= movementThreshold)
         {
             // IMPERATIVO: Velocidad normal cuando está quieto (evita temblor)
@@ -522,13 +528,19 @@ public class NPCSimpleAnimator : MonoBehaviour
                     TransitionToLocomotion();
                 }
             }
-            else if ((_currentState == AnimationState.Idle || (_currentState == AnimationState.OneShot && _poseSostenida != null)) && !_isInteracting)
+            else if ((_currentState == AnimationState.Idle || (_currentState == AnimationState.OneShot && (_poseSostenida != null || !CapaBaseOcupada))) && !_isInteracting)
             {
                 TransitionToLocomotion();
             }
         }
     }
     
+    /// La capa base está haciendo algo que no hay que pisar para andar: un gesto de cuerpo entero en
+    /// curso o una pose sostenida en ella. Si no, y el estado se quedó en OneShot (una pose de la capa
+    /// base soltada sin volver a idle, un gesto de medio cuerpo), las piernas siguen en esa pose y el
+    /// NPC se desliza al moverse. Ver INC-1329.
+    private bool CapaBaseOcupada => (_oneShotCoroutine != null && _oneShotLayer == 0) || _poseCoroutines[0] != null;
+
     /// <summary>
     /// Resetea el movimiento a 0
     /// </summary>
@@ -733,16 +745,10 @@ public class NPCSimpleAnimator : MonoBehaviour
     // ── Poses sostenidas ──────────────────────────────────────────────────────────────────────
     //
     // Un gesto es un DISPARO: se reproduce y, al acabar el clip, PlayOneShotCoroutine llama a
-    // TransitionToIdle(). Para saludar está bien. Para una pose que tiene que DURAR —volar,
-    // sostener un hechizo, quedarse en el aire— es exactamente lo contrario de lo que hace falta,
-    // y es lo que Raúl veía en el prólogo: «cuando se encadenan varias animaciones, por ejemplo
-    // salto y vuelo y disparo, o si se tiene que quedar volando, hay momentos donde pasa a idle».
+    // TransitionToIdle(). Para saludar está bien.
     //
-    // Antes esto se apañaba repitiendo el gesto N veces, y salían las dos formas del mismo fallo:
-    // si la repetición llegaba antes de acabar el clip, la animación se reiniciaba desde el
-    // fotograma 0 (el tirón, «parece que se ha quedado pillado»); si llegaba después, se colaba un
-    // idle. Y la última repetición terminaba su corrutina en pleno vuelo y mandaba a idle a un
-    // personaje que estaba a veinte metros de altura.
+    // Y la última repetición terminaba su corrutina en pleno vuelo y mandaba a idle a un personaje
+    // que estaba a veinte metros de altura.
     //
     // HoldPose no repite nada: cruza UNA vez y se queda vigilando. Solo vuelve a cruzar si el
     // Animator se ha salido de la pose (porque otro sistema le ha mandado a idle o a locomoción),
@@ -1199,11 +1205,10 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// cada NPC puede tener su propio gesto: Greeting01_NoWeapon, HandWave02, Reverence01...).
     /// </summary>
     /// <param name="onComplete">
-    /// NUEVO (1 sep 2026, petición de Raúl): callback opcional invocado cuando el gesto termina
-    /// de verdad (mismo mecanismo que PlayOneShot). Si el guard de abajo impide reproducirlo
-    /// (_isInteracting activo o greetingState vacío), se invoca igualmente al momento para no
-    /// dejar colgado a quien esté esperando el callback — ver
-    /// NPCInteractiveNarrativeExecutor.ExecuteNarrativeChain.
+    /// NUEVO: callback opcional invocado cuando el gesto termina de verdad (mismo mecanismo que
+    /// PlayOneShot). Si el guard de abajo impide reproducirlo (_isInteracting activo o
+    /// greetingState vacío), se invoca igualmente al momento para no dejar colgado a quien esté
+    /// esperando el callback — ver NPCInteractiveNarrativeExecutor.ExecuteNarrativeChain.
     /// </param>
     public void PlayGreeting(Action onComplete = null)
     {
@@ -1683,15 +1688,15 @@ public class NPCSimpleAnimator : MonoBehaviour
     }
 
     /// <summary>
-    /// FIX INC-028: sincroniza únicamente el objetivo de rotación suave (_targetRotation) con la
-    /// rotación actual del transform, SIN tocar _disableAutoRotation (a diferencia de
-    /// EnableAutoRotation()). _targetRotation se cachea una sola vez en Awake() con la rotación
-    /// que el NPC tiene en la escena en ese momento; si después algo reposiciona/reorienta al NPC
-    /// externamente (p.ej. GameBootProfile aplicando la rotación persistida al cargar partida) sin
-    /// llamar a esto, ApplySmoothRotation() lo arrastra en los siguientes frames de vuelta hacia esa
-    /// rotación cacheada — SyncWithNavMeshAgent() no la actualiza mientras el agente esté parado/sin
-    /// path, así que un NPC quieto (p.ej. Eldran esperando fuera de la taberna) se queda girando
-    /// hacia la rotación por defecto de la escena en vez de mantener la que se acaba de restaurar.
+    /// Sincroniza únicamente el objetivo de rotación suave (_targetRotation) con la rotación actual
+    /// del transform, SIN tocar _disableAutoRotation (a diferencia de EnableAutoRotation()).
+    /// _targetRotation se cachea una sola vez en Awake() con la rotación que el NPC tiene en la
+    /// escena en ese momento; si después algo reposiciona/reorienta al NPC externamente (p.ej.
+    /// GameBootProfile aplicando la rotación persistida al cargar partida) sin llamar a esto,
+    /// ApplySmoothRotation() lo arrastra en los siguientes frames de vuelta hacia esa rotación
+    /// cacheada — SyncWithNavMeshAgent() no la actualiza mientras el agente esté parado/sin path,
+    /// así que un NPC quieto (p.ej. Eldran esperando fuera de la taberna) se queda girando hacia la
+    /// rotación por defecto de la escena en vez de mantener la que se acaba de restaurar.
     /// </summary>
     public void SyncTargetRotation()
     {
@@ -1965,14 +1970,13 @@ public class NPCSimpleAnimator : MonoBehaviour
     #region Public API - Social & Emotions
 
     /// <summary>
-    /// Reproduce una animación corporal acorde a la emoción del NPC durante el diálogo.
-    /// Las emociones Neutral/None rotan entre Talk01/02/03 para variedad.
-    /// Si la emoción tiene el campo "Anim Corporal" vacío en el EmotionProfile, NO se reproduce
+    /// Reproduce una animación corporal acorde a la emoción del NPC durante el diálogo. Si la
+    /// emoción tiene el campo "Anim Corporal" vacío en el EmotionProfile, NO se reproduce
     /// ninguna animación: el NPC se queda con el gesto/pose que tuviera en ese momento (permite
-    /// emociones que solo cambian la cara, sin tocar el cuerpo).
-    /// Solo actúa si el NPC está en estado Interacting.
+    /// emociones que solo cambian la cara, sin tocar el cuerpo). Solo actúa si el NPC está en
+    /// estado Interacting.
     /// </summary>
-    // ── La cara, no solo el cuerpo (FIX 16 sep 2026) ─────────────────────────
+    // ── La cara, no solo el cuerpo ─────────────────────────
     //
     // "no veo que se cambie la cara de Will... cuando Oliver durante la explicación del menú
     // tampoco las cambia". Causa raíz: PlayBodyEmotion() solo tocaba el CUERPO. La cara
@@ -2099,6 +2103,14 @@ public class NPCSimpleAnimator : MonoBehaviour
         // (misma utilidad compartida que usa PlayerDialogueAnimator).
         int resolvedLayer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
 
+        // Un gesto social no pisa una pose de medio cuerpo que manda (llevar algo, interactuar,
+        // combate, cinemática): se queda sin hacer.
+        if (resolvedLayer > 0 && !PosesDeMedioCuerpo.CapaLibrePara(animator, resolvedLayer, PosesDeMedioCuerpo.GestoDeReposo))
+        {
+            onComplete?.Invoke();
+            return;
+        }
+
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico siempre visible (no depende de debugMode): si el estado no existe en NINGÚN
         // layer del Animator Controller de este NPC en concreto, PlayOneShot fallará en silencio
@@ -2175,16 +2187,16 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (activity == NPCAmbientActivity.None || _currentState == AnimationState.Dead)
             return;
 
-        // FIX INC-130: SitGround/SitLow/SitMedium/SitHigh tienen sus estados de
-        // Begin/Loop en el Animator Controller compartido, pero el Motion de esos 8 estados apunta
-        // a un GUID que no corresponde a ningún asset del proyecto (clips "reservados" que nunca se
-        // importaron, ver HasWorkingAnimation() más abajo). Como el estado SÍ existe, el diagnóstico
-        // de más abajo (hasBeginState/hasLoopState) no lo detectaba y Mecanim entraba igualmente en
-        // ese estado sin Motion, congelando al NPC en la última pose evaluada justo cuando ya ha
-        // sido teleportado a la altura del asiento — visualmente, un NPC de pie/flotando sobre el
-        // banco en vez de sentado ("se sientan en el aire"). Hasta que se importen y wireen los
-        // clips reales, no reproducimos la actividad: el NPC sigue con su animación normal en vez
-        // de mostrar el hueco.
+        // SitGround/SitLow/SitMedium/SitHigh tienen sus estados de Begin/Loop en el Animator
+        // Controller compartido, pero el Motion de esos 8 estados apunta a un GUID que no
+        // corresponde a ningún asset del proyecto (clips "reservados" que nunca se importaron, ver
+        // HasWorkingAnimation() más abajo). Como el estado SÍ existe, el diagnóstico de más abajo
+        // (hasBeginState/hasLoopState) no lo detectaba y Mecanim entraba igualmente en ese estado
+        // sin Motion, congelando al NPC en la última pose evaluada justo cuando ya ha sido
+        // teleportado a la altura del asiento — visualmente, un NPC de pie/flotando sobre el banco
+        // en vez de sentado ("se sientan en el aire"). Hasta que se importen y wireen los clips
+        // reales, no reproducimos la actividad: el NPC sigue con su animación normal en vez de
+        // mostrar el hueco.
         if (!HasWorkingAnimation(activity))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -2274,15 +2286,14 @@ public class NPCSimpleAnimator : MonoBehaviour
 
     /// <summary>
     /// True si la actividad tiene clips de animación reales asignados en el Animator Controller
-    /// compartido de NPCs. FIX INC-130: los 4 pares Begin/Loop de Sit* (SitGround,
-    /// SitLow, SitMedium, SitHigh) existen como ESTADOS en 'NPC_NoWeapon.controller' pero su Motion
-    /// apunta a un GUID que no corresponde a ningún asset del proyecto — nombres reservados para
-    /// clips que nunca se llegaron a importar (ver
-    /// 'incidencia-npc-hundido-sentado-y-lluvia-causa-real-2026-08-31.md'). 'Animator.HasState' solo
-    /// comprueba que el estado exista, no que su Motion sea válido, así que no basta con ese chequeo.
-    /// Este método centraliza el interruptor: en cuanto se importen y wireen los clips reales en el
-    /// controller, basta con quitar la actividad del switch de abajo para reactivarla en los tres
-    /// caminos que sientan a un NPC (actividad fija, refugio de lluvia y NPCWorldPoint/bancos).
+    /// compartido de NPCs. Los 4 pares Begin/Loop de Sit* (SitGround, SitLow, SitMedium, SitHigh)
+    /// existen como ESTADOS en 'NPC_NoWeapon.controller' pero su Motion apunta a un GUID que no
+    /// corresponde a ningún asset del proyecto — nombres reservados para clips que nunca se llegaron
+    /// a importar. 'Animator.HasState' solo comprueba que el estado exista, no que su Motion sea
+    /// válido, así que no basta con ese chequeo. Este método centraliza el interruptor: en cuanto se
+    /// importen y wireen los clips reales en el controller, basta con quitar la actividad del switch
+    /// de abajo para reactivarla en los tres caminos que sientan a un NPC (actividad fija, refugio de
+    /// lluvia y NPCWorldPoint/bancos).
     ///
     /// Los clips ya están: los 12 estados Sit* del controller apuntan a las animaciones
     /// de Kevin Iglesias (HumanM@Sit*01 Begin/Loop/Stop), comprobado GUID a GUID. Sentarse vuelve a
@@ -2359,15 +2370,14 @@ public class NPCSimpleAnimator : MonoBehaviour
         int layer = GetActivityLayer(activity);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Diagnóstico: a diferencia de PlaySocialGesture (que sí avisa si el estado
-        // no existe), este método no dejaba ningún rastro en consola cuando el Animator Controller
-        // no tenía el estado begin/loop (p.ej. los clips de SitGround están "pendientes de
-        // importar", ver comentario en GetActivityBeginState más abajo) — el NPC simplemente se
-        // quedaba de pie sin ningún indicio de por qué (reportado por Raúl: los NPCs bajo el árbol
-        // "se quedan quietos" en vez de sentarse o tiritar de frío). Este log confirma en la
-        // práctica si es un problema de CONTENIDO (clip/estado faltante en ESTE controller en
-        // concreto) y no de la lógica que llama a PlayAmbientActivity — que si llega hasta aquí,
-        // ya está haciendo su parte correctamente.
+        // Diagnóstico: a diferencia de PlaySocialGesture (que sí avisa si el estado no existe),
+        // este método no dejaba ningún rastro en consola cuando el Animator Controller no tenía el
+        // estado begin/loop (p.ej. los clips de SitGround están "pendientes de importar", ver
+        // comentario en GetActivityBeginState más abajo) — el NPC simplemente se quedaba de pie
+        // sin ningún indicio de por qué. Este log confirma en la práctica si es un problema de
+        // CONTENIDO (clip/estado faltante en ESTE controller en concreto) y no de la lógica que
+        // llama a PlayAmbientActivity — que si llega hasta aquí, ya está haciendo su parte
+        // correctamente.
         bool hasBeginState = !string.IsNullOrEmpty(beginState) && animator != null && animator.HasState(layer, Animator.StringToHash(beginState));
         bool hasLoopState  = !string.IsNullOrEmpty(loopState)  && animator != null && animator.HasState(layer, Animator.StringToHash(loopState));
         if (!hasBeginState && !hasLoopState && (!string.IsNullOrEmpty(beginState) || !string.IsNullOrEmpty(loopState)))
@@ -2530,14 +2540,12 @@ public class NPCSimpleAnimator : MonoBehaviour
 
     private void StartIdleVariations()
     {
-        // FIX 4 sep 2026 (petición de Raúl: "vamos a quitar que no cambie de idle porque no me
-        // gustan las animaciones, que se quede con el idle normal"): se desactiva la
-        // funcionalidad entera aquí, en vez de solo cambiar el valor por defecto de
-        // enableIdleVariations — ese campo ya viene serializado a `true` en el Inspector de
-        // muchos NPCs existentes, así que cambiar el default en el script no les habría afectado.
-        // Con este return incondicional NINGÚN NPC vuelve a cambiar de idle, sea cual sea el
-        // valor guardado en su prefab/instancia; se deja el resto del sistema (campos, coroutine)
-        // intacto por si se quiere reactivar más adelante.
+        // ): se desactiva la funcionalidad entera aquí, en vez de solo cambiar el valor por
+        // defecto de enableIdleVariations — ese campo ya viene serializado a `true` en el
+        // Inspector de muchos NPCs existentes, así que cambiar el default en el script no les
+        // habría afectado. Con este return incondicional NINGÚN NPC vuelve a cambiar de idle, sea
+        // cual sea el valor guardado en su prefab/instancia; se deja el resto del sistema
+        // (campos, coroutine) intacto por si se quiere reactivar más adelante.
         return;
 
 #pragma warning disable CS0162 // código inalcanzable a propósito, ver comentario arriba
@@ -2605,13 +2613,13 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (!navAgent.enabled || !navAgent.isOnNavMesh)
             return;
         
-        // FIX CRÍTICO: Solo sincronizar si el agente tiene un path activo y no está detenido
-        // Esto previene que velocidad residual cause movimiento constante
+        // Solo sincronizar si el agente tiene un path activo y no está detenido Esto
+        // previene que velocidad residual cause movimiento constante
         if (navAgent.isStopped || !navAgent.hasPath)
         {
-            // FIX 5 sep 2026 (ver AllowManualMovement): si un sistema externo tiene el control
-            // explícito del InputMagnitude, no lo pisamos aquí -- solo dejamos de aplicar esta
-            // rama; el resto (early return, sin rotación) se mantiene igual.
+            // Si un sistema externo tiene el control explícito del InputMagnitude, no lo
+            // pisamos aquí -- solo dejamos de aplicar esta rama; el resto (early return, sin
+            // rotación) se mantiene igual.
             if (!AllowManualMovement)
                 SetMovementSpeed(0f);
             return;
@@ -2639,13 +2647,12 @@ public class NPCSimpleAnimator : MonoBehaviour
             // Apply to animation
             SetMovementSpeed(normalizedSpeed);
         }
-        // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): cuando
-        // AllowManualMovement es true (CinematicState controlando la secuencia), NO llamamos a
-        // SetMovementSpeed() aquí -- el InputMagnitude queda 100% en manos de CinematicState
-        // (ComputeWalkGaitSpeedFactor), en vez de que ambos cálculos se pisen mutuamente cada
-        // frame según el orden de Update() (no determinista), que es lo que producía el efecto
-        // de "otra animación"/"patinando sobre hielo" pese a que el Animator seguía correctamente
-        // en el estado "Free Locomotion".
+        // Cuando AllowManualMovement es true (CinematicState controlando la secuencia), NO
+        // llamamos a SetMovementSpeed() aquí -- el InputMagnitude queda 100% en manos de
+        // CinematicState (ComputeWalkGaitSpeedFactor), en vez de que ambos cálculos se pisen
+        // mutuamente cada frame según el orden de Update() (no determinista), que es lo que
+        // producía el efecto de "otra animación"/"patinando sobre hielo" pese a que el Animator
+        // seguía correctamente en el estado "Free Locomotion".
         
         // No actualizar rotación si está deshabilitada (ej: durante/después de cinemáticas)
         if (_disableAutoRotation || AllowManualRotation)
@@ -2677,6 +2684,21 @@ public class NPCSimpleAnimator : MonoBehaviour
     }
     
     private void ApplySmoothRotation()
+    {
+        // Si alguien ha girado el cuerpo desde el último fotograma (un estado que mira a otro
+        // personaje, una secuencia, el barco que lo lleva…), ese giro pasa a ser el objetivo. Sin
+        // esto el animador lo devolvía cada LateUpdate a su objetivo viejo y el otro sistema lo
+        // volvía a girar en el Update siguiente: el personaje temblaba en el sitio. Ver INC-1333.
+        if (_hayRotacionTrasGirar && Quaternion.Angle(transform.rotation, _rotacionTrasGirar) > 0.1f)
+            _targetRotation = transform.rotation;
+
+        GirarHaciaElObjetivo();
+
+        _rotacionTrasGirar = transform.rotation;
+        _hayRotacionTrasGirar = true;
+    }
+
+    private void GirarHaciaElObjetivo()
     {
         // Skip if auto rotation is disabled (e.g. during dialogue)
         if (_disableAutoRotation || AllowManualRotation)
@@ -2772,8 +2794,8 @@ public class NPCSimpleAnimator : MonoBehaviour
             _currentState = AnimationState.Walking;
         }
         
-        // FIX CRÍTICO: Desactivar root motion durante locomotion
-        // para que el NPCSimpleAnimator controle la rotación, no la animación
+        // Desactivar root motion durante locomotion para que el NPCSimpleAnimator
+        // controle la rotación, no la animación
         if (animator != null)
         {
             animator.applyRootMotion = false;

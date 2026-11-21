@@ -1,16 +1,19 @@
 // StartNode.cs
 using System;
 
-[Serializable]
-[NarrativeNodeInfo("Flujo", "Inicio", "Punto de entrada del grafo.")]
-[NarrativeNoWorldEffect]
-[UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Assembly-CSharp")]
-public sealed class StartNode : NarrativeNode
+namespace Liyodev.NarrativeGraph
 {
-    public override bool IsGraphEntry => true;
-
-    public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
+    [Serializable]
+    [NarrativeNodeInfo("Flujo", "Inicio", "Punto de entrada del grafo.")]
+    [NarrativeNoWorldEffect]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceNamespace: "", sourceAssembly: "Liyodev.NarrativeGraph")]
+    public sealed class StartNode : NarrativeNode
     {
-        onReadyToAdvance?.Invoke(); // pasa inmediatamente al siguiente
+        public override bool IsGraphEntry => true;
+
+        public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
+        {
+            onReadyToAdvance?.Invoke(); // pasa inmediatamente al siguiente
+        }
     }
 }

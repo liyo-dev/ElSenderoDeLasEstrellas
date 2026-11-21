@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NarrativeGraphEditor.Story
+namespace Liyodev.NarrativeGraph.Editor.Story
 {
     /// Resultados caros (reconstruir la historia hasta un paso) guardados hasta que cambie algún grafo.
     /// Así elegir pasos o refrescar «En vivo» en Play no vuelve a calcular lo mismo.

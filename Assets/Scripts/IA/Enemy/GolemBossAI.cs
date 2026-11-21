@@ -127,13 +127,11 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     [Tooltip("Probabilidad de embestida al cambiar de fase (0-1)")]
     [SerializeField] private float chargeOnPhaseChangeChance = 0.7f;
 
-    [Header("🏃 Anti-Kiting")]
-    [Tooltip("FIX (petición Raúl, 4 sep 2026 — combate aburrido / \"te alejas un poco y lo matas "
-             + "sin esfuerzo\"): segundos que el Golem puede perseguir sin alcanzar rango de ataque "
-             + "antes de forzar una embestida (ChargeAttack) para cerrar distancia. Antes la embestida "
-             + "solo se evaluaba dentro de TryAttack(), que nunca se llama mientras el jugador se "
-             + "mantiene fuera de attackRange — así que kitear indefinidamente dejaba al Golem sin "
-             + "ninguna respuesta posible.")]
+    [Header("Anti-Kiting")]
+    [Tooltip("Segundos que el Golem puede perseguir sin alcanzar rango de ataque "
+             + "antes de forzar una embestida (ChargeAttack) para cerrar distancia. La embestida "
+             + "no se evalúa en TryAttack() mientras el jugador se mantiene fuera de attackRange, "
+             + "así que esta espera evita que kitear indefinidamente deje al Golem sin respuesta.")]
     [SerializeField] private float kitingChargeDelay = 2.5f;
     private float _kitingSinceTime = -1f;
 
@@ -143,13 +141,13 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     [Tooltip("Offset de rotación Y si el modelo está orientado incorrectamente (0, 90, 180, -90)")]
     [SerializeField] private float modelRotationOffset = 0f;
     
-    [Header("🚧 Contención del Área de Batalla")]
-    [Tooltip("FIX INC-024: distancia máxima que el Golem puede alejarse de su posición de inicio (spawn) antes de que se le fuerce a volver, en lugar de seguir persiguiendo al jugador fuera del arena.")]
+    [Header("Contención del Área de Batalla")]
+    [Tooltip("Distancia máxima que el Golem puede alejarse de su posición de inicio (spawn) antes de que se le fuerce a volver, en lugar de seguir persiguiendo al jugador fuera del arena.")]
     [SerializeField] private float maxLeashDistance = 20f;
     [Tooltip("Al volver por el leash, distancia a la que se considera que ya está 'en casa' y puede retomar el combate normal.")]
     [SerializeField] private float leashReturnThreshold = 2f;
 
-    [Header("💥 Daño por Contacto/Colisión")]
+    [Header("Daño por Contacto/Colisión")]
     [Tooltip("¿Activar daño por contacto cuando el jugador choca con el Golem?")]
     [SerializeField] private bool enableContactDamage = true;
     [Tooltip("Daño que hace el Golem al chocar con el jugador")]
@@ -245,7 +243,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     private Vector3 _jumpStartPos;
     private Vector3 _jumpTargetPos;
 
-    // FIX INC-024: posición de origen (spawn) usada como ancla del leash del área de batalla
+    // Posición de origen (spawn) usada como ancla del leash del área de batalla
     private Vector3 _homePosition;
     private bool _isReturningHome;
     
@@ -313,7 +311,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         }
 
         _hasSpawned = true;
-        _homePosition = transform.position; // FIX INC-024: ancla del leash
+        _homePosition = transform.position; // Ancla del leash
         _currentState = BossState.Idle;
         PlayAnim(ANIM_IDLE);
         
@@ -344,8 +342,8 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     }
 
     /// <summary>
-    /// FIX INC-067: cuando el GameObject/componente se desactiva a mitad de un ataque (p.ej. por
-    /// una cinemática que oculta al boss, culling, etc.), Unity detiene TODAS las corrutinas sin
+    /// Cuando el GameObject/componente se desactiva a mitad de un ataque (p.ej. por una
+    /// cinemática que oculta al boss, culling, etc.), Unity detiene TODAS las corrutinas sin
     /// avisar, incluida la que tenía puesto <see cref="_isAttacking"/> a true. Al reactivarse esa
     /// corrutina ya no existe y nada volvía a poner el flag a false, así que el Golem se quedaba
     /// "vivo" pero sin volver a atacar nunca más. Al reactivarse limpiamos el estado de ataque y
@@ -451,7 +449,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         while (true)
         {
             // congelar IA hostil mientras hay un diálogo abierto
-            // en cualquier parte del mundo (ver mismo fix en Spider1AI.Update/ImpDemonAI.Update).
+            // en cualquier parte del mundo (igual que Spider1AI.Update/ImpDemonAI.Update).
             // No corta un ataque ya en marcha (vive en su propia corrutina), solo evita que este
             // tick periódico dispare la siguiente decisión mientras el jugador está bloqueado.
             bool dialogueOpen = DialogueManager.Instance != null && DialogueManager.Instance.IsOpen;
@@ -468,8 +466,8 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     {
         if (_isAttacking) return;
 
-        // FIX INC-024: si el Golem se ha alejado demasiado de su punto de spawn (ej: persiguiendo
-        // al jugador por un hueco del área), forzarlo a volver en lugar de seguir saliendo del arena.
+        // Si el Golem se ha alejado demasiado de su punto de spawn (ej: persiguiendo al jugador por
+        // un hueco del área), forzarlo a volver en lugar de seguir saliendo del arena.
         float distanceFromHome = Vector3.Distance(transform.position, _homePosition);
         if (_isReturningHome || distanceFromHome > maxLeashDistance)
         {
@@ -702,8 +700,8 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     #region Movimiento
 
     /// <summary>
-    /// FIX INC-024: hace que el Golem camine de vuelta a su posición de spawn cuando se ha alejado
-    /// más de <see cref="maxLeashDistance"/>. Ignora al jugador hasta llegar a <see cref="leashReturnThreshold"/>.
+    /// Hace que el Golem camine de vuelta a su posición de spawn cuando se ha alejado más de <see
+    /// cref="maxLeashDistance"/>. Ignora al jugador hasta llegar a <see cref="leashReturnThreshold"/>.
     /// </summary>
     private void ReturnToLeash(float distanceFromHome)
     {
@@ -935,10 +933,6 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             Vector3 targetPos = PredictThrowTargetPosition(spawnPos, rockSpeed);
             Vector3 direction = (targetPos - spawnPos).normalized;
             
-            // Configurar layer del proyectil
-            // FIX INC-068: "EnemyProjectile" no existe como layer en el proyecto (ver
-            // ProjectSettings/TagManager.asset), así que el fallback caía en "Projectile", que es
-            // la layer de los hechizos del jugador/aliados (MagicProjectil.cs, AllyCombatState.cs).
             // Con eso, las rocas del golem chocaban entre sí o con hechizos aliados y se destruían
             // antes de llegar al jugador, y el escudo (PlayerShieldController, que solo bloquea
             // "ProjectileEnemy") no las reconocía. La layer correcta para proyectiles enemigos es
@@ -974,10 +968,10 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             {
                 proj.enabled = true;
                 ConfigureRockLandingVfx(proj);
-                // FIX INC-082: Initialize() usaba siempre el `speed` serializado en el prefab (fijo),
-                // ignorando rockSpeed — la roca viajaba siempre a la velocidad del prefab, nunca a la
-                // configurada aquí, y PredictThrowTargetPosition calculaba el líder de tiro para una
-                // velocidad que el proyectil real no tenía. SetSpeed() debe llamarse antes de Initialize().
+                // Initialize() usaba siempre el `speed` serializado en el prefab (fijo), ignorando
+                // rockSpeed — la roca viajaba siempre a la velocidad del prefab, nunca a la configurada
+                // aquí, y PredictThrowTargetPosition calculaba el líder de tiro para una velocidad que el
+                // proyectil real no tenía. SetSpeed() debe llamarse antes de Initialize().
                 proj.SetSpeed(rockSpeed);
                 // El daño se configura en el prefab (baseDamage del EnemyProjectile)
                 // Pasamos -1 para usar el daño configurado en el prefab
@@ -1078,7 +1072,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         {
             rock.transform.SetParent(null);
 
-            // Predicción de movimiento (ver PredictThrowTargetPosition) — mismo fix que RockThrowAttack
+            // Predicción de movimiento (ver PredictThrowTargetPosition) — igual que RockThrowAttack
             Vector3 spawnPos = rock.transform.position;
             Vector3 targetPos = PredictThrowTargetPosition(spawnPos, rockSpeed);
             Vector3 direction = (targetPos - spawnPos).normalized;
@@ -1119,13 +1113,12 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         // Centro de la lluvia = posición del jugador
         Vector3 rainCenter = player.position;
 
-        // FIX INC-053 / INC-055 (revisión): la versión anterior hacía que el Golem caminara y
-        // diera "saltitos" pronunciados durante toda la lluvia, como si cada paso hiciera caer una
-        // roca. Se quita por decisión de diseño (no leía bien / distraía). En su lugar el Golem se
-        // planta en el sitio, mirando siempre al jugador, y alterna gestos de invocación con cada
-        // mano (reutilizando ANIM_ATTACK01/02) sincronizados con la aparición de cada roca — el
-        // propio gesto "hacia el cielo" es la señal de que está invocándola, y se apoya en el VFX
-        // de advertencia en el suelo (rockWarningVFX) que ya marca dónde va a caer.
+        // El Golem no camina ni da "saltitos" durante la lluvia (por diseño: distraía).
+        // En su lugar el Golem se planta en el sitio, mirando siempre
+        // al jugador, y alterna gestos de invocación con cada mano (reutilizando ANIM_ATTACK01/02)
+        // sincronizados con la aparición de cada roca — el propio gesto "hacia el cielo" es la
+        // señal de que está invocándola, y se apoya en el VFX de advertencia en el suelo
+        // (rockWarningVFX) que ya marca dónde va a caer.
 
         // Generar las rocas con delay entre cada una
         for (int i = 0; i < rockRainCount; i++)
@@ -1220,7 +1213,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     /// </summary>
     private void SetupRockProjectile(GameObject rock, Vector3 direction, float speed)
     {
-        // Layer del proyectil (FIX INC-068: usar "ProjectileEnemy", ver comentario en RockThrowAttack)
+        // Layer del proyectil
         int projectileLayer = LayerMask.NameToLayer("EnemyProjectile");
         if (projectileLayer == -1) projectileLayer = LayerMask.NameToLayer("ProjectileEnemy");
         if (projectileLayer != -1)
@@ -1252,11 +1245,11 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
         {
             proj.enabled = true;
             ConfigureRockLandingVfx(proj);
-            // FIX INC-082: sin este SetSpeed(), Initialize() pisaba rb.linearVelocity con el `speed`
-            // fijo serializado en el prefab (ver EnemyProjectile.cs) e ignoraba por completo el
-            // parámetro `speed` (rockSpeed en Fase 2 / rockRainSpeed en la lluvia) que se acaba de usar
-            // arriba para calcular la dirección — las rocas de la lluvia y las de Fase 2 viajaban
-            // siempre a la velocidad del prefab, nunca a la configurada en el Inspector del Golem.
+            // Sin este SetSpeed(), Initialize() pisaba rb.linearVelocity con el `speed` fijo
+            // serializado en el prefab (ver EnemyProjectile.cs) e ignoraba por completo el parámetro
+            // `speed` (rockSpeed en Fase 2 / rockRainSpeed en la lluvia) que se acaba de usar arriba
+            // para calcular la dirección — las rocas de la lluvia y las de Fase 2 viajaban siempre a la
+            // velocidad del prefab, nunca a la configurada en el Inspector del Golem.
             proj.SetSpeed(speed);
             proj.Initialize(direction, DanoDeRoca(proj)); // daño del prefab, por la fuerza del fuego
         }
@@ -1351,11 +1344,11 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 break; // Llegamos, hora de golpear
             }
 
-            // FIX INC-024: la embestida persigue al jugador con SetDestination cada frame sin
-            // pasar por UpdateBehavior (que es donde se comprueba el leash normalmente), así que
-            // por sí sola podía arrastrar al Golem muy lejos del área de batalla (las paredes de
-            // la barrera no tienen collider, solo empujan al jugador). Cortamos la embestida si
-            // se aleja demasiado de casa y dejamos que el chequeo de leash del siguiente tick lo
+            // La embestida persigue al jugador con SetDestination cada frame sin pasar por
+            // UpdateBehavior (que es donde se comprueba el leash normalmente), así que por sí
+            // sola podía arrastrar al Golem muy lejos del área de batalla (las paredes de la
+            // barrera no tienen collider, solo empujan al jugador). Cortamos la embestida si se
+            // aleja demasiado de casa y dejamos que el chequeo de leash del siguiente tick lo
             // devuelva al área en vez de seguir persiguiendo indefinidamente.
             if (Vector3.Distance(transform.position, _homePosition) > maxLeashDistance * 1.5f)
             {

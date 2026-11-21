@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Quién atiende en El Sendero cada petición del paso «Pedir al juego». El grafo no conoce a
 /// ninguno: solo emite la petición y espera a que el manejador apuntado aquí termine.
@@ -21,6 +22,7 @@ public static class PeticionesDelJuego
         NarrativeRequests.Register<PedirEntregaDeObjeto, EntregaDeObjetoEnCurso>();
         NarrativeRequests.Register<PedirBatalla, BatallaEnCurso>();
         NarrativeRequests.Register<PedirCombateContraNpc, CombateContraNpcEnCurso>();
+        NarrativeRequests.Register<PedirLeccionDeCombate, LeccionDeCombateEnCurso>();
         NarrativeRequests.Register<PedirGuiarAlJugador, GuiarAlJugadorEnCurso>();
         NarrativeRequests.Register<PedirSeguirSinSerVisto, SeguirSinSerVistoEnCurso>();
     }

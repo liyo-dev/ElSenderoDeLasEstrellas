@@ -25,6 +25,7 @@ using System.Text;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 public static class TMP_FreezeFallbackAtlas
 {

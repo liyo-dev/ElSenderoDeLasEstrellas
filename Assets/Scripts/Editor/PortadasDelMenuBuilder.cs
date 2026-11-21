@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -196,8 +196,6 @@ public static class PortadasDelMenuBuilder
         dir.Normalize();
         float yaw = Quaternion.LookRotation(dir, Vector3.up).eulerAngles.y;
 
-        // Encuadre elegido por Raúl en el Editor (coordenadas de MainWorld): la cámara mira desde arriba y algo
-        // a un lado el columpio y lo que ve Will, que queda en el tercio derecho (los botones, a la izquierda).
         Vector3 camara = new Vector3(3.41f, 31.1f, -133.7f);
         Quaternion giroCamara = Quaternion.Euler(9.52f, 208.8f, 0f);
         var encuadre = Encuadre(etapa.transform, camara, camara + giroCamara * Vector3.forward);
@@ -808,7 +806,6 @@ public static class PortadasDelMenuBuilder
         }
         if (botones == null) { Debug.LogWarning("[PortadasDelMenuBuilder] No encuentro ButtonPanel: el menú queda sin papel."); return; }
         var panel = botones.Find("Panel");
-        var estrella = botones.Find("CursorSeleccion/Estrella");
         var estilo = Componente<EstiloDePapelDelMenu>(botones.gameObject);
         var so = new SerializedObject(estilo);
         so.FindProperty("filas").objectReferenceValue = panel;
@@ -816,8 +813,7 @@ public static class PortadasDelMenuBuilder
         apagar.arraySize = velo != null ? 1 : 0;
         if (velo != null) apagar.GetArrayElementAtIndex(0).objectReferenceValue = velo.gameObject;
         so.FindProperty("titulo").objectReferenceValue = titulo as RectTransform;
-        var imagenEstrella = estrella != null ? estrella.GetComponent<UnityEngine.UI.Image>() : null;
-        so.FindProperty("estrella").objectReferenceValue = imagenEstrella != null ? imagenEstrella.sprite : null;
+        so.FindProperty("estilo").objectReferenceValue = MenusDePapelBuilder.Estilo();
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 

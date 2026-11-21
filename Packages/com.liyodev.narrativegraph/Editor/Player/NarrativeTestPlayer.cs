@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// Jugador de prueba: lo que se cambia del jugador al probar, sea cual sea el paso («con todos
     /// los hechizos», «con poca vida»). Solo guarda los campos que cambia; el resto sale de la

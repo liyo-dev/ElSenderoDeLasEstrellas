@@ -99,14 +99,14 @@ namespace Game.NPC.Common
             // antes de que LateUpdate lo lea, produciendo falsos warnings del safety check.
             agent.velocity = Vector3.zero;
 
-            // FIX INC-NPCS-EN-ARBOLES: este reseteo de nextPosition solo tiene
-            // sentido con el agente sobre el NavMesh (limpiar residuo de un path real). Si se
-            // llama con el agente fuera de malla (p.ej. mientras SeekShelterState lo mueve a mano
-            // bajo la copa de un árbol, ver NPCStateBase.BeginManualApproach), asignar aquí una
-            // posición fuera de malla hace que el NavMeshAgent la reproyecte sobre el NavMesh en
-            // cuanto pueda — y si algo reactiva agent.updatePosition después, arrastra el
-            // transform de vuelta a ese punto proyectado (el NPC se "escupe" del árbol). No hay
-            // nada que limpiar aquí si ya está fuera de malla: se deja tal cual.
+            // Este reseteo de nextPosition solo tiene sentido con el agente sobre el NavMesh
+            // (limpiar residuo de un path real). Si se llama con el agente fuera de malla (p.ej.
+            // mientras SeekShelterState lo mueve a mano bajo la copa de un árbol, ver
+            // NPCStateBase.BeginManualApproach), asignar aquí una posición fuera de malla hace
+            // que el NavMeshAgent la reproyecte sobre el NavMesh en cuanto pueda — y si algo
+            // reactiva agent.updatePosition después, arrastra el transform de vuelta a ese punto
+            // proyectado (el NPC se "escupe" del árbol). No hay nada que limpiar aquí si ya está
+            // fuera de malla: se deja tal cual.
             if (agent.isOnNavMesh)
                 agent.nextPosition = agent.transform.position;
         }
@@ -124,9 +124,7 @@ namespace Game.NPC.Common
 
         // ── Animación de andar: UN solo criterio para todos los NPCs (INC-466) ─────────────────
         //
-        // Raúl, 26 sep 2026, viendo a Oliver deslizarse sin mover las piernas junto a Eldran y
-        // Will: «¿ves cómo se mueven Eldran y Will, que dan como saltitos al andar? Así debe ser
-        // siempre, y si no, con la animación de andar sin saltitos, pero que ande».
+        // Así debe ser siempre, y si no, con la animación de andar sin saltitos, pero que ande».
         //
         // Hasta hoy cada sistema traducía la velocidad del agente a su manera (velocidad/agent.speed,
         // velocidad/una referencia suavizada, velocidad/referencia al 25 %, dos tramos con la

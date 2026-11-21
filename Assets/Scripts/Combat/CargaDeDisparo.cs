@@ -28,6 +28,8 @@ public sealed class CargaDeDisparo : MonoBehaviour
     private Rigidbody[] _cuerpos;
     private bool[] _cinematicos;
     public bool EnCarga => _bola != null;
+    /// <summary>La bola que está creciendo en la mano (null si no hay carga).</summary>
+    public GameObject BolaEnCarga => _bola;
     public float SegundosDeCarga => segundosDeCarga;
 
     /// <summary>

@@ -97,13 +97,20 @@ MonoBehaviour:
     keyboardLabelOverride: 
     gamepadLabelKey: 
     gamepadLabelOverride: 
-  - descriptionKey: CONTROLS_TARGET_NEXT
-    description: Siguiente objetivo de combate
+  - descriptionKey: CONTROLS_DODGE
+    description: Esquivar (rueda hacia donde apuntas)
     glyphName: interactable_rb
-    keyboardLabelKey: 
-    keyboardLabelOverride: 
+    keyboardLabelKey: GLYPH_KEY_C
+    keyboardLabelOverride: C
     gamepadLabelKey: 
     gamepadLabelOverride: 
+  - descriptionKey: CONTROLS_TARGET_NEXT
+    description: Cambiar de objetivo (con uno fijado)
+    glyphName: 
+    keyboardLabelKey: GLYPH_WHEEL_UP
+    keyboardLabelOverride: rueda arriba
+    gamepadLabelKey: GLYPH_STICK_RIGHT
+    gamepadLabelOverride: Stick derecho
   - descriptionKey: CONTROLS_TARGET_TOGGLE
     description: "Activar/desactivar el bloqueo autom\xE1tico de objetivo"
     glyphName: 

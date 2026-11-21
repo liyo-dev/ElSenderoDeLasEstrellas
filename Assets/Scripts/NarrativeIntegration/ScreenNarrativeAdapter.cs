@@ -3,6 +3,7 @@ using System.Collections;
 using EasyTransition;
 using Sendero.Core.Feedback;
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// La pantalla para el grafo: fundidos de <see cref="FeedbackService"/>, el <see cref="Telon"/> y

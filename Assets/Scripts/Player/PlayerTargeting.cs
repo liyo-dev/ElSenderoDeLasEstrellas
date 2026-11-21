@@ -526,7 +526,8 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             return;
         }
 
-        if (CurrentTarget == null)
+        // Un objetivo que se ha apagado (un corista roto, un enemigo retirado) no deja el marcador en el aire.
+        if (CurrentTarget == null || !CurrentTarget.gameObject.activeInHierarchy)
         {
             if (_marker.gameObject.activeSelf)
                 _marker.gameObject.SetActive(false);

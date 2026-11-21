@@ -8,7 +8,9 @@ namespace Sendero.UI
     ///  - X: hechizo básico activo en grande, los otros básicos equipados en pequeño en el orden en
     ///    que salen con LB, y tres puntos con el golpe de la serie que toca. Se tiñe si falta maná.
     ///  - Y: combo. Icono fijo (los combos no se equipan) y anillo de enfriamiento del combo.
-    ///  - B: defensa. Icono fijo de escudo.
+    ///  - B: defensa. Icono de escudo en el color de su elemento (Will Luz; Estela y Liam, el del
+    ///    rápido elegido): el color dice qué magia lo rompe (la del mismo color). Gris mientras está
+    ///    roto y el personaje aturdido.
     /// Lee <see cref="MagicCaster"/> y <see cref="ManaPool"/> del jugador; se reengancha al aplicar
     /// preset y al cambiar de personaje activo. La visibilidad la lleva el CanvasGroup del canvas
     /// (PlayerHUDV2.HideHUD/ShowHUD).
@@ -193,13 +195,17 @@ namespace Sendero.UI
 
         private void Update()
         {
-            if (_shield != null && defenseIcon != null)
+            if (_shield != null && defenseIcon != null && !_latiendo)
             {
-                int defending = _shield.IsDefending ? 1 : 0;
+                // Estado y color juntos: 0/1 = guardia, más el elemento y si está roto.
+                int defending = (_shield.IsDefending ? 1 : 0) + (_shield.Aturdido ? 2 : 0) + 4 * ((int)_shield.ElementoDelEscudo + 1);
                 if (defending != _shownDefending)
                 {
                     _shownDefending = defending;
-                    defenseIcon.color = defending == 1 ? defendingColor : idleDefenseColor;
+                    Color delElemento = RuptoresDeEscudo.ColorDe(_shield.ElementoDelEscudo);
+                    if (_shield.Aturdido) defenseIcon.color = new Color(0.55f, 0.55f, 0.6f, 0.7f);
+                    else if (_shield.IsDefending) defenseIcon.color = Color.Lerp(delElemento, defendingColor, 0.35f);
+                    else defenseIcon.color = new Color(delElemento.r, delElemento.g, delElemento.b, idleDefenseColor.a);
                 }
             }
 

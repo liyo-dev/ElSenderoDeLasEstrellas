@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Puzle "Sello de las Piedras" — variante tipo Simón dice pensada para el Bosque Prohibido

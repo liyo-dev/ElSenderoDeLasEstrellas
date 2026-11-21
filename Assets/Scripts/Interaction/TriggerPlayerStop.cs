@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Componente central y reutilizable para decidir CÓMO un trigger afecta el movimiento del

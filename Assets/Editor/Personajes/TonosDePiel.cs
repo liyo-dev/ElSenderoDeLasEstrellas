@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,7 +52,7 @@ public static class TonosDePiel
         ("NonInteractable/TownNpc#3", "tostada"), ("NonInteractable/VecinoDelMirador", "tostada"),
         ("AldeaDelMar/Anselmo", "tostada"), ("AldeaDelMar/Benito", "tostada"), ("AldeaDelMar/Fermin", "tostada"),
         ("Assets/Prefabs/_MAGO_OSCURO.prefab", "sombra"), ("Assets/Prefabs/_MAGO_OSCURO_REVELADO.prefab", "lavanda"),
-        ("AldeaDelMar/Remedios", "tostada"), ("AldeaDelMar/Rosario", "tostada"),
+        ("AldeaDelMar/Remedios", "tostada"), ("AldeaDelMar/Rosario", "tostada"), ("AldeaDelMar/Pez", "tostada"), ("AldeaDelMar/Candela", "tostada"),
 
         ("Roberto", "morena"), ("Combat/Lety", "morena"), ("Patricia", "morena"), ("Sara", "morena"),
         ("Pueblo/MC01 (1) 2", "morena"), ("Pueblo/Generados/Renard", "morena"),

@@ -71,6 +71,7 @@ namespace ElSendero.Editor.Iconos
                 foreach (var piel in raiz.GetComponentsInChildren<SkinnedMeshRenderer>(true))
                     if (piel.sharedMesh != null && mapa.TryGetValue(piel.transform, out var copiaPiel))
                         PonerEnPoseDeBind(piel.sharedMesh.bindposes, Copias(piel.bones, mapa), copiaPiel, soloSinPoner: true);
+                if (!ajustes.poseDelOrigen) PonerDePieYDeFrente(raiz, mapa);
                 var renderers = new List<Renderer>();
                 foreach (var original in raiz.GetComponentsInChildren<Renderer>(true))
                 {
@@ -247,6 +248,30 @@ namespace ElSendero.Editor.Iconos
                 var m = mundo * bindposes[i].inverse;
                 huesos[i].SetPositionAndRotation(m.GetColumn(3), m.rotation);
             }
+        }
+
+        /// Deja el cuerpo de pie y mirando a +Z según sus propios huesos (cabeza sobre caderas, pierna
+        /// derecha a la derecha), aunque el FBX de la pieza venga girado respecto al prefab (p. ej. el
+        /// -90° de Blender): así toda pieza de cuerpo se fotografía de frente y no desde arriba.
+        static void PonerDePieYDeFrente(GameObject raiz, Dictionary<Transform, Transform> mapa)
+        {
+            var animator = raiz.GetComponentInChildren<Animator>(true);
+            if (animator == null || !animator.isHuman) return;
+            Transform Hueso(HumanBodyBones hueso)
+            {
+                var original = animator.GetBoneTransform(hueso);
+                return original != null && mapa.TryGetValue(original, out var copia) ? copia : null;
+            }
+            var caderas = Hueso(HumanBodyBones.Hips);
+            var cabeza = Hueso(HumanBodyBones.Head);
+            var izquierda = Hueso(HumanBodyBones.LeftUpperLeg);
+            var derecha = Hueso(HumanBodyBones.RightUpperLeg);
+            if (caderas == null || cabeza == null || izquierda == null || derecha == null) return;
+            var arriba = cabeza.position - caderas.position;
+            var frente = Vector3.Cross(derecha.position - izquierda.position, arriba);
+            if (arriba.sqrMagnitude < 1e-6f || frente.sqrMagnitude < 1e-6f) return;
+            var raizCopia = mapa[raiz.transform];
+            raizCopia.rotation = Quaternion.Inverse(Quaternion.LookRotation(frente, arriba)) * raizCopia.rotation;
         }
 
         static int Profundidad(Transform t)

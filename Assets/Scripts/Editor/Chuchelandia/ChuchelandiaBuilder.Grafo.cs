@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// El flujo de Chuchelandia: el grafo «Chuchelandia» (Assets/NarrativeGraph/Chuchelandia.asset) con
@@ -113,16 +114,16 @@ public static partial class ChuchelandiaBuilder
         // Al acabar la llegada (como en Cap. 1 y 2) empieza una misión que no destripa la prueba: todavía
         // nadie sabe de qué va. Su paso, investigar el reino, lleva al heraldo (marcado en el minimapa).
         P("bienvenida", "Misión: bienvenidos a Chuchelandia (aviso de misión nueva; paso: investigad el reino, el heraldo en el minimapa)",
-          new StartQuestNode { questId = IdMisionBienvenida, noGiver = true }),
+          new StartQuestNode { QuestId = IdMisionBienvenida, NoGiver = true }),
         // 2 · El heraldo y la Puerta del Corazón
         P("puerta-empieza", "2 · El heraldo y la Puerta del Corazón (probar desde aquí)", Emitir(Senal.PuertaEmpieza)),
-        P("heraldo-hablar", "2 · Hablar con el heraldo, junto a la Puerta del Corazón", new WaitNpcInteractionNode { npcId = IdDelHeraldo }),
+        P("heraldo-hablar", "2 · Hablar con el heraldo, junto a la Puerta del Corazón", new WaitNpcInteractionNode { NpcId = IdDelHeraldo }),
         P("mando-will-pergamino", "2 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
         P("cine-heraldo", "2 · Cinemática: el heraldo lee el pergamino", Cinematica("cine-heraldo")),
         P("paso-investigar", "Paso: investigar el reino (cierra la misión de la llegada)", Completar(PasoInvestigar, cerrar: true, mision: IdMisionBienvenida)),
         // Con la prueba ya contada sale el aviso de la misión de verdad; su primer paso, abrir la Puerta.
         P("mision", "Misión: la princesa más adorable (aviso de misión nueva; primer paso: intentad abrir la Puerta del Corazón)",
-          new StartQuestNode { questId = IdMision, noGiver = true }),
+          new StartQuestNode { QuestId = IdMision, NoGiver = true }),
         P("puerta-intentos", "2 · Los intentos con el candado: magia de Estela, ganzúa de Liam y empujón de Will, cambiando con la cruceta (o hablar con el heraldo)", Esperar(Senal.PuertaIntentos)),
         P("paso-puerta", "Paso: la Puerta del Corazón", Completar("CHUCHE_PUERTA")),
         // 3 · La candidata
@@ -203,11 +204,11 @@ public static partial class ChuchelandiaBuilder
         foreach (var (id, texto, columna, fila) in Notas)
         {
             Poner(g, PrefijoDeNodo + id, "Nota", new Vector2(columna * AnchoDeColumna, fila * AltoDeFila),
-                new GraphNoteNode { note = texto }, null);
+                new GraphNoteNode { Note = texto }, null);
             ids.Add(PrefijoDeNodo + id);
         }
-        // Lo que montó una versión anterior del menú y ya no está en el recorrido.
-        g.nodes.RemoveAll(n => n != null && n.guid != null && n.guid.StartsWith(PrefijoDeNodo) && !ids.Contains(n.guid));
+        // Lo montado por el menú antes y que ya no está en el recorrido.
+        g.nodes.RemoveAll(n => n != null && n.Guid != null && n.Guid.StartsWith(PrefijoDeNodo) && !ids.Contains(n.Guid));
 
         g.startNodeGuid = PrefijoDeNodo + "inicio";
         EditorUtility.SetDirty(g);
@@ -235,12 +236,12 @@ public static partial class ChuchelandiaBuilder
     private static void Poner(NarrativeGraph g, string id, string titulo, Vector2 posicion, NarrativeNode n, List<string> salidas)
     {
         var anterior = g.FindNode(id);
-        n.guid = id;
-        n.displayTitle = titulo;
-        n.chapter = Capitulo;
-        n.position = posicion;
-        n.outputs = salidas != null ? salidas
-                  : anterior?.outputs != null ? new List<string>(anterior.outputs) : new List<string>();
+        n.Guid = id;
+        n.DisplayTitle = titulo;
+        n.Chapter = Capitulo;
+        n.Position = posicion;
+        n.Outputs = salidas != null ? salidas
+                  : anterior?.Outputs != null ? new List<string>(anterior.Outputs) : new List<string>();
         if (anterior == null) g.nodes.Add(n);
         else g.nodes[g.nodes.IndexOf(anterior)] = n;
     }
@@ -248,18 +249,18 @@ public static partial class ChuchelandiaBuilder
     private static Paso P(string id, string titulo, NarrativeNode nodo, params string[] salidas) =>
         new Paso { Id = id, Titulo = titulo, Nodo = nodo, Salidas = salidas.Length > 0 ? salidas : null };
 
-    private static NarrativeNode Esperar(string senal) => new WaitCustomEventNode { eventKey = senal };
+    private static NarrativeNode Esperar(string senal) => new WaitCustomEventNode { EventKey = senal };
 
-    private static NarrativeNode Emitir(string senal) => new RaiseCustomEventNode { eventKey = senal };
+    private static NarrativeNode Emitir(string senal) => new RaiseCustomEventNode { EventKey = senal };
 
     private static NarrativeNode Grupo(PedirGrupo.Accion accion, string personaje) =>
         GameStepNode.For(new PedirGrupo { accion = accion, personaje = personaje, retirarDeLaEscena = true });
 
     private static NarrativeNode Completar(string condicion, bool cerrar = false, string mision = IdMision) => new CompleteQuestStepsNode
     {
-        questId = mision,
-        stepConditionIds = new List<string> { condicion },
-        completeQuest = cerrar,
+        QuestId = mision,
+        StepConditionIds = new List<string> { condicion },
+        CompleteQuest = cerrar,
     };
 
     // ── La misión ───────────────────────────────────────────────────────────────────────────
@@ -314,9 +315,8 @@ public static partial class ChuchelandiaBuilder
     // ── Start.unity ─────────────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Pone el grafo en el hub (etiqueta «Chuchelandia»), las misiones en el catálogo del QuestManager
-    /// y Chuchelandia en las escenas donde se ve la interfaz de juego (EscenaJugable.PermitirInterfazDeJuego).
-    /// Si Start ya estaba abierta con cambios sin guardar, se deja marcada para que la guarde Raúl.
+    /// Pone el grafo en el hub (etiqueta «Chuchelandia»), las misiones en el catálogo del QuestManager y
+    /// Chuchelandia en las escenas donde se ve la interfaz de juego (EscenaJugable.PermitirInterfazDeJuego).
     /// </summary>
     private static void RegistrarEnStart(NarrativeGraph grafo, StringBuilder informe, params QuestData[] misiones)
     {

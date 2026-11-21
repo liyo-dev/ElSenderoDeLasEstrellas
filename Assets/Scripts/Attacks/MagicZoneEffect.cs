@@ -5,12 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Zona de efecto mágica: a diferencia de <see cref="MagicProjectile"/>, no viaja — se instancia
 /// ya en su posición final y aplica daño periódico a todo lo que esté dentro de su radio mientras
-/// dura. Pensada para MagicKind.Zone (ver Identifiers.cs): el VFX de casteo sigue saliendo de la
-/// mano del lanzador, con el mismo timing que un hechizo Projectile normal (para aprovechar la
-/// animación de casteo ya existente), pero en vez de instanciarse en la mano y volar, este
-/// prefab se instancia directamente en el punto de impacto calculado por
-/// MagicProjectileSpawner.SpawnZoneNow() — "sale de la mano pero se materializa al instante como
-/// zona", que es el pedido de diseño original.
+/// dura.
 ///
 /// No requiere Collider: usa Physics.OverlapSphereNonAlloc en vez de triggers físicos, mismo
 /// criterio que la rama AOE de MagicProjectile.ResolveHit(), para no depender de que los
@@ -109,7 +104,7 @@ public class MagicZoneEffect : MonoBehaviour
             // Piezas del mundo (cristales, lo que arde…): antes del filtro de capas de daño.
             ReaccionesAMagia.NotificarUnaVez(col, new ImpactoDeMagia(_cfg.element, col.bounds.ClosestPoint(transform.position), _instigator, false), _piezasAvisadas);
 
-            // FIX M8 + INC-640: Si coincide con hitLayers o tiene Damageable legítimo y no es aliado
+            // Si coincide con hitLayers o tiene Damageable legítimo y no es aliado
             bool capaValida = _cfg.hitLayers.value == 0 || ((1 << col.gameObject.layer) & _cfg.hitLayers.value) != 0;
             if (!capaValida)
             {
@@ -127,7 +122,7 @@ public class MagicZoneEffect : MonoBehaviour
             if (!alreadyHit.Add(d)) continue; // evita doble tick si el enemigo tiene varios colliders
 
             if (_cfg.damagePerTick > 0f)
-                d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damagePerTick), _instigator);
+                AfinidadElemental.Golpear(d, FormulasDeCombate.DanoDe(_instigator, _cfg.damagePerTick), _instigator, _cfg.element);
             hitSomething = true;
 
             // Estado (INC-499): se renueva en cada tick; atraer tira hacia el centro de la zona.

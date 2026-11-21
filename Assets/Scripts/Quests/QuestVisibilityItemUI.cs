@@ -126,14 +126,10 @@ public class QuestVisibilityItemUI : MonoBehaviour
     /// Configura un botón para cambiar la visibilidad de la quest
     /// </summary>
     /// <param name="actionKey">
-    /// FIX 4 sep 2026 (petición de Raúl: "estoy en ingles y sale Archivar" — el botón de archivar
-    /// del panel de misiones salía siempre en español, incluso jugando en inglés). Antes este
-    /// parámetro se llamaba "actionName" y llegaba con el texto en español a pelo ("Archivar"/
-    /// "Activar") — pero el método nunca llegó a usarlo para nada, así que el texto real del botón
-    /// dependía por completo de que el LocalizedText de su prefab hiciera su trabajo por su cuenta,
-    /// sin ninguna red de seguridad. Ahora es la CLAVE del catálogo (UI_ARCHIVAR/UI_ACTIVAR) y se
-    /// aplica aquí explícitamente cada vez que se configura la fila — con el idioma que esté activo
-    /// en ese momento — en vez de depender solo del componente del prefab.
+    /// El botón de archivar del panel de misiones salía siempre en español, incluso jugando en
+    /// inglés). Ahora es la CLAVE del catálogo (UI_ARCHIVAR/UI_ACTIVAR) y se aplica aquí
+    /// explícitamente cada vez que se configura la fila — con el idioma que esté activo en ese
+    /// momento — en vez de depender solo del componente del prefab.
     /// </param>
     void ConfigureButton(Button button, QuestVisibility targetVisibility, string actionKey)
     {

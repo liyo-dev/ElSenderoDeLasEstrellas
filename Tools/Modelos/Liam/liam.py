@@ -308,6 +308,21 @@ for o, _ in GRUPOS["pelo"]:
             v.co = inv @ (hit[0] + t * 0.014); n += 1
 print("PELO SACADO DE LA CARA", n)
 _bm.free(); bpy.data.objects.remove(to.objects[0]); bpy.data.objects.remove(to.objects[1])
+# Nada del pelo puede salir por fuera de la capucha (19 nov 2026, Raúl: «sigo viendo un pincho salir por encima del
+# gorro»: los pelillos de punta atravesaban la coronilla de la capucha). Lo que queda más allá de la cara de dentro de la
+# capucha se acerca a 1,2 cm por dentro de ella (lo mismo que ../Pelo/pelo_bajo_el_gorro.py; lo mide chequeo_choques).
+_capu = [o for o, _ in GRUPOS["capucha"]]
+_vs, _fs, _off = [], [], 0
+for o in _capu:
+    _vs += [o.matrix_world @ v.co for v in o.data.vertices]; _fs += [[i + _off for i in p.vertices] for p in o.data.polygons]; _off += len(o.data.vertices)
+_gorro = BVHTree.FromPolygons(_vs, _fs); n = 0
+for o, _ in GRUPOS["pelo"]:
+    mw = o.matrix_world; inv = mw.inverted()
+    for v in o.data.vertices:
+        p = mw @ v.co; d = p - _C; L = d.length; t = d / L
+        hit = _gorro.ray_cast(_C, t, L + 0.5)
+        if hit[0] is not None and L > hit[3] - 0.012: v.co = inv @ (_C + t * (hit[3] - 0.012)); n += 1
+print("PELO METIDO BAJO LA CAPUCHA", n)
 unir(GRUPOS["pelo"], "Hair15_Flequillo")
 cuerpo.name = "Body22_Tunica"   # el cuerpo de debajo va dentro: manos y torso
 unir(GRUPOS["traje"], "Body22_Tunica", extra=cuerpo)

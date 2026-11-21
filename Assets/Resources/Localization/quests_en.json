@@ -576,11 +576,11 @@
         },
         {
             "key": "CAP3_PISTA_2_PASO",
-            "value": "Look at the garden fence"
+            "value": "Look at the garden fence, where Lucía saw the fox"
         },
         {
             "key": "CAP3_PISTA_3_PASO",
-            "value": "Look at the house with the lobster pots"
+            "value": "Look at the house with the lobster pots, the one with the thatched roof"
         },
         {
             "key": "CAP3_HOJA_PASO",
@@ -592,7 +592,7 @@
         },
         {
             "key": "CAP3_CLARO_PASO",
-            "value": "Decide what to do in the clearing"
+            "value": "Find out what they're carrying in the clearing"
         },
         {
             "key": "CAP4_ENCUENTRA_A_ESTELA_NAME",
@@ -661,6 +661,22 @@
         {
             "key": "CAP3_NOCHE_PASO",
             "value": "Wait for the cart by the fire at night"
+        },
+        {
+            "key": "CAP3_PEZ_PASO",
+            "value": "Find Pez on the pier"
+        },
+        {
+            "key": "CAP3_LUBINA_PASO",
+            "value": "Take Pez's message to Doña Lubina, at the end of the pier"
+        },
+        {
+            "key": "CAP3_FAROL_PASO",
+            "value": "Swim to the house with the lantern"
+        },
+        {
+            "key": "CAP3_CERCA_PASO",
+            "value": "Look at the garden fence, on the way to the forest"
         }
     ]
 }

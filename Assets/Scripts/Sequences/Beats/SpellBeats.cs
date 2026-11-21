@@ -5,11 +5,9 @@ using UnityEngine;
 
 /// Un hechizo que se LANZA: nace en la mano, viaja, y revienta en el objetivo.
 ///
-/// ── Por qué hacía falta ───────────────────────────────────────────────────────────────────────
-/// Raúl, novena grabación: *«cuando lanzan los hechizos no se ve cómo salen de las manos y viajan
-/// al destino; de pronto se ve algo que explota. La batalla debe sentirse épica y los hechizos
-/// salen de las manos y debemos ver cómo el hechizo se dispara de verdad, igual que en el juego.
-/// No entiendo por qué en las secuencias no se ven nunca.»*
+/// La batalla debe sentirse épica y los hechizos salen de las manos y debemos ver cómo el hechizo
+/// se dispara de verdad, igual que en el juego. No entiendo por qué en las secuencias no se ven
+/// nunca.»*
 ///
 /// La respuesta a esa última pregunta es simple y es la razón de este archivo: **hasta hoy las
 /// secuencias no tenían con qué**. `VfxBeat` instancia un efecto en un sitio y lo deja ahí; el
@@ -203,10 +201,8 @@ public class SpellBeat : SequenceBeat
         // ── 3. El impacto ────────────────────────────────────────────────────────────────────
         if (!string.IsNullOrWhiteSpace(registrarComo)) ctx.UnregisterActor(registrarComo);
 
-        // Y el proyectil se RECOGE. Sin esto se queda parado en el punto de impacto hasta que
-        // caduque su lifetime de seguridad — que es lo que Raúl describe en la décima grabación:
-        // "ya se ven lanzar hechizos, pero no explotan, se quedan en la escena". Explotar sí
-        // explotaban; lo que pasaba es que la bola seguía ahí encima.
+        // Y el proyectil se RECOGE. Explotar sí explotaban; lo que pasaba es que la bola seguía
+        // ahí encima.
         if (proyectil != null) VfxPoolService.Instance.Recoger(proyectil);
 
         if (vfxImpacto != null)
@@ -275,9 +271,7 @@ public class SpellBeat : SequenceBeat
 ///
 /// Un SpellBeat dentro de un Parallel que no espera a todos deja que la escena corte mientras el
 /// hechizo vuela — es lo que permite ir a la cara del que lo recibe con la bola ya en el aire.
-/// Pero entonces lo que venga detrás del corte no sabe cuándo llega. En la grabación del 21 sep
-/// el Mago Oscuro hacía la animación de daño ANTES de que la bola de fuego le alcanzara: el
-/// TakeDamage iba 0,3 s después del lanzamiento, y el vuelo dura casi un segundo.
+/// Pero entonces lo que venga detrás del corte no sabe cuándo llega.
 ///
 /// Esto se pone justo antes de la reacción: primero espera a que el hechizo exista (la carga en
 /// la mano va antes del vuelo) y después a que desaparezca, que es el instante del impacto.

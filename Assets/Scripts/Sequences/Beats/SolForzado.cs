@@ -118,8 +118,8 @@ public class SolForzado : MonoBehaviour
 
     /// El sol se coloca en un punto DEL ENCUADRE, no del mundo (INC-415).
     ///
-    /// La versión anterior buscaba la cresta de las montañas del fondo para ponerlo justo encima.
-    /// Las montañas son decorado sin collider, y su caja (lo único que se puede medir sin leer la
+    /// No se busca la cresta de las montañas del fondo para ponerlo encima:
+    /// las montañas son decorado sin collider, y su caja (lo único que se puede medir sin leer la
     /// malla) llega al pico más alto: en prologo18 la cresta salía a 12° y el borde de arriba del
     /// cuadro estaba a 10°, así que el sol arrancaba ya escondido. Aquí no se mide nada: el sol
     /// sale cerca del borde de arriba, donde en un plano de conversación siempre hay cielo, y baja

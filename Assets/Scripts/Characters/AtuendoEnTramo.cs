@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// <summary>
 /// Pone un atuendo de escena (<see cref="AtuendoDeEscena"/>) mientras dura un tramo de la historia

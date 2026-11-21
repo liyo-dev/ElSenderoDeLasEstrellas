@@ -3,10 +3,6 @@ using UnityEngine;
 
 /// <summary>
 /// Tests de EditMode para el refcount de PushMode/PopMode de PlayerActionManager.
-/// Añadido en la auditoría de seguimiento del 12 de agosto de 2026 (TDD.md §19.2/§19.4),
-/// que recomendaba precisamente este escenario como primer test del proyecto: reproducir
-/// el bug C2 como red de seguridad permanente contra
-/// una regresión futura, no solo confiar en el comentario "FIX C2" del código.
 ///
 /// Vive en una carpeta Editor sin .asmdef propio a propósito: el proyecto no tiene ningún
 /// .asmdef para su propio código (TDD.md §19.2/§19.4 lo documenta como pendiente), así que
@@ -60,8 +56,7 @@ public class PlayerActionManagerTests
     public void PushMode_DosSistemasEmpujanElMismoModo_UnSoloPopNoLoQuita()
     {
         // Reproduce el escenario real del bug C2: DialogueManager y CinematicSequencerBase
-        // empujando Cinematic casi a la vez. Antes del fix, "if (Top == mode) return;" en
-        // PushMode descartaba el segundo Push, pero el segundo Pop sí borraba la única entrada
+        // empujando Cinematic casi a la vez. Si PushMode hiciera "if (Top == mode) return;", descartaría el segundo Push, pero el segundo Pop sí borraba la única entrada
         // real de la pila -> el jugador recuperaba el control en mitad de la cinemática.
         _mgr.PushMode(ActionMode.Cinematic); // ej. DialogueManager
         _mgr.PushMode(ActionMode.Cinematic); // ej. CinematicSequencerBase, casi a la vez
@@ -71,7 +66,7 @@ public class PlayerActionManagerTests
 
         _mgr.PopMode(ActionMode.Cinematic); // termina el diálogo, pero la cinemática sigue
 
-        // Con el bug C2 esto habría vuelto a Default; con el fix, el segundo Push sigue vivo.
+        // El segundo Push sigue vivo (con el bug C2 habría vuelto a Default).
         Assert.AreEqual(ActionMode.Cinematic, _mgr.Top,
             "El jugador no debería recuperar el control mientras el segundo sistema siga activo (regresión de C2).");
         Assert.IsTrue(_mgr.IsInMode(ActionMode.Cinematic));

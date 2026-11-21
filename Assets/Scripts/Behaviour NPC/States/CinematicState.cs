@@ -54,8 +54,7 @@ namespace Game.NPC.States
             base.OnEnter(context);
             
             context.IsInCinematic = true;
-            // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): mientras dura
-            // la cinemática, este estado es quien llama explícitamente a
+            // Mientras dura la cinemática, este estado es quien llama explícitamente a
             // context.Animator.SetMovementSpeed() (ver MoveToAction/LeadPlayerToAnchorSequence).
             // Sin esta bandera, NPCSimpleAnimator.Update() sigue llamando a
             // SyncWithNavMeshAgent() todos los frames (no comprueba IsInCinematic) y esa función
@@ -94,7 +93,7 @@ namespace Game.NPC.States
             base.OnExit(context);
             
             context.IsInCinematic = false;
-            // FIX 5 sep 2026: devolver el control automático de InputMagnitude a
+            // Devolver el control automático de InputMagnitude a
             // NPCSimpleAnimator.SyncWithNavMeshAgent() al salir de la cinemática.
             if (context.Animator != null)
                 context.Animator.AllowManualMovement = false;
@@ -317,13 +316,12 @@ namespace Game.NPC.States
             _hasDisabledObstacleAvoidance = true;
             context.Log($"[CinematicSequence] Obstacle avoidance desactivado temporalmente (era: {_originalObstacleAvoidanceType})");
 
-            // Asegurar que no quede la pose de interacción del diálogo al iniciar movimiento.
-            // FIX 5 sep 2026 (incidencia animación rota en escolta/movimiento cinemático): si el
-            // NPC llegó aquí con _isInBattle todavía activo (p.ej. AlertState disparó
+            // Asegurar que no quede la pose de interacción del diálogo al iniciar movimiento. Si
+            // el NPC llegó aquí con _isInBattle todavía activo (p.ej. AlertState disparó
             // SetBattleMode(true) pero saltó directo a CinematicState sin pasar por CombatState),
             // EndInteraction() de abajo lo mandaría a PlayBattleIdle() en vez de a idle normal, y
             // la capa UpperBody se quedaría congelada en pose de combate durante todo el
-            // movimiento cinemático. Ver AlertState.OnExit() para el fix simétrico del origen.
+            // movimiento cinemático. Ver AlertState.OnExit() para el caso simétrico del origen.
             if (context.Animator != null)
             {
                 context.Animator.SetBattleMode(false);
@@ -1141,12 +1139,6 @@ namespace Game.NPC.States
             // Primer frame: preparar escolta y esperar STARTUP_WAIT segundos antes de andar
             if (!_initialized)
             {
-                // Salir de la pose de diálogo/idle (sin activar locomoción todavía)
-                // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): mismo
-                // motivo que en MoveToAction más arriba — si _isInBattle sigue activo (leak desde
-                // AlertState al saltar directo a CinematicState), EndInteraction() reforzaría la
-                // pose de combate en vez de volver a idle normal, y la capa UpperBody se quedaría
-                // congelada (brazos/torso fijos) durante toda la escolta.
                 context.Animator?.SetBattleMode(false);
                 context.Animator?.SetTalking(false);
                 context.Animator?.EndInteraction();
@@ -1304,9 +1296,8 @@ namespace Game.NPC.States
         }
 
         // Gesto con el que el NPC llama al jugador que se ha quedado atrás: levanta el brazo
-        // mientras dice su frase («¡Por aquí!»). Vive en la capa UpperBody del Animator de
-        // los NPCs (NPC_NoWeapon). Raúl, 26 sep 2026: «cuando el NPC al que tengo que seguir diga
-        // "por aquí" o lo que toque, que haga la animación de levantar el brazo».
+        // mientras dice su frase («¡Por aquí!»). Vive en la capa UpperBody del Animator de los
+        // NPCs (NPC_NoWeapon).
         private const string GESTO_LLAMADA = "HandWave01";
 
         /// El NPC se ha parado a esperar: llama al jugador (frase del executor + brazo en alto).
@@ -1355,12 +1346,12 @@ namespace Game.NPC.States
             }
             // Arrancar la locomoción ya, sin esperar a que agent.velocity tenga magnitud.
             //
-            // FIX 16 sep 2026: antes esto además daba un salto discreto de InputMagnitude a 0.5
-            // (WalkGaitThreshold). Con el rango completo ese salto es contraproducente: la rampa real
-            // del agente (aceleración 8) llega sola y de forma continua en menos de medio segundo, y
-            // un valor impuesto por encima de la velocidad real produce un pequeño bache cuando el
-            // cálculo por frame lo alcanza. Se deja solo la transición de estado y que la rampa haga
-            // su trabajo -- que es justo lo que hace que el movimiento se vea limpio.
+            // Antes esto además daba un salto discreto de InputMagnitude a 0.5 (WalkGaitThreshold).
+            // Con el rango completo ese salto es contraproducente: la rampa real del agente
+            // (aceleración 8) llega sola y de forma continua en menos de medio segundo, y un valor
+            // impuesto por encima de la velocidad real produce un pequeño bache cuando el cálculo por
+            // frame lo alcanza. Se deja solo la transición de estado y que la rampa haga su trabajo
+            // -- que es justo lo que hace que el movimiento se vea limpio.
             context.Animator?.TransitionToLocomotion();
         }
 

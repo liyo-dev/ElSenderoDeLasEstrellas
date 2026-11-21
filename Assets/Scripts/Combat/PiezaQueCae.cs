@@ -1,4 +1,5 @@
 using UnityEngine;
+using Liyodev.NarrativeGraph;
 
 /// Una pieza que lleva puesta un personaje (un aro, un casco, una cadena) y que se suelta al
 /// caer él: deja de seguir al esqueleto, cae con física, sus brillos se apagan poco a poco y,

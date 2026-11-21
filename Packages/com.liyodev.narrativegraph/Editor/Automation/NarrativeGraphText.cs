@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using NarrativeGraphEditor.Story;
+using Liyodev.NarrativeGraph.Editor.Story;
 using UnityEditor;
 using UnityEngine;
 
-namespace NarrativeGraphEditor
+namespace Liyodev.NarrativeGraph.Editor
 {
     /// The graph as plain text: a chapter read top to bottom, and a manual of every step type.
     /// Meant for people and for any tool or assistant that works with the graph.
@@ -29,10 +30,10 @@ namespace NarrativeGraphEditor
                 foreach (var node in section.Steps)
                 {
                     sb.AppendLine();
-                    string title = string.IsNullOrWhiteSpace(node.displayTitle) ? "(untitled)" : node.displayTitle;
+                    string title = string.IsNullOrWhiteSpace(node.DisplayTitle) ? "(untitled)" : node.DisplayTitle;
                     sb.AppendLine($"### {s.Number(node)} {title}");
                     sb.AppendLine($"- type: {node.KindType.Name} ({NarrativeNodeCatalog.TitleOf(node)})");
-                    sb.AppendLine($"- id: {node.guid}");
+                    sb.AppendLine($"- id: {node.Guid}");
                     var summary = StepSummary.For(node, 400);
                     if (!string.IsNullOrWhiteSpace(summary)) sb.AppendLine($"- does: {summary}");
                     foreach (var owner in node.FieldOwners())
@@ -42,10 +43,10 @@ namespace NarrativeGraphEditor
                             if (!string.IsNullOrEmpty(value)) sb.AppendLine($"- {field.Name}: {value}");
                         }
                     var ports = node.GetOutputPorts();
-                    if (node.outputs != null)
-                        for (int i = 0; i < node.outputs.Count; i++)
+                    if (node.Outputs != null)
+                        for (int i = 0; i < node.Outputs.Count; i++)
                         {
-                            var target = graph.FindNode(node.outputs[i]);
+                            var target = graph.FindNode(node.Outputs[i]);
                             string label = ports != null && i < ports.Length ? ports[i] : "next";
                             sb.AppendLine($"- {label} → {(target != null ? s.Number(target) : "nothing")}");
                         }
@@ -95,9 +96,27 @@ namespace NarrativeGraphEditor
             return sb.ToString();
         }
 
-        /// Public, serialized, visible fields a person can edit on a step.
+        /// Campos que guarda Unity de un tipo: públicos o con [SerializeField], también los heredados
+        /// (los del tipo primero). Los nodos guardan sus datos en campos privados con [SerializeField].
+        public static IEnumerable<FieldInfo> SerializedFields(Type type)
+        {
+            for (var t = type; t != null && t != typeof(object); t = t.BaseType)
+                foreach (var f in t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                    if (!f.IsNotSerialized && (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null || f.GetCustomAttribute<SerializeReference>() != null))
+                        yield return f;
+        }
+
+        /// El campo guardado <paramref name="name"/> de un tipo (o de sus bases), o null.
+        public static FieldInfo SerializedField(Type type, string name)
+        {
+            if (type == null || string.IsNullOrEmpty(name)) return null;
+            foreach (var f in SerializedFields(type)) if (f.Name == name) return f;
+            return null;
+        }
+
+        /// Serialized, visible fields a person can edit on a step.
         public static FieldInfo[] EditableFields(Type type)
-            => type.GetFields(BindingFlags.Instance | BindingFlags.Public)
+            => SerializedFields(type)
                    .Where(f => f.DeclaringType != typeof(NarrativeNode) && f.DeclaringType != typeof(NarrativeRequest))
                    .Where(f => !typeof(NarrativeRequest).IsAssignableFrom(f.FieldType))
                    .Where(f => f.GetCustomAttribute<HideInInspector>() == null && f.GetCustomAttribute<NonSerializedAttribute>() == null)

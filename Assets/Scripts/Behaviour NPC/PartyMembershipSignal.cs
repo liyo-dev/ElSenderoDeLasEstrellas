@@ -1,5 +1,6 @@
 using UnityEngine;
 using Game.NPC.Common;
+using Liyodev.NarrativeGraph;
 
 namespace Game.NPC
 {

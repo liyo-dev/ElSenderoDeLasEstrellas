@@ -7,11 +7,8 @@ using Sendero.Core.Feedback;
 /// La bola de conjuro: la pequeña esfera de luz que se forma entre las manos de quien prepara un
 /// hechizo y que se mueve y crece mientras dura la carga — el conjuro de los animes de los 90.
 ///
-/// Antes esto se resolvía con un destello genérico ("1 Flash_magic_ellow_blue"), que lleva una
-/// partícula de 19 m de ancho: en cuanto la cámara se acercaba, la "bola" se comía la pantalla
-/// entera y el hechizo de levantar una carreta parecía el hechizo protector del final. Aquí la
-/// bola es PEQUEÑA de verdad y la mueve este beat: adelante, arriba y adelante otra vez, cada vez
-/// más rápido y más grande conforme sube la intensidad.
+/// Aquí la bola es PEQUEÑA de verdad y la mueve este beat: adelante, arriba y adelante otra vez,
+/// cada vez más rápido y más grande conforme sube la intensidad.
 [Serializable]
 public class ConjuroEnLasManosBeat : SequenceBeat
 {
