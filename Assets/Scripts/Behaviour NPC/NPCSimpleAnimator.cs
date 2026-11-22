@@ -129,6 +129,10 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     // Animator parameters
     private static readonly int InputMagnitudeHash = Animator.StringToHash("InputMagnitude");
+    private static readonly int InputHorizontalHash = Animator.StringToHash("InputHorizontal");
+    private static readonly int InputVerticalHash = Animator.StringToHash("InputVertical");
+    private static readonly int IsStrafingHash = Animator.StringToHash("IsStrafing");
+    private static readonly int IsSprintingHash = Animator.StringToHash("IsSprinting");
 
     // parámetros de suelo/vuelo del controller compartido de personajes jugables
     // (Will/Liam/Estela usan el Animator Controller de Invector, que trae un Any State →
@@ -398,6 +402,31 @@ public class NPCSimpleAnimator : MonoBehaviour
         DialogueManager.OnDialogueClosed += OnDialogueClosed;
     }
     
+    void OnEnable()
+    {
+        if (_piloto == null || LoLlevaElJugador || animator == null || _currentState == AnimationState.Dead) return;
+
+        // El controlador puede cambiar con el piloto. Sus parámetros y estados se resuelven una
+        // vez al recuperar la IA, no por frame, y no se hereda el strafe ni la caída de Invector.
+        _stateCache = new AnimatorStateCache(animator);
+        _animatorParamHashes ??= new HashSet<int>();
+        _animatorParamHashes.Clear();
+        var parameters = animator.parameters;
+        for (int i = 0; i < parameters.Length; i++) _animatorParamHashes.Add(parameters[i].nameHash);
+        TrySetBool(IsStrafingHash, false);
+        TrySetBool(IsSprintingHash, false);
+        TrySetFloat(InputHorizontalHash, 0f);
+        TrySetFloat(InputVerticalHash, 0f);
+        ForceGroundedForSit();
+        _lastPosition = transform.position;
+        _targetRotation = transform.rotation;
+        _hayRotacionTrasGirar = false;
+        _actualSpeed = 0f;
+        _isInteracting = false;
+        ResetMovement();
+        TransitionToIdle();
+    }
+
     void OnDisable()
     {
         PararLaPose();
@@ -426,7 +455,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// Invector. Este animador es el de la IA; si se enciende en el cuerpo del jugador (un cambio
     /// de piloto o un prefab mal configurado), no debe tocar nada de eso. Ver INC-1243.
     private bool LoLlevaElJugador =>
-        (_piloto != null && _piloto.LoLlevaElJugador) || ControlDelJugador.EsElJugador(this);
+        _piloto != null ? _piloto.LoLlevaElJugador : ControlDelJugador.EsElJugador(this);
 
     void Start()
     {

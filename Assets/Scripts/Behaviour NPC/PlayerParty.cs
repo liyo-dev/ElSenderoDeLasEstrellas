@@ -105,6 +105,9 @@ namespace Game.NPC
 
         #region State
         private readonly List<NPCPartyMember> _members = new();
+        // Una carga puede restaurar los cuerpos después del teletransporte del jugador. La
+        // reunión de carga no depende de poder recorrer a pie el camino desde su sitio de escena.
+        private readonly List<NPCPartyMember> _reunionesPendientes = new(4);
         private Transform _playerTransform;
         private PlayerActionManager _playerActionManager;
         private bool _isInitialized;
@@ -558,6 +561,7 @@ namespace Game.NPC
             
             _members.Add(member);
             member.OnJoinedParty(this, isRestore);
+            if (isRestore) PedirReunion(member);
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerParty] {member.DisplayName} se unió al equipo [{MemberCount}/{maxPartySize}] - PartyConfig: {(member.PartyConfig != null ? "sí" : "no")}, autoJoinCombat: {member.PartyConfig?.autoJoinPlayerCombat}");
@@ -974,6 +978,11 @@ namespace Game.NPC
         /// </summary>
         public void TeleportAllMembersToPlayer(bool forzar = false, bool avisar = false)
         {
+            if (forzar)
+            {
+                for (int i = 0; i < _members.Count; i++) PedirReunion(_members[i]);
+                PedirReunion(ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will));
+            }
             if (_playerTransform == null) return;
 
             for (int i = 0; i < _members.Count; i++)
@@ -982,7 +991,7 @@ namespace Game.NPC
                 if (member == null || ControlDelJugador.RepresentadoPorElJugador(member)) continue;
                 // En modo libre, solo se teletransportan los que están siguiendo activamente
                 if (member.NPCManager?.Context?.EstaAncladoParaSeguir == true) continue;
-                TeleportMemberToPlayer(member, forzar, avisar);
+                if (TeleportMemberToPlayer(member, forzar, avisar)) _reunionesPendientes.Remove(member);
             }
             ReunirAWill(forzar, avisar);
         }
@@ -996,8 +1005,34 @@ namespace Game.NPC
         {
             var will = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
             if (will == null || will.NPCManager?.Context?.EstaAncladoParaSeguir == true || (will.NPCManager?.IsInCinematic ?? false)) return;
-            if (TeleportMemberToPlayer(will, forzar, avisar) && PartyControlManager.DebeSeguirAlJugador(will))
-                will.StartFollowingIgnorePartyCheck();
+            if (TeleportMemberToPlayer(will, forzar, avisar))
+            {
+                _reunionesPendientes.Remove(will);
+                if (PartyControlManager.DebeSeguirAlJugador(will)) will.StartFollowingIgnorePartyCheck();
+            }
+        }
+
+        private void PedirReunion(NPCPartyMember member)
+        {
+            if (member != null && !_reunionesPendientes.Contains(member)) _reunionesPendientes.Add(member);
+        }
+
+        private void ResolverReunionesPendientes()
+        {
+            if (CinematicSequencerBase.AnySequenceActive) return;
+            for (int i = _reunionesPendientes.Count - 1; i >= 0; i--)
+            {
+                var member = _reunionesPendientes[i];
+                if (member == null || ControlDelJugador.RepresentadoPorElJugador(member)
+                    || !PartyControlManager.DebeSeguirAlJugador(member)
+                    || member.NPCManager?.Context?.EstaAncladoParaSeguir == true)
+                {
+                    _reunionesPendientes.RemoveAt(i);
+                    continue;
+                }
+                if (member.NPCManager?.IsInCinematic == true) continue;
+                if (TeleportMemberToPlayer(member, forzar: true)) _reunionesPendientes.RemoveAt(i);
+            }
         }
 
         /// <summary>
@@ -1472,6 +1507,7 @@ namespace Game.NPC
             Log("ResetForNewGame: limpiando miembros y pendientes del party");
 
             _pendingMemberIds.Clear();
+            _reunionesPendientes.Clear();
             DisbandParty();
 
             // Seguridad extra: en caso de referencias residuales/nulls.
@@ -2025,6 +2061,8 @@ namespace Game.NPC
             // Un salto en curso no se corta con un warp: primero se termina de cruzar.
             if (JugadorEnElAire) return;
 
+            ResolverReunionesPendientes();
+
             for (int i = 0; i < _members.Count; i++)
             {
                 var member = _members[i];
@@ -2117,12 +2155,15 @@ namespace Game.NPC
             // mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
             // no gatear Warp() detrás de isOnNavMesh, porque si da false en ese instante deja al
             // agente desincronizado del NavMesh para siempre (ver comentario extenso allí).
-            var agent = member.GetComponent<NavMeshAgent>();
+            var agent = member.NPCManager != null ? member.NPCManager.Agent : null;
             if (agent != null)
             {
-                agent.Warp(targetPos);
-                if (!agent.isOnNavMesh)
-                    member.transform.position = targetPos;
+                if (!agent.isActiveAndEnabled) return false;
+                if (!agent.Warp(targetPos)) return false;
+                // El seguimiento mueve el Transform a mano (updatePosition=false): Warp debe
+                // recolocar tanto la simulación del agente como el cuerpo visible.
+                agent.nextPosition = targetPos;
+                member.transform.position = targetPos;
             }
             else
             {
