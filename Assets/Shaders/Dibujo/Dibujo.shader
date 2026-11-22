@@ -20,6 +20,7 @@ Shader "El Sendero/Dibujo"
         [Toggle(_SOMBRA_SIN_RECORTE)] _SombraSinRecorte("La sombra no usa el recorte (sombra estable)", Float) = 0.0
         [Toggle(_PINCEL)] _Pincel("Pinceladas (piezas de color liso)", Float) = 0.0
         [Toggle(_FOLLAJE)] _Follaje("Follaje de dibujo (copas y matas: color de zona, golpes de hoja y matiz por árbol)", Float) = 0.0
+        [Toggle(_UV_DEL_MUNDO)] _UvDelMundo("Textura en coordenadas del mundo (cajas estiradas: se repite según el tamaño; la escala de la textura es repeticiones por metro)", Float) = 0.0
         [NoScaleOffset] _MascaraDeFollaje("Qué parte de la textura es follaje (blanco = follaje)", 2D) = "white" {}
         _FollajeMip("Nivel de la textura del que sale el color de cada zona", Range(0, 10)) = 5.0
         _LuzDePersonaje("Luz de personaje (sombra más pequeña y más clara, como en el dibujo animado)", Range(0, 1)) = 0.0
@@ -64,6 +65,7 @@ Shader "El Sendero/Dibujo"
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
             #pragma shader_feature_local_fragment _PINCEL
             #pragma shader_feature_local_fragment _FOLLAJE
+            #pragma shader_feature_local_vertex _UV_DEL_MUNDO
             // La emisión se enciende en juego (ventanas de noche): la variante tiene que existir siempre.
             #pragma multi_compile_local_fragment _ _EMISSION
 
@@ -120,7 +122,16 @@ Shader "El Sendero/Dibujo"
                 output.positionCS = posicion.positionCS;
                 output.positionWS = posicion.positionWS;
                 output.normalWS = normal.normalWS;
+                #if defined(_UV_DEL_MUNDO)
+                // Cada cara toma el plano del mundo que mira (el suelo, X y Z; las paredes, el largo y el
+                // alto): una caja estirada repite la textura en vez de estirarla.
+                float3 eje = abs(normal.normalWS);
+                float2 plano = eje.y >= max(eje.x, eje.z) ? posicion.positionWS.xz
+                             : (eje.x >= eje.z ? posicion.positionWS.zy : posicion.positionWS.xy);
+                output.uv = plano * _BaseMap_ST.xy + _BaseMap_ST.zw;
+                #else
                 output.uv = TRANSFORM_TEX(input.texcoord, _BaseMap);
+                #endif
                 #if defined(_FOG_FRAGMENT)
                 output.fogFactor = 0;
                 #else

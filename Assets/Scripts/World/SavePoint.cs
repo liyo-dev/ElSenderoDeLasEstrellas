@@ -5,7 +5,10 @@ using System.Collections;
 public class SavePoint : MonoBehaviour
 {
     [Header("Config")]
-    public string anchorIdToSet;        // si lo dejas vacío, conserva el actual
+    [Tooltip("Ancla donde aparece el jugador al cargar este guardado. Vacío o sin ancla en la escena = la SpawnAnchor de este farol (hija o padre). Ver INC-1400.")]
+    public string anchorIdToSet;
+    [Tooltip("Clave de texto del lugar (LUGAR_…) que enseña la ranura al guardar aquí. Vacío = el lugar de la zona en la que está el jugador.")]
+    [SerializeField] private string claveDelLugar;
     public bool healOnSave = true;
     public bool teleportAfterSave;
     public string teleportAnchorId;
@@ -122,14 +125,19 @@ public class SavePoint : MonoBehaviour
             return;
         }
 
+        // Se guarda el ancla del propio farol: si la configurada no existe en la escena, nunca la
+        // del último sitio visitado (INC-1400).
         string anchorId = anchorIdToSet;
-        if (string.IsNullOrEmpty(anchorId))
+        if (string.IsNullOrEmpty(anchorId) || SpawnAnchor.FindById(anchorId) == null)
         {
-            var anchor = GetComponentInParent<SpawnAnchor>() ?? GetComponent<SpawnAnchor>();
+            var anchor = GetComponentInChildren<SpawnAnchor>(true) ?? GetComponentInParent<SpawnAnchor>();
             if (anchor != null && !string.IsNullOrEmpty(anchor.anchorId))
             {
                 anchorId = anchor.anchorId;
             }
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            else Debug.LogWarning($"[SavePoint] '{name}' no tiene ancla propia: se guarda el ancla '{anchorId}' sin comprobar. Ver INC-1400.");
+#endif
         }
 
         if (!string.IsNullOrEmpty(anchorId))
@@ -179,7 +187,7 @@ public class SavePoint : MonoBehaviour
             // sin modo testeo más adelante. Esto permite "capturar" el progreso desde un preset.
             bool wasTestingMode = GameBootService.IsPresetOverrideActive;
             
-            bool success = Partida.Guardar(saveSystem);
+            bool success = Partida.GuardarEnPuntoDeGuardado(saveSystem, claveDelLugar);
 
             if (success)
             {

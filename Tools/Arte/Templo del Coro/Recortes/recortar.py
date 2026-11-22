@@ -45,6 +45,15 @@ TENOR = [
 <g {TRAZO}><path d="M18 230 Q10 200 30 190 Q46 186 50 205 L54 250 Q40 262 26 255 Z" fill="#A79FB0"/>
 <path d="M30 222 L42 220 M30 236 L44 234" fill="none" stroke-width="3"/></g>
 '''),
+    # El micro del Tenor, en la mano derecha (para calentar la voz antes de la función).
+    ('tenor_micro', (352, 112, 392, 208), (366, 200), f'''
+<g {TRAZO}>
+<path d="M362 204 L368 160 L376 161 L372 205 Z" fill="#5A5266"/>
+<path d="M366 162 L380 163 L378 154 L368 153 Z" fill="#8E8698"/>
+<circle cx="373" cy="138" r="16" fill="#C9C2CF"/>
+</g>
+<g fill="none" stroke="#5A5266" stroke-width="2.5" stroke-linecap="round"><path d="M362 132 L384 132"/><path d="M360 140 L386 140"/><path d="M363 148 L383 148"/><path d="M373 123 L373 153"/></g>
+'''),
     ('tenor_mano_der', (338, 182, 390, 266), (360, 196), f'''
 <g {TRAZO}><path d="M382 230 Q390 200 370 190 Q354 186 350 205 L346 250 Q360 262 374 255 Z" fill="#A79FB0"/>
 <path d="M370 222 L358 220 M370 236 L356 234" fill="none" stroke-width="3"/></g>
@@ -230,7 +239,7 @@ with open('salida/piezas.json', 'w', encoding='utf-8') as f:
     json.dump({'escala_px_por_unidad_del_modelo': ESCALA,
                'nota': 'pivote_unity en coordenadas normalizadas del sprite (0,0 abajo izquierda). desde_la_cara: desplazamiento del pivote de cada pieza respecto al de la cara, en unidades del modelo, eje Y hacia arriba.',
                'movimientos': {'tenor_cara': 'cabecea en cada tiempo (±4°)', 'tenor_ceja_izq/der': 'sube medio tiempo antes de un peligro',
-                               'tenor_mandibula': 'baja en el PUM y vuelve con rebote', 'tenor_mano_izq/der': 'arriba en el 1, abajo en el 3',
+                               'tenor_mandibula': 'baja en el PUM y vuelve con rebote', 'tenor_mano_izq/der': 'arriba en el 1, abajo en el 3', 'tenor_micro': 'en la mano derecha; da golpecitos y sube a la boca al calentar',
                                'corista_cabeza': 'cabecea en cada tiempo', 'corista_boca': 'se abre (escala Y) en el ¡Ah! del 2 y el 4',
                                'corista_burbuja_*': 'escudo del elemento; se rompe con esa magia',
                                'nota_que_cae + sombra_de_nota': 'la sombra crece hasta el PUM', 'semicorchea': 'cae delante en cada «pi» del final y rompe la losa donde cae', 'clave_que_se_esquiva': 'gira; no se devuelve',

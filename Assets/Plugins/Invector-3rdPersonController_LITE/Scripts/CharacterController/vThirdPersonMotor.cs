@@ -36,6 +36,10 @@ namespace Invector.vCharacterController
         public float jumpTimer = 0.14f;
         [Tooltip("Add Extra jump height, if you want to jump only with Root Motion leave the value with 0.")]
         public float jumpHeight = 4f;
+        [Tooltip("Escala de la velocidad de despegue de todo salto (0,92 ≈ un 15 % menos de altura que 1).")]
+        [Range(0.5f, 1.2f)] public float escalaDelSalto = 0.92f;
+        [Tooltip("Al soltar el botón de salto mientras se sube, la velocidad hacia arriba se queda en esta fracción: pulsar suave da un salto corto; mantener, el salto entero. 1 = sin salto corto.")]
+        [Range(0.2f, 1f)] public float corteAlSoltarElSalto = 0.5f;
         [Tooltip("Multiplicador del impulso inicial al despegar.")]
         [Range(0.5f, 6f)] public float jumpTakeoffBoost = 3.2f;
         [Tooltip("Velocidad vertical mínima al inicio del salto para asegurar despegue visible.")]
@@ -267,29 +271,11 @@ namespace Invector.vCharacterController
             moveDirection = Vector3.zero;
         }
 
-        /// <summary>Entrada suavizada y velocidad de ahora, para devolverlas tras una acción que toma el cuerpo.</summary>
-        public Vector3 EntradaSuavizada => inputSmooth;
+        /// <summary>Velocidad de locomoción, para devolverla tras una acción que toma el cuerpo.</summary>
         public float VelocidadDeMovimiento => moveSpeed;
         public Vector3 VelocidadHorizontal => _rigidbody
             ? Vector3.ProjectOnPlane(_rigidbody.linearVelocity, Vector3.up)
             : Vector3.zero;
-
-        /// <summary>
-        /// Devuelve la carrera que llevaba antes de una acción que tomó el cuerpo (una esquiva): sigue
-        /// corriendo en vez de arrancar desde parado. Ver INC-1349.
-        /// </summary>
-        public void RecuperarImpulso(Vector3 entradaSuavizada, float velocidad)
-        {
-            inputSmooth = entradaSuavizada;
-            moveSpeed = velocidad;
-        }
-
-        public void RecuperarVelocidadHorizontal(Vector3 velocidad)
-        {
-            if (!isActiveAndEnabled || lockMovement || !_rigidbody || _rigidbody.isKinematic) return;
-            _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(
-                new Vector3(velocidad.x, _rigidbody.linearVelocity.y, velocidad.z));
-        }
 
         /// <summary>
         /// Fuerza las variables internas de estado en el suelo (isGrounded, groundDistance, verticalVelocity).
@@ -539,7 +525,7 @@ namespace Invector.vCharacterController
 #endif
         }
 
-        private Vector3 LimitarVelocidadDeMovimiento(Vector3 velocidad)
+        protected Vector3 LimitarVelocidadDeMovimiento(Vector3 velocidad)
         {
             Vector3 horizontal = new Vector3(velocidad.x, 0f, velocidad.z);
             if (!float.IsPositiveInfinity(topeDeVelocidad))

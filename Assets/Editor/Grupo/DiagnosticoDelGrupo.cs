@@ -94,6 +94,7 @@ public static class DiagnosticoDelGrupo
         }
         public Vector2 CameraLook => Vector2.zero;
         public bool SprintHeld => false;
+        public bool JumpHeld => true;
         public bool JumpPressed
         {
             get

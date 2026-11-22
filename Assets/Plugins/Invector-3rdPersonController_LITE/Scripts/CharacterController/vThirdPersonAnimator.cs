@@ -14,7 +14,9 @@ namespace Invector.vCharacterController
 
         #endregion  
 
-        public virtual void UpdateAnimator()
+        public virtual void UpdateAnimator() => ActualizarAnimatorLocomocion(inmediato: false);
+
+        protected void ActualizarAnimatorLocomocion(bool inmediato)
         {
             if (animator == null || !animator.enabled) return;
 
@@ -41,18 +43,12 @@ namespace Invector.vCharacterController
             }
 
             float finalInputVertical = overrideInputMagnitude >= 0f ? overrideInputMagnitude : (forceZeroMotion ? 0 : verticalSpeed);
-            if (isStrafing)
-            {
-                animator.SetFloat(vAnimatorParameters.InputHorizontal, forceZeroMotion ? 0 : horizontalSpeed, strafeSpeed.animationSmooth, Time.deltaTime);
-                animator.SetFloat(vAnimatorParameters.InputVertical, finalInputVertical, strafeSpeed.animationSmooth, Time.deltaTime);
-            }
-            else
-            {
-                animator.SetFloat(vAnimatorParameters.InputVertical, finalInputVertical, freeSpeed.animationSmooth, Time.deltaTime);
-            }
-
             float finalInputMagnitude = overrideInputMagnitude >= 0f ? overrideInputMagnitude : (forceZeroMotion ? 0f : inputMagnitude);
-            animator.SetFloat(vAnimatorParameters.InputMagnitude, finalInputMagnitude, isStrafing ? strafeSpeed.animationSmooth : freeSpeed.animationSmooth, Time.deltaTime);
+            float suavizado = inmediato ? 0f : (isStrafing ? strafeSpeed.animationSmooth : freeSpeed.animationSmooth);
+            if (isStrafing)
+                animator.SetFloat(vAnimatorParameters.InputHorizontal, forceZeroMotion ? 0f : horizontalSpeed, suavizado, Time.deltaTime);
+            animator.SetFloat(vAnimatorParameters.InputVertical, finalInputVertical, suavizado, Time.deltaTime);
+            animator.SetFloat(vAnimatorParameters.InputMagnitude, finalInputMagnitude, suavizado, Time.deltaTime);
         }
 
         public virtual void SetAnimatorMoveSpeed(vMovementSpeed speed)

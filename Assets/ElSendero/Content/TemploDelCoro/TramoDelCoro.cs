@@ -129,13 +129,26 @@ public sealed class TramoDelCoro : PruebaDelJugador
     {
         var pregunta = ConfirmationPopupUI.Instance;
         if (pregunta == null) { SoltarLaCamara(); return; }
+        // Con la pregunta en pantalla, el plano queda limpio: solo el cuadro y el Tenor a la derecha.
+        Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
+        _hudOculto = true;
         pregunta.Show(PresentadorDeLinea.Texto("CORO_REPETIR", "¡Bravo! ¿Repetir la función?"), Repetir, SoltarLaCamara,
                       PresentadorDeLinea.Texto("CORO_REPETIR_SI", "Repetir"), PresentadorDeLinea.Texto("CORO_REPETIR_NO", "Quedarme"),
                       selectConfirm: true, centrado: true);
     }
 
+    private bool _hudOculto;
+
+    private void DevolverElHUD()
+    {
+        if (!_hudOculto) return;
+        _hudOculto = false;
+        Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
+    }
+
     private void SoltarLaCamara()
     {
+        DevolverElHUD();
         if (camara != null) camara.Soltar();
     }
 
@@ -166,6 +179,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
         PartyControlManager.OnActiveCharacterChanged -= AlCambiarDePersonaje;
         SoltarLaMusica();
         DejarDeCorrer();
+        DevolverElHUD();
         if (camara != null) camara.Soltar();
         Kits.Core.GameContext.Exit(Situaciones.PruebaSinPausa, this);
         SombraDeContacto.SoltarRefuerzo(this);
@@ -343,6 +357,8 @@ public sealed class TramoDelCoro : PruebaDelJugador
         // Por delante del borde del recuadro (resolviendo deprisa un respiro), cada vez más despacio:
         // el recuadro le alcanza y lo que cae vuelve a estar a su paso.
         bool parado = CentroDelRecuadro(segundo + 0.1f) - centro < 0.01f;
+        // En un respiro no hay prisa: sin el sprint de recuperar, los saltos miden lo de siempre.
+        if (parado) tope = metrosPorSegundo;
         float exceso = zDelJugador - (centro + (parado ? metrosAdelanteEnRespiro : metrosAdelante));
         if (segundoSinTope > 0f && segundo >= segundoSinTope) exceso = 0f;
         if (exceso > 0f) tope = Mathf.Max(0.5f, metrosPorSegundo - exceso * 3f);

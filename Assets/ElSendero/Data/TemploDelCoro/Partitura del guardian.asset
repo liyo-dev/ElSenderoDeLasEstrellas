@@ -402,13 +402,13 @@ MonoBehaviour:
     measure: 6
     beat: 2.5
   - time: 9.81
-    voice: INTRO_PAM
-    measure: 0
-    beat: 0
-  - time: 9.81
     voice: COMPAS_AFINACION
     measure: 7
     beat: 1
+  - time: 9.81
+    voice: INTRO_PAM
+    measure: 0
+    beat: 0
   - time: 10.24
     voice: INTRO_PAM
     measure: 0
@@ -538,6 +538,10 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 24.863
+    voice: COMBA
+    measure: 0
+    beat: 0
+  - time: 24.863
     voice: BOMBARDINO_PUM
     measure: 0
     beat: 1
@@ -546,34 +550,30 @@ MonoBehaviour:
     measure: 16
     beat: 1.5
   - time: 25.269
-    voice: GOLPE
-    measure: 0
-    beat: 0
-  - time: 25.269
     voice: BOMBARDINO_PAM
     measure: 0
     beat: 2
+  - time: 25.269
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 25.681
+    voice: GOLPE
+    measure: 0
+    beat: 0
   - time: 25.681
     voice: BOMBARDINO_PUM
     measure: 0
     beat: 3
-  - time: 25.681
-    voice: GOLPE
-    measure: 0
-    beat: 0
   - time: 25.896
     voice: LOSA
     measure: 16
     beat: 3.5
   - time: 26.111
-    voice: GOLPE
-    measure: 0
-    beat: 0
-  - time: 26.111
     voice: BOMBARDINO_PAM
     measure: 0
     beat: 4
-  - time: 26.523
+  - time: 26.111
     voice: GOLPE
     measure: 0
     beat: 0
@@ -581,19 +581,23 @@ MonoBehaviour:
     voice: BOMBARDINO_PUM
     measure: 0
     beat: 1
+  - time: 26.523
+    voice: COMBA
+    measure: 0
+    beat: 0
+  - time: 26.523
+    voice: GOLPE
+    measure: 0
+    beat: 0
   - time: 26.726
     voice: LOSA
     measure: 17
     beat: 1.5
   - time: 26.929
-    voice: GOLPE
-    measure: 0
-    beat: 0
-  - time: 26.929
     voice: BOMBARDINO_PAM
     measure: 0
     beat: 2
-  - time: 27.347
+  - time: 26.929
     voice: GOLPE
     measure: 0
     beat: 0
@@ -601,18 +605,26 @@ MonoBehaviour:
     voice: BOMBARDINO_PUM
     measure: 0
     beat: 3
+  - time: 27.347
+    voice: GOLPE
+    measure: 0
+    beat: 0
   - time: 27.559
     voice: LOSA
     measure: 17
     beat: 3.5
   - time: 27.771
-    voice: GOLPE
-    measure: 0
-    beat: 0
-  - time: 27.771
     voice: BOMBARDINO_PAM
     measure: 0
     beat: 4
+  - time: 27.771
+    voice: GOLPE
+    measure: 0
+    beat: 0
+  - time: 28.166
+    voice: COMBA
+    measure: 0
+    beat: 0
   - time: 28.166
     voice: BOMBARDINO_PUM
     measure: 0
@@ -641,6 +653,10 @@ MonoBehaviour:
     voice: BOMBARDINO_PUM
     measure: 0
     beat: 1
+  - time: 29.843
+    voice: COMBA
+    measure: 0
+    beat: 0
   - time: 30.047
     voice: LOSA
     measure: 19
@@ -694,17 +710,17 @@ MonoBehaviour:
     measure: 22
     beat: 2
   - time: 36.078
-    voice: NOTA_GRANDE
-    measure: 0
-    beat: 0
+    voice: LOSA
+    measure: 22
+    beat: 4
   - time: 36.078
     voice: GOLPE
     measure: 0
     beat: 0
   - time: 36.078
-    voice: LOSA
-    measure: 22
-    beat: 4
+    voice: NOTA_GRANDE
+    measure: 0
+    beat: 0
   - time: 38.568
     voice: LOSA
     measure: 24
@@ -742,13 +758,13 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 48.791
-    voice: COLUMNA
-    measure: 30
-    beat: 2
-  - time: 48.791
     voice: LLAMA_DEL_TIEMPO
     measure: 0
     beat: 0
+  - time: 48.791
+    voice: COLUMNA
+    measure: 30
+    beat: 2
   - time: 49.191
     voice: LLAMA_DEL_TIEMPO
     measure: 0
@@ -782,13 +798,13 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 52.471
-    voice: COLUMNA
-    measure: 32
-    beat: 3
-  - time: 52.471
     voice: LLAMA_DEL_TIEMPO
     measure: 0
     beat: 0
+  - time: 52.471
+    voice: COLUMNA
+    measure: 32
+    beat: 3
   - time: 52.878
     voice: LLAMA_DEL_TIEMPO
     measure: 0
@@ -798,13 +814,13 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 53.696
-    voice: COLUMNA
-    measure: 33
-    beat: 2
-  - time: 53.696
     voice: LLAMA_DEL_TIEMPO
     measure: 0
     beat: 0
+  - time: 53.696
+    voice: COLUMNA
+    measure: 33
+    beat: 2
   - time: 54.108
     voice: LLAMA_DEL_TIEMPO
     measure: 0
@@ -886,33 +902,33 @@ MonoBehaviour:
     measure: 39
     beat: 1
   - time: 67.889
-    voice: PROYECTIL
-    measure: 42
-    beat: 1
-  - time: 67.889
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
     beat: 1
-  - time: 68.667
-    voice: COLUMNA
+  - time: 67.889
+    voice: PROYECTIL
     measure: 42
-    beat: 3
+    beat: 1
   - time: 68.667
     voice: PIROTECNIA
     measure: 0
     beat: 0
+  - time: 68.667
+    voice: COLUMNA
+    measure: 42
+    beat: 3
   - time: 69.291
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
     beat: 0
   - time: 69.503
-    voice: TELAR_SACO
-    measure: 0
-    beat: 0
-  - time: 69.503
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
     beat: 1
+  - time: 69.503
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
   - time: 69.909
     voice: PROYECTIL
     measure: 43
@@ -934,6 +950,10 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 71.14
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 71.14
     voice: TELAR_ESTRELLA
     measure: 0
     beat: 0
@@ -941,10 +961,6 @@ MonoBehaviour:
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
     beat: 1
-  - time: 71.14
-    voice: NOTA_DEL_ESTRIBILLO
-    measure: 0
-    beat: 0
   - time: 71.343
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
@@ -958,15 +974,15 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 71.959
-    voice: TELAR_LUNA
-    measure: 0
-    beat: 0
-  - time: 71.959
     voice: COLUMNA
     measure: 44
     beat: 3
   - time: 71.959
     voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 71.959
+    voice: TELAR_LUNA
     measure: 0
     beat: 0
   - time: 72.365
@@ -990,13 +1006,13 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 73.172
-    voice: NOTA_DEL_ESTRIBILLO
-    measure: 0
-    beat: 0
-  - time: 73.172
     voice: LOSA
     measure: 45
     beat: 1.87
+  - time: 73.172
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
   - time: 73.224
     voice: TELAR_LUNA
     measure: 0
@@ -1018,7 +1034,7 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 74.414
-    voice: NOTA_DEL_ESTRIBILLO
+    voice: TELAR_LUNA
     measure: 0
     beat: 0
   - time: 74.414
@@ -1026,7 +1042,7 @@ MonoBehaviour:
     measure: 0
     beat: 1
   - time: 74.414
-    voice: TELAR_LUNA
+    voice: NOTA_DEL_ESTRIBILLO
     measure: 0
     beat: 0
   - time: 74.617004
@@ -1042,6 +1058,10 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 75.233
+    voice: COLUMNA
+    measure: 46
+    beat: 3
+  - time: 75.233
     voice: PIROTECNIA
     measure: 0
     beat: 0
@@ -1049,10 +1069,6 @@ MonoBehaviour:
     voice: TELAR_SACO
     measure: 0
     beat: 0
-  - time: 75.233
-    voice: COLUMNA
-    measure: 46
-    beat: 3
   - time: 76.051
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
@@ -1074,15 +1090,11 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 77.282
-    voice: PIROTECNIA
-    measure: 0
-    beat: 0
-  - time: 77.282
     voice: COLUMNA
     measure: 47
     beat: 4
-  - time: 77.688
-    voice: TELAR_SACO
+  - time: 77.282
+    voice: PIROTECNIA
     measure: 0
     beat: 0
   - time: 77.688
@@ -1093,6 +1105,10 @@ MonoBehaviour:
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
     beat: 1
+  - time: 77.688
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
   - time: 77.894
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
@@ -1118,20 +1134,20 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 79.348
-    voice: PIROTECNIA
+    voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
-    beat: 0
+    beat: 1
   - time: 79.348
     voice: TELAR_SACO
     measure: 0
     beat: 0
   - time: 79.348
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 79.348
     voice: COLUMNA
     measure: 49
-    beat: 1
-  - time: 79.348
-    voice: PLATILLO_DEL_ESTRIBILLO
-    measure: 0
     beat: 1
   - time: 79.778
     voice: TELAR_LUNA
@@ -1158,13 +1174,13 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 80.968
-    voice: TELAR_LUNA
-    measure: 0
-    beat: 0
-  - time: 80.968
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
     beat: 1
+  - time: 80.968
+    voice: TELAR_LUNA
+    measure: 0
+    beat: 0
   - time: 81.34
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
@@ -1214,11 +1230,23 @@ MonoBehaviour:
     measure: 0
     beat: 1
   - time: 86.532
+    voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 86.532
     voice: COLUMNA
     measure: 53
     beat: 2.5
   - time: 86.75
     voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 87.58
+    voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 87.58
+    voice: BARRIDO_DEL_PRACTICABLE
     measure: 0
     beat: 0
   - time: 87.58
@@ -1229,16 +1257,16 @@ MonoBehaviour:
     voice: PROYECTIL
     measure: 54
     beat: 1
-  - time: 87.58
-    voice: NOTA_DEL_ESTRIBILLO
-    measure: 0
-    beat: 0
   - time: 87.789
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
     beat: 0
   - time: 88.207
     voice: NOTA_DEL_ESTRIBILLO
+    measure: 0
+    beat: 0
+  - time: 88.416
+    voice: BARRIDO_DEL_PRACTICABLE
     measure: 0
     beat: 0
   - time: 88.625
@@ -1274,12 +1302,12 @@ MonoBehaviour:
     measure: 56
     beat: 3
   - time: 92.607
-    voice: LOSA
-    measure: 57
-    beat: 1
-  - time: 92.607
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
+    beat: 1
+  - time: 92.607
+    voice: LOSA
+    measure: 57
     beat: 1
   - time: 94.232
     voice: PIROTECNIA
@@ -1291,6 +1319,10 @@ MonoBehaviour:
     beat: 1
   - time: 95.823
     voice: PIROTECNIA
+    measure: 0
+    beat: 0
+  - time: 95.823
+    voice: COMBA
     measure: 0
     beat: 0
   - time: 95.823
@@ -1314,23 +1346,23 @@ MonoBehaviour:
     measure: 59
     beat: 4
   - time: 97.553
-    voice: NOTA_DEL_PUENTE
-    measure: 0
-    beat: 0
-  - time: 97.553
     voice: FUEGO
     measure: 60
     beat: 1
+  - time: 97.553
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
   - time: 97.93
     voice: OLEADA
     measure: 60
     beat: 1.97
   - time: 97.942
-    voice: FUEGO
+    voice: RAYO
     measure: 60
     beat: 2
   - time: 97.942
-    voice: RAYO
+    voice: FUEGO
     measure: 60
     beat: 2
   - time: 98.371
@@ -1338,19 +1370,7 @@ MonoBehaviour:
     measure: 60
     beat: 3
   - time: 98.807
-    voice: RAYO
-    measure: 60
-    beat: 4
-  - time: 98.807
     voice: RAYO_LUZ
-    measure: 0
-    beat: 0
-  - time: 98.807
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 98.807
-    voice: RAYO_MENTE
     measure: 0
     beat: 0
   - time: 98.807
@@ -1361,20 +1381,24 @@ MonoBehaviour:
     voice: FUEGO
     measure: 60
     beat: 4
-  - time: 99.242
-    voice: NOTA_DEL_PUENTE
+  - time: 98.807
+    voice: RAYO
+    measure: 60
+    beat: 4
+  - time: 98.807
+    voice: RAYO_MENTE
     measure: 0
     beat: 0
   - time: 99.242
     voice: FUEGO
     measure: 61
     beat: 1
+  - time: 99.242
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
   - time: 99.666
     voice: FUEGO
-    measure: 61
-    beat: 2
-  - time: 99.666
-    voice: RAYO
     measure: 61
     beat: 2
   - time: 99.666
@@ -1382,9 +1406,9 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 99.666
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
+    voice: RAYO
+    measure: 61
+    beat: 2
   - time: 99.666
     voice: RAYO_MENTE
     measure: 0
@@ -1398,19 +1422,7 @@ MonoBehaviour:
     measure: 61
     beat: 3
   - time: 100.513
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 100.513
     voice: RAYO
-    measure: 61
-    beat: 4
-  - time: 100.513
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
-  - time: 100.513
-    voice: FUEGO
     measure: 61
     beat: 4
   - time: 100.513
@@ -1419,90 +1431,86 @@ MonoBehaviour:
     beat: 0
   - time: 100.513
     voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 100.513
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 100.513
+    voice: FUEGO
+    measure: 61
+    beat: 4
+  - time: 100.926
+    voice: NOTA_DEL_PUENTE
     measure: 0
     beat: 0
   - time: 100.926
     voice: FUEGO
     measure: 62
     beat: 1
-  - time: 100.926
-    voice: NOTA_DEL_PUENTE
-    measure: 0
-    beat: 0
-  - time: 101.343
-    voice: RAYO
-    measure: 62
-    beat: 2
-  - time: 101.343
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 101.343
-    voice: RAYO_MENTE
-    measure: 0
-    beat: 0
-  - time: 101.343
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
   - time: 101.343
     voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 101.343
+    voice: RAYO_FUEGO
     measure: 0
     beat: 0
   - time: 101.343
     voice: FUEGO
     measure: 62
     beat: 2
+  - time: 101.343
+    voice: RAYO
+    measure: 62
+    beat: 2
+  - time: 101.343
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
   - time: 101.761
     voice: FUEGO
     measure: 62
     beat: 3
   - time: 102.179
-    voice: RAYO_MENTE
-    measure: 0
-    beat: 0
-  - time: 102.179
     voice: RAYO
     measure: 62
     beat: 4
   - time: 102.179
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 102.179
     voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 102.179
+    voice: RAYO_MENTE
     measure: 0
     beat: 0
   - time: 102.179
     voice: FUEGO
     measure: 62
     beat: 4
-  - time: 102.179
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 102.179
-    voice: RAYO_LUZ
+  - time: 102.592
+    voice: NOTA_DEL_PUENTE
     measure: 0
     beat: 0
   - time: 102.592
     voice: FUEGO
     measure: 63
     beat: 1
-  - time: 102.592
-    voice: NOTA_DEL_PUENTE
-    measure: 0
-    beat: 0
   - time: 103.015
-    voice: RAYO_MENTE
-    measure: 0
-    beat: 0
-  - time: 103.015
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
+    voice: FUEGO
+    measure: 63
+    beat: 2
   - time: 103.015
     voice: RAYO
     measure: 63
     beat: 2
   - time: 103.015
-    voice: RAYO_FUEGO
+    voice: RAYO_MENTE
     measure: 0
     beat: 0
   - time: 103.015
@@ -1510,21 +1518,25 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 103.015
-    voice: FUEGO
-    measure: 63
-    beat: 2
-  - time: 103.41
-    voice: TELAR_LUNA
+    voice: RAYO_LUZ
     measure: 0
     beat: 0
   - time: 103.41
     voice: FUEGO
     measure: 63
     beat: 3
-  - time: 103.822
-    voice: RAYO_FUEGO
+  - time: 103.41
+    voice: TELAR_LUNA
     measure: 0
     beat: 0
+  - time: 103.822
+    voice: FUEGO
+    measure: 63
+    beat: 4
+  - time: 103.822
+    voice: RAYO
+    measure: 63
+    beat: 4
   - time: 103.822
     voice: RAYO_MENTE
     measure: 0
@@ -1537,14 +1549,6 @@ MonoBehaviour:
     voice: RAYO_LUZ
     measure: 0
     beat: 0
-  - time: 103.822
-    voice: RAYO
-    measure: 63
-    beat: 4
-  - time: 103.822
-    voice: FUEGO
-    measure: 63
-    beat: 4
   - time: 104.229
     voice: OLEADA
     measure: 64
@@ -1558,7 +1562,15 @@ MonoBehaviour:
     measure: 64
     beat: 1
   - time: 104.647
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 104.647
     voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 104.647
+    voice: RAYO_LUZ
     measure: 0
     beat: 0
   - time: 104.647
@@ -1566,41 +1578,17 @@ MonoBehaviour:
     measure: 64
     beat: 2
   - time: 104.647
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
-  - time: 104.647
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 104.647
-    voice: RAYO_MENTE
-    measure: 0
-    beat: 0
-  - time: 104.647
     voice: FUEGO
     measure: 64
     beat: 2
-  - time: 105.059
-    voice: FUEGO
-    measure: 64
-    beat: 3
   - time: 105.059
     voice: TELAR_ESTRELLA
     measure: 0
     beat: 0
-  - time: 105.477
+  - time: 105.059
     voice: FUEGO
     measure: 64
-    beat: 4
-  - time: 105.477
-    voice: RAYO
-    measure: 64
-    beat: 4
-  - time: 105.477
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
+    beat: 3
   - time: 105.477
     voice: RAYO_MENTE
     measure: 0
@@ -1610,9 +1598,17 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 105.477
-    voice: RAYO_FUEGO
+    voice: RAYO_LUZ
     measure: 0
     beat: 0
+  - time: 105.477
+    voice: RAYO
+    measure: 64
+    beat: 4
+  - time: 105.477
+    voice: FUEGO
+    measure: 64
+    beat: 4
   - time: 105.889
     voice: FUEGO
     measure: 65
@@ -1622,6 +1618,14 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 106.307
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 106.307
+    voice: TELAR_SACO
+    measure: 0
+    beat: 0
+  - time: 106.307
     voice: RAYO
     measure: 65
     beat: 2
@@ -1630,45 +1634,17 @@ MonoBehaviour:
     measure: 65
     beat: 2
   - time: 106.307
-    voice: TELAR_SACO
-    measure: 0
-    beat: 0
-  - time: 106.307
     voice: RAYO_LUZ
     measure: 0
     beat: 0
-  - time: 106.307
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 106.307
-    voice: RAYO_MENTE
+  - time: 106.707
+    voice: TELAR_LUNA
     measure: 0
     beat: 0
   - time: 106.707
     voice: FUEGO
     measure: 65
     beat: 3
-  - time: 106.707
-    voice: TELAR_LUNA
-    measure: 0
-    beat: 0
-  - time: 107.143
-    voice: RAYO
-    measure: 65
-    beat: 4
-  - time: 107.143
-    voice: FUEGO
-    measure: 65
-    beat: 4
-  - time: 107.143
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
-  - time: 107.143
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
   - time: 107.143
     voice: RAYO_MENTE
     measure: 0
@@ -1678,55 +1654,99 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 107.143
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 107.143
     voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 107.143
+    voice: FUEGO
+    measure: 65
+    beat: 4
+  - time: 107.143
+    voice: RAYO
+    measure: 65
+    beat: 4
+  - time: 107.561
+    voice: FUEGO
+    measure: 66
+    beat: 1
+  - time: 107.561
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 107.561
     voice: NOTA_DEL_PUENTE
     measure: 0
     beat: 0
-  - time: 107.561
-    voice: FUEGO
-    measure: 66
-    beat: 1
-  - time: 107.95
-    voice: FUEGO
-    measure: 66
-    beat: 2
-  - time: 107.95
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 107.95
-    voice: RAYO
-    measure: 66
-    beat: 2
-  - time: 107.95
-    voice: RAYO_MENTE
-    measure: 0
-    beat: 0
-  - time: 107.95
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 107.95
-    voice: RAYO_LUZ
+  - time: 107.75549
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 107.95
     voice: TELAR_SACO
     measure: 0
     beat: 0
-  - time: 108.356
+  - time: 107.95
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 107.95
     voice: FUEGO
     measure: 66
-    beat: 3
+    beat: 2
+  - time: 107.95
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 107.95
+    voice: RAYO
+    measure: 66
+    beat: 2
+  - time: 108.153
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 108.356
+    voice: TRALLA
+    measure: 0
+    beat: 0
   - time: 108.356
     voice: TELAR_LUNA
     measure: 0
     beat: 0
+  - time: 108.356
+    voice: FUEGO
+    measure: 66
+    beat: 3
+  - time: 108.562
+    voice: TRALLA
+    measure: 0
+    beat: 0
   - time: 108.768
     voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 108.768
+    voice: TELAR_ESTRELLA
     measure: 0
     beat: 0
   - time: 108.768
@@ -1734,23 +1754,15 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 108.768
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 108.768
-    voice: FUEGO
-    measure: 66
-    beat: 4
-  - time: 108.768
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
-  - time: 108.768
     voice: RAYO
     measure: 66
     beat: 4
   - time: 108.768
-    voice: TELAR_ESTRELLA
+    voice: FUEGO
+    measure: 66
+    beat: 4
+  - time: 108.971
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 109.169
@@ -1758,31 +1770,23 @@ MonoBehaviour:
     measure: 67
     beat: 0.99
   - time: 109.174
+    voice: FUEGO
+    measure: 67
+    beat: 1
+  - time: 109.174
     voice: NOTA_DEL_PUENTE
     measure: 0
     beat: 0
   - time: 109.174
-    voice: FUEGO
-    measure: 67
-    beat: 1
-  - time: 109.592
-    voice: RAYO
-    measure: 67
-    beat: 2
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 109.383
+    voice: TRALLA
+    measure: 0
+    beat: 0
   - time: 109.592
     voice: TELAR_SACO
-    measure: 0
-    beat: 0
-  - time: 109.592
-    voice: FUEGO
-    measure: 67
-    beat: 2
-  - time: 109.592
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 109.592
-    voice: RAYO_MENTE
     measure: 0
     beat: 0
   - time: 109.592
@@ -1790,19 +1794,47 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 109.592
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 109.592
     voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 109.592
+    voice: FUEGO
+    measure: 67
+    beat: 2
+  - time: 109.592
+    voice: RAYO
+    measure: 67
+    beat: 2
+  - time: 109.592
+    voice: RAYO_MENTE
+    measure: 0
+    beat: 0
+  - time: 109.7955
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 109.999
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 109.999
     voice: FUEGO
     measure: 67
     beat: 3
-  - time: 110.411
-    voice: RAYO_MENTE
+  - time: 110.205
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 110.411
     voice: RAYO_FUEGO
+    measure: 0
+    beat: 0
+  - time: 110.411
+    voice: TELAR_LUNA
     measure: 0
     beat: 0
   - time: 110.411
@@ -1810,31 +1842,59 @@ MonoBehaviour:
     measure: 67
     beat: 4
   - time: 110.411
-    voice: RAYO
-    measure: 67
-    beat: 4
-  - time: 110.411
-    voice: TELAR_LUNA
-    measure: 0
-    beat: 0
-  - time: 110.411
     voice: RAYO_LUZ
     measure: 0
     beat: 0
   - time: 110.411
-    voice: RAYO_FUEGO
+    voice: RAYO
+    measure: 67
+    beat: 4
+  - time: 110.411
+    voice: RAYO_MENTE
     measure: 0
     beat: 0
-  - time: 110.823
-    voice: NOTA_DEL_PUENTE
+  - time: 110.411
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 110.617004
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 110.823
     voice: FUEGO
     measure: 68
     beat: 1
+  - time: 110.823
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 110.823
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 111.029
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 111.235
+    voice: FUEGO
+    measure: 68
+    beat: 2
+  - time: 111.235
+    voice: TRALLA
+    measure: 0
+    beat: 0
   - time: 111.235
     voice: TELAR_ESTRELLA
+    measure: 0
+    beat: 0
+  - time: 111.235
+    voice: RAYO
+    measure: 68
+    beat: 2
+  - time: 111.235
+    voice: RAYO_LUZ
     measure: 0
     beat: 0
   - time: 111.235
@@ -1845,40 +1905,36 @@ MonoBehaviour:
     voice: RAYO_FUEGO
     measure: 0
     beat: 0
-  - time: 111.235
-    voice: RAYO
-    measure: 68
-    beat: 2
-  - time: 111.235
-    voice: FUEGO
-    measure: 68
-    beat: 2
-  - time: 111.235
-    voice: RAYO_LUZ
+  - time: 111.441
+    voice: TRALLA
     measure: 0
     beat: 0
-  - time: 111.235
-    voice: RAYO_FUEGO
+  - time: 111.647
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 111.647
     voice: FUEGO
     measure: 68
     beat: 3
+  - time: 111.8535
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 112.06
+    voice: TRALLA
+    measure: 0
+    beat: 0
   - time: 112.06
     voice: TELAR_SACO
     measure: 0
     beat: 0
   - time: 112.06
-    voice: RAYO_LUZ
-    measure: 0
-    beat: 0
-  - time: 112.06
-    voice: RAYO
+    voice: FUEGO
     measure: 68
     beat: 4
   - time: 112.06
-    voice: FUEGO
+    voice: RAYO
     measure: 68
     beat: 4
   - time: 112.06
@@ -1890,15 +1946,31 @@ MonoBehaviour:
     measure: 0
     beat: 0
   - time: 112.06
-    voice: RAYO_FUEGO
+    voice: RAYO_LUZ
+    measure: 0
+    beat: 0
+  - time: 112.266
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 112.472
+    voice: NOTA_DEL_PUENTE
+    measure: 0
+    beat: 0
+  - time: 112.472
+    voice: TRALLA
     measure: 0
     beat: 0
   - time: 112.472
     voice: FUEGO
     measure: 69
     beat: 1
-  - time: 112.472
-    voice: NOTA_DEL_PUENTE
+  - time: 112.681
+    voice: TRALLA
+    measure: 0
+    beat: 0
+  - time: 112.89
+    voice: RAYO_LUZ
     measure: 0
     beat: 0
   - time: 112.89
@@ -1911,14 +1983,6 @@ MonoBehaviour:
     beat: 2
   - time: 112.89
     voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 112.89
-    voice: RAYO_FUEGO
-    measure: 0
-    beat: 0
-  - time: 112.89
-    voice: RAYO_LUZ
     measure: 0
     beat: 0
   - time: 112.89
@@ -1957,14 +2021,22 @@ MonoBehaviour:
     voice: COLUMNA
     measure: 74
     beat: 2.65
-  - time: 121.783
-    voice: LOSA
-    measure: 74
-    beat: 3.88
+  - time: 121.469986
+    voice: ROMPE_PRACTICABLE
+    measure: 0
+    beat: 0
+  - time: 121.57149
+    voice: ROMPE_PRACTICABLE
+    measure: 0
+    beat: 0
   - time: 121.783
     voice: NOTA_DEL_ESTRIBILLO
     measure: 0
     beat: 0
+  - time: 121.783
+    voice: LOSA
+    measure: 74
+    beat: 3.88
   - time: 122.282
     voice: CORISTA_DEL_FINAL
     measure: 0
@@ -1973,8 +2045,28 @@ MonoBehaviour:
     voice: PLATILLO_DEL_ESTRIBILLO
     measure: 0
     beat: 1
+  - time: 122.28701
+    voice: ROMPE_PRACTICABLE
+    measure: 0
+    beat: 0
+  - time: 122.38576
+    voice: ROMPE_PRACTICABLE
+    measure: 0
+    beat: 0
+  - time: 123.10099
+    voice: ROMPE_PRACTICABLE
+    measure: 0
+    beat: 0
+  - time: 123.19674
+    voice: ROMPE_PRACTICABLE
+    measure: 0
+    beat: 0
   - time: 123.472
     voice: TELAR_LUNA
+    measure: 0
+    beat: 0
+  - time: 123.80901
+    voice: ROMPE_PRACTICABLE
     measure: 0
     beat: 0
   - time: 123.82
@@ -1987,6 +2079,10 @@ MonoBehaviour:
     beat: 1
   - time: 123.867
     voice: CORISTA_DEL_FINAL
+    measure: 0
+    beat: 0
+  - time: 123.91201
+    voice: ROMPE_PRACTICABLE
     measure: 0
     beat: 0
   - time: 124.25
@@ -2018,11 +2114,11 @@ MonoBehaviour:
     measure: 0
     beat: 1
   - time: 125.504
-    voice: CORISTA_DEL_FINAL
+    voice: ROSAS
     measure: 0
     beat: 0
   - time: 125.504
-    voice: ROSAS
+    voice: CORISTA_DEL_FINAL
     measure: 0
     beat: 0
   - time: 125.614

@@ -11,7 +11,7 @@ las usa: lo que cambia entre juegos va en datos o se enchufa desde fuera.
   tiempos en lugar de un BPM fijo (`StartAtSeconds`, `SongTime`).
 - `ScoreCueTrigger`: avisa un poco antes de cada marca de unas voces y en el golpe (eventos).
 - `CueDrop`: lo que cae del techo en el golpe de cada marca, con su sombra creciendo. A quién golpea
-  lo decide el juego con `CueDrop.Strike`. Con `strikeLength`, el golpe es una franja a lo largo de su «adelante» (un rayo que barre
+  lo decide el juego con `CueDrop.Strike` (centro, radio, daño y alto; con `strikeHeight` el golpe solo llega a esa altura: algo bajo que barre el suelo y se salta). Con `strikeLength`, el golpe es una franja a lo largo de su «adelante» (un rayo que barre
   una línea), en círculos seguidos.
 - `CueSinkingTile`: losa que tiembla y se hunde en el segundo de una marca y vuelve después.
 - `PulseMotion`: empujón de una pieza que vuelve sola (cabeceo, mandíbula, cejas) en cada tiempo,
@@ -34,3 +34,9 @@ las usa: lo que cambia entre juegos va en datos o se enchufa desde fuera.
 
 El juego enchufa quién cuenta como alcanzado, quién es un cuerpo y en qué nivel se usan desde su
 carpeta de `Connections/` (ver TDD § 31).
+
+## Luces de función
+
+- `BeatLightRig`: focos que laten en cada tiempo y cambian de paleta por tramos de la canción (rotando colores por compás o por tiempo); un tramo con intensidad 0 deja la escena a oscuras.
+- `FollowSpot`: el cañón de seguimiento; sigue la posición que le da el juego con `FollowSpot.Target`.
+- `BeatSway`: plataforma que va de lado a lado al compás (sale del segundo de la canción) y lleva a quien va encima (`BeatSway.Rider`, lo pone el juego).

@@ -119,6 +119,7 @@ public static partial class Partida
         var d = new PlayerSaveData
         {
             lastSpawnAnchorId = SpawnManager.CurrentAnchorId ?? p.spawnAnchorId ?? AnclaPorDefecto,
+            lugarDelGuardado = string.IsNullOrEmpty(LugarDelGuardado) ? AmbientZone.LugarDelJugador : LugarDelGuardado,
             level = p.level,
             maxHp = p.maxHP, currentHp = p.currentHP,
             maxMp = p.maxMP, currentMp = p.currentMP,

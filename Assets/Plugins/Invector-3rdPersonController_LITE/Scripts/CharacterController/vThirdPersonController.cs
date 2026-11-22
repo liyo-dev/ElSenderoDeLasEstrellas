@@ -117,6 +117,23 @@ namespace Invector.vCharacterController
             }
         }
 
+        /// <summary>Enlaza con el movimiento pedido al recuperar el control tras un impulso.</summary>
+        public void RecuperarImpulso(Vector2 stick, float velocidad, Transform referencia)
+        {
+            if (!isActiveAndEnabled || lockMovement || !_rigidbody || _rigidbody.isKinematic) return;
+
+            input = inputSmooth = new Vector3(stick.x, 0f, stick.y);
+            moveDirection = Vector3.zero;
+            UpdateMoveDirection(referencia);
+            moveSpeed = velocidad;
+            SetAnimatorMoveSpeed(isStrafing ? strafeSpeed : freeSpeed);
+
+            Vector3 salida = stopMove ? Vector3.zero : Vector3.ClampMagnitude(moveDirection, 1f) * moveSpeed;
+            salida.y = _rigidbody.linearVelocity.y;
+            _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(salida);
+            ActualizarAnimatorLocomocion(inmediato: true);
+        }
+
         public virtual void Sprint(bool value)
         {
             if (_actionValidator != null && !_actionValidator.CanSprint()) return;
@@ -216,6 +233,25 @@ namespace Invector.vCharacterController
             _rigidbody.linearVelocity = vel;
         }
 
+        // El salto en curso aún se puede acortar soltando el botón (hasta que se suelta o deja de subir).
+        private bool _saltoQueSePuedeCortar;
+
+        /// <summary>
+        /// Se ha soltado el botón de salto: si el salto aún sube, se queda en <see cref="vThirdPersonMotor.corteAlSoltarElSalto"/>
+        /// de su velocidad hacia arriba (salto corto) y deja de empujar. Solo una vez por salto.
+        /// </summary>
+        public void SoltarSalto()
+        {
+            if (!_saltoQueSePuedeCortar || _rigidbody == null || _rigidbody.isKinematic) return;
+            var vel = _rigidbody.linearVelocity;
+            _saltoQueSePuedeCortar = false;
+            if (vel.y <= 0f) return;
+            vel.y *= corteAlSoltarElSalto;
+            _rigidbody.linearVelocity = vel;
+            isJumping = false;
+            jumpCounter = 0f;
+        }
+
         private void DoJump(float impulseFactor, bool ignoreValidator = false)
         {
             if (!ignoreValidator && _actionValidator != null && !_actionValidator.CanJump()) return;
@@ -233,7 +269,8 @@ namespace Invector.vCharacterController
             {
                 var vel = _rigidbody.linearVelocity;
                 float actionRPGMinImpulse = useActionRPGJump ? 7.6f : 0f;
-                float baseJumpImpulse = Mathf.Max(jumpHeight * jumpTakeoffBoost, minJumpTakeoffSpeed, actionRPGMinImpulse) * impulseFactor;
+                float baseJumpImpulse = Mathf.Max(jumpHeight * jumpTakeoffBoost, minJumpTakeoffSpeed, actionRPGMinImpulse) * impulseFactor * escalaDelSalto;
+                _saltoQueSePuedeCortar = true;
 
                 // Si llega con velocidad negativa por pendiente o escalón, se limpia antes del despegue.
                 if (vel.y < 0f)

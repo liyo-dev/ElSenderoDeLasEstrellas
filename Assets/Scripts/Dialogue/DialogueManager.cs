@@ -141,6 +141,9 @@ public class DialogueManager : MonoBehaviour
     // Sin esto, cada apertura empujaba Cinematic y la sustituida nunca lo devolvía: el jugador
     // se quedaba sin control ni ataques hasta morir (INC-1279).
     bool _dialogueModePushed;
+    // El PlayerActionManager al que se empujó el modo: el Pop va al mismo, aunque entretanto haya
+    // cambiado el cuerpo que lleva el jugador.
+    PlayerActionManager _modoEmpujadoEn;
 
     // Typewriter estado
     Coroutine _typeRoutine;
@@ -1621,51 +1624,28 @@ public class DialogueManager : MonoBehaviour
         // presentación de un lugar) cede ante ella. Dura lo que el modo diálogo.
         if (!activate) Kits.Core.GameContext.Exit(Situaciones.Dialogo, this);
 
-        // Buscar el jugador usando PlayerService
-        if (!PlayerService.TryGetPlayer(out var player, allowSceneLookup: true) || player == null)
+        if (!activate)
+        {
+            _dialogueModePushed = false;
+            var empujado = _modoEmpujadoEn;
+            _modoEmpujadoEn = null;
+            if (empujado != null) empujado.PopMode(ActionMode.Cinematic);
+            return;
+        }
+
+        if (!PlayerService.TryGetComponent(out PlayerActionManager actionManager, allowSceneLookup: true) || actionManager == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[DialogueManager] No se encontró el jugador para activar modo diálogo");
+            Debug.LogWarning("[DialogueManager] No hay PlayerActionManager del jugador: el diálogo no bloquea el movimiento.");
 #endif
             _dialogueModePushed = false;
             return;
         }
 
-        // Obtener el PlayerActionManager
-        var actionManager = player.GetComponent<PlayerActionManager>();
-        if (actionManager == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[DialogueManager] El jugador no tiene PlayerActionManager, no se puede bloquear el movimiento");
-#endif
-            _dialogueModePushed = false;
-            return;
-        }
-
-        // Activar/desactivar modo Cinematic (bloquea todo el jugador)
-        if (activate)
-        {
-            actionManager.PushMode(ActionMode.Cinematic);
-            _dialogueModePushed = true;
-            Kits.Core.GameContext.Enter(Situaciones.Dialogo, this);
-            if (verboseLogging)
-            {
-                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[DialogueManager] Modo Cinematic ACTIVADO - Jugador bloqueado para diálogo");
-                #endif
-            }
-        }
-        else
-        {
-            _dialogueModePushed = false;
-            actionManager.PopMode(ActionMode.Cinematic);
-            if (verboseLogging)
-            {
-                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[DialogueManager] Modo Cinematic DESACTIVADO - Jugador desbloqueado tras diálogo");
-                #endif
-            }
-        }
+        actionManager.PushMode(ActionMode.Cinematic);
+        _modoEmpujadoEn = actionManager;
+        _dialogueModePushed = true;
+        Kits.Core.GameContext.Enter(Situaciones.Dialogo, this);
     }
 
     /// <summary>

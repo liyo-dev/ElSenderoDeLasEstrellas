@@ -11,6 +11,8 @@ public interface ICharacterInputSource
     Vector2 CameraLook { get; }
     bool SprintHeld { get; }
     bool JumpPressed { get; }
+    /// <summary>El botón de salto sigue pulsado (soltarlo pronto da un salto corto).</summary>
+    bool JumpHeld { get; }
 }
 
 /// <summary>

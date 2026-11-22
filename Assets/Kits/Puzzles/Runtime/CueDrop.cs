@@ -15,8 +15,8 @@ namespace Kits.Puzzles
     [DisallowMultipleComponent]
     public sealed class CueDrop : MonoBehaviour
     {
-        /// <summary>Golpe al tocar el suelo: (centro, radio, daño). Lo pone el juego.</summary>
-        public static Action<Vector3, float, float> Strike;
+        /// <summary>Golpe al tocar el suelo: (centro, radio, daño, alto; alto 0 = el de siempre del juego). Lo pone el juego.</summary>
+        public static Action<Vector3, float, float, float> Strike;
         /// <summary>
         /// Suena el golpe: (sonido, sitio, volumen). Lo pone el juego para que pase por su mezcla;
         /// sin él, suena con <see cref="AudioSource.PlayClipAtPoint(AudioClip, Vector3, float)"/>.
@@ -71,6 +71,8 @@ namespace Kits.Puzzles
         [SerializeField, Min(0f)] private float strikeLength;
         [Tooltip("Daño al tocar el suelo. 0: solo se ve (una presentación).")]
         [SerializeField, Min(0f)] private float damage = 10f;
+        [Tooltip("Altura del golpe sobre el suelo. 0: la de siempre (alcanza aunque se salte). Bajo: algo que barre el suelo y se salta.")]
+        [SerializeField, Min(0f)] private float strikeHeight;
 
         [Header("Sonido")]
         [Tooltip("Lo que suena al tocar el suelo. Se lanza con el adelanto del retardo de audio del reloj, para oírse justo en el golpe.")]
@@ -191,11 +193,11 @@ namespace Kits.Puzzles
         private void Golpear(Vector3 punto)
         {
             if (Strike == null) return;
-            if (strikeLength <= radius * 2f || radius <= 0f) { Strike(punto, radius, damage); return; }
+            if (strikeLength <= radius * 2f || radius <= 0f) { Strike(punto, radius, damage, strikeHeight); return; }
             Vector3 adelante = transform.forward;
             int n = Mathf.CeilToInt(strikeLength / (radius * 1.5f));
             for (int i = 0; i <= n; i++)
-                Strike(punto + adelante * (strikeLength * ((float)i / n - 0.5f)), radius, damage);
+                Strike(punto + adelante * (strikeLength * ((float)i / n - 0.5f)), radius, damage, strikeHeight);
         }
 
         private void SeguirAlObjetivo()

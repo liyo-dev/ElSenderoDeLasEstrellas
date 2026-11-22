@@ -1,0 +1,489 @@
+{
+ "escala_px_por_unidad_del_modelo": 4,
+ "nota": "pivote_unity en coordenadas normalizadas del sprite (0,0 abajo izquierda). desde_la_cara: desplazamiento del pivote de cada pieza respecto al de la cara, en unidades del modelo, eje Y hacia arriba.",
+ "movimientos": {
+  "tenor_cara": "cabecea en cada tiempo (±4°)",
+  "tenor_ceja_izq/der": "sube medio tiempo antes de un peligro",
+  "tenor_mandibula": "baja en el PUM y vuelve con rebote",
+  "tenor_mano_izq/der": "arriba en el 1, abajo en el 3",
+  "corista_cabeza": "cabecea en cada tiempo",
+  "corista_boca": "se abre (escala Y) en el ¡Ah! del 2 y el 4",
+  "corista_burbuja_*": "escudo del elemento; se rompe con esa magia",
+  "nota_que_cae + sombra_de_nota": "la sombra crece hasta el PUM",
+  "semicorchea": "cae delante en cada «pi» del final y rompe la losa donde cae",
+  "clave_que_se_esquiva": "gira; no se devuelve",
+  "regalito": "se devuelve con B",
+  "organo": "salta hacia el jugador en cada tiempo y cae encima (se aplasta al caer)",
+  "atrezo_*": "los peligros como decorado de cartón: columna, llamarada, ola (latigazo) y rayo (tumbado)",
+  "telar_*": "lo que cae del telar colgado de su cuerda (saco de arena, luna y estrella de cartón): baja a plomo",
+  "publico_muneco_*": "el público de cartón del Tenor, en su palo: bota en el platillo y en ¡Bravo!"
+ },
+ "piezas": {
+  "tenor_cara": {
+   "png": "tenor_cara.png",
+   "ancho_px": 1248,
+   "alto_px": 1432,
+   "pivote_unity": [
+    0.5,
+    0.2291
+   ],
+   "posicion_en_el_modelo": [
+    200,
+    290
+   ],
+   "desde_la_cara": [
+    0,
+    0
+   ]
+  },
+  "tenor_mandibula": {
+   "png": "tenor_mandibula.png",
+   "ancho_px": 1232,
+   "alto_px": 480,
+   "pivote_unity": [
+    0.5,
+    0.85
+   ],
+   "posicion_en_el_modelo": [
+    200,
+    292
+   ],
+   "desde_la_cara": [
+    0,
+    -2
+   ]
+  },
+  "tenor_ceja_izq": {
+   "png": "tenor_ceja_izq.png",
+   "ancho_px": 424,
+   "alto_px": 248,
+   "pivote_unity": [
+    0.8019,
+    0.5806
+   ],
+   "posicion_en_el_modelo": [
+    165,
+    110
+   ],
+   "desde_la_cara": [
+    -35,
+    180
+   ]
+  },
+  "tenor_ceja_der": {
+   "png": "tenor_ceja_der.png",
+   "ancho_px": 424,
+   "alto_px": 248,
+   "pivote_unity": [
+    0.1981,
+    0.5806
+   ],
+   "posicion_en_el_modelo": [
+    235,
+    110
+   ],
+   "desde_la_cara": [
+    35,
+    180
+   ]
+  },
+  "tenor_mano_izq": {
+   "png": "tenor_mano_izq.png",
+   "ancho_px": 272,
+   "alto_px": 400,
+   "pivote_unity": [
+    0.5588,
+    0.78
+   ],
+   "posicion_en_el_modelo": [
+    40,
+    196
+   ],
+   "desde_la_cara": [
+    -160,
+    94
+   ]
+  },
+  "tenor_mano_der": {
+   "png": "tenor_mano_der.png",
+   "ancho_px": 272,
+   "alto_px": 400,
+   "pivote_unity": [
+    0.4412,
+    0.78
+   ],
+   "posicion_en_el_modelo": [
+    360,
+    196
+   ],
+   "desde_la_cara": [
+    160,
+    94
+   ]
+  },
+  "corista_cuerpo_luz": {
+   "png": "corista_cuerpo_luz.png",
+   "ancho_px": 592,
+   "alto_px": 632,
+   "pivote_unity": [
+    0.5,
+    0.8228
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -10
+   ]
+  },
+  "corista_burbuja_luz": {
+   "png": "corista_burbuja_luz.png",
+   "ancho_px": 848,
+   "alto_px": 1136,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    0
+   ]
+  },
+  "corista_cuerpo_fuego": {
+   "png": "corista_cuerpo_fuego.png",
+   "ancho_px": 592,
+   "alto_px": 632,
+   "pivote_unity": [
+    0.5,
+    0.8228
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -10
+   ]
+  },
+  "corista_burbuja_fuego": {
+   "png": "corista_burbuja_fuego.png",
+   "ancho_px": 848,
+   "alto_px": 1136,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    0
+   ]
+  },
+  "corista_cuerpo_viento": {
+   "png": "corista_cuerpo_viento.png",
+   "ancho_px": 592,
+   "alto_px": 632,
+   "pivote_unity": [
+    0.5,
+    0.8228
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -10
+   ]
+  },
+  "corista_burbuja_viento": {
+   "png": "corista_burbuja_viento.png",
+   "ancho_px": 848,
+   "alto_px": 1136,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    0
+   ]
+  },
+  "corista_cuerpo_mente": {
+   "png": "corista_cuerpo_mente.png",
+   "ancho_px": 592,
+   "alto_px": 632,
+   "pivote_unity": [
+    0.5,
+    0.8228
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -10
+   ]
+  },
+  "corista_burbuja_mente": {
+   "png": "corista_burbuja_mente.png",
+   "ancho_px": 848,
+   "alto_px": 1136,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    0
+   ]
+  },
+  "corista_cuerpo_oscuro": {
+   "png": "corista_cuerpo_oscuro.png",
+   "ancho_px": 592,
+   "alto_px": 632,
+   "pivote_unity": [
+    0.5,
+    0.8228
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -10
+   ]
+  },
+  "corista_burbuja_oscuro": {
+   "png": "corista_burbuja_oscuro.png",
+   "ancho_px": 848,
+   "alto_px": 1136,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    0
+   ]
+  },
+  "corista_cabeza": {
+   "png": "corista_cabeza.png",
+   "ancho_px": 448,
+   "alto_px": 432,
+   "pivote_unity": [
+    0.5,
+    0.1296
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -18
+   ]
+  },
+  "corista_boca": {
+   "png": "corista_boca.png",
+   "ancho_px": 192,
+   "alto_px": 208,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    -40
+   ]
+  },
+  "nota_que_cae": {
+   "png": "nota_que_cae.png",
+   "ancho_px": 384,
+   "alto_px": 400,
+   "pivote_unity": [
+    0.3958,
+    0.3
+   ],
+   "posicion_en_el_modelo": [
+    46,
+    66
+   ]
+  },
+  "semicorchea": {
+   "png": "semicorchea.png",
+   "ancho_px": 400,
+   "alto_px": 408,
+   "pivote_unity": [
+    0.38,
+    0.2941
+   ],
+   "posicion_en_el_modelo": [
+    46,
+    66
+   ]
+  },
+  "sombra_de_nota": {
+   "png": "sombra_de_nota.png",
+   "ancho_px": 304,
+   "alto_px": 160,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    60,
+    104
+   ]
+  },
+  "clave_que_se_esquiva": {
+   "png": "clave_que_se_esquiva.png",
+   "ancho_px": 464,
+   "alto_px": 464,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    60,
+    60
+   ]
+  },
+  "regalito": {
+   "png": "regalito.png",
+   "ancho_px": 432,
+   "alto_px": 464,
+   "pivote_unity": [
+    0.5,
+    0.3966
+   ],
+   "posicion_en_el_modelo": [
+    60,
+    70
+   ]
+  },
+  "organo": {
+   "png": "organo.png",
+   "ancho_px": 1184,
+   "alto_px": 1280,
+   "pivote_unity": [
+    0.5,
+    0.0437
+   ],
+   "posicion_en_el_modelo": [
+    200,
+    312
+   ]
+  },
+  "atrezo_columna": {
+   "png": "atrezo_columna.png",
+   "ancho_px": 416,
+   "alto_px": 1024,
+   "pivote_unity": [
+    0.5,
+    0.0312
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    240
+   ]
+  },
+  "atrezo_llama": {
+   "png": "atrezo_llama.png",
+   "ancho_px": 1056,
+   "alto_px": 560,
+   "pivote_unity": [
+    0.5,
+    0.0571
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    124
+   ]
+  },
+  "atrezo_latigo": {
+   "png": "atrezo_latigo.png",
+   "ancho_px": 1216,
+   "alto_px": 240,
+   "pivote_unity": [
+    0.5,
+    0.1333
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    44
+   ]
+  },
+  "telar_saco": {
+   "png": "telar_saco.png",
+   "ancho_px": 528,
+   "alto_px": 1852,
+   "pivote_unity": [
+    0.5,
+    0.0216
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    60
+   ]
+  },
+  "telar_luna": {
+   "png": "telar_luna.png",
+   "ancho_px": 576,
+   "alto_px": 1852,
+   "pivote_unity": [
+    0.5,
+    0.0216
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    60
+   ]
+  },
+  "telar_estrella": {
+   "png": "telar_estrella.png",
+   "ancho_px": 576,
+   "alto_px": 1812,
+   "pivote_unity": [
+    0.5,
+    0.0221
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    50
+   ]
+  },
+  "atrezo_rayo": {
+   "png": "atrezo_rayo.png",
+   "ancho_px": 192,
+   "alto_px": 1984,
+   "pivote_unity": [
+    0.5,
+    0.5
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    240
+   ]
+  },
+  "publico_muneco_a": {
+   "png": "publico_muneco_a.png",
+   "ancho_px": 384,
+   "alto_px": 816,
+   "pivote_unity": [
+    0.5,
+    0.0392
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    170
+   ]
+  },
+  "publico_muneco_b": {
+   "png": "publico_muneco_b.png",
+   "ancho_px": 384,
+   "alto_px": 816,
+   "pivote_unity": [
+    0.5,
+    0.0392
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    170
+   ]
+  },
+  "publico_muneco_c": {
+   "png": "publico_muneco_c.png",
+   "ancho_px": 384,
+   "alto_px": 816,
+   "pivote_unity": [
+    0.5,
+    0.0392
+   ],
+   "posicion_en_el_modelo": [
+    0,
+    170
+   ]
+  }
+ }
+}

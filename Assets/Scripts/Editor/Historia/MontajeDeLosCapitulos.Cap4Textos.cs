@@ -5,6 +5,16 @@ public static partial class MontajeDeLosCapitulos
 {
     private static IEnumerable<(string clave, string es, string en)> TextosDeCineCap4() => new[]
     {
+        // Los ladrones del claro: se ríen de ella, ella se hace la tonta y acaban por los suelos.
+        ("CAP4_LADRONES_01", "Mira qué tenemos aquí. Una chica sola, en pleno bosque.", "Well, look what we have here. A girl all alone, deep in the woods."),
+        ("CAP4_LADRONES_02", "Esa bolsa pesa mucho para ti, bonita. Te la llevamos nosotros.", "That bag looks heavy for you, sweetheart. We'll carry it for you."),
+        ("CAP4_LADRONES_03", "¡Ay, qué amables! ¿Sois los leñadores? Me han dicho que por aquí hay una bruja malísima.", "Oh, how kind! Are you the woodcutters? They told me there's a terribly wicked witch around here."),
+        ("CAP4_LADRONES_04", "Ni bruja ni leche. La bolsa. Ya.", "Witch, my foot. The bag. Now."),
+        ("CAP4_LADRONES_05", "Uy, es que dentro solo hay setas. Y un sapo. Bueno, antes era un señor.", "Oh, there's only mushrooms in it. And a toad. Well, he used to be a gentleman."),
+        ("CAP4_LADRONES_06", "…¿Un señor?", "…A gentleman?"),
+        ("CAP4_LADRONES_07", "Uno que también quería mi bolsa.", "One who also wanted my bag."),
+        ("CAP4_LADRONES_08", "¡La bruja! ¡Era la bruja! ¡Corre!", "The witch! It was the witch! Run!"),
+        ("CAP4_LADRONES_09", "¡Y decidle a vuestros amigos que la bruja no es malísima! …Es mala, a secas.", "And tell your friends the witch isn't terribly wicked! …Just wicked."),
         ("CAP4_ESTELA_01", "¿Y tú quién eres? ¿Otra pobre princesita perdida en el bosque?", "And who are you? Another poor little princess lost in the woods?"),
         ("CAP4_ESTELA_02", "Me llamo Will. Busco a la hechicera Estela.", "My name's Will. I'm looking for the sorceress Estela."),
         ("CAP4_ESTELA_03", "La tienes delante. Y si vienes a que convierta a alguien en sapo, ya no lo hago. El último acabó con vestido.", "You're looking at her. And if you've come to have someone turned into a toad, I don't do that anymore. The last one ended up in a dress."),

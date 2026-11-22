@@ -108,6 +108,8 @@ namespace Invector.vCharacterController
                 jumpPressed = true;
                 jumpPressedAt = Time.time;
             }
+            // Soltar pronto el botón acorta el salto en curso (pulsar suave, salto pequeño).
+            if (!source.JumpHeld && cc != null) cc.SoltarSalto();
         }
 
         public virtual void OnAnimatorMove()

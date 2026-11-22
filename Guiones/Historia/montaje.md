@@ -13,8 +13,19 @@ Grafo «Cap3»: 72 nodos.
 Grafo «Cap4»: 66 nodos.
 Cap. 2: despedida en la salida del pueblo (0 nodos de la despedida anterior retirados).
 Sendero: espera CH_Cap4_BACK_1 (antes CH_Cap2_BACK_1).
-Roster de MainWorld: 18 entradas de los capítulos.
-Personajes según la historia: 23 (41 situaciones).
+Roster de MainWorld: 20 entradas de los capítulos.
+Personajes según la historia: 25 (47 situaciones).
+  ⚠ «MISIONES SECUNDARIAS» abre varias ramas: las piezas van como rama aparte.
+  Secundary · tras «MISIONES SECUNDARIAS»: Ladron1 desde aquí: Cap. 4 · antes del bosque
+  Secundary · tras «MISIONES SECUNDARIAS»: Ladron2 desde aquí: Cap. 4 · antes del bosque
+  Cap4 · tras «4.1 · Hacia el Bosque Prohibido (probar desde aquí)»: Ladron1: vuelve a lo de siempre (acaba «Cap. 4 · antes del bosque»)
+  Cap4 · tras «4.1 · Hacia el Bosque Prohibido (probar desde aquí)»: Ladron2: vuelve a lo de siempre (acaba «Cap. 4 · antes del bosque»)
+  Cap4 · tras «4.1 · Hacia el Bosque Prohibido (probar desde aquí)»: Ladron1 desde aquí: Cap. 4 · rodean a Estela en su claro
+  Cap4 · tras «4.1 · Hacia el Bosque Prohibido (probar desde aquí)»: Ladron2 desde aquí: Cap. 4 · rodean a Estela en su claro
+  Cap4 · tras «4.2 · La casa entre raíces (probar desde aquí)»: Ladron1: vuelve a lo de siempre (acaba «Cap. 4 · rodean a Estela en su claro»)
+  Cap4 · tras «4.2 · La casa entre raíces (probar desde aquí)»: Ladron2: vuelve a lo de siempre (acaba «Cap. 4 · rodean a Estela en su claro»)
+  Cap4 · tras «4.2 · La casa entre raíces (probar desde aquí)»: Ladron1, lo de siempre: Cap. 4 · han huido
+  Cap4 · tras «4.2 · La casa entre raíces (probar desde aquí)»: Ladron2, lo de siempre: Cap. 4 · han huido
   Cap2 · enganchadas tras «26d.- «Ve a despedirte» (señal)»: Boticaria desde aquí: Cap. 2 · despedida de Will, Eldran desde aquí: Cap. 2–3 · espera en la salida del pueblo, Erika desde aquí: Cap. 2 · despedida de Will, Tomasa desde aquí: Cap. 2 · despedida de Will, Oliver desde aquí: Cap. 2 · tras despedirse de Will, Victoria desde aquí: Cap. 2 · despedida de Will
   Cap3 · enganchadas tras «3.1 · Camino del puerto, a pie (probar desde aquí)»: Boticaria: vuelve a lo de siempre (acaba «Cap. 2 · despedida de Will»), Erika: vuelve a lo de siempre (acaba «Cap. 2 · despedida de Will»), Tomasa: vuelve a lo de siempre (acaba «Cap. 2 · despedida de Will»), Oliver: vuelve a lo de siempre (acaba «Cap. 2 · tras despedirse de Will»), Victoria: vuelve a lo de siempre (acaba «Cap. 2 · despedida de Will»)
   Cap3 · enganchadas tras «3.2 · Sigue hacia la aldea del mar (probar desde aquí)»: Anselmo desde aquí: Cap. 3 · la aldea del mar, Benito desde aquí: Cap. 3 · la aldea del mar, Eusebio desde aquí: Cap. 3 · la aldea del mar, Fermin desde aquí: Cap. 3 · la aldea del mar, Remedios desde aquí: Cap. 3 · la aldea del mar, Rosario desde aquí: Cap. 3 · la aldea del mar
@@ -50,5 +61,5 @@ Aldea del mar: Rosario sentado en «Banco junto a la puerta» (SitHigh, raíz (2
 Aldea del mar: 7 piezas apoyadas en las mesas de la terraza.
 Aldea del mar: ruta de cajas de Remedios y marcas de las pistas de la madera.
 Pueblo de Will: la boticaria recoge hierbas en el campo y de vez en cuando las lleva a su carro.
-MainWorld: 42 marcas, 19 puntos del roster, 9 llegadas, 7 puntos de inspección y 27 piezas de atrezo.
-Textos: 301 claves en las tablas ES/EN.
+MainWorld: 44 marcas, 21 puntos del roster, 9 llegadas, 7 puntos de inspección y 27 piezas de atrezo.
+Textos: 311 claves en las tablas ES/EN.

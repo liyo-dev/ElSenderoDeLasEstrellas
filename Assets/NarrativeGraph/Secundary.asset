@@ -76,6 +76,8 @@ MonoBehaviour:
   - rid: 6540294600349712523
   - rid: 6540294747617493595
   - rid: 6540294747617493596
+  - rid: 6540294773546943092
+  - rid: 6540294773546943093
   applicableSceneNames:
   - MainWorld
   references:
@@ -268,6 +270,7 @@ MonoBehaviour:
         - sec-erika-revancha-0
         - pieza-npc_boticaria-usual-siempre-la-pocion-434108a8-8f50-407a-b807-74d22ff2a5ac
         - pieza-npc_pez-usual-aldea-del-mar-siempre-434108a8-8f50-407a-b807-74d22ff2a5ac
+        - pieza-npc_ladron1-fromhere-cap-4-antes-del-bosque-434108a8-8f50-407a-b807-74d22ff2a5ac
     - rid: 5623891481250759595
       type: {class: WaitQuestCompleteNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
@@ -1209,11 +1212,13 @@ MonoBehaviour:
         npcId: NPC_Erika
         otrosNpcs: []
         combatConfig: {fileID: 0}
+        perfilesPorNpc: []
         defeatEventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         waitForDefeat: 1
         restorePeacefulOnDefeat: 1
         llevarATerrenoAbierto: 1
         distanciaAlTerrenoAbierto: 20
+        radioDeArena: 0
     - rid: 6540294747617493595
       type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
@@ -1257,6 +1262,45 @@ MonoBehaviour:
         lines:
         - {fileID: 11400000, guid: 657a75c2779ef834b89f06de21c5cf5c, type: 2}
         - {fileID: 11400000, guid: 0ab5bb709b8d75845b98e0cdbda87df0, type: 2}
+    - rid: 6540294773546943092
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Ladron1 desde aqu\xED: Cap. 4 \xB7 antes del bosque"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_ladron1-fromhere-cap-4-antes-del-bosque-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 150}
+        outputs:
+        - pieza-npc_ladron2-fromhere-cap-4-antes-del-bosque-434108a8-8f50-407a-b807-74d22ff2a5ac
+        actorId: NPC_Ladron1
+        layer: 0
+        presence: 2
+        markId: 
+        lines: []
+    - rid: 6540294773546943093
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Ladron2 desde aqu\xED: Cap. 4 \xB7 antes del bosque"
+        chapter: 
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_ladron2-fromhere-cap-4-antes-del-bosque-434108a8-8f50-407a-b807-74d22ff2a5ac
+        position: {x: 40, y: 260}
+        outputs: []
+        actorId: NPC_Ladron2
+        layer: 0
+        presence: 2
+        markId: 
+        lines: []
     - rid: 7719302845561928001
       type: {class: WaitQuestCompleteNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:

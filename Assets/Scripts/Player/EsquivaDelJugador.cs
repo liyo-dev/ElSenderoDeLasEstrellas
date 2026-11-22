@@ -5,8 +5,8 @@ using Invector.vCharacterController;
 
 /// <summary>
 /// Esquiva del jugador: un dash rodando hacia donde apunta el stick (sin stick, hacia atrás): sale
-/// disparado y frena al final, dejando un rastro detrás mientras dura. Se devuelve el control a mitad del clip, sin frenar a cero y
-/// sin fundido largo, y si se mantiene el stick sigue corriendo al acabar. Con unos instantes de
+/// disparado y frena al final, dejando un rastro detrás mientras dura. La rodada completa el giro
+/// durante el impulso y funde con la locomoción que pide el stick al salir. Con unos instantes de
 /// invulnerabilidad al empezar y una espera corta antes de la siguiente. El movimiento lo hace <see cref="VolteretaDelJugador"/> (recorta contra
 /// paredes, aterriza en el suelo real y bloquea moverse y lanzar mientras dura); la animación se
 /// elige entre cuatro (adelante, atrás, izquierda, derecha) según la dirección respecto a donde
@@ -25,13 +25,9 @@ public class EsquivaDelJugador : MonoBehaviour
     [Header("Movimiento")]
     [Tooltip("Metros que recorre la esquiva (menos si hay una pared).")]
     [SerializeField, Min(0.5f)] private float distancia = DistanciaPorDefecto;
-    [Tooltip("Segundos del clip entero (el clip se acelera para durar eso); el control vuelve antes, en 'devuelveElControlEn'.")]
-    [SerializeField, Min(0.1f)] private float duracionAtras = DuracionPorDefecto;
     [Tooltip("Segundos de desplazamiento del dash en suelo y en aire.")]
     [SerializeField, Min(0.1f)] private float duracionDelDash = 0.22f;
-    [Tooltip("Punto del clip (0-1) en el que acaba el avance y se devuelve el control; lo que queda del clip se corta.")]
-    [SerializeField, Range(0.3f, 1f)] private float devuelveElControlEn = DevuelveElControlPorDefecto;
-    [Tooltip("Velocidad de la animación de rodar (1 = la del clip). Más rápida = esquiva más corta: el recorrido va con el clip.")]
+    [Tooltip("Multiplicador de la rodada si el Animator no expone la duración del clip.")]
     [SerializeField, Range(0.5f, 4f)] private float velocidad = VelocidadPorDefecto;
     [Tooltip("Saltito al rodar, en alturas de la cabeza (0 = pegado al suelo).")]
     [SerializeField, Range(0f, 1f)] private float saltito = SaltitoPorDefecto;
@@ -39,11 +35,10 @@ public class EsquivaDelJugador : MonoBehaviour
     /// <summary>Valores de partida (el montaje los vuelve a poner en el cuerpo del grupo).</summary>
     public const float VelocidadPorDefecto = 1.4f;
     public const float DistanciaPorDefecto = 4.5f;
-    public const float DuracionPorDefecto = 0.5f;
     public const float EsperaPorDefecto = 0.18f;
     /// Fundido (s) del clip de rodar al entrar, y a la locomoción al salir con el stick mantenido o sin él.
     public const float FundidoDeEntrada = 0.04f;
-    public const float FundidoDeSalidaCorriendo = 0.05f;
+    public const float FundidoDeSalidaCorriendo = 0.08f;
     public const float FundidoDeSalidaParado = 0.12f;
     public const float SaltitoPorDefecto = 0f;
     [Tooltip("Inclinación mínima del stick para rodar hacia él; por debajo, rueda hacia atrás.")]
@@ -88,7 +83,7 @@ public class EsquivaDelJugador : MonoBehaviour
     public const float DistanciaDelSaltoPorDefecto = 3.2f;
     public const float DuracionDelSaltoPorDefecto = 0.7f;
     public const float DistanciaRodandoPorDefecto = 2.2f;
-    public const float DevuelveElControlPorDefecto = 0.7f;
+    private const float FinDelGiro = 0.95f;
 
     /// <summary>Pose del salto del león (la crea la tabla de poses de actuación).</summary>
     public const string EstadoDelSaltoPorDefecto = "Esquiva_Salto";
@@ -139,11 +134,7 @@ public class EsquivaDelJugador : MonoBehaviour
     private bool _dashAereo;
     private bool _dashAereoConsumido;
     private float _finDelDashAereo;
-    private Vector3 _direccion;
-    private Vector3 _entradaAntes;
-    private Vector3 _velocidadHorizontalAntes;
-    private float _velocidadAntes, _magnitudAntes;
-    private static readonly int HashInputMagnitude = Animator.StringToHash("InputMagnitude");
+    private float _velocidadAntes;
     private float _libreDesde;
     private float _invulnerableHasta = -1f;
     private float _guardadaHasta = -1f;
@@ -225,7 +216,7 @@ public class EsquivaDelJugador : MonoBehaviour
     private float VelocidadPara(float largo, float segundos)
     {
         if (largo <= 0.01f || segundos <= 0.01f) return velocidad;
-        return Mathf.Clamp(largo / segundos, 0.5f, 4f);
+        return largo / segundos;
     }
 
     private bool TieneParametroFloat(int hash)
@@ -294,7 +285,7 @@ public class EsquivaDelJugador : MonoBehaviour
         Vector3 direccion = DireccionEnMundo(stick);
         bool conStick = stick.sqrMagnitude >= stickMinimo * stickMinimo;
         bool enAire = _controller && !_controller.PisandoSuelo;
-        GuardarImpulso();
+        _velocidadAntes = _controller ? _controller.VelocidadDeMovimiento : 0f;
         _rastroDuranteImpulso = !enAire && !(saltoDelLeon && conStick);
         float ventanaInvulnerable = segundosInvulnerable;
 
@@ -336,17 +327,19 @@ public class EsquivaDelJugador : MonoBehaviour
         else
         {
             string estado = EstadoPara(direccion, out float largo);
-            if (_tieneVelocidad) _animator.SetFloat(_hashVelocidad, VelocidadPara(largo, duracionAtras));
+            // El mismo reloj lleva el clip y el avance, para devolver el control con los pies abajo.
+            float duracionDelClip = duracionDelDash / FinDelGiro;
+            if (_tieneVelocidad) _animator.SetFloat(_hashVelocidad, VelocidadPara(largo, duracionDelClip));
             var rodar = new VolteretaDelJugador.Tramo
             {
                 altura = saltito,
                 desplazamiento = direccion * distancia,
                 estado = estado,
-                tramoDeMovimiento = new Vector2(0f, devuelveElControlEn),
-                terminaEn = devuelveElControlEn,
-                duracionFija = duracionDelDash / devuelveElControlEn,
+                tramoDeMovimiento = new Vector2(0f, FinDelGiro),
+                terminaEn = FinDelGiro,
+                duracionFija = duracionDelClip,
                 avance = VolteretaDelJugador.Avance.Frenando,
-                velocidadDeSalida = conStick ? Mathf.Max(0f, Vector3.Dot(_velocidadHorizontalAntes, direccion)) : 0f,
+                velocidadDeSalida = conStick && _controller ? Mathf.Max(0f, Vector3.Dot(_controller.VelocidadHorizontal, direccion)) : 0f,
                 fundidoDeEntrada = FundidoDeEntrada,
                 fundidoDeSalida = conStick ? FundidoDeSalidaCorriendo : FundidoDeSalidaParado
             };
@@ -354,7 +347,6 @@ public class EsquivaDelJugador : MonoBehaviour
             ventanaInvulnerable = Mathf.Min(ventanaInvulnerable, duracionDelDash);
         }
 
-        _direccion = direccion;
         _mia = true;
         Rastro(true);
         _invulnerableHasta = Time.time + ventanaInvulnerable;
@@ -382,28 +374,16 @@ public class EsquivaDelJugador : MonoBehaviour
         _mia = false;
         Rastro(false);
         _libreDesde = Time.time + espera;
+        // Los clips de rodar son cíclicos. El fundido conserva la pose de salida sin iniciar otro giro.
+        if (_rastroDuranteImpulso && _tieneVelocidad) _animator.SetFloat(_hashVelocidad, 0f);
         if (!_dashAereo) RecuperarImpulso();
         _dashAereo = false;
     }
 
-    /// La carrera que llevaba al empezar, para seguir corriendo al acabar en vez de arrancar de cero.
-    private void GuardarImpulso()
-    {
-        _entradaAntes = _controller ? _controller.EntradaSuavizada : Vector3.zero;
-        _velocidadAntes = _controller ? _controller.VelocidadDeMovimiento : 0f;
-        _velocidadHorizontalAntes = _controller ? _controller.VelocidadHorizontal : Vector3.zero;
-        _magnitudAntes = _animator ? _animator.GetFloat(HashInputMagnitude) : 0f;
-    }
-
     private void RecuperarImpulso()
     {
-        if (!_controller || _velocidadAntes <= 0.01f) return;
-        Vector2 stick = GamepadInputReader.Move;
-        if (stick.sqrMagnitude < stickMinimo * stickMinimo || (_acciones && !_acciones.CanUse(PlayerAbility.Move))) return;
-        _controller.RecuperarImpulso(_entradaAntes, _velocidadAntes);
-        Vector3 direccion = DireccionEnMundo(stick);
-        _controller.RecuperarVelocidadHorizontal(direccion * Mathf.Max(0f, Vector3.Dot(_velocidadHorizontalAntes, direccion)));
-        if (_animator) _animator.SetFloat(HashInputMagnitude, _magnitudAntes);
+        if (!_controller || (_acciones && !_acciones.CanUse(PlayerAbility.Move))) return;
+        _controller.RecuperarImpulso(GamepadInputReader.Move, _velocidadAntes, CamaraDeMovimiento());
     }
 
     /// Dirección plana en mundo: el stick respecto a la cámara o, sin stick, hacia atrás.
@@ -416,12 +396,18 @@ public class EsquivaDelJugador : MonoBehaviour
             return atras.sqrMagnitude > 0.0001f ? atras.normalized : Vector3.back;
         }
 
-        if (_camara == null || !_camara.isActiveAndEnabled) _camara = Camera.main;
-        Transform referencia = _camara != null ? _camara.transform : transform;
+        Transform referencia = CamaraDeMovimiento();
+        if (!referencia) referencia = transform;
         Vector3 delante = referencia.forward; delante.y = 0f;
         Vector3 derecha = referencia.right; derecha.y = 0f;
         Vector3 dir = delante.normalized * stick.y + derecha.normalized * stick.x;
         return dir.sqrMagnitude > 0.0001f ? dir.normalized : -transform.forward;
+    }
+
+    private Transform CamaraDeMovimiento()
+    {
+        if (!_camara || !_camara.isActiveAndEnabled) _camara = Camera.main;
+        return _camara ? _camara.transform : null;
     }
 
     /// La animación que corresponde a la dirección vista desde el personaje (y lo que dura su clip).

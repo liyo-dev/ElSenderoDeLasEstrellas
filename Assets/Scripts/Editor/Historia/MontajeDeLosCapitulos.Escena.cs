@@ -398,7 +398,8 @@ public static partial class MontajeDeLosCapitulos
                 if (!string.IsNullOrEmpty(i.Senal))
                 {
                     var s = go.AddComponent<SignalEmitter>();
-                    s.eventKey = i.Senal; s.trigger = SignalEmitter.TriggerType.OnInteract; s.once = true;
+                    // La señal sale al cerrar la caja: si saliera al abrirla, el grafo seguiría con la caja abierta.
+                    s.eventKey = i.Senal; s.trigger = SignalEmitter.TriggerType.OnInteractFinished; s.once = true;
                 }
                 if (!string.IsNullOrEmpty(i.Mision) && i.Paso >= 0)
                 {

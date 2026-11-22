@@ -64,11 +64,15 @@ public sealed class CamaraDelCoro : MonoBehaviour
     [SerializeField] private float vueltaDeLaDespedida = 200f;
     [Tooltip("Metros que sube durante la vuelta.")]
     [SerializeField] private float subidaDeLaDespedida = 8f;
+    [Tooltip("El Tenor al que acaba mirando la despedida (vacío: acaba mirando al grupo).")]
+    [SerializeField] private Transform tenorDeLaDespedida;
+    [Tooltip("Dónde queda el Tenor al acabar, de izquierda (0) a derecha (1) de la pantalla: a un lado de la pregunta de repetir.")]
+    [SerializeField, Range(0.5f, 0.95f)] private float tenorEnPantalla = 0.82f;
 
     private enum Modo { Ninguno, Presentacion, Huida, Despedida }
 
     private System.Action _alAcabarLaDespedida;
-    private float _despedidaDesde, _angulo0, _radio0, _altura0;
+    private float _despedidaDesde, _angulo0, _radio0, _altura0, _vuelta;
     private Vector3 _centro;
 
     private Camera _camara;
@@ -128,6 +132,16 @@ public sealed class CamaraDelCoro : MonoBehaviour
         d.y = 0f;
         _radio0 = Mathf.Max(4f, d.magnitude);
         _angulo0 = Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg;
+        _vuelta = vueltaDeLaDespedida;
+        if (tenorDeLaDespedida != null)
+        {
+            // Acaba detrás del grupo, de espaldas al Tenor: la vuelta más parecida a la pedida que deja ahí.
+            Vector3 desdeElTenor = _centro - tenorDeLaDespedida.position;
+            desdeElTenor.y = 0f;
+            float anguloFinal = Mathf.Atan2(desdeElTenor.x, desdeElTenor.z) * Mathf.Rad2Deg;
+            float delta = Mathf.DeltaAngle(_angulo0, anguloFinal);
+            _vuelta = delta + 360f * Mathf.Round((vueltaDeLaDespedida - delta) / 360f);
+        }
         _despedidaDesde = Time.time;
         _alAcabarLaDespedida = alAcabar;
         _modo = Modo.Despedida;
@@ -137,10 +151,19 @@ public sealed class CamaraDelCoro : MonoBehaviour
     {
         float u = Mathf.Clamp01((Time.time - _despedidaDesde) / segundosDeLaDespedida);
         float s = Mathf.SmoothStep(0f, 1f, u);
-        float angulo = (_angulo0 + vueltaDeLaDespedida * s) * Mathf.Deg2Rad;
+        float angulo = (_angulo0 + _vuelta * s) * Mathf.Deg2Rad;
         float radio = Mathf.Lerp(_radio0, _radio0 * 2.2f, s);
         Vector3 pos = _centro + new Vector3(Mathf.Sin(angulo) * radio, Mathf.Lerp(_altura0, _altura0 + subidaDeLaDespedida, s), Mathf.Cos(angulo) * radio);
-        _camara.transform.SetPositionAndRotation(pos, Quaternion.LookRotation(_centro + Vector3.up * 1.5f - pos, Vector3.up));
+        Quaternion giro = Quaternion.LookRotation(_centro + Vector3.up * 1.5f - pos, Vector3.up);
+        if (tenorDeLaDespedida != null)
+        {
+            // Al final, el Tenor a un lado del cuadro: se mira a él y se gira a la izquierda lo justo.
+            float medioCampo = Mathf.Atan(Mathf.Tan(_camara.fieldOfView * 0.5f * Mathf.Deg2Rad) * _camara.aspect);
+            float hacia = Mathf.Atan((tenorEnPantalla * 2f - 1f) * Mathf.Tan(medioCampo)) * Mathf.Rad2Deg;
+            Quaternion alTenor = Quaternion.AngleAxis(-hacia, Vector3.up) * Quaternion.LookRotation(tenorDeLaDespedida.position - pos, Vector3.up);
+            giro = Quaternion.Slerp(giro, alTenor, s * s);
+        }
+        _camara.transform.SetPositionAndRotation(pos, giro);
         if (u < 1f || _alAcabarLaDespedida == null) return;
         var alAcabar = _alAcabarLaDespedida;
         _alAcabarLaDespedida = null;

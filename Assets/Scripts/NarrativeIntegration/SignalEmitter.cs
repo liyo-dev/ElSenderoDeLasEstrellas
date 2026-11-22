@@ -19,7 +19,8 @@ public class SignalEmitter : MonoBehaviour
         SendNow,        // Al arrancar la escena.
         PhysicsTrigger, // OnTriggerEnter de un Collider con el tag indicado.
         OnInteract,     // Interactable.OnInteract de este mismo GameObject.
-        OnEnemyDied     // Damageable.OnDied de este mismo GameObject (prefab de enemigo).
+        OnEnemyDied,    // Damageable.OnDied de este mismo GameObject (prefab de enemigo).
+        OnInteractFinished // Interactable.OnFinished: cuando se cierra el diálogo que abre la interacción.
     }
 
     [Tooltip("Clave de la señal que emitirá el grafo (la misma que espera un WaitCustomEventNode o similar).")]
@@ -66,7 +67,7 @@ public class SignalEmitter : MonoBehaviour
     {
         ResolveSignals();
 
-        if (trigger == TriggerType.OnInteract)
+        if (trigger == TriggerType.OnInteract || trigger == TriggerType.OnInteractFinished)
             _interactable = GetComponent<Interactable>();
         else if (trigger == TriggerType.OnEnemyDied)
             _damageable = GetComponent<Damageable>();
@@ -82,7 +83,10 @@ public class SignalEmitter : MonoBehaviour
     private void OnEnable()
     {
         if (_interactable != null)
-            _interactable.OnInteract.AddListener(HandleInteract);
+        {
+            if (trigger == TriggerType.OnInteractFinished) _interactable.OnFinished?.AddListener(HandleFinished);
+            else _interactable.OnInteract.AddListener(HandleInteract);
+        }
         if (_damageable != null)
             _damageable.OnDied += HandleDied;
     }
@@ -90,7 +94,10 @@ public class SignalEmitter : MonoBehaviour
     private void OnDisable()
     {
         if (_interactable != null)
+        {
             _interactable.OnInteract.RemoveListener(HandleInteract);
+            _interactable.OnFinished?.RemoveListener(HandleFinished);
+        }
         if (_damageable != null)
             _damageable.OnDied -= HandleDied;
     }
@@ -155,6 +162,10 @@ public class SignalEmitter : MonoBehaviour
         if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
         Send();
     }
+
+    // La señal sale al cerrar el diálogo: lo que el grafo haga a continuación (rótulos, llevar al
+    // jugador, cinemáticas, apagar este punto por tramo) no pisa una caja de diálogo abierta.
+    private void HandleFinished() => HandleInteract(null);
 
     private void HandleInteract(GameObject _)
     {

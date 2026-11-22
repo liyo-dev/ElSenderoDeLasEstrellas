@@ -9,6 +9,13 @@ public class PlayerSaveData
     public string lastSpawnAnchorId;
 
     /// <summary>
+    /// Clave de texto del lugar donde se guardó (la del farol o la de la zona en que estaba el
+    /// jugador). La enseña la ranura del menú; vacía en partidas anteriores (se cae al último
+    /// lugar conocido).
+    /// </summary>
+    public string lugarDelGuardado;
+
+    /// <summary>
     /// Dónde estaba el jugador en un auto-guardado: punto del NavMesh, rumbo y escena del suelo que
     /// pisaba. Al cargar se aparece ahí si la escena está cargada y el punto sigue valiendo; si no,
     /// en <see cref="lastSpawnAnchorId"/>. Los guardados en un punto de guardado no la llevan.

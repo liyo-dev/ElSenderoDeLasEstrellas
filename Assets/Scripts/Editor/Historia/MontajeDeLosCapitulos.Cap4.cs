@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
 using UnityEditor.Events;
@@ -46,6 +46,7 @@ public static partial class MontajeDeLosCapitulos
     }
 
     private const string Estela = "_ESTELA", Liam = "_LIAM";
+    private const string Ladron1 = "NPC_Ladron1", Ladron2 = "NPC_Ladron2";
 
     private static Capitulo MontarAssetsCap4(StringBuilder informe)
     {
@@ -76,6 +77,11 @@ public static partial class MontajeDeLosCapitulos
         string dCama = DialogoDeCaja("DLG_CAP4_CAMA", "DLG_CAP4_CAMA",
             W("Un jergón entre las raíces. Huele a humo y a manzana.", "A straw mattress among the roots. It smells of smoke and apples."),
             L("CHAR_ESTELA", "Duerme. Mañana empieza tu entrenamiento.", "Sleep. Your training starts tomorrow."));
+        // Frases de Estela en caja: un bocadillo del grafo sale sobre el jugador, no sobre ella.
+        string dCasa = DialogoDeCaja("DLG_CAP4_CASA", "DLG_CAP4_CASA",
+            L("CHAR_ESTELA", "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jergón.", "This is my home. Look around all you like, but don't touch dinner. Sleep on the straw mattress."));
+        string dFigura = DialogoDeCaja("DLG_CAP4_FIGURA", "DLG_CAP4_FIGURA",
+            L("CHAR_ESTELA", "¡Te has salvado tú y has chamuscado a quien tenías que proteger!", "You saved yourself and scorched the ones you were meant to protect!", NPCEmotion.Annoyed));
         string dBota = DialogoDeCaja("DLG_CAP4_BOTA", "DLG_CAP4_BOTA",
             W("¡La tengo! Enganchada entre dos ramas.", "Got it! Caught between two branches.", NPCEmotion.Happy));
 
@@ -122,6 +128,27 @@ public static partial class MontajeDeLosCapitulos
         s_puntos.Add(new PuntoDeRoster { Cap = Cap4, SpawnId = "SPAWN__LIAM", Pos = new Vector3(-300f, float.NaN, 98f), Rumbo = 240f });
         s_papeles.Add(new Papel { SpawnId = "SPAWN__ESTELA", Prefab = "Assets/Prefabs/_ESTELA.prefab", Nombre = "_ESTELA", Id = Estela, Flag = FlagEstelaAparece, NavMesh = false });
         s_papeles.Add(new Papel { SpawnId = "SPAWN__LIAM", Prefab = "Assets/Prefabs/_LIAM.prefab", Nombre = "_LIAM", Id = Liam, Flag = FlagLiamAparece, NavMesh = false });
+
+        // Los dos ladrones de la entrada de Estela: están en su claro mientras dura el encuentro y se
+        // van al acabar (la cinemática solo los deja fuera de cuadro, INC-1251).
+        M(Cap4, "Cap4_Claro_Ladron1", -322.5f, 62.8f, 60f);
+        M(Cap4, "Cap4_Claro_Ladron2", -318.2f, 66.6f, 220f);
+        s_puntos.Add(new PuntoDeRoster { Cap = Cap4, SpawnId = "SPAWN_Ladron1", Pos = new Vector3(-322.5f, float.NaN, 62.8f), Rumbo = 60f });
+        s_puntos.Add(new PuntoDeRoster { Cap = Cap4, SpawnId = "SPAWN_Ladron2", Pos = new Vector3(-318.2f, float.NaN, 66.6f), Rumbo = 220f });
+        s_papeles.Add(new Papel { SpawnId = "SPAWN_Ladron1", Prefab = "Assets/_NPCs/Combat/Boy_Pirate.prefab", Nombre = "Ladron1", Id = Ladron1, Flag = FlagEstelaAparece, NavMesh = false });
+        s_papeles.Add(new Papel { SpawnId = "SPAWN_Ladron2", Prefab = "Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab", Nombre = "Ladron2", Id = Ladron2, Flag = FlagEstelaAparece, NavMesh = false });
+        TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Dialogos, "CHAR_LADRON", "Ladrón", "Thief");
+        foreach (var (l, marca) in new[] { (Ladron1, "Cap4_Claro_Ladron1"), (Ladron2, "Cap4_Claro_Ladron2") })
+            s_personajes.Add(new SituacionesDe
+            {
+                Actor = l,
+                Entradas =
+                {
+                    ("Cap. 4 · antes del bosque", Tramo(null, S4.Bosque), ActorPresence.Away, null, null),
+                    ("Cap. 4 · rodean a Estela en su claro", Tramo(S4.Bosque, S4.Casa), ActorPresence.AtMark, marca, null),
+                    ("Cap. 4 · han huido", Tramo(S4.Casa), ActorPresence.Away, null, null),
+                },
+            });
 
         // Liam les sigue de lejos antes de unirse: la loma de la campana, el saliente del Gólem y la bifurcación.
         s_personajes.Add(new SituacionesDe
@@ -179,7 +206,7 @@ public static partial class MontajeDeLosCapitulos
             // 4.2 · La casa entre raíces
             P("casa", "4.2 · La casa entre raíces (probar desde aquí)", Emitir(S4.Casa)),
             P("casa-noche", "4.2 · Anochece en el claro", GameStepNode.For(new PedirHoraDelDia { targetTime = DayNightCycle.TimeOfDay.Night })),
-            P("casa-boc", "4.2 · «Puedes mirar, pero no toques la cena»", Bocadillo("CAP4_BOC_CASA", "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jergón.", "This is my home. Look around all you like, but don't touch dinner. Sleep on the straw mattress.", 4f)),
+            P("casa-boc", "4.2 · «Puedes mirar, pero no toques la cena»", Dialogo(dCasa, Estela)),
             P("dormir", "4.2 · Will se acuesta en el jergón", Esperar(S4.Dormir)),
             P("rotulo-manana", "4.2 · Rótulo: a la mañana siguiente", Rotulo("CAP4_ROTULO_MANANA", "A la mañana siguiente…", "The next morning…")),
             P("manana-hora", "4.2 · Amanece", GameStepNode.For(new PedirHoraDelDia { targetTime = DayNightCycle.TimeOfDay.Morning, immediate = true })),
@@ -239,7 +266,7 @@ public static partial class MontajeDeLosCapitulos
         {
             P("figura-0", "4.3 · Una figura de barro, chamuscada", Esperar(S4.Figura)),
             P("figura-1", "4.3 · Queda apuntado", Flag(FlagFigurasChamuscadas)),
-            P("figura-2", "4.3 · Estela: «¡Las tenías que proteger!»", Bocadillo("CAP4_BOC_FIGURA", "¡Te has salvado tú y has chamuscado a quien tenías que proteger!", "You saved yourself and scorched the ones you were meant to protect!", 3.5f), "figura-0"),
+            P("figura-2", "4.3 · Estela: «¡Las tenías que proteger!»", Dialogo(dFigura, Estela), "figura-0"),
         });
         c4.Notas.Add(("nota", "Cap. 4 · El Bosque Prohibido y el Gólem (GDD § 5.8). Lo monta El Sendero ▸ Historia ▸ Montar los capítulos 3 y 4: los nodos «cap4-…» se rehacen. " +
                               "Escena: claro de Estela (−330, 65), arena del Gólem (−95, 65) con el barro, bifurcación junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."));

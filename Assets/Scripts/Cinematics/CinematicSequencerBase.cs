@@ -510,6 +510,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         }
 
         bool done = false;
+        bool cortado = false;
 
         UnityEngine.Events.UnityAction cutHandler = null;
         UnityEngine.Events.UnityAction endHandler = null;
@@ -523,6 +524,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             // primer plano tarda, enseñaba la cámara del jugador con el cielo y la luz de la escena
             // de la cinemática (el mundo en negro con Will y los cofres). Ver INC-987.
             if (recogerPantallaTapada && SueltaElTelonEnSuPrimerPlano) Telon.Cerrar(ClaveTelon);
+            cortado = true;
             onCutPoint?.Invoke();
         };
         endHandler = () =>
@@ -539,8 +541,23 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         tm.onTransitionEnd += endHandler;
         tm.Transition(settings, 0f);
 
-        yield return new WaitUntil(() => done);
+        // Si el TransitionManager no llega a avisar (otra transición la pisa, se para o se
+        // destruye), la cinemática no se queda colgada: pasado el tope se hace el corte que falte
+        // y se sigue. Tiempo real: con el juego en pausa o en cámara lenta el tope no se alarga.
+        float tope = Time.unscaledTime + TopeDeTransicion;
+        while (!done && Time.unscaledTime < tope) yield return null;
+        if (!done)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning($"[CinematicSequencerBase] {name}: la transición no ha avisado en {TopeDeTransicion:0} s; se sigue sin ella.");
+#endif
+            ClearTransitionHandlers();
+            if (!cortado) onCutPoint?.Invoke();
+        }
     }
+
+    // Segundos que se espera a una transición de entrada o salida antes de seguir sin ella.
+    private const float TopeDeTransicion = 8f;
 
     // ── Telón ────────────────────────────────────────────────────────────────
 

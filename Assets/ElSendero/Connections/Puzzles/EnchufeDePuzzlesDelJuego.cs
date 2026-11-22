@@ -35,8 +35,11 @@ public static class EnchufeDePuzzlesDelJuego
     private static void SonidoDeLoQueCae(AudioClip sonido, Vector3 donde, float volumen)
         => AudioService.Instance?.PlaySFX(sonido, volumen);
 
-    private static void GolpeDeLoQueCae(Vector3 centro, float radio, float dano)
-        => DanoEnZona.GolpearEnCilindro(centro, radio, 2.2f, 0.3f, dano, 5f);
+    // Alto 0: hasta 2,2 m (alcanza aunque se salte); con alto, solo hasta ahí (algo bajo que se salta).
+    private static void GolpeDeLoQueCae(Vector3 centro, float radio, float dano, float alto)
+        => DanoEnZona.GolpearEnCilindro(centro, radio, alto > 0f ? alto : 2.2f, 0.3f, dano, 5f);
+
+    private static Transform CuerpoDeQuienVaAlMando() => ControlDelJugador.CuerpoDelJugador?.transform;
 
     private static Transform RaizDelJugador(Collider col)
         => ControlDelJugador.EsElJugador(col) ? ControlDelJugador.CuerpoDelJugador?.transform : null;
@@ -91,6 +94,8 @@ public static class EnchufeDePuzzlesDelJuego
         CueDrop.Strike = GolpeDeLoQueCae;
         CueDrop.PlaySound = SonidoDeLoQueCae;
         CueDrop.TargetPosition = PosicionDelJugador;
+        FollowSpot.Target = PosicionDelJugador;
+        BeatSway.Rider = CuerpoDeQuienVaAlMando;
         BeatGate.QuedaAlguienDetras = QuedaAlguienDetras;
         SidePlaneZone.ResolvePlayerRoot = RaizDelJugador;
         SidePlaneZone.ZoneEntered += AlEntrarEnElLateral;

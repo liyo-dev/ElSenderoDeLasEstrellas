@@ -15,9 +15,9 @@ MonoBehaviour:
   nombre: Cap4_01_Estela
   escena: MainWorld
   rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap4_01_Estela.guion.txt
-  duracion: 68.24923
+  duracion: 105.67821
   presentacion: 1
-  huella: "2026-11-18 15:27 \xB7 3531f5ed9ac01a9126e6e4b62a3cd418"
+  huella: "2026-11-22 00:30 \xB7 cdd7ebab4508f2902a72a75700df6841"
   actores:
   - id: Player
     prefab: Assets/Prefabs/_WILL.prefab
@@ -31,244 +31,441 @@ MonoBehaviour:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: -318, y: 36.29455, z: 70}
+      punto: {x: -320, y: 36.032467, z: 64.5}
       actor: 
-    - t: 2.604
+    - t: 0.75
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 4.325
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 8.355
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 2.7540002
+    - t: 14.074999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 16.505
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 15.788419
+    - t: 21.47
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 23.47
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 27.515562
+    - t: 28.354
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 31.865667
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 35.730663
+    - t: 40.433002
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 39.92291
+    - t: 40.583004
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 46.714745
+    - t: 53.617397
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 59.93352
+    - t: 65.19454
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 62.832294
+    - t: 73.35964
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 77.501884
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 84.293724
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 97.362495
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 100.26127
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
     cabezas:
-    - t: 2.604
+    - t: 0.7
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 4.2749996
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 8.304999
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 2.7040002
+    - t: 14.024999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 16.455
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 6.80747
+    - t: 21.42
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 23.42
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 15.738419
+    - t: 28.304
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 31.815668
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 23.008623
+    - t: 40.433002
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 24.508623
+    - t: 40.533005
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 27.465563
+    - t: 44.63647
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 35.680664
+    - t: 53.567398
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 39.87291
+    - t: 60.7376
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 46.664745
+    - t: 62.1876
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 48.893314
+    - t: 65.14454
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 56.06352
+    - t: 73.30964
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 59.883522
+    - t: 77.45188
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
-    - t: 62.782295
+    - t: 84.24372
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 86.3723
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 93.4925
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 97.31249
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 100.211266
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: _ESTELA
     animacion:
     - fundido: 0
-      t: 3.3040001
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 6.7574697
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 6.8374696
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 9.994409
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 16.338419
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 22.958624
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 23.038624
-      tipo: 2
-      estado: Question01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 24.208624
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0.4
-      t: 24.458624
-      tipo: 1
-      estado: Ofrecer
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 46.564743
-      tipo: 0
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 47.264744
-      tipo: 2
-      estado: HeadShake02
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0.4
-      t: 48.843315
-      tipo: 1
-      estado: ManoAlPecho
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0.4
-      t: 56.01352
-      tipo: 1
-      estado: Ofrecer
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 59.78352
-      tipo: 0
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 60.48352
+      t: 4.8749995
       tipo: 2
       estado: HeadNod01
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
+    - fundido: 0
+      t: 8.905
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 14.624999
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 21.8
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 22.52
+      tipo: 2
+      estado: SenseSomethingStart_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: gasp
+      origen: 0
+    - fundido: 0
+      t: 28.904001
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 32.41567
+      tipo: 2
+      estado: Sobresalto01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 37.055668
+      tipo: 2
+      estado: HandClap01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 41.133003
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 44.58647
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 44.666473
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 47.82341
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 49.33647
+      tipo: 2
+      estado: Idle03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
+      t: 54.167397
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 57.217396
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
+      t: 60.6876
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 60.7676
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 61.9376
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.4
+      t: 62.1376
+      tipo: 1
+      estado: Ofrecer
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 84.14372
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 84.84372
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.4
+      t: 86.322296
+      tipo: 1
+      estado: ManoAlPecho
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.4
+      t: 93.4425
+      tipo: 1
+      estado: Ofrecer
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 97.212494
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 97.91249
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
     caras:
-    - t: 3.204
+    - t: 8.805
       emocion: sorpresa
       dura: 2
-    - t: 6.7574697
+    - t: 21.74
+      emocion: sorpresa
+      dura: 1.2
+    - t: 22.52
+      emocion: preocupado
+      dura: 0
+    - t: 32.315666
+      emocion: sorpresa
+      dura: 2
+    - t: 41.033
+      emocion: sorpresa
+      dura: 2
+    - t: 44.58647
       emocion: sorpresa
       dura: 3.5869389
-    - t: 22.958624
+    - t: 60.6876
       emocion: confuso
       dura: 1.6
-    - t: 48.843315
+    - t: 86.322296
       emocion: decidido
       dura: 7.270204
-    - t: 56.01352
+    - t: 93.4425
       emocion: decidido
       dura: 4.17
     visible: []
@@ -281,142 +478,222 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: -320, y: 36.032467, z: 64.5}
-    - t: 9.944408
+    - t: 47.77341
       p: {x: -320, y: 36.032467, z: 64.5}
-    - t: 10.224033
+    - t: 48.053036
       p: {x: -319.85333, y: 36.02617, z: 64.47}
-    - t: 10.455313
+    - t: 48.284317
       p: {x: -319.70667, y: 36.02044, z: 64.44}
-    - t: 10.661992
+    - t: 48.490997
       p: {x: -319.56, y: 36.0147, z: 64.409996}
-    - t: 11.030202
+    - t: 48.859207
       p: {x: -319.26666, y: 36.003235, z: 64.35}
-    - t: 11.382447
+    - t: 49.21145
       p: {x: -318.97333, y: 35.996155, z: 64.29}
-    - t: 11.7346945
+    - t: 49.563694
       p: {x: -318.68, y: 35.996155, z: 64.229996}
-    - t: 12.08694
+    - t: 49.915936
       p: {x: -318.38666, y: 35.996155, z: 64.17}
-    - t: 12.439185
+    - t: 50.268177
       p: {x: -318.09332, y: 35.996155, z: 64.11}
-    - t: 12.7914295
+    - t: 50.62042
       p: {x: -317.8, y: 35.996155, z: 64.05}
-    - t: 13.143641
+    - t: 50.97263
       p: {x: -317.50668, y: 35.996155, z: 63.989998}
-    - t: 13.495887
+    - t: 51.32487
       p: {x: -317.21335, y: 35.996155, z: 63.93}
-    - t: 13.848133
+    - t: 51.677116
       p: {x: -316.92, y: 35.996155, z: 63.87}
-    - t: 14.200379
+    - t: 52.02936
       p: {x: -316.62668, y: 35.996155, z: 63.809998}
-    - t: 14.552625
+    - t: 52.381603
       p: {x: -316.33334, y: 35.996155, z: 63.75}
-    - t: 14.9208355
+    - t: 52.749813
       p: {x: -316.04, y: 35.996155, z: 63.69}
-    - t: 15.127513
+    - t: 52.95649
       p: {x: -315.89334, y: 35.996155, z: 63.66}
-    - t: 15.358794
+    - t: 53.18777
       p: {x: -315.74667, y: 35.996155, z: 63.629997}
-    - t: 15.638419
+    - t: 53.467396
       p: {x: -315.6, y: 35.996155, z: 63.6}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: -318, y: 36.29455, z: 70}
+      punto: {x: -311, y: 39.6531, z: 65}
       actor: 
-    - t: 2.604
+    - t: 0.87
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 4.4449997
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 8.205
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 14.195
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 21.59
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 28.474
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 40.433002
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 6.9074697
+    - t: 44.736473
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.108624
+    - t: 60.8376
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 24.608624
+    - t: 62.2876
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 48.993317
+    - t: 86.4723
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 56.16352
+    - t: 93.5925
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     cabezas:
-    - t: 2.604
+    - t: 0.82
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 4.3949995
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 8.205
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 8.255
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 14.1449995
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 16.404999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 21.54
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 23.369999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 28.424002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 31.765667
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 40.433002
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 2.654
+    - t: 40.483
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 6.8574696
+    - t: 44.686474
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 15.688419
+    - t: 53.517395
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 23.058624
+    - t: 60.7876
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 24.558624
+    - t: 62.237602
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 27.415562
+    - t: 65.09454
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 39.822906
+    - t: 77.401886
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 46.614742
+    - t: 84.193726
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 48.943317
+    - t: 86.422295
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 56.11352
+    - t: 93.542496
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 59.83352
+    - t: 97.2625
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
-    - t: 62.732292
+    - t: 100.16127
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -424,422 +701,1288 @@ MonoBehaviour:
     animacion:
     - fundido: 0
       t: 0
-      tipo: 2
-      estado: MagicRight
+      tipo: 1
+      estado: ManosALaEspalda
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 1.1040001
-      tipo: 2
-      estado: Dizzy_NoWeapon
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 2.3306668
-      tipo: 5
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 2.604
+      t: 8.205
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 2.684
-      tipo: 2
-      estado: Challenging_NoWeapon
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 6.80747
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 7.4574695
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0.4
-      t: 15.638419
-      tipo: 1
-      estado: BrazosEnJarras
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 26.365562
+      t: 8.205
       tipo: 0
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 27.365562
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 27.445562
+      t: 8.285
       tipo: 2
-      estado: Dudar01
+      estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 30.245562
+      t: 10.585
       tipo: 2
       estado: Talk03
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 33.462227
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 35.33066
+      t: 13.974999
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 35.58066
+      t: 14.624999
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 16.355
       tipo: 3
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 35.660664
+      t: 16.435
       tipo: 2
-      estado: Angry01
+      estado: Shrug01
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 39.522907
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 39.772907
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 39.85291
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 42.319572
+      t: 18.135
       tipo: 2
       estado: Talk02
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 44.93624
-      tipo: 2
-      estado: Talk03
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0.4
-      t: 46.564743
-      tipo: 1
-      estado: BrazosCruzados
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 46.614742
+      t: 21.019999
       tipo: 4
       estado: 
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
     - fundido: 0
-      t: 46.644745
+      t: 21.8
       tipo: 2
-      estado: HeadShake01
+      estado: Question01
       congelar: 0
       alFinal: 0
       voz: 
-    - fundido: 0
-      t: 49.543316
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 56.71352
-      tipo: 2
-      estado: HeadNod01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 59.78352
-      tipo: 0
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 59.78352
-      tipo: 3
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 59.86352
-      tipo: 2
-      estado: Talk01
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0
-      t: 62.132294
-      tipo: 4
-      estado: 
-      congelar: 0
-      alFinal: 0
-      voz: 
-    - fundido: 0.4
-      t: 62.682293
+      origen: 0
+    - fundido: 0.3
+      t: 23.32
       tipo: 1
       estado: BrazosEnJarras
       congelar: 0
       alFinal: 0
       voz: 
+      origen: 0
+    - fundido: 0
+      t: 25.4
+      tipo: 2
+      estado: MagicRight
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.3
+      t: 26.48
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 27.004
+      tipo: 2
+      estado: Dizzy_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 28.230667
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 31.795668
+      tipo: 2
+      estado: Challenging_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.3
+      t: 34.495667
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 40.513004
+      tipo: 2
+      estado: Challenging_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.3
+      t: 43.213005
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.4
+      t: 53.467396
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 64.04454
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 65.04454
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 65.12454
+      tipo: 2
+      estado: Dudar01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 67.92454
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 71.141205
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 73.00964
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 73.20964
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 73.28964
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 77.151886
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 77.35188
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 77.431885
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 79.89855
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 82.51522
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.4
+      t: 84.14372
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 84.193726
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 84.223724
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 87.02229
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 94.142494
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 97.212494
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 97.212494
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 97.292496
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 99.56127
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0.4
+      t: 100.11127
+      tipo: 1
+      estado: BrazosEnJarras
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
     caras:
-    - t: 1.1040001
-      emocion: molesto
-      dura: 0
-    - t: 2.604
-      emocion: picaro
-      dura: 4.5534697
-    - t: 15.638419
-      emocion: molesto
-      dura: 7.270204
-    - t: 23.378624
+    - t: 8.205
+      emocion: alegre
+      dura: 6.12
+    - t: 16.355
+      emocion: alegre
+      dura: 5.015
+    - t: 21.74
       emocion: sorpresa
       dura: 1.2
-    - t: 26.365562
+    - t: 23.32
+      emocion: picaro
+      dura: 2.48
+    - t: 27.004
+      emocion: molesto
+      dura: 0
+    - t: 31.715668
+      emocion: picaro
+      dura: 5.3399997
+    - t: 40.433002
+      emocion: picaro
+      dura: 4.5534697
+    - t: 53.467396
+      emocion: molesto
+      dura: 7.270204
+    - t: 61.107597
+      emocion: sorpresa
+      dura: 1.2
+    - t: 64.04454
       emocion: pensativo
       dura: 0
-    - t: 27.365562
+    - t: 65.04454
       emocion: pensativo
       dura: 8.315102
-    - t: 35.58066
+    - t: 73.20964
       emocion: enfado
       dura: 4.292245
-    - t: 39.772907
+    - t: 77.35188
       emocion: preocupado
       dura: 7.191837
-    - t: 46.564743
+    - t: 84.14372
       emocion: molesto
       dura: 2.2285714
-    - t: 59.78352
+    - t: 97.212494
       emocion: preocupado
       dura: 2.6987755
-    - t: 62.682293
+    - t: 100.11127
       emocion: picaro
       dura: 4.866939
+    visible: []
+    deslizando: []
+  - id: NPC_Ladron1
+    prefab: Assets/_NPCs/Combat/Boy_Pirate.prefab
+    alias: l1
+    colorDelNombre: {r: 0.7254902, g: 0.64705884, b: 0.54901963, a: 1}
+    claveDelNombre: CHAR_LADRON
+    posiciones:
+    - t: 0
+      p: {x: -322.5, y: 36.072327, z: 62.8}
+    - t: 26.504
+      p: {x: -322.5, y: 36.072327, z: 62.8}
+    - t: 26.778055
+      p: {x: -322.75, y: 36.06602, z: 62.649998}
+    - t: 26.991386
+      p: {x: -323, y: 36.059708, z: 62.5}
+    - t: 27.275211
+      p: {x: -323.375, y: 36.050243, z: 62.274998}
+    - t: 27.557354
+      p: {x: -323.75, y: 36.040775, z: 62.05}
+    - t: 27.849407
+      p: {x: -324.125, y: 36.03145, z: 61.824997}
+    - t: 28.084635
+      p: {x: -324.375, y: 36.02622, z: 61.675}
+    - t: 28.234518
+      p: {x: -324.5, y: 36.023605, z: 61.6}
+    - t: 31.115667
+      p: {x: -324.5, y: 36.023605, z: 61.6}
+    - t: 31.394308
+      p: {x: -324.6638, y: 36.036423, z: 61.848274}
+    - t: 31.610884
+      p: {x: -324.82758, y: 36.049244, z: 62.09655}
+    - t: 31.899918
+      p: {x: -325.07327, y: 36.067947, z: 62.468964}
+    - t: 32.18776
+      p: {x: -325.31897, y: 36.085403, z: 62.841377}
+    - t: 32.4756
+      p: {x: -325.56467, y: 36.089798, z: 63.21379}
+    - t: 32.76343
+      p: {x: -325.81033, y: 36.088024, z: 63.586205}
+    - t: 33.051273
+      p: {x: -326.05603, y: 36.104248, z: 63.95862}
+    - t: 33.339115
+      p: {x: -326.30173, y: 36.12048, z: 64.33103}
+    - t: 33.626957
+      p: {x: -326.54742, y: 36.135853, z: 64.703445}
+    - t: 33.914787
+      p: {x: -326.7931, y: 36.149857, z: 65.07586}
+    - t: 34.20263
+      p: {x: -327.0388, y: 36.163853, z: 65.44827}
+    - t: 34.49047
+      p: {x: -327.2845, y: 36.17785, z: 65.82069}
+    - t: 34.778313
+      p: {x: -327.53018, y: 36.19249, z: 66.1931}
+    - t: 35.066143
+      p: {x: -327.77585, y: 36.20868, z: 66.56551}
+    - t: 35.353985
+      p: {x: -328.02155, y: 36.22491, z: 66.93793}
+    - t: 35.641827
+      p: {x: -328.26724, y: 36.241135, z: 67.31034}
+    - t: 35.92967
+      p: {x: -328.51294, y: 36.257362, z: 67.682755}
+    - t: 36.2175
+      p: {x: -328.7586, y: 36.273594, z: 68.05517}
+    - t: 36.50534
+      p: {x: -329.0043, y: 36.289818, z: 68.42758}
+    - t: 36.793186
+      p: {x: -329.25, y: 36.306046, z: 68.8}
+    - t: 37.081028
+      p: {x: -329.4957, y: 36.32227, z: 69.17242}
+    - t: 37.36887
+      p: {x: -329.7414, y: 36.338497, z: 69.54483}
+    - t: 37.6567
+      p: {x: -329.98706, y: 36.35472, z: 69.917244}
+    - t: 37.944542
+      p: {x: -330.23276, y: 36.370396, z: 70.28966}
+    - t: 38.232384
+      p: {x: -330.47845, y: 36.385735, z: 70.66207}
+    - t: 38.520226
+      p: {x: -330.72415, y: 36.39896, z: 71.034485}
+    - t: 38.808056
+      p: {x: -330.96982, y: 36.413208, z: 71.4069}
+    - t: 39.095898
+      p: {x: -331.2155, y: 36.427654, z: 71.77931}
+    - t: 39.38374
+      p: {x: -331.4612, y: 36.442112, z: 72.151726}
+    - t: 39.67158
+      p: {x: -331.7069, y: 36.415306, z: 72.52414}
+    - t: 39.95941
+      p: {x: -331.95258, y: 36.38073, z: 72.89655}
+    - t: 40.247253
+      p: {x: -332.19827, y: 36.346146, z: 73.26897}
+    - t: 40.535095
+      p: {x: -332.44397, y: 36.311813, z: 73.64138}
+    - t: 40.822937
+      p: {x: -332.68967, y: 36.24918, z: 74.013794}
+    - t: 41.110767
+      p: {x: -332.93533, y: 36.189945, z: 74.38621}
+    - t: 41.39861
+      p: {x: -333.18103, y: 36.130707, z: 74.75862}
+    - t: 41.68645
+      p: {x: -333.42673, y: 36.071472, z: 75.131035}
+    - t: 41.97548
+      p: {x: -333.67242, y: 36.04431, z: 75.50345}
+    - t: 42.192055
+      p: {x: -333.8362, y: 36.038994, z: 75.751724}
+    - t: 42.47069
+      p: {x: -334, y: 36.03368, z: 76}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -320, y: 36.032467, z: 64.5}
+      actor: 
+    - t: 4.5649996
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 8.475
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 16.625
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 21.71
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 23.59
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    cabezas:
+    - t: 0.65000004
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 4.5149994
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 8.425
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 13.974999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 16.575
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 21.66
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron2
+    - t: 23.54
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 27.004
+      tipo: 0
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: Idle_Battle_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 0.68
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 4.8749995
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 8.905
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 14.004999
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 17.055
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 21.8
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 26.504
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 27.004
+      tipo: 1
+      estado: Knockdown01_Ground
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 30.349
+      tipo: 2
+      estado: GetUp_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 31.115667
+      tipo: 1
+      estado: Knockdown01_Ground
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 31.115667
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 43.933002
+      tipo: 2
+      estado: Idle03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    caras:
+    - t: 0.6
+      emocion: picaro
+      dura: 3.975
+    - t: 8.805
+      emocion: sorpresa
+      dura: 2
+    - t: 13.924999
+      emocion: molesto
+      dura: 2.48
+    - t: 21.74
+      emocion: sorpresa
+      dura: 1.2
+    visible: []
+    deslizando: []
+  - id: NPC_Ladron2
+    prefab: Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab
+    alias: l2
+    colorDelNombre: {r: 0.65882355, g: 0.6117647, b: 0.5411765, a: 1}
+    claveDelNombre: CHAR_LADRON
+    posiciones:
+    - t: 0
+      p: {x: -318.2, y: 36.024784, z: 66.6}
+    - t: 26.504
+      p: {x: -318.2, y: 36.024784, z: 66.6}
+    - t: 26.784225
+      p: {x: -317.98825, y: 36.018673, z: 66.81176}
+    - t: 27.001925
+      p: {x: -317.7765, y: 36.012566, z: 67.02353}
+    - t: 27.292765
+      p: {x: -317.45883, y: 36.003403, z: 67.34118}
+    - t: 27.582588
+      p: {x: -317.14117, y: 36.00121, z: 67.65882}
+    - t: 27.873428
+      p: {x: -316.82352, y: 36.00121, z: 67.97647}
+    - t: 28.091127
+      p: {x: -316.61176, y: 36.00121, z: 68.18824}
+    - t: 28.371353
+      p: {x: -316.4, y: 36.00121, z: 68.4}
+    - t: 31.115667
+      p: {x: -316.4, y: 36.00121, z: 68.4}
+    - t: 31.395943
+      p: {x: -316.675, y: 36.00263, z: 68.51875}
+    - t: 31.613672
+      p: {x: -316.94998, y: 36.00375, z: 68.637505}
+    - t: 31.904564
+      p: {x: -317.3625, y: 36.0356, z: 68.81563}
+    - t: 32.19445
+      p: {x: -317.775, y: 36.128616, z: 68.99375}
+    - t: 32.484337
+      p: {x: -318.1875, y: 36.222485, z: 69.171875}
+    - t: 32.774223
+      p: {x: -318.6, y: 36.31637, z: 69.35}
+    - t: 33.064095
+      p: {x: -319.01248, y: 36.41302, z: 69.52813}
+    - t: 33.35398
+      p: {x: -319.425, y: 36.532448, z: 69.70625}
+    - t: 33.643867
+      p: {x: -319.8375, y: 36.651897, z: 69.88438}
+    - t: 33.933754
+      p: {x: -320.25, y: 36.719265, z: 70.0625}
+    - t: 34.22364
+      p: {x: -320.6625, y: 36.773254, z: 70.24062}
+    - t: 34.51351
+      p: {x: -321.07498, y: 36.780697, z: 70.418755}
+    - t: 34.8034
+      p: {x: -321.4875, y: 36.777176, z: 70.59688}
+    - t: 35.093285
+      p: {x: -321.9, y: 36.773666, z: 70.775}
+    - t: 35.38317
+      p: {x: -322.3125, y: 36.77014, z: 70.953125}
+    - t: 35.673058
+      p: {x: -322.725, y: 36.76568, z: 71.13125}
+    - t: 35.96293
+      p: {x: -323.13748, y: 36.760677, z: 71.30938}
+    - t: 36.252815
+      p: {x: -323.55, y: 36.75567, z: 71.4875}
+    - t: 36.5427
+      p: {x: -323.9625, y: 36.75067, z: 71.66563}
+    - t: 36.83259
+      p: {x: -324.375, y: 36.745667, z: 71.84375}
+    - t: 37.122475
+      p: {x: -324.7875, y: 36.74066, z: 72.02187}
+    - t: 37.41236
+      p: {x: -325.2, y: 36.73494, z: 72.2}
+    - t: 37.702232
+      p: {x: -325.6125, y: 36.728447, z: 72.37813}
+    - t: 37.99212
+      p: {x: -326.025, y: 36.721962, z: 72.55625}
+    - t: 38.282005
+      p: {x: -326.4375, y: 36.715466, z: 72.734375}
+    - t: 38.57189
+      p: {x: -326.85, y: 36.708977, z: 72.9125}
+    - t: 38.86178
+      p: {x: -327.2625, y: 36.702484, z: 73.09062}
+    - t: 39.15165
+      p: {x: -327.675, y: 36.69648, z: 73.26875}
+    - t: 39.441536
+      p: {x: -328.0875, y: 36.691483, z: 73.44688}
+    - t: 39.731422
+      p: {x: -328.5, y: 36.686478, z: 73.625}
+    - t: 40.02131
+      p: {x: -328.9125, y: 36.681473, z: 73.80312}
+    - t: 40.311195
+      p: {x: -329.325, y: 36.67647, z: 73.98125}
+    - t: 40.601067
+      p: {x: -329.7375, y: 36.66208, z: 74.15938}
+    - t: 40.890953
+      p: {x: -330.15, y: 36.62467, z: 74.3375}
+    - t: 41.18084
+      p: {x: -330.5625, y: 36.574974, z: 74.515625}
+    - t: 41.470726
+      p: {x: -330.975, y: 36.525276, z: 74.69375}
+    - t: 41.760612
+      p: {x: -331.3875, y: 36.4746, z: 74.87187}
+    - t: 42.050484
+      p: {x: -331.8, y: 36.36315, z: 75.05}
+    - t: 42.34037
+      p: {x: -332.2125, y: 36.251682, z: 75.22813}
+    - t: 42.630257
+      p: {x: -332.625, y: 36.141155, z: 75.40625}
+    - t: 42.920143
+      p: {x: -333.0375, y: 36.07878, z: 75.58437}
+    - t: 43.211037
+      p: {x: -333.45, y: 36.05153, z: 75.7625}
+    - t: 43.428764
+      p: {x: -333.725, y: 36.042603, z: 75.88125}
+    - t: 43.70904
+      p: {x: -334, y: 36.03368, z: 76}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -320, y: 36.032467, z: 64.5}
+      actor: 
+    - t: 0.99
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 8.595
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 14.315
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 16.744999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 23.71
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    cabezas:
+    - t: 0.94
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 4.225
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 8.545
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 14.264999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Ladron1
+    - t: 16.695
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 21.369999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 23.66
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: _ESTELA
+    - t: 27.004
+      tipo: 0
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    animacion:
+    - fundido: 0
+      t: 0
+      tipo: 1
+      estado: BrazosCruzados
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 8.905
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 14.624999
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 21.4
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 24.02
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 26.504
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 27.004
+      tipo: 1
+      estado: Knockdown01_Ground
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 28.284
+      tipo: 2
+      estado: GetUp_NoWeapon
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 31.115667
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    caras:
+    - t: 4.1749997
+      emocion: picaro
+      dura: 4.43
+    - t: 8.805
+      emocion: sorpresa
+      dura: 2
+    - t: 21.32
+      emocion: sorpresa
+      dura: 1.6
+    - t: 28.204
+      emocion: miedo
+      dura: 2.545
     visible: []
     deslizando: []
   lineas:
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 2.604
-    t1: 6.7574697
-    actor: _ESTELA
-    clave: CAP4_ESTELA_01
-    linea: 37
-    gesto: Challenging_NoWeapon
-    sinPose: 0
-    presentacion: -1
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t0: 6.7574697
-    t1: 9.944408
-    actor: Player
-    clave: CAP4_ESTELA_02
-    linea: 39
+    t0: 0.6
+    t1: 4.1749997
+    actor: NPC_Ladron1
+    clave: CAP4_LADRONES_01
+    linea: 46
     gesto: Talk01
-    sinPose: 0
-    presentacion: -1
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t0: 15.638419
-    t1: 22.508623
-    actor: _ESTELA
-    clave: CAP4_ESTELA_03
-    linea: 43
-    gesto: 
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 22.958624
-    t1: 24.158625
-    actor: Player
-    clave: CAP4_ESTELA_04
-    linea: 44
-    gesto: Question01
-    sinPose: 0
-    presentacion: -1
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t0: 24.458624
-    t1: 26.365562
-    actor: Player
-    clave: CAP4_ESTELA_05
+    t0: 4.1749997
+    t1: 8.205
+    actor: NPC_Ladron2
+    clave: CAP4_LADRONES_02
     linea: 48
     gesto: 
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 27.365562
-    t1: 35.280663
+    t0: 8.205
+    t1: 13.924999
     actor: _ESTELA
-    clave: CAP4_ESTELA_06
-    linea: 54
-    gesto: Dudar01
+    clave: CAP4_LADRONES_03
+    linea: 53
+    gesto: Question01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 35.58066
-    t1: 39.472908
-    actor: _ESTELA
-    clave: CAP4_ESTELA_07
+    t0: 13.924999
+    t1: 16.005
+    actor: NPC_Ladron1
+    clave: CAP4_LADRONES_04
     linea: 55
     gesto: Angry01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 39.772907
-    t1: 46.564743
+    t0: 16.355
+    t1: 20.97
     actor: _ESTELA
-    clave: CAP4_ESTELA_08
+    clave: CAP4_LADRONES_05
     linea: 56
-    gesto: Talk01
+    gesto: Shrug01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 46.564743
-    t1: 48.393314
+    t0: 21.32
+    t1: 22.52
+    actor: NPC_Ladron2
+    clave: CAP4_LADRONES_06
+    linea: 57
+    gesto: Question01
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 23.32
+    t1: 25.4
     actor: _ESTELA
-    clave: CAP4_ESTELA_09
-    linea: 60
-    gesto: HeadShake01
-    sinPose: 1
-    presentacion: -1
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t0: 48.843315
-    t1: 55.71352
-    actor: Player
-    clave: CAP4_ESTELA_10
-    linea: 61
-    gesto: 
-    sinPose: 1
-    presentacion: -1
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t0: 56.01352
-    t1: 59.78352
-    actor: Player
-    clave: CAP4_ESTELA_13
+    clave: CAP4_LADRONES_07
     linea: 64
     gesto: 
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 59.78352
-    t1: 62.082294
+    t0: 28.204
+    t1: 30.349
+    actor: NPC_Ladron2
+    clave: CAP4_LADRONES_08
+    linea: 82
+    gesto: GetUp_NoWeapon
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 31.715668
+    t1: 36.655666
     actor: _ESTELA
-    clave: CAP4_ESTELA_11
-    linea: 69
+    clave: CAP4_LADRONES_09
+    linea: 88
+    gesto: Challenging_NoWeapon
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 40.433002
+    t1: 44.58647
+    actor: _ESTELA
+    clave: CAP4_ESTELA_01
+    linea: 99
+    gesto: Challenging_NoWeapon
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 44.58647
+    t1: 47.77341
+    actor: Player
+    clave: CAP4_ESTELA_02
+    linea: 101
     gesto: Talk01
     sinPose: 0
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 62.682293
-    t1: 67.14923
+    t0: 53.467396
+    t1: 60.3376
+    actor: _ESTELA
+    clave: CAP4_ESTELA_03
+    linea: 105
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 60.6876
+    t1: 61.8876
+    actor: Player
+    clave: CAP4_ESTELA_04
+    linea: 106
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 62.1376
+    t1: 64.04454
+    actor: Player
+    clave: CAP4_ESTELA_05
+    linea: 110
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 65.04454
+    t1: 72.95964
+    actor: _ESTELA
+    clave: CAP4_ESTELA_06
+    linea: 116
+    gesto: Dudar01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 73.20964
+    t1: 77.10188
+    actor: _ESTELA
+    clave: CAP4_ESTELA_07
+    linea: 117
+    gesto: Angry01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 77.35188
+    t1: 84.14372
+    actor: _ESTELA
+    clave: CAP4_ESTELA_08
+    linea: 118
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 84.14372
+    t1: 85.9723
+    actor: _ESTELA
+    clave: CAP4_ESTELA_09
+    linea: 122
+    gesto: HeadShake01
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 86.322296
+    t1: 93.1925
+    actor: Player
+    clave: CAP4_ESTELA_10
+    linea: 123
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 93.4425
+    t1: 97.212494
+    actor: Player
+    clave: CAP4_ESTELA_13
+    linea: 126
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 97.212494
+    t1: 99.51127
+    actor: _ESTELA
+    clave: CAP4_ESTELA_11
+    linea: 131
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 100.11127
+    t1: 104.57821
     actor: _ESTELA
     clave: CAP4_ESTELA_12
-    linea: 71
+    linea: 133
     gesto: 
     sinPose: 1
     presentacion: -1
   planos:
   - focos: []
     t0: 0
-    t1: 2.604
-    linea: 27
+    t1: 0.6
+    linea: 40
     tipo: 0
-    descripcion: general de will y estela
+    descripcion: general de estela y l1 y l2
     posiciones:
     - t: 0
-      p: {x: -317.78754, y: 40.283855, z: 74.29447}
+      p: {x: -314.84964, y: 39.211742, z: 57.775112}
     lente: 42
     lenteFinal: 0
     sujetos:
-    - Player
     - _ESTELA
+    - NPC_Ladron1
+    - NPC_Ladron2
     pesos:
+    - 1
     - 1
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8648522
+    alturaDelFoco: 0.8385321
     encuadre: {x: 0, y: 0}
     suavidad: 1
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 2.604
-    t1: 6.7574697
-    linea: 36
+    t0: 0.6
+    t1: 4.1749997
+    linea: 45
+    tipo: 2
+    descripcion: medio de l1
+    posiciones:
+    - t: 0.6
+      p: {x: -319.40457, y: 36.931465, z: 62.622368}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Ladron1
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.058129
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 4.1749997
+    t1: 8.205
+    linea: 47
+    tipo: 6
+    descripcion: sobre el hombro de estela a l2
+    posiciones:
+    - t: 4.1749997
+      p: {x: -321.81012, y: 37.582836, z: 64.95833}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Ladron2
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.2085695
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 8.205
+    t1: 13.924999
+    linea: 50
     tipo: 2
     descripcion: medio de estela
     posiciones:
-    - t: 2.604
-      p: {x: -316.5874, y: 36.899784, z: 63.449974}
+    - t: 8.205
+      p: {x: -323.56082, y: 37.08801, z: 64.237526}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -849,18 +1992,346 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0891812
-    encuadre: {x: 0, y: -0.074}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 6.7574697
-    t1: 15.638419
-    linea: 38
+    t0: 13.924999
+    t1: 22.52
+    linea: 54
+    tipo: 5
+    descripcion: 'dos: l1 y l2'
+    posiciones:
+    - t: 13.924999
+      p: {x: -317.621, y: 36.94929, z: 59.21875}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - NPC_Ladron1
+    - NPC_Ladron2
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9028222
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 22.52
+    t1: 23.32
+    linea: 59
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 6.7574697
+    - t: 22.52
+      p: {x: -315.17648, y: 36.888313, z: 65.87714}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038896
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 23.32
+    t1: 25.4
+    linea: 63
+    tipo: 3
+    descripcion: primer plano de estela
+    posiciones:
+    - t: 23.32
+      p: {x: -316.81882, y: 36.899784, z: 65.62019}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.09, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 25.4
+    t1: 28.204
+    linea: 69
+    tipo: 0
+    descripcion: general de estela y l1 y l2
+    posiciones:
+    - t: 25.4
+      p: {x: -311.95462, y: 39.316467, z: 61.89793}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    - NPC_Ladron1
+    - NPC_Ladron2
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8385321
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 28.204
+      p: {x: -320.4994, y: 36.036922, z: 64.855865}
+    - t: 28.254
+      p: {x: -320.4932, y: 36.037266, z: 64.86713}
+    - t: 28.303999
+      p: {x: -320.49777, y: 36.10403, z: 64.8675}
+    - t: 28.353998
+      p: {x: -320.4732, y: 36.059032, z: 64.892136}
+    - t: 28.403997
+      p: {x: -320.4558, y: 36.028637, z: 64.909584}
+    - t: 28.453997
+      p: {x: -320.44537, y: 36.011757, z: 64.91994}
+    - t: 28.503996
+      p: {x: -320.4385, y: 36.003117, z: 64.92672}
+    - t: 28.553995
+      p: {x: -320.4347, y: 36.007114, z: 64.93057}
+    - t: 28.603994
+      p: {x: -320.42773, y: 36.10912, z: 64.9379}
+    - t: 28.653994
+      p: {x: -320.42383, y: 36.1411, z: 64.94369}
+    - t: 28.703993
+      p: {x: -320.43744, y: 36.15759, z: 64.93347}
+    - t: 28.753992
+      p: {x: -320.46198, y: 36.231754, z: 64.91284}
+    - t: 28.803991
+      p: {x: -320.23834, y: 36.493435, z: 65.14236}
+    - t: 28.85399
+      p: {x: -320.2383, y: 36.493355, z: 65.142365}
+    - t: 28.90399
+      p: {x: -320.2383, y: 36.49323, z: 65.142365}
+    - t: 28.953989
+      p: {x: -320.23828, y: 36.493065, z: 65.14237}
+    - t: 29.003988
+      p: {x: -320.23828, y: 36.492863, z: 65.14238}
+    - t: 29.053988
+      p: {x: -320.23828, y: 36.492622, z: 65.142395}
+    - t: 29.103987
+      p: {x: -320.23828, y: 36.49236, z: 65.1424}
+    - t: 29.153986
+      p: {x: -320.44885, y: 36.03845, z: 64.91148}
+    - t: 29.203985
+      p: {x: -320.44885, y: 36.03784, z: 64.91147}
+    - t: 29.253984
+      p: {x: -320.44885, y: 36.037235, z: 64.91147}
+    - t: 29.303984
+      p: {x: -320.44885, y: 36.036667, z: 64.91146}
+    - t: 29.353983
+      p: {x: -320.44885, y: 36.03615, z: 64.91145}
+    - t: 29.403982
+      p: {x: -320.44885, y: 36.035694, z: 64.91145}
+    - t: 29.453981
+      p: {x: -320.44885, y: 36.035473, z: 64.911446}
+    - t: 29.50398
+      p: {x: -320.44885, y: 36.035046, z: 64.91144}
+    - t: 29.55398
+      p: {x: -320.44885, y: 36.034855, z: 64.91144}
+    - t: 29.60398
+      p: {x: -320.44885, y: 36.034763, z: 64.91144}
+    - t: 29.653978
+      p: {x: -320.44885, y: 36.034763, z: 64.91144}
+    - t: 29.703978
+      p: {x: -320.44885, y: 36.034863, z: 64.91144}
+    - t: 29.753977
+      p: {x: -320.44885, y: 36.03507, z: 64.911446}
+    - t: 29.803976
+      p: {x: -320.44885, y: 36.03538, z: 64.911446}
+    - t: 29.853975
+      p: {x: -320.44885, y: 36.035786, z: 64.91145}
+    - t: 29.903975
+      p: {x: -320.44885, y: 36.03629, z: 64.91145}
+    - t: 29.953974
+      p: {x: -320.44885, y: 36.036854, z: 64.91146}
+    - t: 30.003973
+      p: {x: -320.44885, y: 36.037476, z: 64.911476}
+    - t: 30.053972
+      p: {x: -320.44885, y: 36.03812, z: 64.911476}
+    - t: 30.103971
+      p: {x: -320.44885, y: 36.03876, z: 64.91149}
+    - t: 30.15397
+      p: {x: -320.44885, y: 36.03938, z: 64.9115}
+    - t: 30.20397
+      p: {x: -320.44885, y: 36.03994, z: 64.91151}
+    - t: 30.25397
+      p: {x: -320.44885, y: 36.04043, z: 64.911514}
+    - t: 30.303968
+      p: {x: -320.44888, y: 36.04082, z: 64.91152}
+    - t: 30.353968
+      p: {x: -320.42996, y: 36.114544, z: 64.912346}
+    - t: 30.403967
+      p: {x: -320.43008, y: 36.074066, z: 64.91226}
+    - t: 30.453966
+      p: {x: -320.4375, y: 36.04234, z: 64.907745}
+    - t: 30.503965
+      p: {x: -320.4467, y: 36.02473, z: 64.9023}
+    - t: 30.553965
+      p: {x: -320.45398, y: 36.014965, z: 64.897995}
+    - t: 30.603964
+      p: {x: -320.45782, y: 36.009754, z: 64.895706}
+    - t: 30.653963
+      p: {x: -320.4617, y: 36.102196, z: 64.89364}
+    - t: 30.703962
+      p: {x: -320.466, y: 36.147293, z: 64.891}
+    - t: 30.753962
+      p: {x: -320.45905, y: 36.159153, z: 64.894646}
+    - t: 30.80396
+      p: {x: -320.44025, y: 36.204937, z: 64.90454}
+    - t: 30.85396
+      p: {x: -320.6606, y: 36.46181, z: 64.76909}
+    - t: 30.90396
+      p: {x: -320.66064, y: 36.46149, z: 64.76906}
+    - t: 30.953959
+      p: {x: -320.66064, y: 36.461174, z: 64.76904}
+    - t: 31.003958
+      p: {x: -320.66064, y: 36.46086, z: 64.76903}
+    - t: 31.053957
+      p: {x: -320.66064, y: 36.460567, z: 64.76901}
+    - t: 31.103956
+      p: {x: -320.66064, y: 36.460308, z: 64.769005}
+    - t: 31.153955
+      p: {x: -320.48004, y: 36.916206, z: 65.02517}
+    - t: 31.203955
+      p: {x: -320.51926, y: 36.917484, z: 65.05804}
+    - t: 31.253954
+      p: {x: -320.55847, y: 36.91876, z: 65.090904}
+    - t: 31.303953
+      p: {x: -320.59772, y: 36.920033, z: 65.12377}
+    - t: 31.353952
+      p: {x: -320.63693, y: 36.92131, z: 65.15664}
+    - t: 31.403952
+      p: {x: -320.6781, y: 36.922653, z: 65.19122}
+    - t: 31.45395
+      p: {x: -320.72858, y: 36.92426, z: 65.23352}
+    - t: 31.50395
+      p: {x: -320.77905, y: 36.92587, z: 65.27581}
+    - t: 31.55395
+      p: {x: -320.82953, y: 36.92748, z: 65.31811}
+    - t: 31.603949
+      p: {x: -320.88, y: 36.92909, z: 65.3604}
+    - t: 31.653948
+      p: {x: -320.93567, y: 36.93292, z: 65.407104}
+    - t: 31.703947
+      p: {x: -320.99234, y: 36.93727, z: 65.45462}
+    - t: 31.715668
+      p: {x: -321.0056, y: 36.93829, z: 65.46576}
+    t0: 28.204
+    t1: 31.715668
+    linea: 81
+    tipo: 5
+    descripcion: 'dos: l1 y l2'
+    posiciones:
+    - t: 28.204
+      p: {x: -316.8532, y: 37.044556, z: 53.516983}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - NPC_Ladron1
+    - NPC_Ladron2
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9028222
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 31.715668
+    t1: 37.055668
+    linea: 87
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 31.715668
+      p: {x: -318.7106, y: 36.950195, z: 67.24738}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 37.055668
+    t1: 40.433002
+    linea: 93
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 37.055668
+      p: {x: -316.405, y: 36.888313, z: 64.90346}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1038896
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 40.433002
+    t1: 44.58647
+    linea: 98
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 40.433002
+      p: {x: -317.249, y: 36.899784, z: 62.22396}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - _ESTELA
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0891812
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 44.58647
+    t1: 53.467396
+    linea: 100
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 44.58647
       p: {x: -316.33237, y: 36.888313, z: 61.00051}
     lente: 30
     lenteFinal: 0
@@ -876,13 +2347,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 15.638419
-    t1: 26.365562
-    linea: 41
+    t0: 53.467396
+    t1: 64.04454
+    linea: 103
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
-    - t: 15.638419
+    - t: 53.467396
       p: {x: -315.74152, y: 36.88405, z: 59.802013}
     lente: 32
     lenteFinal: 0
@@ -900,13 +2371,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 26.365562
-    t1: 46.564743
-    linea: 50
+    t0: 64.04454
+    t1: 84.14372
+    linea: 112
     tipo: 3
     descripcion: primer plano de estela
     posiciones:
-    - t: 26.365562
+    - t: 64.04454
       p: {x: -314.18246, y: 36.91886, z: 60.539734}
     lente: 24
     lenteFinal: 0
@@ -922,13 +2393,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 46.564743
-    t1: 59.78352
-    linea: 57
+    t0: 84.14372
+    t1: 97.212494
+    linea: 119
     tipo: 5
     descripcion: 'dos: will y estela'
     posiciones:
-    - t: 46.564743
+    - t: 84.14372
       p: {x: -316.15527, y: 36.88405, z: 59.98533}
     lente: 32
     lenteFinal: 0
@@ -946,13 +2417,13 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 59.78352
-    t1: 68.24923
-    linea: 66
+    t0: 97.212494
+    t1: 105.67821
+    linea: 128
     tipo: 3
     descripcion: primer plano de estela
     posiciones:
-    - t: 59.78352
+    - t: 97.212494
       p: {x: -314.18246, y: 36.91886, z: 60.539734}
     lente: 24
     lenteFinal: 0
@@ -972,31 +2443,35 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 6540294704968237395
-    linea: 24
+      rid: 6540294773546943094
+    linea: 38
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 1.1040001
+    t: 26.504
     beat:
-      rid: 6540294704968237396
-    linea: 29
+      rid: 6540294773546943095
+    linea: 71
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 1.1040001
+    t: 26.504
     beat:
-      rid: 6540294704968237397
-    linea: 30
+      rid: 6540294773546943096
+    linea: 72
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 67.74923
+    t: 105.17821
     beat:
-      rid: 6540294704968237398
-    linea: 74
+      rid: 6540294773546943097
+    linea: 136
   etiquetas:
   - nombre: inicio
     t: 0
+  - nombre: paliza
+    t: 25.4
+  - nombre: aplauso
+    t: 37.055668
   - nombre: aro
-    t: 24.158625
+    t: 61.8876
   puntos:
   - nombre: tronco
     posicion: {x: -311, y: 39.6531, z: 65}
@@ -1006,13 +2481,23 @@ MonoBehaviour:
     posicion: {x: -320, y: 36.032467, z: 64.5}
   - nombre: p_estela2
     posicion: {x: -315.6, y: 35.996155, z: 63.6}
+  - nombre: p_l1
+    posicion: {x: -322.5, y: 36.072327, z: 62.8}
+  - nombre: p_l2
+    posicion: {x: -318.2, y: 36.024784, z: 66.6}
+  - nombre: p_l1_cae
+    posicion: {x: -324.5, y: 36.023605, z: 61.6}
+  - nombre: p_l2_cae
+    posicion: {x: -316.4, y: 36.00121, z: 68.4}
+  - nombre: huida
+    posicion: {x: -334, y: 36.03368, z: 76}
   - nombre: explosion
-    posicion: {x: -318, y: 36.29455, z: 70}
+    posicion: {x: -320, y: 36.042202, z: 64.8}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 6540294704968237395
+    - rid: 6540294773546943094
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1020,7 +2505,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 6540294704968237396
+    - rid: 6540294773546943095
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -1033,14 +2518,14 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 6540294704968237397
+    - rid: 6540294773546943096
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.6
         duration: 0.5
         waitForEnd: 0
-    - rid: 6540294704968237398
+    - rid: 6540294773546943097
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

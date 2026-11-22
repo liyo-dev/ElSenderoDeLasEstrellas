@@ -37,6 +37,20 @@ public static partial class Partida
         return ok;
     }
 
+    // Lugar que pide quien guarda (un farol); vacío = el de la zona donde está el jugador.
+    static string LugarDelGuardado;
+
+    /// <summary>
+    /// Guardado manual en un punto de guardado: la ranura dirá el lugar del farol, no el último
+    /// lugar conocido. Vacío = el lugar de la zona en la que está el jugador.
+    /// </summary>
+    public static bool GuardarEnPuntoDeGuardado(SaveSystem guardado, string claveDelLugar)
+    {
+        LugarDelGuardado = claveDelLugar;
+        try { return Guardar(guardado, SaveRequestContext.Manual); }
+        finally { LugarDelGuardado = null; }
+    }
+
     /// <summary>
     /// Guardado manual en un momento en que el jugador no está en un sitio jugable (un final, a
     /// mitad de una escena): al cargar aparece donde el último auto-guardado de esta sesión (o el

@@ -38,6 +38,7 @@ namespace Core
         public bool SprintHeld => GamepadInputReader.SprintHeld;
         // Tecleando un combo (Y), la A es un botón de la secuencia, no un salto (INC-494).
         public bool JumpPressed => !ComboCastController.IsComposing && GamepadInputReader.JumpPressed;
+        public bool JumpHeld => GamepadInputReader.JumpHeld;
 
         public Vector2 CameraLook
         {

@@ -50,6 +50,8 @@ namespace Kits.Puzzles
         public int BeatsPerMeasure => FollowsSong ? score.BeatsPerMeasure : beatsPerMeasure;
         /// <summary>La partitura que sigue (null si va a un BPM fijo).</summary>
         public MusicScore Score => score;
+        /// <summary>Fuente que suena la canción (null si el reloj va sin música).</summary>
+        public AudioSource Source => source;
         /// <summary>Sigue a una canción medida en lugar de a un BPM fijo.</summary>
         public bool FollowsSong => score != null && score.BeatCount > 1;
         /// <summary>Segundo de la canción en el que va (solo con partitura).</summary>

@@ -2763,6 +2763,18 @@
         {
             "key": "DLG_ALDEA_CANDELA_2_01",
             "value": "Desde aquí se ve todo: el mar, el puerto y el camino del bosque."
+        },
+        {
+            "key": "DLG_CAP4_CASA_01",
+            "value": "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jergón."
+        },
+        {
+            "key": "DLG_CAP4_FIGURA_01",
+            "value": "¡Te has salvado tú y has chamuscado a quien tenías que proteger!"
+        },
+        {
+            "key": "CHAR_LADRON",
+            "value": "Ladrón"
         }
     ]
 }

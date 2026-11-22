@@ -1,36 +1,98 @@
-# Cap. 4 · El claro de los troncos quemados: Estela, el aro leído y «ya me lo cobraré».
+# Cap. 4 · El claro de los troncos quemados: dos ladrones intentan robar a Estela, ella se hace la
+# tonta y al final les da una paliza. Will lo ve todo desde los árboles y aplaude: así se conocen.
+# Después, el aro leído y «ya me lo cobraré».
 GUION Cap4_01_Estela
 ESCENA MainWorld
 ZONA Cap4Claro -326 70 26
 SECUENCIA Assets/_SEQUENCES/SEQ_Cap4_01_Estela.asset
 TEXTO subtitulo
-RITMO entre_frases=0.45 mismo_hablante=0.3
+RITMO entre_frases=0.35 mismo_hablante=0.25
 
 REPARTO
-will    Player   nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
-estela  _ESTELA  nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+will    Player          nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+estela  _ESTELA         nombre=CHAR_ESTELA color=FF9F6B prefab=Assets/Prefabs/_ESTELA.prefab
+l1      NPC_Ladron1     nombre=CHAR_LADRON color=B9A58C prefab=Assets/_NPCs/Combat/Boy_Pirate.prefab
+l2      NPC_Ladron2     nombre=CHAR_LADRON color=A89C8A prefab=Assets/_NPCs/_GrafoNarrativo/Contrabandista_Grandote.prefab
 
 PUNTOS
 tronco     -311 65
+# Will llega por el camino y se queda en el borde del claro, mirando.
 p_will     -313.5 62.5
 p_estela   -320 64.5
 p_estela2  -315.6 63.6
-explosion  -318 70
+# Los dos ladrones la rodean, uno a cada lado.
+p_l1       -322.5 62.8
+p_l2       -318.2 66.6
+# Donde caen tras el hechizo y por donde huyen (fuera de cuadro; los retira el grafo, INC-1251).
+p_l1_cae   -324.5 61.6
+p_l2_cae   -316.4 68.4
+huida      -334 76
+explosion  -320 64.8
 
 HILO
 @inicio
-will en p_will mirando explosion
-& estela en p_estela mirando explosion
+will en p_will mirando p_estela
+& estela en p_estela mirando tronco
+& l1 en p_l1 mirando p_estela
+& l2 en p_l2 mirando p_estela
 & bandas
-# Estela está practicando y el hechizo le sale mal (INC-1287): por eso sale tosiendo del humo y de
-# mal humor, y la explosión no parece un fallo de la escena.
-plano general will estela
+# Plano de situación: la ven desde los árboles; Estela, de espaldas, recoge leña tarareando.
+plano general estela l1 l2
+& estela bucle ManosALaEspalda
+& l1 bucle Idle_Battle_NoWeapon
+& l2 bucle BrazosCruzados
+espera 0.6
+plano medio l1
+l1 dice CAP4_LADRONES_01 cara=picaro gesto=Talk01
+plano medio l2
+l2 dice CAP4_LADRONES_02 cara=picaro
+# Ella se hace la tonta: se gira despacio, sonrisa de no enterarse de nada.
+plano medio estela
+& estela reposo
+& estela mira l1
+estela dice CAP4_LADRONES_03 cara=alegre gesto=Question01
+plano dos l1 l2
+l1 dice CAP4_LADRONES_04 cara=molesto gesto=Angry01
+estela dice CAP4_LADRONES_05 cara=alegre gesto=Shrug01
+l2 dice CAP4_LADRONES_06 cara=sorpresa gesto=Question01
+# Contraplano corto: Will, a punto de intervenir, se frena al ver la cara de ella.
+plano medio will
+& will gesto SenseSomethingStart_NoWeapon
+will cara preocupado
+espera 0.8
+plano primer estela
+estela dice CAP4_LADRONES_07 cara=picaro
+& estela bucle BrazosEnJarras fundido=0.3
+
+@paliza
+# El golpe cómico: un hechizo a bocajarro, humo, y los dos por los suelos.
+plano general estela l1 l2
 estela gesto MagicRight
 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Smoke AOE explosion.prefab" en=explosion lifetime=3
 & sacudida 0.6 0.5
+& l1 anda a p_l1_cae ritmo=prisa sin_esperar
+& l2 anda a p_l2_cae ritmo=prisa sin_esperar
+espera 0.5
+l1 bucle Knockdown01_Ground
+& l2 bucle Knockdown01_Ground
 & estela gesto Dizzy_NoWeapon
 & estela cara molesto
-espera 1.5
+espera 1.2
+plano dos l1 l2
+l2 dice CAP4_LADRONES_08 cara=miedo gesto=GetUp_NoWeapon
+l1 gesto GetUp_NoWeapon
+l1 anda a huida ritmo=prisa sin_esperar
+& l2 anda a huida ritmo=prisa sin_esperar
+espera 0.6
+plano medio estela
+estela dice CAP4_LADRONES_09 cara=picaro gesto=Challenging_NoWeapon
+espera 0.4
+
+@aplauso
+# Silencio. Desde los árboles, un aplauso solo. Ella se gira de golpe.
+plano medio will
+will gesto HandClap01
+espera 1.2
 estela mira will
 will mira estela
 plano medio estela

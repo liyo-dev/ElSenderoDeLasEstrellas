@@ -2763,6 +2763,18 @@
         {
             "key": "DLG_ALDEA_CANDELA_2_01",
             "value": "From here you can see everything: the sea, the harbour and the forest road."
+        },
+        {
+            "key": "DLG_CAP4_CASA_01",
+            "value": "This is my home. Look around all you like, but don't touch dinner. Sleep on the straw mattress."
+        },
+        {
+            "key": "DLG_CAP4_FIGURA_01",
+            "value": "You saved yourself and scorched the ones you were meant to protect!"
+        },
+        {
+            "key": "CHAR_LADRON",
+            "value": "Thief"
         }
     ]
 }

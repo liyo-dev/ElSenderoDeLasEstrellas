@@ -294,3 +294,23 @@ MonoBehaviour:
     requireNavMesh: 0
     requiredFlag: 
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Ladron1
+    prefab: {fileID: 7766501778076261952, guid: 5118f931c03a5874cbda28b2a3df997f, type: 3}
+    gameObjectName: Ladron1
+    persistenceId: NPC_Ladron1
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: NARRATIVE_FLAG:ESTELA_APARECE
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Ladron2
+    prefab: {fileID: 3238590465008799467, guid: fc981ffd7cfc80d489ec5c20f5c83f28, type: 3}
+    gameObjectName: Ladron2
+    persistenceId: NPC_Ladron2
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: NARRATIVE_FLAG:ESTELA_APARECE
+    invertCondition: 0

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -70,6 +70,12 @@ public class AmbientZone : MonoBehaviour
 
     private Transform _playerTransform;
     private Collider _collider;
+
+    /// <summary>Clave del nombre del lugar de esta zona (vacía si la zona no tiene nombre).</summary>
+    public string NombreDelLugar => ambientPreset != null ? ambientPreset.nombreDelLugar : "";
+
+    /// <summary>Clave del lugar de la zona que manda ahora sobre el jugador (vacía si ninguna).</summary>
+    public static string LugarDelJugador => _currentActiveZone != null ? _currentActiveZone.NombreDelLugar : "";
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

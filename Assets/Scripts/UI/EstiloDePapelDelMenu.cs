@@ -374,6 +374,11 @@ public sealed class EstiloDePapelDelMenu : MonoBehaviour
     /// El último lugar que el grupo conoció (lo anuncia <see cref="PresentacionDeLugares"/>).
     private static string LugarDe(PlayerSaveData datos)
     {
+        if (!string.IsNullOrEmpty(datos.lugarDelGuardado))
+        {
+            var l = LocalizationManager.Instance;
+            return l != null ? l.Get(datos.lugarDelGuardado, datos.lugarDelGuardado) : datos.lugarDelGuardado;
+        }
         if (datos.flags == null) return null;
         for (int i = datos.flags.Count - 1; i >= 0; i--)
         {

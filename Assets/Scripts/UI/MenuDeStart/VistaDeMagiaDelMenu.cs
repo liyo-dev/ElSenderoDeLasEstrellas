@@ -39,6 +39,13 @@ namespace Sendero.UI
         private Image _iconoGrande, _halo, _chipElemento;
         private TextMeshProUGUI _escudo, _escudoNota;
         private Image _chipEscudo;
+        private GameObject _hojaDelEscudo, _hojaDeHabilidades;
+        private readonly List<TextMeshProUGUI> _nombresDeHabilidad = new(), _frasesDeHabilidad = new();
+        private TextMeshProUGUI _sinHabilidades;
+        // Abajo a la derecha se ve la hoja de habilidades en vez de la del escudo (X cambia).
+        private bool _verHabilidades;
+        private static readonly AbilityKey[] s_habilidades =
+            { AbilityKey.Swim, AbilityKey.Jump, AbilityKey.Sprint, AbilityKey.Fly, AbilityKey.Magic, AbilityKey.Shield };
 
         private readonly List<(MagicSpellSO s, bool sabe)> _rapidos = new(), _combos = new();
         private (MagicSpellSO s, bool sabe) _especialDelSet;
@@ -47,13 +54,14 @@ namespace Sendero.UI
 
         public string Titulo => "Magia";
         public bool UsaPersonaje => true;
-        public bool UsaX => false;
+        public bool UsaX => true;
         public bool UsaGatillos => true;
 
         /// El hechizo resaltado (el Grimorio se abre por él).
         public SpellId Resaltado { get { var s = SpellResaltado(out _); return s != null ? s.spellId : SpellId.None; } }
 
-        public string Pistas => GrimorioDelPersonaje.TieneGrimorio ? P.Boton(InputGlyphNames.Select) + " Grimorio" : "";
+        public string Pistas => P.Boton(InputGlyphNames.MenuX) + (_verHabilidades ? " Escudo" : " Habilidades")
+                                + (GrimorioDelPersonaje.TieneGrimorio ? "     " + P.Boton(InputGlyphNames.Select) + " Grimorio" : "");
 
         // ─── Montaje ───────────────────────────────────────────────────────────
 
@@ -63,6 +71,56 @@ namespace Sendero.UI
             MontarSet(cuerpo);
             MontarDetalle(cuerpo);
             MontarEscudo(cuerpo);
+            MontarHabilidades(cuerpo);
+        }
+
+        /// Hoja «Habilidades» (INC-1397): lo que el personaje ya sabe hacer (nadar, volar…), con su
+        /// nombre y una frase, en el sitio de la hoja del escudo. Dos columnas de tres.
+        private void MontarHabilidades(RectTransform raiz)
+        {
+            var cuerpo = P.Vacio("Hoja de habilidades", raiz);
+            P.Rellenar(cuerpo);
+            _hojaDeHabilidades = cuerpo.gameObject;
+            P.Hoja("Habilidades", cuerpo, 910f, 630f, 902f, 330f);
+            var t = P.Titulo("Título habilidades", cuerpo, "Habilidades", 30f, PaletaUI.TintaDeTexto, TextAlignmentOptions.MidlineLeft);
+            PiezasDeUI.ColocarArribaIzquierda(t.rectTransform, 946f, 648f, 400f, 42f);
+            for (int i = 0; i < s_habilidades.Length; i++)
+            {
+                float x = 946f + (i % 2) * 424f, y = 702f + (i / 2) * 82f;
+                var n = P.Titulo("Habilidad " + i, cuerpo, "", 24f, PaletaUI.TintaDeTexto, TextAlignmentOptions.TopLeft);
+                PiezasDeUI.ColocarArribaIzquierda(n.rectTransform, x, y, 404f, 32f);
+                var f = P.Txt("Frase " + i, cuerpo, "", 19f, P.TextoMaqueta, false, TextAlignmentOptions.TopLeft, envolver: true);
+                PiezasDeUI.ColocarArribaIzquierda(f.rectTransform, x, y + 32f, 404f, 46f);
+                f.enableAutoSizing = true; f.fontSizeMin = 15f; f.fontSizeMax = 19f;
+                _nombresDeHabilidad.Add(n); _frasesDeHabilidad.Add(f);
+            }
+            _sinHabilidades = P.Txt("Sin habilidades", cuerpo, "Todavía no ha aprendido ninguna.", 22f, P.TextoMaqueta, false, TextAlignmentOptions.TopLeft, envolver: true);
+            PiezasDeUI.ColocarArribaIzquierda(_sinHabilidades.rectTransform, 946f, 706f, 836f, 40f);
+            P.Activar(_hojaDeHabilidades, false);
+        }
+
+        // Se pinta al abrir el menú, al cambiar de personaje y al cambiar de hoja; nunca por fotograma.
+        private void PintarHabilidades()
+        {
+            P.Activar(_hojaDelEscudo, !_verHabilidades);
+            P.Activar(_hojaDeHabilidades, _verHabilidades);
+            if (!_verHabilidades) return;
+            var habilidades = HabilidadesDelPersonaje.De(Partida.Preset, Personaje);
+            int k = 0;
+            for (int i = 0; i < s_habilidades.Length; i++)
+            {
+                if (!habilidades.Tiene(s_habilidades[i])) continue;
+                var info = AbilityPresentationKeyLookup.Resolve(s_habilidades[i], null);
+                _nombresDeHabilidad[k].text = info.title;
+                _frasesDeHabilidad[k].text = info.description;
+                k++;
+            }
+            for (int i = 0; i < _nombresDeHabilidad.Count; i++)
+            {
+                P.Activar(_nombresDeHabilidad[i].gameObject, i < k);
+                P.Activar(_frasesDeHabilidad[i].gameObject, i < k);
+            }
+            P.Activar(_sinHabilidades.gameObject, k == 0);
         }
 
         private void MontarSet(RectTransform cuerpo)
@@ -153,8 +211,11 @@ namespace Sendero.UI
             _especial.enableAutoSizing = true; _especial.fontSizeMin = 16f; _especial.fontSizeMax = 20f;
         }
 
-        private void MontarEscudo(RectTransform cuerpo)
+        private void MontarEscudo(RectTransform raiz)
         {
+            var cuerpo = P.Vacio("Hoja del escudo", raiz);
+            P.Rellenar(cuerpo);
+            _hojaDelEscudo = cuerpo.gameObject;
             P.Hoja("Escudo", cuerpo, 910f, 630f, 902f, 330f);
             var t = P.TxtConIconos("Título escudo", cuerpo, "Escudo  " + P.Boton(InputGlyphNames.East), 30f, PaletaUI.TintaDeTexto, TextAlignmentOptions.MidlineLeft);
             if (P.FuenteTitulos != null) t.font = P.FuenteTitulos;
@@ -237,6 +298,7 @@ namespace Sendero.UI
             }
             AjustarIndice();
             Pintar();
+            PintarHabilidades();
         }
 
         public void Ocultar() { }
@@ -413,6 +475,13 @@ namespace Sendero.UI
         {
             int h = EntradaDelMenu.Horizontal(), v = EntradaDelMenu.Vertical();
             if (h != 0 || v != 0) Mover(h, v);
+            if (EntradaDelMenu.Quitar)
+            {
+                _verHabilidades = !_verHabilidades;
+                EntradaDelMenu.Sonido("UI_Navigate");
+                PintarHabilidades();
+                _menu.RefrescarPistas();
+            }
         }
 
         private void Mover(int h, int v)
