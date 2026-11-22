@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using Core;
 using Invector.vCharacterController;
@@ -41,59 +41,17 @@ public class EsquivaDelJugador : MonoBehaviour
     public const float FundidoDeSalidaCorriendo = 0.08f;
     public const float FundidoDeSalidaParado = 0.12f;
     public const float SaltitoPorDefecto = 0f;
+    // Parte del clip de rodar (0-1) en la que acaba el giro y se devuelve el control.
+    private const float FinDelGiro = 0.95f;
     [Tooltip("Inclinación mínima del stick para rodar hacia él; por debajo, rueda hacia atrás.")]
     [SerializeField, Range(0.05f, 0.9f)] private float stickMinimo = 0.3f;
 
-    [Header("Salto del león (con el stick)")]
-    [Tooltip("Con el stick, salta hacia donde apunta y da la voltereta en el aire mientras baja. Si no, rueda sin saltar.")]
-    // Apagado desde el 20 nov 2026 (Raúl: «está mal el esquivar, vamos a usar la primera versión
-    // que trae el propio pack»): con o sin stick, rueda con las animaciones del paquete
-    // (RollFWD/BWD/LFT/RGT) hacia donde apunta, sin salto. El salto con voltereta en el aire
-    // (INC-1374) sigue aquí por si se quiere volver a probar.
-    [SerializeField] private bool saltoDelLeon = false;
-    [Tooltip("Pose de cuerpo entero del salto (la crea la tabla de poses de actuación).")]
-    [SerializeField] private string estadoDelSalto = EstadoDelSaltoPorDefecto;
-    [Tooltip("Altura del salto, en alturas de la cabeza. Bajo = rasante, como un dash.")]
-    [SerializeField, Range(0f, 2f)] private float alturaDelSalto = AlturaDelSaltoPorDefecto;
-    [Tooltip("Metros que recorre en el aire, a velocidad constante (menos si hay una pared).")]
-    [SerializeField, Min(0f)] private float distanciaDelSalto = DistanciaDelSaltoPorDefecto;
-    [Tooltip("Segundos en el aire, del despegue a tocar suelo (voltereta incluida).")]
-    [SerializeField, Min(0.1f)] private float duracionDelSalto = DuracionDelSaltoPorDefecto;
-    [Tooltip("Metros de más que recorre el arco con la voltereta (se suman a los del salto).")]
-    [SerializeField, Min(0f)] private float distanciaRodando = DistanciaRodandoPorDefecto;
-
-    [Tooltip("Pose de cuerpo entero en lo alto: brazos abiertos y piernas juntas, preparando la voltereta.")]
-    [SerializeField] private string estadoDePreparar = EstadoDePrepararPorDefecto;
-    [Tooltip("Voltereta en el aire mientras baja (el clip se acelera para caber).")]
-    [SerializeField] private string estadoDeLaVoltereta = "JumpAirSpin_InPlace_NoWeapon";
-    [Tooltip("Caída de un salto normal, al tocar suelo.")]
-    [SerializeField] private string estadoDeLaCaida = "JumpEnd_InPlace_NoWeapon";
-    [Tooltip("Parte del arco (0-1) en la que deja de subir y se prepara.")]
-    [SerializeField, Range(0f, 1f)] private float empiezaAPrepararEn = 0.35f;
-    [Tooltip("Parte del arco (0-1) en la que empieza la voltereta.")]
-    [SerializeField, Range(0f, 1f)] private float empiezaLaVolteretaEn = 0.5f;
-    [Tooltip("Segundos de la caída en el suelo antes de devolver el control.")]
-    [SerializeField, Min(0f)] private float segundosDeCaida = 0.12f;
-
-    /// <summary>Pose de lo alto del salto (la crea la tabla de poses de actuación).</summary>
-    public const string EstadoDePrepararPorDefecto = "Esquiva_Preparar";
-
-    /// <summary>Valores de partida del salto del león (el montaje los pone en el cuerpo del grupo).</summary>
-    public const float AlturaDelSaltoPorDefecto = 0.9f;
-    public const float DistanciaDelSaltoPorDefecto = 3.2f;
-    public const float DuracionDelSaltoPorDefecto = 0.7f;
-    public const float DistanciaRodandoPorDefecto = 2.2f;
-    private const float FinDelGiro = 0.95f;
-
-    /// <summary>Pose del salto del león (la crea la tabla de poses de actuación).</summary>
-    public const string EstadoDelSaltoPorDefecto = "Esquiva_Salto";
-
     [Header("Reglas")]
-    [Tooltip("Segundos de invulnerabilidad desde que empieza a rodar.")]
+    [Tooltip("Segundos de invulnerabilidad desde que empieza a rodar (independiente de lo que dure el dash).")]
     [SerializeField, Min(0f)] private float segundosInvulnerable = 0.3f;
     [Tooltip("Segundos tras acabar una esquiva antes de poder empezar otra.")]
     [SerializeField, Min(0f)] private float espera = EsperaPorDefecto;
-    [Tooltip("Segundos que se guarda una pulsación si aún no se puede rodar (p. ej. al acabar de lanzar).")]
+    [Tooltip("Segundos que se guarda una pulsación si aún no se puede rodar (p. ej. al acabar de lanzar). La dirección se lee al salir.")]
     [SerializeField, Min(0f)] private float guardarPulsacion = 0.2f;
 
     [Header("Animator")]
@@ -138,13 +96,15 @@ public class EsquivaDelJugador : MonoBehaviour
     private float _libreDesde;
     private float _invulnerableHasta = -1f;
     private float _guardadaHasta = -1f;
-    private Vector2 _stickGuardado;
 
     /// <summary>Hay una esquiva en curso.</summary>
     public bool EnCurso => _mia;
 
-    /// <summary>Está en los instantes invulnerables de la esquiva: no le alcanzan ni golpes ni derribos.</summary>
-    public bool EsInvulnerable => _mia && Time.time < _invulnerableHasta;
+    /// <summary>
+    /// Está en los instantes invulnerables de la esquiva: no le alcanzan ni golpes ni derribos. El
+    /// mismo plazo se pasa a <see cref="PlayerHealthSystem.HacerInvulnerable"/> para el daño.
+    /// </summary>
+    public bool EsInvulnerable => Time.time < _invulnerableHasta;
 
     /// <summary>Ha empezado una esquiva (dirección en mundo).</summary>
     public event Action<Vector3> OnEsquiva;
@@ -244,6 +204,7 @@ public class EsquivaDelJugador : MonoBehaviour
         _mia = false;
         Rastro(false);
         _guardadaHasta = -1f;
+        _invulnerableHasta = -1f;
     }
 
     void Update()
@@ -264,17 +225,17 @@ public class EsquivaDelJugador : MonoBehaviour
 
         if (_guardadaHasta < 0f) return;
         if (Time.time > _guardadaHasta) { _guardadaHasta = -1f; return; }
-        if (Intentar(_stickGuardado)) _guardadaHasta = -1f;
+        if (Intentar(GamepadInputReader.Move)) _guardadaHasta = -1f;
     }
 
     /// <summary>
     /// Pide una esquiva con la inclinación del stick de movimiento (relativa a la cámara). Si
-    /// ahora no se puede pero se podrá enseguida, la pulsación se guarda un instante.
+    /// ahora no se puede pero se podrá enseguida, la pulsación se guarda un instante; al salir
+    /// rueda hacia donde apunte el stick en ese momento, no al pulsar.
     /// </summary>
     public void Pedir(Vector2 stick)
     {
         if (Intentar(stick)) { _guardadaHasta = -1f; return; }
-        _stickGuardado = stick;
         _guardadaHasta = Time.time + guardarPulsacion;
     }
 
@@ -286,8 +247,9 @@ public class EsquivaDelJugador : MonoBehaviour
         bool conStick = stick.sqrMagnitude >= stickMinimo * stickMinimo;
         bool enAire = _controller && !_controller.PisandoSuelo;
         _velocidadAntes = _controller ? _controller.VelocidadDeMovimiento : 0f;
-        _rastroDuranteImpulso = !enAire && !(saltoDelLeon && conStick);
-        float ventanaInvulnerable = segundosInvulnerable;
+        _rastroDuranteImpulso = !enAire;
+        // Con el hechizo ya fuera, la esquiva corta la recuperación del gesto.
+        if (_caster && _caster.IsCasting) _caster.CortarRecuperacion();
 
         if (enAire)
         {
@@ -296,33 +258,6 @@ public class EsquivaDelJugador : MonoBehaviour
             if (!_controller.PedirImpulsoAereo(direccion, distancia, duracionDelDash)) return false;
             _dashAereoConsumido = _dashAereo = true;
             _finDelDashAereo = Time.time + duracionDelDash;
-            ventanaInvulnerable = Mathf.Min(ventanaInvulnerable, duracionDelDash);
-        }
-        else if (saltoDelLeon && conStick)
-        {
-            // Un solo arco (dibujo de Raúl, 20 nov 2026): sube, en lo alto abre los brazos y junta
-            // las piernas preparando la voltereta, la da mientras baja y cae como un salto normal.
-            // Antes esperaba a caer del salto para rodar por el suelo.
-            Quaternion antes = transform.rotation;
-            transform.rotation = Quaternion.LookRotation(direccion, Vector3.up);
-            var salto = new VolteretaDelJugador.SaltoConVoltereta
-            {
-                altura = alturaDelSalto,
-                desplazamiento = direccion * (distanciaDelSalto + distanciaRodando),
-                duracion = duracionDelSalto,
-                estadoSubida = estadoDelSalto,
-                estadoPreparar = estadoDePreparar,
-                estadoVoltereta = estadoDeLaVoltereta,
-                estadoCaida = estadoDeLaCaida,
-                empiezaAPrepararEn = empiezaAPrepararEn,
-                empiezaLaVolteretaEn = empiezaLaVolteretaEn,
-                caida = segundosDeCaida,
-            };
-            if (!voltereta.ConVolteretaEnElAire(salto))
-            {
-                transform.rotation = antes;
-                return false;
-            }
         }
         else
         {
@@ -344,13 +279,12 @@ public class EsquivaDelJugador : MonoBehaviour
                 fundidoDeSalida = conStick ? FundidoDeSalidaCorriendo : FundidoDeSalidaParado
             };
             if (!voltereta.DesdeElSuelo(rodar)) return false;
-            ventanaInvulnerable = Mathf.Min(ventanaInvulnerable, duracionDelDash);
         }
 
         _mia = true;
         Rastro(true);
-        _invulnerableHasta = Time.time + ventanaInvulnerable;
-        if (salud) salud.HacerInvulnerable(ventanaInvulnerable, parpadeo: false);
+        _invulnerableHasta = Time.time + segundosInvulnerable;
+        if (salud) salud.HacerInvulnerable(segundosInvulnerable, parpadeo: false);
         if (!string.IsNullOrEmpty(sfxAlRodar) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(sfxAlRodar);
         OnEsquiva?.Invoke(direccion);
@@ -364,7 +298,7 @@ public class EsquivaDelJugador : MonoBehaviour
         if (salud && !salud.IsAlive) return false;
         if (_acciones && !_acciones.CanUse(PlayerAbility.Roll)) return false;
         if (_controller && _controller.suppressAirMovement) return false;
-        if (_caster && _caster.IsCasting) return false;
+        if (_caster && _caster.IsCasting && !_caster.RecuperacionCortable) return false;
         return true;
     }
 

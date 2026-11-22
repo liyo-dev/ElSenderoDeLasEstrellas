@@ -86,6 +86,8 @@ public class MagicCaster : MonoBehaviour
     private int _nextSeriesStep;
     private float _lastSeriesCastTime = -999f;
     private float _castingUntil;
+    // Hasta cuándo no ha salido aún lo lanzado: antes no se puede cortar el gesto (se perdería el hechizo).
+    private float _salidaHasta;
     private ITargetProvider _targets;
     private Coroutine _omniRelease;
     private Coroutine _remate;
@@ -118,6 +120,27 @@ public class MagicCaster : MonoBehaviour
 
     /// <summary>True mientras dura el gesto del último lanzamiento (retraso + carga).</summary>
     public bool IsCasting => Time.time < _castingUntil;
+
+    /// <summary>
+    /// El gesto en curso ya ha soltado el hechizo y solo queda la recuperación: una esquiva puede
+    /// cortarlo con <see cref="CortarRecuperacion"/>. Los gestos de equipo, devolución y remate no se cortan.
+    /// </summary>
+    public bool RecuperacionCortable => IsCasting && Time.time >= _salidaHasta
+        && !_gestoDeDevolucion && _remate == null && _omniRelease == null;
+
+    /// <summary>Corta la recuperación del gesto (ver <see cref="RecuperacionCortable"/>). Devuelve si lo hizo.</summary>
+    public bool CortarRecuperacion()
+    {
+        if (!RecuperacionCortable) return false;
+        _castingUntil = 0f;
+        if (controller)
+        {
+            controller.CancelActionCommit();
+            controller.CancelAirHold();
+            controller.ReleaseUpperBodyPose();
+        }
+        return true;
+    }
 
     public IReadOnlyList<MagicSpellSO> BasicSpells => _basics;
     public int ActiveBasicIndex => _activeBasic;
@@ -433,6 +456,8 @@ public class MagicCaster : MonoBehaviour
             ? spell.castStyle : MagicCastStyle.Hand;
         if (style == MagicCastStyle.Area) castLock = Mathf.Max(castLock, areaMinSeconds);
         _castingUntil = Time.time + castLock;
+        _salidaHasta = style == MagicCastStyle.Area ? _castingUntil
+            : Time.time + Mathf.Max(0f, spell.castDelaySeconds);
 
         Vector3 toTarget = GetDirectionToTarget();
         if (toTarget.sqrMagnitude > 0.0001f && controller != null)
@@ -478,7 +503,7 @@ public class MagicCaster : MonoBehaviour
 
         lockSeconds = Mathf.Max(0.1f, lockSeconds);
         if (style == MagicCastStyle.Area) lockSeconds = Mathf.Max(lockSeconds, areaMinSeconds);
-        _castingUntil = Time.time + lockSeconds;
+        _castingUntil = _salidaHasta = Time.time + lockSeconds;
 
         if (controller) PlayCastGesture(style, CastHand.Center, lockSeconds, facing);
         return true;

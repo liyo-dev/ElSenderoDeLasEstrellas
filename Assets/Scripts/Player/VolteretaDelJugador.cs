@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using Invector.vCharacterController;
@@ -107,107 +107,6 @@ public class VolteretaDelJugador : MonoBehaviour
         public float velocidadDeSalida;
         /// Segundos de fundido al entrar en el clip y al salir a la locomoción (0 = los de siempre).
         public float fundidoDeEntrada, fundidoDeSalida;
-    }
-
-    /// <summary>
-    /// Salto con la voltereta en el aire (esquiva con stick, dibujo de Raúl, 20 nov 2026): un solo
-    /// arco. Sube; en lo alto abre los brazos y junta las piernas preparando la voltereta; la da
-    /// mientras baja; y cae como un salto normal. Fracciones del arco (0-1) para cada parte.
-    /// </summary>
-    public struct SaltoConVoltereta
-    {
-        /// Altura en alturas de la cabeza.
-        public float altura;
-        /// Desplazamiento horizontal en mundo (se recorta contra paredes).
-        public Vector3 desplazamiento;
-        /// Segundos en el aire.
-        public float duracion;
-        public string estadoSubida, estadoPreparar, estadoVoltereta, estadoCaida;
-        /// Fracción del arco en la que deja de subir y se prepara, y en la que empieza la voltereta.
-        public float empiezaAPrepararEn, empiezaLaVolteretaEn;
-        /// Segundos de la caída en el suelo antes de devolver el control.
-        public float caida;
-    }
-
-    /// <summary>Salto con la voltereta en el aire. False si no se puede empezar.</summary>
-    public bool ConVolteretaEnElAire(SaltoConVoltereta salto)
-    {
-        if (!PuedeEmpezar()) return false;
-        _hayOtroTramo = false;
-        _co = StartCoroutine(Co_ConVolteretaEnElAire(salto));
-        return true;
-    }
-
-    private float _velocidadDelAnimatorAntes = -1f;
-
-    private IEnumerator Co_ConVolteretaEnElAire(SaltoConVoltereta s)
-    {
-        EnCursoDesdeElSuelo = true;
-        _animacionAjena = false;
-        Tomar();
-
-        Vector3 inicio = transform.position;
-        Vector3 desplazamiento = s.desplazamiento; desplazamiento.y = 0f;
-        desplazamiento = RecortarContraParedes(inicio, desplazamiento);
-        _aterrizaje = SueloEn(inicio + desplazamiento, inicio.y);
-        float alto = AlturaDeLaCabeza() * Mathf.Max(0f, s.altura);
-        float dur = Mathf.Max(0.2f, s.duracion);
-        float preparar = Mathf.Clamp01(s.empiezaAPrepararEn);
-        float voltereta = Mathf.Clamp(s.empiezaLaVolteretaEn, preparar, 1f);
-
-        int fase = -1;
-        int hashVoltereta = Animator.StringToHash(string.IsNullOrEmpty(s.estadoVoltereta) ? estadoEnElAire : s.estadoVoltereta);
-        for (float t = 0f; t < dur; t += Time.deltaTime)
-        {
-            BajarBrazos();
-            float u = t / dur;
-            int ahora = u < preparar ? 0 : u < voltereta ? 1 : 2;
-            if (ahora != fase)
-            {
-                fase = ahora;
-                if (fase == 0) ReproducirEstado(s.estadoSubida);
-                else if (fase == 1) ReproducirEstado(s.estadoPreparar);
-                else
-                {
-                    // La voltereta entera en lo que queda de arco: el clip se acelera para caber.
-                    if (Reproducir(hashVoltereta)) AjustarVelocidadDelClip(s.estadoVoltereta ?? estadoEnElAire, dur * (1f - voltereta));
-                }
-            }
-            Vector3 p = Vector3.Lerp(inicio, _aterrizaje, u);
-            p.y += alto * 4f * u * (1f - u);
-            transform.position = p;
-            yield return null;
-        }
-        RestaurarVelocidadDelAnimator();
-        transform.position = _aterrizaje;
-
-        // La caída de un salto normal, ya en el suelo.
-        if (s.caida > 0f && ReproducirEstado(s.estadoCaida))
-            for (float t = 0f; t < s.caida; t += Time.deltaTime) { BajarBrazos(); yield return null; }
-
-        _co = null;
-        Soltar();
-    }
-
-    private bool ReproducirEstado(string estado) => !string.IsNullOrEmpty(estado) && Reproducir(Animator.StringToHash(estado));
-
-    private void AjustarVelocidadDelClip(string nombreDelClip, float segundos)
-    {
-        if (!animator || animator.runtimeAnimatorController == null || segundos <= 0.05f) return;
-        foreach (var clip in animator.runtimeAnimatorController.animationClips)
-        {
-            if (clip == null || clip.name != nombreDelClip || clip.length <= 0.01f) continue;
-            if (_velocidadDelAnimatorAntes < 0f) _velocidadDelAnimatorAntes = animator.speed;
-            animator.speed = clip.length / segundos;
-            return;
-        }
-    }
-
-    private void RestaurarVelocidadDelAnimator()
-    {
-        if (_velocidadDelAnimatorAntes < 0f || !animator) return;
-        animator.speed = _velocidadDelAnimatorAntes;
-        _velocidadDelAnimatorAntes = -1f;
     }
 
     /// <summary>Hay una voltereta en curso.</summary>
@@ -491,7 +390,6 @@ public class VolteretaDelJugador : MonoBehaviour
     /// personaje en su punto de aterrizaje. Idempotente.
     private void Soltar()
     {
-        RestaurarVelocidadDelAnimator();
         bool habia = _devolverCuerpo || _modoPuesto || _bloqueoPuesto;
         bool desdeElSuelo = _devolverCuerpo;
 
