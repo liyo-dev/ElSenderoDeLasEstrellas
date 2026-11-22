@@ -13,47 +13,26 @@ MonoBehaviour:
   m_Name: DLG_CAP3_PEZ_LECCION
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   lines:
-  - speakerNameId: CHAR_PEZ
+  - speakerNameId: CHAR_WILL
     textId: DLG_CAP3_PEZ_LECCION_01
-    text: "Un trato es un trato. Lecci\xF3n de nataci\xF3n. Primero: piensa como un pez."
+    text: "Aqu\xED tienes tu lubina."
     portrait: {fileID: 0}
-    isPlayerSpeaking: 0
+    isPlayerSpeaking: 1
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_PEZ
     textId: DLG_CAP3_PEZ_LECCION_02
-    text: "\u2026No. Todav\xEDa piensas como un chico. Se te nota en las orejas."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 6
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_LECCION_03
-    text: Brazos como si aplaudieras a una sardina muy lejos. Piernas como si no te importara nada.
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_LECCION_04
-    text: Y respira cuando el mar no mire.
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_WILL
-    textId: DLG_CAP3_PEZ_LECCION_05
-    text: "\xBFY ya est\xE1?"
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 1
-    lookAtOverrideId: 
-    emotion: 12
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_LECCION_06
-    text: "Por la autoridad que me dieron unas almejas que no recuerdo\u2026 \xA1te nombro pez de honor!"
+    text: "\xA1Capitana! El alumno est\xE1 listo. \xBFC\xF3mo dice? \xBFPies de sardina y brazos de pulpo? \xA1Pero solo tiene dos!"
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 13
+  - speakerNameId: CHAR_PEZ
+    textId: DLG_CAP3_PEZ_LECCION_03
+    text: Dos bastan. Estira un brazo cada vez, da pataditas y gira la cabeza para respirar. La capitana dice que puedes.
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 1
   maxLinesPerPage: 0
   isGroupConversation: 0

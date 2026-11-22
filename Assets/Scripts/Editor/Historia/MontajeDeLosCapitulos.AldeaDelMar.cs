@@ -45,11 +45,12 @@ public static partial class MontajeDeLosCapitulos
         foreach (var n in VecinosDeLaAldea)
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaDeVecino(n)) == null) { PersonajesConAspectoFijo.Asegurar(n); nuevos++; }
         if (nuevos > 0) CarasDeLosNPCs.Aplicar(informe);
+        NinosHechosEnBlender.Aplicar(informe, "Pez");
         // Lucía es una niña: su cuerpo y sus caras salen de NinosHechosEnBlender, no de las caras de los NPCs.
         if (AssetDatabase.LoadAssetAtPath<GameObject>(RutaDeVecino("Lucia")) == null)
         {
             PersonajesConAspectoFijo.Asegurar("Lucia");
-            NinosHechosEnBlender.Aplicar(informe);
+            NinosHechosEnBlender.Aplicar(informe, "Lucia");
         }
 
         foreach (var (clave, es, en) in new[]
@@ -78,15 +79,14 @@ public static partial class MontajeDeLosCapitulos
 
         // ── Dónde están (siempre; el posadero y Lucía, desde el Cap. 3, en la tabla del capítulo) ──
         Vecino("Remedios", 268.5f, -446.0f, 180f, navMesh: true, voz: "Vecina");
-        Vecino("Anselmo", 270.0f, -459.5f, 180f, y: 3.76f);   // al final del muelle: la altura de los tablones, no la del fondo
+        Vecino("Anselmo", 272f, -445f, 180f, navMesh: true); // en tierra junto al embarcadero
         Vecino("Engracia", 256.0f, -440.8f, 90f, voz: "Vecina");
         Vecino("Eusebio", 255.3f, -425.8f, 90f);              // en el banco de la plaza
         Vecino("Fermin", 270.0f, -432.0f, 0f, navMesh: true);
         Vecino("Benito", 282.6f, -430.8f, 90f);                // comiendo en la terraza de la posada, en su banco
         Vecino("Rosario", 285.4f, -430.8f, 270f, voz: "Vecina"); // enfrente, en el banco junto a la puerta
-        // Pez, en la orilla junto al embarcadero, hablándole al agua (el montaje del Cap. 3 busca la orilla); Candela, en el porche de la casa del farol (la
-        // casa apartada, solo se llega nadando). Su sitio exacto lo mide el montaje del Cap. 3 en la escena.
-        Vecino("Pez", PuntaDelMuelle.x, PuntaDelMuelle.y, 180f, y: 3.8f);
+        // Pez espera en tierra, antes de entrar al muelle, mirando hacia el paso del pueblo.
+        Vecino("Pez", 275f, -447f, 270f, navMesh: true);
         Vecino("Candela", 245f, -484f, 0f, y: 1.6f, voz: "Vecina");
 
         // ── Lo que cuentan: durante el Cap. 3 (animales con aro, carros de noche) y el resto del juego ──
@@ -133,8 +133,8 @@ public static partial class MontajeDeLosCapitulos
             Frase("ROSARIO_2", "CHAR_ROSARIO", "Siéntate, hombre, que de pie se come peor.", "Sit down, love, food goes down better sitting.", NPCEmotion.Happy));
 
         Charla("Pez", null,
-            Frase("PEZ_1", "CHAR_PEZ", "Hoy los boquerones están insoportables.", "The anchovies are unbearable today."),
-            Frase("PEZ_2", "CHAR_PEZ", "Si ves a Doña Lubina, dile que sigo esperando una disculpa.", "If you see Doña Lubina, tell her I'm still waiting for an apology."));
+            Frase("PEZ_1", "CHAR_PEZ", "Los boquerones van en grupo. Si ves uno, mira detrás.", "Anchovies swim in groups. If you see one, look behind it."),
+            Frase("PEZ_2", "CHAR_PEZ", "Puedo dibujar una lubina de memoria. Las escamas me llevan más tiempo.", "I can draw a sea bass from memory. The scales take me longer."));
         Charla("Candela", null,
             Frase("CANDELA_1", "CHAR_CANDELA", "Cada noche enciendo el farol. Por si acaso.", "Every night I light the lantern. Just in case."),
             Frase("CANDELA_2", "CHAR_CANDELA", "Desde aquí se ve todo: el mar, el puerto y el camino del bosque.", "From here you can see everything: the sea, the harbour and the forest road."));

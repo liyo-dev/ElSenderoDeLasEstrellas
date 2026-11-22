@@ -2562,7 +2562,7 @@
         },
         {
             "key": "DLG_CAP3_LUCES_09",
-            "value": "Pez will teach you, if you can put up with him. He's on the pier, talking to the fish."
+            "value": "Pez will teach you, if you can put up with him. He's on the beach by the pier."
         },
         {
             "key": "DLG_CAP3_LUCES_10",
@@ -2606,15 +2606,15 @@
         },
         {
             "key": "DLG_CAP3_PEZ_01",
-            "value": "Shh. I'm in a meeting."
+            "value": "Did you know sea bass come closer to shore at high tide? I counted three today."
         },
         {
             "key": "DLG_CAP3_PEZ_02",
-            "value": "…Yes, yes, I'll tell him."
+            "value": "I need to swim to the lantern house."
         },
         {
             "key": "DLG_CAP3_PEZ_03",
-            "value": "The sardines say you smell of land. Want to swim? Everybody wants to swim. Nobody wants to listen."
+            "value": "I can teach you with my wooden sea bass! My mum, Rosario, has it. She's sitting by the inn door."
         },
         {
             "key": "DLG_CAP3_PEZ_04",
@@ -2650,15 +2650,15 @@
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_01",
-            "value": "A deal's a deal. Swimming lesson. First: think like a fish."
+            "value": "Here's your sea bass."
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_02",
-            "value": "…No. You're still thinking like a boy. It shows in your ears."
+            "value": "Captain! Your pupil is ready. What's that? Sardine feet and octopus arms? But he only has two!"
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_03",
-            "value": "Arms like you're applauding a sardine very far away. Legs like you don't care about anything."
+            "value": "Two will do. Reach forward with one arm at a time, kick gently, and turn your head to breathe. The captain says you can do it."
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_04",
@@ -2678,7 +2678,7 @@
         },
         {
             "key": "DLG_CAP3_PEZ_ADIOS_02",
-            "value": "Candela has been lighting that lantern for ten years. The fish say Andrés isn't coming back."
+            "value": "Candela has been lighting that lantern for ten years. Nobody has seen his boat since."
         },
         {
             "key": "DLG_CAP3_PEZ_ADIOS_03",
@@ -2718,7 +2718,7 @@
         },
         {
             "key": "DLG_CAP3_PEZ_RECADO_01",
-            "value": "Have you spoken to Doña Lubina yet? She's very particular. The last post, at the end of the pier."
+            "value": "My mum is sitting by the inn door. Ask her for my wooden sea bass."
         },
         {
             "key": "DLG_CAP3_PEZ_BOYAS_01",
@@ -2750,11 +2750,11 @@
         },
         {
             "key": "DLG_ALDEA_PEZ_1_01",
-            "value": "The anchovies are unbearable today."
+            "value": "Anchovies swim in groups. If you see one, look behind it."
         },
         {
             "key": "DLG_ALDEA_PEZ_2_01",
-            "value": "If you see Doña Lubina, tell her I'm still waiting for an apology."
+            "value": "I can draw a sea bass from memory. The scales take me longer."
         },
         {
             "key": "DLG_ALDEA_CANDELA_1_01",
@@ -2775,6 +2775,14 @@
         {
             "key": "CHAR_LADRON",
             "value": "Thief"
+        },
+        {
+            "key": "DLG_CAP3_MADRE_DE_PEZ_01",
+            "value": "Can I take Pez's wooden sea bass? He wants to use it to teach me to swim."
+        },
+        {
+            "key": "DLG_CAP3_MADRE_DE_PEZ_02",
+            "value": "Here. Tell him the paint is dry and he can get it wet this time."
         }
     ]
 }

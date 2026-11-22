@@ -112,7 +112,7 @@ public static partial class MontajeDeLosCapitulos
         // Punto de guardado a un lado del camino, a mitad de viaje (entre 138,−261 y 157,−278).
         M(Cap3, MarcaAcampadaCamino, 150f, -266.5f, 45f);
         // A mitad del camino del puerto salta el interludio de Tobías; radio ancho para que no se escape quien vaya campo a través.
-        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "A mitad del camino del puerto", Senal = SD.Acampada, Mision = MisionCap3,
+        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "A mitad del camino del puerto", Senal = SD.Acampada, Mision = MisionDeLaAldea,
             Pos = new Vector3(130f, float.NaN, -253f), Radio = 22f, Tramo = Tramo(SD.Camino, SD.Acampada) });
         QuitarPiezaViejaDeEldran(informe);
         informe.AppendLine("Despedida: misión «Hora de partir», frases de despedida, cinemática e interludio de Tobías a mitad del camino.");
@@ -148,7 +148,7 @@ public static partial class MontajeDeLosCapitulos
         P("adios-hablar", "3.0 · Hablar con Eldran en la salida del pueblo (probar desde aquí)", Hablar(Eldran)),
         P("adios", "3.0 · Cinemática: la despedida («es un hasta pronto»)", Cinematica("CAP3_DESPEDIDA")),
         P("adios-paso", "Paso: reunirse con Eldran (cierra «Hora de partir»)", Completar(MisionPartir, "CAP2_ADIOS_ELDRAN", cerrar: true)),
-        P("mision", "Misión: las marcas de hierro (aviso de misión nueva)", new StartQuestNode { QuestId = MisionCap3, NoGiver = true }),
+        P("mision", "Misión: pistas en la Aldea del Mar", new StartQuestNode { QuestId = MisionDeLaAldea, NoGiver = true }),
         P("camino", "3.1 · Camino del puerto, a pie (probar desde aquí)", Emitir(SD.Camino)),
         P("camino-punto", "3.1 · Punto de guardado: la salida del pueblo", Punto("CAP3_SALIDA", MarcaWillSalida)),
         // A mitad de camino salta el interludio de Tobías y se sigue andando, sin rótulos ni cambio de hora.

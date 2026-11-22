@@ -41,7 +41,7 @@ public sealed class AyudaDelLab : MonoBehaviour, ISeccionDelLab
             "<b>Extras del Cap. 2</b> (norte): el puente sin magia sobre una zanja, el plato que persigue con una silla y el campamento de los contrabandistas.\n" +
             "<b>Enemigos del mundo</b> (sureste): fantasmas, mímicos, imps ladrones, Beholder y la Roca tras los muros rompibles.\n" +
             "<b>Amanecer</b> (noroeste): la estación para probar el hechizo que abre la protección del Mago Oscuro.\n" +
-            "<b>Zona de jefes</b> (oeste, por el pasillo del plataformeo): Demonio 1, Demonio 2, Gólem y Mago Oscuro. Al ganar vuelves a la entrada con la vida llena; si caes, el LAB se recarga allí.\n" +
+            "<b>Zona de jefes</b> (oeste, por el pasillo del plataformeo): Demonio 1, Demonio 2, Gólem, Mago Oscuro y Templo del Coro. Al ganar vuelves a la entrada con la vida llena; si caes, el LAB se recarga allí.\n" +
             "Las zonas cerradas (Pruebas, Tesoros, Arañas, Extras del Cap. 2, Enemigos del mundo y Amanecer) tienen un portal «← Volver al laboratorio» junto a la llegada: se sale andando, sin usar el viaje rápido.");
         Seccion("Pestañas",
             "<b>Combate</b>: escenarios del centro. <b>Zonas</b>: viaje rápido y salir al menú. <b>Grupo</b>: pelear solo, con Estela, con Liam o con los dos. " +

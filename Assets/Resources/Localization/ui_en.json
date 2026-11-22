@@ -1,6 +1,10 @@
 {
     "texts": [
         {
+            "key": "CORO_VOLVER_AL_LAB",
+            "value": "Return to the Lab"
+        },
+        {
             "key": "AVISO_AUTOGUARDADO",
             "value": "This game saves automatically. When you see this symbol, do not turn off or close the game."
         },
@@ -2507,6 +2511,14 @@
         {
             "key": "RASGO_NOMBRE_REBOTEEXTRA",
             "value": "Extra bounce"
+        },
+        {
+            "key": "ITEM_JUGUETE_DE_PEZ_NAME",
+            "value": "Wooden sea bass"
+        },
+        {
+            "key": "ITEM_JUGUETE_DE_PEZ_DESC",
+            "value": "The wooden fish Rosario keeps for her son."
         }
     ]
 }

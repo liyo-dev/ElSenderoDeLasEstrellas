@@ -15,45 +15,24 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_PEZ
     textId: DLG_CAP3_PEZ_01
-    text: "Shh. Estoy en una reuni\xF3n."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_02
-    text: "\u2026S\xED, s\xED, ya se lo digo."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 6
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_03
-    text: "Dicen las sardinas que hueles a tierra. \xBFQuieres nadar? Todo el mundo quiere nadar. Nadie quiere escuchar."
+    text: "\xBFSab\xEDas que las lubinas se acercan a la orilla cuando sube la marea? Hoy he contado tres."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
   - speakerNameId: CHAR_WILL
-    textId: DLG_CAP3_PEZ_04
-    text: Necesito llegar a la casa del farol.
+    textId: DLG_CAP3_PEZ_02
+    text: Necesito nadar hasta la casa del farol.
     portrait: {fileID: 0}
     isPlayerSpeaking: 1
     lookAtOverrideId: 
-    emotion: 10
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_05
-    text: "Te ense\xF1o, pero un favor por un favor. Do\xF1a Lubina, la del \xFAltimo pilar, no me habla desde el martes."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 2
-  - speakerNameId: CHAR_PEZ
-    textId: DLG_CAP3_PEZ_06
-    text: "Dile que lo del martes fue un malentendido. Ella sabr\xE1."
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
     emotion: 0
+  - speakerNameId: CHAR_PEZ
+    textId: DLG_CAP3_PEZ_03
+    text: "\xA1Te ense\xF1o con mi lubina de madera! Mi madre, Rosario, lo tiene. Est\xE1 sentada junto a la puerta de la posada."
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 13
   maxLinesPerPage: 0
   isGroupConversation: 0

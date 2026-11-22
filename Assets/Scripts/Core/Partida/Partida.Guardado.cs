@@ -190,6 +190,7 @@ public static partial class Partida
         var p = Preset;
         if (p == null) return;
 
+        MigrarMisionesDeLaAldea(p.flags);
         ReiniciarSesionNarrativa();
         // Lo que «ya pasó» vuelve con la partida: los tramos de historia lo consultan.
         (DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance())?.RestoreEverRaised(p.senalesEmitidas);
@@ -226,5 +227,43 @@ public static partial class Partida
             QuestManager.Instance?.RestoreFromProfileFlags(Preset != null ? Preset.flags : flags);
         }
         GameBootService.OnProfileReady += AlEstarListo;
+    }
+
+    /// Conserva el progreso de las partidas en las que las pistas de la aldea y las marcas eran una sola misión.
+    private static void MigrarMisionesDeLaAldea(System.Collections.Generic.List<string> flags)
+    {
+        const string marcas = "CAP3_MARCAS_DE_HIERRO";
+        const string aldea = "CAP3_PISTAS_ALDEA";
+        const string activa = "QUEST_ACTIVE:";
+        const string completa = "QUEST_COMPLETED:";
+        const string paso = "QUEST_STEP_DONE:";
+        const int pasosDeLaAldea = 5;
+
+        if (flags == null || flags.Contains(activa + aldea) || flags.Contains(completa + aldea)) return;
+        bool marcasTerminadas = flags.Contains(completa + marcas);
+        if (!marcasTerminadas && !flags.Contains(activa + marcas)) return;
+        bool candela = marcasTerminadas || flags.Contains(paso + marcas + ":4");
+
+        // Fuera del tramo inicial, las marcas siguen activas y sus pasos conservan su orden relativo.
+        if (!candela) flags.Remove(activa + marcas);
+        flags.Add((candela ? completa : activa) + aldea);
+        string pasosAntiguos = paso + marcas + ":";
+        for (int i = 0; i < flags.Count; i++)
+        {
+            string flag = flags[i];
+            if (flag == null || !flag.StartsWith(pasosAntiguos, System.StringComparison.Ordinal) ||
+                !int.TryParse(flag.Substring(pasosAntiguos.Length), out int indice)) continue;
+            flags[i] = indice < pasosDeLaAldea
+                ? $"{paso}{aldea}:{indice}"
+                : $"{pasosAntiguos}{indice - pasosDeLaAldea}";
+        }
+
+        if (candela) return;
+        for (int i = 0; i < flags.Count; i++)
+        {
+            string flag = flags[i];
+            if (flag == "QUEST_ARCHIVED:" + marcas || flag == "QUEST_FOLLOWED:" + marcas || flag == "QUEST_TRACKED:" + marcas)
+                flags[i] = flag.Substring(0, flag.IndexOf(':') + 1) + aldea;
+        }
     }
 }

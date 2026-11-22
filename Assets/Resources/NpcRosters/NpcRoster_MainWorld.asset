@@ -221,7 +221,7 @@ MonoBehaviour:
     persistenceId: NPC_Anselmo
     vozDeReacciones: Vecino
     startActive: 1
-    requireNavMesh: 0
+    requireNavMesh: 1
     requiredFlag: 
     invertCondition: 0
   - enabled: 1
@@ -281,7 +281,7 @@ MonoBehaviour:
     persistenceId: NPC_Pez
     vozDeReacciones: Vecino
     startActive: 1
-    requireNavMesh: 0
+    requireNavMesh: 1
     requiredFlag: 
     invertCondition: 0
   - enabled: 1

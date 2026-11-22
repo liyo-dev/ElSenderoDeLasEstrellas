@@ -138,7 +138,7 @@ public static class PersonajesConAspectoFijo
             // Pez: un adulto que se cree medio pez, habla con los peces y nada mejor que nadie. Pelo
             // revuelto de salitre y ropa de faena. Enseña a nadar a Will en el Cap. 3.
             Nombre = "Pez", Ruta = Aldea + "Pez.prefab", IdPersonaje = "CHAR_PEZ", IdPersistencia = "NPC_Pez",
-            Piezas = new[] { "Head01_Male", "Hair05", "Body16", "Eye01", "Mouth02" },
+            Piezas = new[] { "Head01_Male", "Body03", "Eye01", "Mouth02", "Hat13" },
             Lineas = new[] { "DLG_PEZ_01" }, Pasea = false, BuscaRefugio = false,
         };
         yield return new Personaje

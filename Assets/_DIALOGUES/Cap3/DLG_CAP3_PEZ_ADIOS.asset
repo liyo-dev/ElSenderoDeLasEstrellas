@@ -22,7 +22,7 @@ MonoBehaviour:
     emotion: 0
   - speakerNameId: CHAR_PEZ
     textId: DLG_CAP3_PEZ_ADIOS_02
-    text: "Candela lleva diez a\xF1os encendiendo ese farol. Los peces dicen que Andr\xE9s no va a volver."
+    text: "Candela lleva diez a\xF1os encendiendo ese farol. Nadie ha vuelto a ver su barca."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

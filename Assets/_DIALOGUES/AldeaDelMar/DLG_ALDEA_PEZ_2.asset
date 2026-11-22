@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_PEZ
     textId: DLG_ALDEA_PEZ_2_01
-    text: "Si ves a Do\xF1a Lubina, dile que sigo esperando una disculpa."
+    text: "Puedo dibujar una lubina de memoria. Las escamas me llevan m\xE1s tiempo."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

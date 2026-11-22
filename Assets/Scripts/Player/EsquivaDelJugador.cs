@@ -268,7 +268,7 @@ public class EsquivaDelJugador : MonoBehaviour
             var rodar = new VolteretaDelJugador.Tramo
             {
                 altura = saltito,
-                desplazamiento = direccion * distancia,
+                desplazamiento = TopeDeVelocidadDelJugador.LimitarDesplazamiento(transform.position, direccion * distancia),
                 estado = estado,
                 tramoDeMovimiento = new Vector2(0f, FinDelGiro),
                 terminaEn = FinDelGiro,

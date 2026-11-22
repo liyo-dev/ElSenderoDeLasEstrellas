@@ -71,7 +71,7 @@ MonoBehaviour:
     emotion: 0
   - speakerNameId: CHAR_POSADERO
     textId: DLG_CAP3_LUCES_09
-    text: "Pez te ense\xF1a, si le aguantas. Est\xE1 en el muelle, habl\xE1ndole a los peces."
+    text: "Pez te ense\xF1a, si le aguantas. Est\xE1 en la playa, junto al embarcadero."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

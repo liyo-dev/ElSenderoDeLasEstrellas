@@ -241,7 +241,7 @@ v07 @entra+6.0     gesto HandWave01
 v10 @saludo+2.2    gesto HeadNod01
 v01 @saludo_fin+0.6  pasea por k2, k3, k4, k1 ritmo=trote pausa=0.5
 v01 @saludo_fin+1.4  pasea por k4, k1, k5, k1 ritmo=trote pausa=0.8
-v02 @saludo+0.5    gesto HandWave02
+v02 @saludo        anda a v02_saluda ritmo=trote llega_mirando=archimago
 v02 @saludo_fin+0.8 pasea por v02_horno ritmo=paseo pausa=1.4
 v07 @saludo_fin+1.2  pasea por k6, k7, k6, k7 ritmo=paseo pausa=0.8
 # El carretero suelta la carreta cuando llega el maestro: se queda de pie junto a ella, mirando
@@ -342,8 +342,8 @@ v03  @cielo+1.2 gesto FoundSomething_NoWeapon
 # (efecto en el HILO, @entra), se asoma y le saluda con la mano. Con la tormenta las cierra y se va.
 vm 0 en M_Mirador_Vecino mirando plaza_archimago
 vm @entra+3.6 mira archimago
-vm @entra+3.7 bucle Asomado fundido=0.4
 vm @entra+4.3 gesto HandWave01
+vm @saludo+1.0 gesto HandWave02
 vm @saludo_fin+1.0 mira carreta
 vm @carreta_magia+3.9 gesto HandClap01
 vm @globo_sube mira cielo_globo
@@ -355,7 +355,6 @@ vm @cielo+3.0 desaparece
 # la tormenta se meten (las contraventanas las cierra el golpe de todo el pueblo).
 ab 0 en M_Mirador_Abuela mirando plaza_archimago
 ab @entra+4.6 mira archimago
-ab @entra+4.7 bucle Asomado fundido=0.4
 ab @saludo+2.2 gesto HandWave02
 ab @saludo_fin+1.4 mira carreta
 ab @globo_sube+0.3 mira cielo_globo
@@ -364,7 +363,6 @@ ab @cielo+0.5 mira oeste
 ab @cielo+2.2 desaparece
 vc 0 en M_Mirador_Vecina mirando plaza_archimago
 vc @saludo_fin+0.8 mira carreta
-vc @saludo_fin+0.9 bucle Asomado fundido=0.4
 vc @carreta_magia+1.2 cara sorpresa
 vc @carreta_magia+4.1 gesto HandClap01
 vc @carreta_magia+4.2 cara alegre
@@ -391,20 +389,13 @@ panadera @huida+0.8 huye a puente_c, otro_lado_c, lejos_panadera
 panadera @duelo mira oeste
 # La madre y Lucas, de la mano: llegan paseando por la calle, compran el pan y se quedan a la
 # puerta de su casa. Con la tormenta entran corriendo; con la orden de evacuar salen al puente.
-# 19 nov (Raúl: «buenos días» desde puertas y ventanas): la madre empieza DENTRO de casa, abre la
-# puerta, sale y saluda al maestro; luego sale Lucas, le coge de la mano y van a por el pan.
-madre 0 en M_Puerta_Madre_Dentro mirando M_Puerta_Madre_Fuera
-lucas 0 en M_Puerta_Madre_Dentro mirando M_Puerta_Madre_Fuera
-madre 0 desaparece
-lucas 0 desaparece
-madre @saludo+0.4 aparece en=M_Puerta_Madre_Dentro mirando M_Puerta_Madre_Fuera
-madre @saludo+0.45 gesto AbrirPuerta
-madre @saludo+1.5 anda a M_Puerta_Madre_Fuera ritmo=paseo llega_mirando=archimago
-lucas @saludo_fin+0.3 aparece en=M_Puerta_Madre_Dentro mirando M_Puerta_Madre_Fuera
-lucas @saludo_fin+0.4 de_la_mano madre lado=der
-madre @saludo_fin+2.0 anda a madre_pan ritmo=paseo llega_mirando=panadera
-madre @carreta_magia+0.2 charla con panadera cada=3.0
-lucas @carreta_magia+0.4 mira panadera
+madre 0 en madre_ini mirando madre_pan
+lucas 0 en lucas_ini mirando madre_pan
+lucas 0 de_la_mano madre lado=der
+madre +0.2 anda a madre_pan ritmo=paseo llega_mirando=panadera
+madre @saludo+2.0 charla con panadera cada=3.0
+madre @saludo_fin+3.6 gesto HeadNod01
+lucas @saludo+1.0 mira panadera
 madre @carreta_magia+3.6 reposo
 madre @carreta_magia+3.7 anda a M_Puerta_Madre_Fuera ritmo=paseo llega_mirando=cielo_globo
 madre @globo_fin+0.4 gesto HeadNod01
@@ -481,22 +472,11 @@ archimago dice PROLOGO_MANANA_INTRO gesto=Talk01 cara=alegre
 # la cámara se alejaba y el grupo entero quedaba en miniatura. La voz de v01 sale del grupo.
 # La Vecina (v02), de frente y a su altura: el contraplano sobre el hombro del maestro dejaba su
 # sombrero en primer plano y el maestro diminuto al fondo.
-# 19 nov (Raúl): los «buenos días» le llegan de las casas. El vecino, asomado a su mirador (abrió
-# las contraventanas en @entra+3.2)…
-desde @saludo+0.6 efecto HojasConBisagraBeat nombre="Puerta de la madre" grupo="Pueblo del prólogo · puertas" abrir=true segundos=0.6
-desde @saludo+0.6 sonido SFX_Pueblo_Contraventana_Abre en=M_Puerta_Madre_Fuera volume=0.45 tono=0.85
-# Desde detrás del maestro (lo que él ve): de cerca, la cámara se metía en la pared del mirador.
-plano hombro archimago vm lente=34
-vm dice PROLOGO_MANANA_SALUDO_1 gesto=HandWave01 mira=archimago cara=alegre
-& archimago mira vm
-# …y la vecina, que ha salido a la puerta de su casa.
-# Igual: sobre el hombro del maestro, para verle la cara (de cerca la cogía de lado, en el quicio).
-plano hombro archimago madre lente=32
-madre dice PROLOGO_MANANA_SALUDO_2 gesto=HandWave02 mira=archimago cara=alegre
-& archimago mira madre
-& archimago gesto HeadNod01
+plano medio v02 solo desde=cam_v02 altura=1.0 altura_foco=1.0 lente=38
+v01 dice PROLOGO_MANANA_SALUDO_1 gesto=HandWave01 mira=archimago cara=alegre
+& archimago mira v02
+v02 dice PROLOGO_MANANA_SALUDO_2 gesto=HandWave02 mira=archimago cara=alegre
 @saludo_fin
-desde @saludo_fin+3.0 efecto HojasConBisagraBeat nombre="Puerta de la madre" grupo="Pueblo del prólogo · puertas" abrir=false segundos=0.6
 # La vecina de Casa_Sur_03 abre su mirador para ver qué pasa con la carreta.
 desde @saludo_fin+0.4 efecto HojasConBisagraBeat nombre="Mirador · Vecina" abrir=true segundos=0.7
 desde @saludo_fin+0.4 sonido SFX_Pueblo_Contraventana_Abre en=M_Mirador_Vecina volume=0.5 tono=1.08
@@ -558,7 +538,7 @@ plano hombro archimago nina lente=30
 & archimago mira nina
 plano medio archimago lado=der altura=1.0 altura_foco=1.0 lente=38
 archimago mira globo
-& hora AfterNoon duracion=12
+& hora AfterNoon transitionSeconds=12
 archimago bucle CastingIdle01
 && archimago dice PROLOGO_MANANA_GLOBO_OK mira=globo cara=decidido
 +0.4 sonido Prologo_MagiaLevitar en=archimago
@@ -583,21 +563,19 @@ espera 1.2
 # ── 2. EL RÍO ─────────────────────────────────────────────────────────────────────────────
 @rio
 # Del pueblo al río, fundido corto a negro: la mezcla de cámara cruzaba volando el pueblo (INC-1083).
-# El «Amanecer» se despide durante el fundido y el leitmotiv entra cruzado. «dura» reserva el
-# segundo del fundido: sin él, el descubrir salía a la vez que el cubrir y la pantalla se quedaba en negro.
-efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.0 waitForEnd=true dura=1.1
+efecto ScreenFadeBeat fadeIn=true color=000000FF duration=0.4 waitForEnd=true
 # En el río, la mañana del valle (la melodía principal, tierna): Liora y el maestro hablan de la carta
 # de la academia. Releva a «Amanecer en el Valle» durante el fundido; la tormenta la para con su silencio.
-musica PROLOGUE_DREAM fadeIn=3.5 continuarDondeIba=false
+musica PROLOGUE_DREAM fadeIn=2.0 continuarDondeIba=false
 ambiente AMBIENTE sonar=false fundido=3
 ambiente AMBIENTE_RIO eventKey=Ambience_Prologo_Rio volumen=0.55
-hora Sunset duracion=8
+hora Sunset transitionSeconds=6
 archimago en rio_a_ini mirando rio_a_fin
 liora en rio_l_ini mirando rio_l_fin
 efecto SolDeFondoBeat colocar=true ladoDeLaCamara=270 elevacion=7 segundos=2 enCuadro=true posicionX=0.72 alturaDeSalida=0.88 alturaDePuesta=0.42 puesta=19
 # Travelling de frente: de lado, la espalda del maestro tapaba a Liora mientras hablaba.
 plano sigue liora lado=frente distancia=4.5
-efecto ScreenFadeBeat fadeIn=false duration=1.0 waitForEnd=false
+efecto ScreenFadeBeat fadeIn=false duration=0.5 waitForEnd=false
 espera 1.0
 @rio_paseo
 archimago anda a rio_a_fin ritmo=paseo llega_mirando=liora sin_esperar
@@ -616,18 +594,18 @@ espera 2.2
 @cielo
 # La tormenta: el pueblo cierra las contraventanas de golpe y la madre mete a Lucas en casa.
 desde @cielo+0.8 efecto HojasConBisagraBeat grupo="Pueblo del prólogo" abrir=false golpe=true segundos=0.35 escalonado=3.0
-desde @cielo+1.1 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_norte volume=0.3
-desde @cielo+1.9 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_oeste volume=0.25 tono=1.1
-desde @cielo+2.6 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_sur volume=0.3 tono=0.92
-desde @cielo+3.3 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_este volume=0.22 tono=1.05
+desde @cielo+1.1 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_norte volume=0.8
+desde @cielo+1.9 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_oeste volume=0.7 tono=1.1
+desde @cielo+2.6 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_sur volume=0.8 tono=0.92
+desde @cielo+3.3 sonido SFX_Pueblo_Contraventana_Golpe en=golpe_este volume=0.6 tono=1.05
 desde @cielo+1.0 efecto HojasConBisagraBeat nombre="Puerta de la madre" grupo="Pueblo del prólogo · puertas" abrir=true segundos=0.5
 desde @cielo+4.4 efecto HojasConBisagraBeat nombre="Puerta de la madre" grupo="Pueblo del prólogo · puertas" abrir=false golpe=true segundos=0.3
-# (19 nov) Sin portazo: caía bajo el plano del cielo, sin la madre en cuadro, y sonaba a algo que se cae.
+desde @cielo+4.7 sonido SFX_Pueblo_Contraventana_Golpe en=M_Puerta_Madre_Fuera volume=0.9 tono=0.8
 ambiente AMBIENTE_RIO sonar=false fundido=2.5
 sonido SFX_Prologo_Viento volume=0.7
 clima Viento
-# El cielo se cierra en 5 s, luz, cielo y tormenta a la vez (antes: tormenta de golpe y noche en 3 s).
-pasa_el_tiempo Night duracion=5 clima=Tormenta
+clima Tormenta immediate=true
+hora Night transitionSeconds=3
 efecto SolDeFondoBeat colocar=false segundos=8
 efecto RecogerVfxBeat ids=MARIPOSAS_A|MARIPOSAS_B|MARIPOSAS_C
 silencio 3
@@ -650,8 +628,6 @@ efecto EfectoDeVozBeat preset=ExteriorNoche
 # Aparece en el cielo sobre la colina y baja volando, despacio, mirando el valle y a su gente con
 # orgullo, hasta posarse (INC-976; antes, quieto con la pose de sostener la magia).
 mago aparece en=colina_cielo mirando=centro_plaza
-# Niebla de suelo con su luz debajo al llegar el Mago (encargo P20 de Raúl, INC-1341). Con «&»: a la vez que aparece.
-& efecto NieblaDeSueloBeat actor=mago seguir=si radio=6 entrada=3
 & mago bucle fly_idle
 & mago mira centro_plaza
 & mago cara picaro
@@ -659,9 +635,8 @@ mago aparece en=colina_cielo mirando=centro_plaza
 desde @llegada+0.05 mago desliza a colina dura=5.55 mirando=centro_plaza
 desde @llegada+5.6 mago reposo
 desde @llegada+5.7 mago gesto Challenging_NoWeapon
-# Desde el pie de la colina, mirando arriba: el Mago en el cielo y la cresta abajo (el contrapicado
-# ponía la cámara en la ladera y la montaña llenaba el cuadro: la «mancha marrón», INC-1380).
-plano conjunto mago desde=entrada altura=1.4 lente=30 suave=0.4
+# Desde arriba del camino: el encuadre sigue al Mago por encima del talud (INC-1380).
+plano conjunto mago desde=entrada altura=5.5 lente=34 suave=0.4
 destello C8D2FFFF 0.18
 & efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=1 destello=true trueno=SFX_Prologo_Trueno_2
 & sonido Prologo_Golpe en=mago
@@ -766,33 +741,58 @@ plano medio archimago lado=der altura=1.0 altura_foco=1.0 lente=38
 archimago dice PROLOGO_DUELO_ARCHIMAGO gesto=Angry02 mira=mago cara=decidido
 & mago reposo
 
-# El combate en COMPASES (19 nov 2026, pistas acción ↔ reacción, el dibujo de Raúl): cada fila es
-# un momento y en cada momento los DOS hacen algo; el compás dura lo que la animación más larga,
-# entera (con su anticipación). Lo que se deja vacío lo rellena el horno (reacción automática al
-# impacto, vida de fondo). Antes (INC-1287) iba con tiempos sueltos y el Archimago esperaba quieto.
-PALETA luz vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Luz_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14
-PALETA sombra vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=15
+# El combate: en un dos de perfil se lee todo (nada de cortes en cada golpe).
+# El duelo sin turnos (INC-1287): los dos se mueven y atacan a la vez; nadie se queda esperando a
+# que le ataquen. Cada hechizo sale de un gesto propio (antes el mago lanzaba tres con un solo gesto
+# y parecían salir solos). Plano general de los dos, de lado: se lee todo sin cortar en cada golpe.
 plano dos archimago mago desde=cam_duelo_norte altura=1.1 altura_foco=1.0 lente=58 mano=0.25
+mago gesto MagicRight
+& archimago desliza a arch_lado dura=0.45 mirando=mago
++0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Sombra_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
++0.35 archimago gesto MagicLeft
++0.55 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano=Assets/_VFX/Prologo/Piloto/Luz_Destello.prefab vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
++0.6 mago desliza a mago_lado dura=0.4 mirando=archimago
++0.75 mago gesto MagicLeft
++0.95 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=15 esperarAlImpacto=false
++1.05 sonido Prologo_ImpactoHechizo en=archimago volume=0.6
++1.2 vfx Assets/_VFX/Prologo/Piloto/Luz_Escudo.prefab en=archimago offset=0,-0.1,0 lifetime=1.0 seguirAlActor=true
++1.2 archimago gesto Defend_NoWeapon
++1.45 sonido Prologo_EscudoBloquea en=archimago
++1.45 destello BFB3FFFF 0.10
++1.45 sacudida 0.3 0.35
+espera 1.55
+
 @intercambio
-COMPASES duelo actores=archimago,mago solape=0.1
-#  compás           | archimago                                   | mago
-1 se miden          | gesto Decidido01 cara=decidido               | gesto Laugh_Risita cara=picaro
-2 ataque            | esquiva salto altura=2.2 desplazamiento=1.6  | lanza MagicRight hechizo=sombra a=archimago
-3 contra            | lanza MagicLeft hechizo=luz a=mago           | cara sorpresa                     # no se lo ve venir: el golpe (auto) le llega en pleno gesto
-4 impacto           | gesto Laugh01 cara=alegre                    | gesto Angry01 cara=enfado
-5 se rehace         | bucle Idle_Battle_NoWeapon dura=0.8                | desliza a mago_lado dura=0.4 mirando=archimago
-FIN_COMPASES
-# La ráfaga del Mago: tres hechizos, tres gestos; el Archimago para dos con el escudo y el tercero le alcanza.
+# Ráfaga del mago: tres hechizos, tres gestos (derecha, izquierda, derecha) mientras avanza; el
+# Archimago no espera: salta para esquivarlos y contesta desde el aire.
 plano dos archimago mago desde=cam_duelo_norte altura=1.2 altura_foco=1.4 lente=62 mano=0.35
-COMPASES rafaga actores=archimago,mago solape=0.15
-6 primero           | reacciona Defend_NoWeapon cara=preocupado    | lanza MagicRight hechizo=sombra a=archimago cara=enfado
-+0.05 vfx Assets/_VFX/Prologo/Piloto/Luz_Escudo.prefab en=archimago offset=0,-0.1,0 lifetime=2.6 seguirAlActor=true
-COMPASES rafaga2 actores=archimago,mago solape=0.15
-7 segundo           | (auto)                                       | lanza MagicLeft hechizo=sombra a=archimago   # el escudo para el golpe: DefendHit (auto)
-8 tercero           | (auto)                                       | lanza MagicRight hechizo=sombra a=archimago  # el tercero ya no lo para: TakeDamage (auto)
-9 se ríe            | desliza a duelo_a dura=0.4 mirando=mago      | gesto Laugh_Carcajada cara=picaro
-FIN_COMPASES
-+0.3 mago desliza a duelo_m dura=0.35 mirando=archimago
+mago desliza a duelo_m dura=0.5 mirando=archimago
+& mago gesto MagicRight
++0.15 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.4 mago gesto MagicLeft
++0.55 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.8 mago gesto MagicRight
++0.95 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/_VFX/Prologo/Piloto/Sombra_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Sombra_Impacto.prefab sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=17 esperarAlImpacto=false
++0.3 efecto SaltoBeat actorId=archimago altura=2.6 desplazamiento=2.2 haciaElLado=true subida=0.32 sostener=0.5 caida=0.4
++0.35 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=archimago offset=0,0.2,0 lifetime=1.4
++0.35 sonido Prologo_Despegue en=archimago volume=0.7
++0.2 sacudida 0.25 0.9
++0.75 archimago gesto MagicLeft
++0.85 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil=Assets/_VFX/Prologo/Piloto/Luz_Proyectil.prefab vfxImpacto=Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=18 esperarAlImpacto=false
++0.85 destello BFB3FFFF 0.10
+# El mago se cubre a la vez que retrocede; el golpe le alcanza igual.
++1.05 vfx Assets/_VFX/Prologo/Piloto/Sombra_Escudo.prefab en=mago offset=0,-0.1,0 lifetime=0.9 seguirAlActor=true
++1.05 mago gesto Defend_NoWeapon
++1.3 sonido Prologo_EscudoBloquea en=mago
++1.5 vfx Assets/_VFX/Prologo/Piloto/Luz_Impacto.prefab en=mago offset=0,0.95,0 lifetime=1.2
++1.5 sonido Prologo_ImpactoHechizo en=mago
++1.5 destello FFFFFFFF 0.14
++1.5 sacudida 0.55 0.6
++1.55 mago desliza a mago_retrocede dura=0.25 seco mirando=archimago
++1.55 mago gesto TakeDamage
+espera 2.0
+archimago desliza a duelo_a dura=0.35 mirando=mago
+& mago desliza a duelo_m dura=0.35 mirando=archimago
 @choque
 plano dos archimago mago desde=cam_duelo_norte altura=1.1 altura_foco=1.1 lente=58 mano=0.3
 mago gesto MagicSpecial
@@ -846,7 +846,7 @@ plano general archimago mago desde=cam_final agujero altura_foco=0 altura=0.9 le
 # Brazos arriba mientras lo conjura (se queda con los brazos en alto).
 mago bucle JumpAir_InPlace_NoWeapon congela
 & mago bucle FoundSomething_NoWeapon congela al_final
-& mago desliza aqui altura=5 dura=2.6
+& mago desliza aqui altura=3 dura=2.6
 +0.1 sonido Prologo_Despegue en=mago
 +0.1 vfx Assets/_VFX/Prologo/Piloto/Polvo.prefab en=mago offset=0,0.2,0 lifetime=1.6
 +0.6 sonido Prologo_HechizoGrande en=mago volume=0.6
@@ -964,9 +964,7 @@ desde @hechizo-38.4 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambient
 # La música del clímax (INC-940), montada a medida desde la Cover de Suno de la maqueta
 # Tools/Musica/Climax del prologo: la plegaria, el respiro (33-37 s), el grito (39 s) y el golpe
 # del estallido a los 43,8 s justos desde aquí. Si se mueve @estallido, hay que moverla con él.
-# Prueba con la toma «crescendo épico»: arranca desde su principio en el mismo punto y sigue
-# hasta el silencio del final. Para volver a la montada a medida, PROLOGO_CLIMAX.
-desde @hechizo-38.4 musica PROLOGO_CLIMAX_CRESCENDO fadeIn=0.3 continuarDondeIba=false
+desde @hechizo-38.4 musica PROLOGO_CLIMAX fadeIn=0.3 continuarDondeIba=false
 # Abre los ojos: primer plano de frente, justo antes del grito.
 plano primer archimago lado=frente altura=1.05 altura_foco=1.1 lente=26
 +0.45 archimago cara enfado

@@ -20,7 +20,6 @@ using UnityEngine;
 /// </summary>
 [DisallowMultipleComponent]
 [DefaultExecutionOrder(100)] // después de ElevacionVisual y ManosIK, para colocar el orbe entre las manos ya elevadas
-[RequireComponent(typeof(ComboCastController))]
 public class PresentacionDelCombo : MonoBehaviour
 {
     private const string LoopDeViento = "ComboCirculo";
@@ -161,6 +160,7 @@ public class PresentacionDelCombo : MonoBehaviour
     private enum Estado { Apagado, Abierto, Cerrando }
 
     private ComboCastController _combo;
+    private int _pasosDelNpc;
     private ElevacionVisual _elevacion;
     private Transform _personaje;
 
@@ -205,6 +205,7 @@ public class PresentacionDelCombo : MonoBehaviour
 
     void OnEnable()
     {
+        if (_combo == null) return;
         _combo.OnOpened += AlAbrir;
         _combo.OnInput += AlTeclear;
         _combo.OnClosed += AlCerrar;
@@ -213,10 +214,13 @@ public class PresentacionDelCombo : MonoBehaviour
 
     void OnDisable()
     {
-        _combo.OnOpened -= AlAbrir;
-        _combo.OnInput -= AlTeclear;
-        _combo.OnClosed -= AlCerrar;
-        _combo.OnDenied -= AlDenegar;
+        if (_combo != null)
+        {
+            _combo.OnOpened -= AlAbrir;
+            _combo.OnInput -= AlTeclear;
+            _combo.OnClosed -= AlCerrar;
+            _combo.OnDenied -= AlDenegar;
+        }
 
         LiberarFrenazo();
         if (_estado != Estado.Apagado)
@@ -236,6 +240,29 @@ public class PresentacionDelCombo : MonoBehaviour
     }
 
     // ── Eventos del combo ──────────────────────────────────────────────────
+
+    // La IA indica cada paso igual que el mando. Usa la misma presentación sin frenar el mundo.
+    public void AbrirParaNpc(PresentacionDelCombo modelo, int pasos)
+    {
+        if (_combo != null) return;
+        if (_raiz == null)
+        {
+            _pasosDelNpc = pasos;
+            materialBase = modelo.materialBase;
+            materialExterior = modelo.materialExterior;
+            materialAnillo = modelo.materialAnillo;
+            materialDestello = modelo.materialDestello;
+            materialOrbe = modelo.materialOrbe;
+            materialChispas = modelo.materialChispas;
+            materialPolvo = modelo.materialPolvo;
+        }
+        AlAbrir(null);
+    }
+
+    public void MostrarPasoDelNpc(ComboButton paso, int indice) => MostrarPaso(paso, indice);
+
+    public void CerrarParaNpc(bool lanzado) =>
+        AlCerrar(lanzado ? ComboCastController.Result.Cast : ComboCastController.Result.Cancelled, null);
 
     private void AlAbrir(IReadOnlyList<MagicSpellSO> _)
     {
@@ -270,7 +297,7 @@ public class PresentacionDelCombo : MonoBehaviour
         _rafaga.Play();
         _rafaga.Emit(polvoEnRafaga);
 
-        if (escalaFrenazo < 1f && duracionFrenazo > 0f)
+        if (_combo != null && escalaFrenazo < 1f && duracionFrenazo > 0f)
         {
             TimeScaleArbiterService.Request(this, escalaFrenazo);
             _frenazoActivo = true;
@@ -281,22 +308,26 @@ public class PresentacionDelCombo : MonoBehaviour
 
         Sonar(sfxApertura);
         Sonar(sfxRafaga);
-        if (!string.IsNullOrEmpty(sfxViento) && AudioService.Instance != null)
+        if (_combo != null && !string.IsNullOrEmpty(sfxViento) && AudioService.Instance != null)
             AudioService.Instance.PlayLoopingSFX(LoopDeViento, sfxViento, volumenViento);
     }
 
     private void AlTeclear(IReadOnlyList<ComboButton> tecleado, IReadOnlyList<bool> _)
     {
-        if (_estado != Estado.Abierto || tecleado.Count == 0) return;
-        int i = tecleado.Count - 1;
-        Color c = ColorDe(tecleado[i]);
+        if (tecleado.Count > 0) MostrarPaso(tecleado[tecleado.Count - 1], tecleado.Count - 1);
+    }
+
+    private void MostrarPaso(ComboButton paso, int i)
+    {
+        if (_estado != Estado.Abierto || i < 0) return;
+        Color c = ColorDe(paso);
 
         if (i < _anillos.Length)
         {
             _colorAnillo[i] = c;
             _brilloAnillo[i] = 1f;
         }
-        _encendidos = Mathf.Min(tecleado.Count, _anillos.Length);
+        _encendidos = Mathf.Min(i + 1, _anillos.Length);
 
         _pulso = 1f;
         _colorPulso = c;
@@ -571,8 +602,9 @@ public class PresentacionDelCombo : MonoBehaviour
         TimeScaleArbiterService.Release(this);
     }
 
-    private static void DetenerViento(float fundido)
+    private void DetenerViento(float fundido)
     {
+        if (_combo == null) return;
         if (AudioService.Instance != null) AudioService.Instance.StopLoopingSFX(LoopDeViento, fundido);
     }
 
@@ -588,11 +620,11 @@ public class PresentacionDelCombo : MonoBehaviour
     {
         if (_raiz != null) return;
 
-        var controller = _combo.Personaje;
+        var controller = _combo != null ? _combo.Personaje : null;
         _personaje = controller != null ? controller.transform : transform;
         _elevacion = _personaje.GetComponent<ElevacionVisual>();
         if (_elevacion == null) _elevacion = GetComponentInParent<ElevacionVisual>();
-        _manos = _personaje.GetComponent<ManosIK>();
+        _manos = _personaje.GetComponentInChildren<ManosIK>();
         _camara = Camera.main;
 
         _mpb = new MaterialPropertyBlock();
@@ -605,7 +637,7 @@ public class PresentacionDelCombo : MonoBehaviour
         int orden = 0;
         _exterior = CrearCapa("Exterior", materialExterior, orden++);
         _base = CrearCapa("Base", materialBase, orden++);
-        int n = Mathf.Max(1, _combo.LongitudMaxima);
+        int n = Mathf.Max(1, _combo != null ? _combo.LongitudMaxima : _pasosDelNpc);
         _anillos = new MeshRenderer[n];
         _colorAnillo = new Color[n];
         _brilloAnillo = new float[n];

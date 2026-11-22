@@ -17,7 +17,7 @@ MonoBehaviour:
   displayName: Hoja de avistamientos
   pluralDisplayNameId: 
   pluralDisplayName: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ffc65ce581d2573468494ad8a0735f8d, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_HOJA_AVISTAMIENTOS_DESC

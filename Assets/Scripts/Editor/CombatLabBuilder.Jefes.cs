@@ -1,5 +1,7 @@
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// Zona de jefes del LAB (INC-644), al oeste, separada de las demás pruebas: una entrada con
 /// un portal por jefe y una arena grande con su círculo. Se llega andando por un pasillo que sale
@@ -17,6 +19,7 @@ public static partial class CombatLabBuilder
     private const string EncuentroDemonio2 = "Assets/BOSSBATTLES/Encuentro_Demonio2.asset";
     private const string EncuentroGolem = "Assets/BOSSBATTLES/Encuentro_Golem1.asset";
     private const string PrefabDemonio2 = "Assets/Prefabs/Enemy/Demon2.prefab";
+    private const string RutaEscenaTemploDelCoro = "Assets/Scenes/Worlds/TemploDelCoro.unity";
     private const string VfxPortalJefe = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Portals/Portal red.prefab";
     private const string VfxPortalPaso = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Portals/Portal blue.prefab";
 
@@ -59,6 +62,11 @@ public static partial class CombatLabBuilder
         var soMago = new SerializedObject(mago);
         soMago.FindProperty("escena").stringValue = "BatallaFinal";
         soMago.ApplyModifiedPropertiesWithoutUndo();
+
+        var coro = CrearPortal<PortalDeEscenaDelLab>("Templo del Coro", raiz, c + new Vector3(20f, 0f, filaZ), matJefe, VfxPortalJefe);
+        var soCoro = new SerializedObject(coro);
+        soCoro.FindProperty("escena").stringValue = "TemploDelCoro";
+        soCoro.ApplyModifiedPropertiesWithoutUndo();
 
         // Ida y vuelta desde el área central.
         var llegadaLab = Punto("Llegada al laboratorio", raiz, new Vector3(0f, 0.1f, -8f));
@@ -138,6 +146,86 @@ public static partial class CombatLabBuilder
         }
         CrearTexto(nombre, padre, pos + Vector3.up * 3.8f, yaw);
         return portal;
+    }
+
+    [MenuItem("El Sendero/Combate/LAB: asegurar portal del Templo del Coro")]
+    public static void AsegurarPortalTemploDelCoro()
+    {
+        if (Application.isPlaying) { OrdenesDelEditor.Avisar("LAB", "Sal de Play antes de tocar la escena."); return; }
+        AddToBuildSettings(RutaEscenaTemploDelCoro);
+
+        Scene escena = SceneManager.GetSceneByPath(ScenePath);
+        bool abiertaAqui = false;
+        if (!escena.IsValid() || !escena.isLoaded)
+        {
+            if (!System.IO.File.Exists(ScenePath))
+            {
+                Debug.LogWarning($"[LAB] No existe {ScenePath}: crea antes el LAB.");
+                return;
+            }
+            escena = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
+            abiertaAqui = true;
+        }
+
+        try
+        {
+            Transform raizJefes = null;
+            foreach (var go in escena.GetRootGameObjects())
+            {
+                if (go.name == "LAB_ZONA_DE_JEFES")
+                {
+                    raizJefes = go.transform;
+                    break;
+                }
+            }
+
+            if (raizJefes == null)
+            {
+                Debug.LogWarning("[LAB] No se encontró LAB_ZONA_DE_JEFES en Lab.unity.");
+                return;
+            }
+
+            const string nombrePortal = "Templo del Coro";
+            string nombreObjeto = "Portal — " + nombrePortal;
+
+            for (int i = raizJefes.childCount - 1; i >= 0; i--)
+            {
+                var hijo = raizJefes.GetChild(i);
+                if (hijo.name == nombreObjeto || hijo.name == "Rótulo — " + nombrePortal)
+                    Object.DestroyImmediate(hijo.gameObject);
+            }
+
+            Vector3 c = CentroZonaJefes;
+            float m = LadoZonaJefes * 0.5f;
+            float filaZ = -m + 13f;
+            var matJefe = GetMaterial("Lab_PortalJefe", new Color(0.75f, 0.18f, 0.22f));
+
+            var coro = CrearPortal<PortalDeEscenaDelLab>(nombrePortal, raizJefes, c + new Vector3(20f, 0f, filaZ), matJefe, VfxPortalJefe);
+            var soCoro = new SerializedObject(coro);
+            soCoro.FindProperty("escena").stringValue = "TemploDelCoro";
+            soCoro.ApplyModifiedPropertiesWithoutUndo();
+
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[LAB] Portal al Templo del Coro asegurado en la zona de jefes.");
+        }
+        finally
+        {
+            if (abiertaAqui) EditorSceneManager.CloseScene(escena, true);
+        }
+    }
+
+    [UnityEditor.Callbacks.DidReloadScripts]
+    private static void AutoAsegurarPortalAlCompilar()
+    {
+        if (EditorPrefs.GetBool("LAB_PortalTemploDelCoro_Creado_V2", false)) return;
+        EditorApplication.delayCall += () =>
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            AsegurarPortalTemploDelCoro();
+            EditorPrefs.SetBool("LAB_PortalTemploDelCoro_Creado_V2", true);
+        };
     }
 
     /// Círculo en el suelo con el límite de la arena.

@@ -2562,7 +2562,7 @@
         },
         {
             "key": "DLG_CAP3_LUCES_09",
-            "value": "Pez te enseña, si le aguantas. Está en el muelle, hablándole a los peces."
+            "value": "Pez te enseña, si le aguantas. Está en la playa, junto al embarcadero."
         },
         {
             "key": "DLG_CAP3_LUCES_10",
@@ -2606,15 +2606,15 @@
         },
         {
             "key": "DLG_CAP3_PEZ_01",
-            "value": "Shh. Estoy en una reunión."
+            "value": "¿Sabías que las lubinas se acercan a la orilla cuando sube la marea? Hoy he contado tres."
         },
         {
             "key": "DLG_CAP3_PEZ_02",
-            "value": "…Sí, sí, ya se lo digo."
+            "value": "Necesito nadar hasta la casa del farol."
         },
         {
             "key": "DLG_CAP3_PEZ_03",
-            "value": "Dicen las sardinas que hueles a tierra. ¿Quieres nadar? Todo el mundo quiere nadar. Nadie quiere escuchar."
+            "value": "¡Te enseño con mi lubina de madera! Mi madre, Rosario, lo tiene. Está sentada junto a la puerta de la posada."
         },
         {
             "key": "DLG_CAP3_PEZ_04",
@@ -2650,15 +2650,15 @@
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_01",
-            "value": "Un trato es un trato. Lección de natación. Primero: piensa como un pez."
+            "value": "Aquí tienes tu lubina."
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_02",
-            "value": "…No. Todavía piensas como un chico. Se te nota en las orejas."
+            "value": "¡Capitana! El alumno está listo. ¿Cómo dice? ¿Pies de sardina y brazos de pulpo? ¡Pero solo tiene dos!"
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_03",
-            "value": "Brazos como si aplaudieras a una sardina muy lejos. Piernas como si no te importara nada."
+            "value": "Dos bastan. Estira un brazo cada vez, da pataditas y gira la cabeza para respirar. La capitana dice que puedes."
         },
         {
             "key": "DLG_CAP3_PEZ_LECCION_04",
@@ -2678,7 +2678,7 @@
         },
         {
             "key": "DLG_CAP3_PEZ_ADIOS_02",
-            "value": "Candela lleva diez años encendiendo ese farol. Los peces dicen que Andrés no va a volver."
+            "value": "Candela lleva diez años encendiendo ese farol. Nadie ha vuelto a ver su barca."
         },
         {
             "key": "DLG_CAP3_PEZ_ADIOS_03",
@@ -2718,7 +2718,7 @@
         },
         {
             "key": "DLG_CAP3_PEZ_RECADO_01",
-            "value": "¿Ya has hablado con Doña Lubina? Es muy suya. El último pilar, al final del muelle."
+            "value": "Mi madre está sentada junto a la puerta de la posada. Pídele mi lubina de madera."
         },
         {
             "key": "DLG_CAP3_PEZ_BOYAS_01",
@@ -2750,11 +2750,11 @@
         },
         {
             "key": "DLG_ALDEA_PEZ_1_01",
-            "value": "Hoy los boquerones están insoportables."
+            "value": "Los boquerones van en grupo. Si ves uno, mira detrás."
         },
         {
             "key": "DLG_ALDEA_PEZ_2_01",
-            "value": "Si ves a Doña Lubina, dile que sigo esperando una disculpa."
+            "value": "Puedo dibujar una lubina de memoria. Las escamas me llevan más tiempo."
         },
         {
             "key": "DLG_ALDEA_CANDELA_1_01",
@@ -2775,6 +2775,14 @@
         {
             "key": "CHAR_LADRON",
             "value": "Ladrón"
+        },
+        {
+            "key": "DLG_CAP3_MADRE_DE_PEZ_01",
+            "value": "¿Me dejas la lubina de madera de Pez? Quiere enseñarme a nadar con ella."
+        },
+        {
+            "key": "DLG_CAP3_MADRE_DE_PEZ_02",
+            "value": "Toma. Dile que la pintura ya está seca y que esta vez puede mojarla."
         }
     ]
 }

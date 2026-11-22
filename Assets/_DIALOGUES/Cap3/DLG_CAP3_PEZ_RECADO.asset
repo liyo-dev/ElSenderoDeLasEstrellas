@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_PEZ
     textId: DLG_CAP3_PEZ_RECADO_01
-    text: "\xBFYa has hablado con Do\xF1a Lubina? Es muy suya. El \xFAltimo pilar, al final del muelle."
+    text: "Mi madre est\xE1 sentada junto a la puerta de la posada. P\xEDdele mi lubina de madera."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 

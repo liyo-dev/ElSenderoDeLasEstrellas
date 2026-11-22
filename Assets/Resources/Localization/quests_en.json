@@ -556,11 +556,11 @@
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DESC",
-            "value": "Estela doesn't take apprentices. Eldran thinks she'll listen if you bring her proof about the collars, and at the seaside village they've seen collared animals."
+            "value": "Candela saw a cart carrying glowing cages. Check the garden fence and follow the trail toward the forest."
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DETAIL",
-            "value": "Estela doesn't take apprentices. Eldran thinks she'll listen if you bring her proof about the collars, and at the seaside village they've seen collared animals."
+            "value": "Candela saw a cart carrying glowing cages. Check the garden fence and follow the trail toward the forest."
         },
         {
             "key": "CAP3_LLEGAR_PASO",
@@ -664,19 +664,31 @@
         },
         {
             "key": "CAP3_PEZ_PASO",
-            "value": "Find Pez on the pier"
+            "value": "Find Pez on the beach"
         },
         {
             "key": "CAP3_LUBINA_PASO",
-            "value": "Take Pez's message to Doña Lubina, at the end of the pier"
+            "value": "Pick up Pez's toy at the inn entrance and bring it back to him"
         },
         {
             "key": "CAP3_FAROL_PASO",
-            "value": "Swim to the house with the lantern"
+            "value": "Swim to the lantern house and speak to Candela"
         },
         {
             "key": "CAP3_CERCA_PASO",
             "value": "Look at the garden fence, on the way to the forest"
+        },
+        {
+            "key": "CAP3_PISTAS_ALDEA_NAME",
+            "value": "Clues in the seaside village"
+        },
+        {
+            "key": "CAP3_PISTAS_ALDEA_DESC",
+            "value": "Eldran thinks Estela will listen if you bring proof about the collars. Ask around the seaside village to find out what people have seen."
+        },
+        {
+            "key": "CAP3_PISTAS_ALDEA_DETAIL",
+            "value": "Eldran thinks Estela will listen if you bring proof about the collars. Ask around the seaside village to find out what people have seen."
         }
     ]
 }

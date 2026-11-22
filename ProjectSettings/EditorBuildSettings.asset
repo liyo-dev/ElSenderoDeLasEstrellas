@@ -53,5 +53,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Worlds/Parque.unity
     guid: c7e2ed1a4af5d804da7806f62266710d
+  - enabled: 1
+    path: Assets/Scenes/Worlds/TemploDelCoro.unity
+    guid: f529c65064315b94baef9e679d6192a8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

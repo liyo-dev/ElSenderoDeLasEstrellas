@@ -173,6 +173,8 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
     {
         _aLaVista = false;
         Vista?.Ver(false);
+        // Un recordatorio que coincide con un combate caduca al perder el turno.
+        if (_breve && Kits.Core.GameContext.Has(Situaciones.Combate)) Descartar();
     }
 
     public void AlDescartar()
@@ -195,7 +197,7 @@ public class PresentacionDeLugares : MonoBehaviour, IAvisoEnPantalla
         if (_ultimoAviso.TryGetValue(clave, out float cuando) && Time.unscaledTime - cuando < EsperaParaRecordar)
             return false;
         for (int i = 0; i < s_cedeAnte.Length; i++)
-            if (s_cedeAnte[i] != Situaciones.Combate && Kits.Core.GameContext.Has(s_cedeAnte[i])) return false;
+            if (Kits.Core.GameContext.Has(s_cedeAnte[i])) return false;
         return true;
     }
 

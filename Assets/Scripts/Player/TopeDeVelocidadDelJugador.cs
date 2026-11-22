@@ -42,15 +42,36 @@ public static class TopeDeVelocidadDelJugador
         Aplicar();
     }
 
-    /// Conserva un espacio detrás del guía sin impedir retroceder ni apartarse a los lados.
+    /// Limita el avance respecto al guía. Una separación negativa permite adelantarse esos metros.
+    /// Con velocidad cero, el borde no admite cruzarlo por inercia entre pasos de física.
     public static void PonerSeguimiento(object quien, float tope, Transform guia, Vector3 direccion,
         float velocidad, float separacion)
     {
         if (quien == null || guia == null) return;
         direccion.y = 0f;
         if (direccion.sqrMagnitude < 0.0001f) return;
-        Seguimientos[quien] = new Seguimiento(guia, direccion.normalized, Mathf.Max(0f, velocidad), Mathf.Max(0f, separacion));
+        Seguimientos[quien] = new Seguimiento(guia, direccion.normalized, Mathf.Max(0f, velocidad), separacion);
         Poner(quien, tope);
+    }
+
+    /// Recorta un desplazamiento que se ejecuta por posición, como la esquiva en suelo.
+    public static Vector3 LimitarDesplazamiento(Vector3 origen, Vector3 desplazamiento)
+    {
+        foreach (var seguimiento in Seguimientos.Values)
+        {
+            if (seguimiento.guia == null || seguimiento.velocidad > 0f) continue;
+            float hueco = Vector3.Dot(seguimiento.guia.position - origen, seguimiento.direccion) - seguimiento.separacion;
+            float avance = Vector3.Dot(desplazamiento, seguimiento.direccion);
+            float permitido = Mathf.Max(0f, hueco);
+            if (avance > permitido) desplazamiento -= seguimiento.direccion * (avance - permitido);
+        }
+        return desplazamiento;
+    }
+
+    /// Mantiene el tope general y deja de limitar el avance respecto al guía.
+    public static void QuitarSeguimiento(object quien)
+    {
+        if (quien != null && Seguimientos.Remove(quien)) Aplicar();
     }
 
     /// Quita el tope de 'quien'. No hace nada si no tenía.

@@ -1,6 +1,10 @@
 {
     "texts": [
         {
+            "key": "CORO_VOLVER_AL_LAB",
+            "value": "Volver al Lab"
+        },
+        {
             "key": "AVISO_AUTOGUARDADO",
             "value": "Este juego guarda automáticamente. Cuando veas este símbolo, no apagues ni cierres el juego."
         },
@@ -2507,6 +2511,14 @@
         {
             "key": "RASGO_NOMBRE_REBOTEEXTRA",
             "value": "Rebote extra"
+        },
+        {
+            "key": "ITEM_JUGUETE_DE_PEZ_NAME",
+            "value": "Lubina de madera"
+        },
+        {
+            "key": "ITEM_JUGUETE_DE_PEZ_DESC",
+            "value": "El pez de madera que Rosario guarda para su hijo."
         }
     ]
 }

@@ -92,7 +92,7 @@ public sealed class CombatLabDirector : MonoBehaviour, ISeccionDelLab
         }
         GUILayout.Space(10f);
         if (GUILayout.Button("Reiniciar el LAB (R): vida, maná y enemigos como al entrar", EstiloDelLab.Boton)) ReloadScene();
-        GUILayout.Label("Los jefes de verdad (Demonios, Gólem y Mago Oscuro) están en la pestaña Zonas ▸ Zona de jefes.", EstiloDelLab.Nota);
+        GUILayout.Label("Los jefes de verdad (Demonios, Gólem, Mago Oscuro y Templo del Coro) están en la pestaña Zonas ▸ Zona de jefes.", EstiloDelLab.Nota);
     }
 
     /// Recarga el LAB como al entrar (lo que se guarda en la sesión, como los puzles resueltos, se conserva).

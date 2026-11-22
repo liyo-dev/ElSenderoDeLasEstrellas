@@ -16,8 +16,57 @@ using Liyodev.NarrativeGraph;
 /// </summary>
 public static partial class MontajeDeLosCapitulos
 {
+
+    [MenuItem("El Sendero/Historia/Fijar arranque en la aldea del mar")]
+    public static void FijarArranqueAldeaDelMar()
+    {
+        var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>("Assets/NarrativeGraph/Cap3.asset");
+        const string id = "cap3-punto-aldea";
+        if (grafo.FindNode(id) != null)
+            return;
+
+        var llegada = grafo.FindNode("cap3-llegada");
+        if (llegada == null || llegada.Outputs.Count != 1 || llegada.Outputs[0] != "cap3-paso-llegar")
+            throw new System.InvalidOperationException("La salida de la llegada a la aldea ha cambiado.");
+
+        var punto = Punto("CAP3_ALDEA", "Cap3_Aldea");
+        punto.Guid = id;
+        punto.DisplayTitle = "3.2 · Punto de arranque: la aldea del mar";
+        punto.Chapter = llegada.Chapter;
+        punto.Position = llegada.Position + new Vector2(0f, 176f);
+        punto.Outputs = new List<string>(llegada.Outputs);
+
+        Undo.RecordObject(grafo, "Fijar arranque en la aldea del mar");
+        grafo.nodes.Insert(grafo.nodes.IndexOf(llegada) + 1, punto);
+        llegada.Outputs[0] = id;
+        EditorUtility.SetDirty(grafo);
+        AssetDatabase.SaveAssets();
+    }
+
     private const string Cap3 = "Cap3";
     public const string MisionCap3 = "CAP3_MARCAS_DE_HIERRO";
+    private const string MisionDeLaAldea = "CAP3_PISTAS_ALDEA";
+
+    private static void MontarMisionesDeLaAldea()
+    {
+        Mision("Q_CAP3_PISTAS_ALDEA", MisionDeLaAldea, "Pistas en la Aldea del Mar", "Clues in the seaside village",
+            "Eldran cree que Estela te escuchará si le llevas pruebas de los aros. Pregunta en la Aldea del Mar qué han visto.",
+            "Eldran thinks Estela will listen if you bring proof about the collars. Ask around the seaside village to find out what people have seen.",
+            ("CAP3_LLEGAR", "Llega a la aldea del mar", "Reach the seaside village"),
+            ("CAP3_POSADA", "Pregunta en la posada", "Ask at the inn"),
+            ("CAP3_PEZ", "Busca a Pez en la playa", "Find Pez on the beach"),
+            ("CAP3_LUBINA", "Recoge el juguete de Pez en la entrada de la posada y llévaselo", "Pick up Pez's toy at the inn entrance and bring it back to him"),
+            ("CAP3_FAROL", "Nada hasta la casa del farol y habla con Candela", "Swim to the lantern house and speak to Candela"));
+
+        Mision("Q_CAP3_MARCAS_DE_HIERRO", MisionCap3, "Las marcas de hierro", "The iron marks",
+            "Candela vio un carro con jaulas que brillaban. Examina la cerca del huerto y sigue el rastro hacia el bosque.",
+            "Candela saw a cart carrying glowing cages. Check the garden fence and follow the trail toward the forest.",
+            ("CAP3_CERCA", "Mira la cerca del huerto, camino del bosque", "Look at the garden fence, on the way to the forest"),
+            ("CAP3_BOSQUE", "Ve por el camino hacia el Bosque Prohibido", "Take the road toward the Forbidden Forest"),
+            ("CAP3_NOCHE", "Espera el carro de noche junto al fuego", "Wait for the cart by the fire at night"),
+            ("CAP3_CARRO", "Sigue al carro sin que te vea", "Follow the cart without being seen"),
+            ("CAP3_CLARO", "Averigua qué llevan en el claro", "Find out what they're carrying in the clearing"));
+    }
 
     public const string FlagCap3Iniciado = "CAP3_INICIADO";
 
@@ -48,7 +97,10 @@ public static partial class MontajeDeLosCapitulos
     private const string Pez = "NPC_Pez", Candela = "NPC_Candela";
     private const string Guardia1 = "NPC_GuardiaCruce1", Guardia2 = "NPC_GuardiaCruce2";
     private const string Contra1 = "NPC_Contrabandista1", Contra2 = "NPC_Contrabandista2";
+    private const string MadreDePez = "NPC_Rosario";
+    private const string RutaJugueteDePez = CarpetaItems + "/IT_JugueteDePez.asset";
     private const string RutaHoja = CarpetaItems + "/IT_HojaDeAvistamientos.asset";
+    private const string IconoHoja = "Assets/Art/UI/Items/hoja_de_avistamientos.png";
     private const string RutaPluma = CarpetaItems + "/IT_PlumaBrillante.asset";
     private const string CombateDeLosContrabandistas = "Assets/_NPCs/Combat/NPC_Combat_Config_BoyPirate.asset";
     /// Música del seguimiento a escondidas. Si aún no está en el proyecto, el tramo no cambia la música.
@@ -75,21 +127,12 @@ public static partial class MontajeDeLosCapitulos
 
         Objeto("IT_HojaDeAvistamientos", "hoja_avistamientos", "Hoja de avistamientos", "Sightings sheet",
             "La hoja donde Will apunta lo que cuentan en la aldea del mar de los animales con aro.",
-            "The sheet where Will writes down what the seaside villagers tell him about the collared animals.");
+            "The sheet where Will writes down what the seaside villagers tell him about the collared animals.", IconoHoja);
 
-        Mision("Q_CAP3_MARCAS_DE_HIERRO", MisionCap3, "Las marcas de hierro", "The iron marks",
-            "Estela no acepta aprendices. Eldran cree que te escuchará si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro.",
-            "Estela doesn't take apprentices. Eldran thinks she'll listen if you bring her proof about the collars, and at the seaside village they've seen collared animals.",
-            ("CAP3_LLEGAR", "Llega a la aldea del mar", "Reach the seaside village"),
-            ("CAP3_POSADA", "Pregunta en la posada", "Ask at the inn"),
-            ("CAP3_PEZ", "Busca a Pez en el muelle", "Find Pez on the pier"),
-            ("CAP3_LUBINA", "Lleva el recado de Pez a Doña Lubina, al final del muelle", "Take Pez's message to Doña Lubina, at the end of the pier"),
-            ("CAP3_FAROL", "Nada hasta la casa del farol", "Swim to the house with the lantern"),
-            ("CAP3_CERCA", "Mira la cerca del huerto, camino del bosque", "Look at the garden fence, on the way to the forest"),
-            ("CAP3_BOSQUE", "Ve por el camino hacia el Bosque Prohibido", "Take the road toward the Forbidden Forest"),
-            ("CAP3_NOCHE", "Espera el carro de noche junto al fuego", "Wait for the cart by the fire at night"),
-            ("CAP3_CARRO", "Sigue al carro sin que te vea", "Follow the cart without being seen"),
-            ("CAP3_CLARO", "Averigua qué llevan en el claro", "Find out what they're carrying in the clearing"));
+        var jugueteDePez = Objeto("IT_JugueteDePez", "juguete_de_pez", "Lubina de madera", "Wooden sea bass",
+            "El pez de madera que Rosario guarda para su hijo.", "The wooden fish Rosario keeps for her son.");
+
+        MontarMisionesDeLaAldea();
 
         // ── Diálogos ────────────────────────────────────────────────────────────────────────
         // La charla sigue a la cinemática sin volver a hablarle (INC-1320): lo que vio, los carros y a quién preguntar.
@@ -102,34 +145,24 @@ public static partial class MontajeDeLosCapitulos
             W("Yo sí le creo. Se lo voy a llevar a Estela, la hechicera del Bosque Prohibido… pero antes quiero estar seguro.", "I believe you. I'm taking this to Estela, the sorceress of the Forbidden Forest… but first I want to be sure.", NPCEmotion.Determined),
             L("CHAR_POSADERO", "Entonces habla con Candela, la del farol. No duerme: cada noche enciende un farol en la ventana, por si vuelve la barca de su Andrés. Si algo pasó por ese camino, ella lo vio.", "Then talk to Candela, the one with the lantern. She doesn't sleep: every night she lights a lantern in her window, in case her Andrés's boat comes back. If something went down that road, she saw it."),
             L("CHAR_POSADERO", "Vive en la casa del agua, y allí no hay pasarela. O nadas, o nada.", "She lives in the house on the water, and there's no walkway out there. Either you swim, or nothing."),
-            L("CHAR_POSADERO", "Pez te enseña, si le aguantas. Está en el muelle, hablándole a los peces.", "Pez will teach you, if you can put up with him. He's on the pier, talking to the fish."));
+            L("CHAR_POSADERO", "Pez te enseña, si le aguantas. Está en la playa, junto al embarcadero.", "Pez will teach you, if you can put up with him. He's on the beach by the pier."));
         string dlgLuciaCerca = DialogoDeCaja("DLG_CAP3_LUCIA_CERCA", "DLG_CAP3_LUCIA_CERCA",
             L("CHAR_LUCIA", "¡Yo también vi un carro! Bueno… vi la cerca rota por la mañana.", "I saw a cart too! Well… I saw the broken fence in the morning.", NPCEmotion.Excited),
             L("CHAR_LUCIA", "Mi padre dice que fue una vaca. ¡Las vacas no dejan paja que brilla!", "My dad says it was a cow. Cows don't leave glowing straw!", NPCEmotion.Annoyed));
-        // Pez: el respiro cómico del capítulo. Enseña a nadar a cambio de un recado a Doña Lubina (un pez).
         string dlgPez = DialogoDeCaja("DLG_CAP3_PEZ", "DLG_CAP3_PEZ",
-            L("CHAR_PEZ", "Shh. Estoy en una reunión.", "Shh. I'm in a meeting."),
-            L("CHAR_PEZ", "…Sí, sí, ya se lo digo.", "…Yes, yes, I'll tell him.", NPCEmotion.Thinking),
-            L("CHAR_PEZ", "Dicen las sardinas que hueles a tierra. ¿Quieres nadar? Todo el mundo quiere nadar. Nadie quiere escuchar.", "The sardines say you smell of land. Want to swim? Everybody wants to swim. Nobody wants to listen."),
-            W("Necesito llegar a la casa del farol.", "I need to get to the house with the lantern.", NPCEmotion.Determined),
-            L("CHAR_PEZ", "Te enseño, pero un favor por un favor. Doña Lubina, la del último pilar, no me habla desde el martes.", "I'll teach you, but a favour for a favour. Doña Lubina, by the last post, hasn't spoken to me since Tuesday.", NPCEmotion.Sad),
-            L("CHAR_PEZ", "Dile que lo del martes fue un malentendido. Ella sabrá.", "Tell her Tuesday was a misunderstanding. She'll know."));
-        string dlgLubina = DialogoDeCaja("DLG_CAP3_LUBINA", "DLG_CAP3_LUBINA",
-            W("Ejem… ¿Doña Lubina? Dice Pez que lo del martes fue un malentendido.", "Ahem… Doña Lubina? Pez says Tuesday was a misunderstanding.", NPCEmotion.Confused),
-            W("¡Puaj!", "Ugh!", NPCEmotion.Surprised),
-            L("CHAR_PEZ", "¿Y bien? ¿Qué ha dicho?", "Well? What did she say?", NPCEmotion.Excited),
-            W("…Me ha escupido.", "…She spat at me.", NPCEmotion.Annoyed),
-            L("CHAR_PEZ", "¡Eso es que sí! Una dama.", "That means yes! A true lady.", NPCEmotion.Happy));
+            L("CHAR_PEZ", "¿Sabías que las lubinas se acercan a la orilla cuando sube la marea? Hoy he contado tres.", "Did you know sea bass come closer to shore at high tide? I counted three today."),
+            W("Necesito nadar hasta la casa del farol.", "I need to swim to the lantern house."),
+            L("CHAR_PEZ", "¡Te enseño con mi lubina de madera! Mi madre, Rosario, lo tiene. Está sentada junto a la puerta de la posada.", "I can teach you with my wooden sea bass! My mum, Rosario, has it. She's sitting by the inn door.", NPCEmotion.Excited));
+        string dlgMadreDePez = DialogoDeCaja("DLG_CAP3_MADRE_DE_PEZ", "DLG_CAP3_MADRE_DE_PEZ",
+            W("¿Me dejas la lubina de madera de Pez? Quiere enseñarme a nadar con ella.", "Can I take Pez's wooden sea bass? He wants to use it to teach me to swim."),
+            L("CHAR_ROSARIO", "Toma. Dile que la pintura ya está seca y que esta vez puede mojarla.", "Here. Tell him the paint is dry and he can get it wet this time."));
         string dlgLeccion = DialogoDeCaja("DLG_CAP3_PEZ_LECCION", "DLG_CAP3_PEZ_LECCION",
-            L("CHAR_PEZ", "Un trato es un trato. Lección de natación. Primero: piensa como un pez.", "A deal's a deal. Swimming lesson. First: think like a fish."),
-            L("CHAR_PEZ", "…No. Todavía piensas como un chico. Se te nota en las orejas.", "…No. You're still thinking like a boy. It shows in your ears.", NPCEmotion.Thinking),
-            L("CHAR_PEZ", "Brazos como si aplaudieras a una sardina muy lejos. Piernas como si no te importara nada.", "Arms like you're applauding a sardine very far away. Legs like you don't care about anything."),
-            L("CHAR_PEZ", "Y respira cuando el mar no mire.", "And breathe when the sea isn't looking."),
-            W("¿Y ya está?", "And that's it?", NPCEmotion.Confused),
-            L("CHAR_PEZ", "Por la autoridad que me dieron unas almejas que no recuerdo… ¡te nombro pez de honor!", "By the authority granted to me by some clams I can't remember… I name you honorary fish!", NPCEmotion.Excited));
+            W("Aquí tienes tu lubina.", "Here's your sea bass."),
+            L("CHAR_PEZ", "¡Capitana! El alumno está listo. ¿Cómo dice? ¿Pies de sardina y brazos de pulpo? ¡Pero solo tiene dos!", "Captain! Your pupil is ready. What's that? Sardine feet and octopus arms? But he only has two!", NPCEmotion.Excited),
+            L("CHAR_PEZ", "Dos bastan. Estira un brazo cada vez, da pataditas y gira la cabeza para respirar. La capitana dice que puedes.", "Two will do. Reach forward with one arm at a time, kick gently, and turn your head to breathe. The captain says you can do it.", NPCEmotion.Happy));
         string dlgPezAdios = DialogoDeCaja("DLG_CAP3_PEZ_ADIOS", "DLG_CAP3_PEZ_ADIOS",
             L("CHAR_PEZ", "Sigue los barriles que flotan: te llevan a la casa del farol. Los peces los llaman boyas. Los peces son muy finos.", "Follow the floating barrels: they'll take you to the lantern house. The fish call them buoys. Fish are very refined."),
-            L("CHAR_PEZ", "Candela lleva diez años encendiendo ese farol. Los peces dicen que Andrés no va a volver.", "Candela has been lighting that lantern for ten years. The fish say Andrés isn't coming back.", NPCEmotion.Sad),
+            L("CHAR_PEZ", "Candela lleva diez años encendiendo ese farol. Nadie ha vuelto a ver su barca.", "Candela has been lighting that lantern for ten years. Nobody has seen his boat since.", NPCEmotion.Sad),
             L("CHAR_PEZ", "Yo no se lo digo. Hay cosas que se oyen mejor con la luz encendida.", "I don't tell her. Some things are easier to hear with the light on."));
         // Candela, la del farol: la pista fuerte. Vio el carro cruzar hacia el bosque con algo que brillaba en las jaulas.
         string dlgCandela = DialogoDeCaja("DLG_CAP3_CANDELA", "DLG_CAP3_CANDELA",
@@ -151,7 +184,7 @@ public static partial class MontajeDeLosCapitulos
         string fPosaderoPistas = DialogoDeCaja("DLG_CAP3_POSADERO_PISTAS", "DLG_CAP3_POSADERO_PISTAS",
             L("CHAR_POSADERO", "Pez está en el muelle, hablándole a los peces. Si te enseña, nada hasta la casa del farol. Candela no muerde… casi nunca.", "Pez is on the pier, talking to the fish. If he teaches you, swim to the lantern house. Candela doesn't bite… hardly ever."));
         string fPezRecado = DialogoDeCaja("DLG_CAP3_PEZ_RECADO", "DLG_CAP3_PEZ_RECADO",
-            L("CHAR_PEZ", "¿Ya has hablado con Doña Lubina? Es muy suya. El último pilar, al final del muelle.", "Have you spoken to Doña Lubina yet? She's very particular. The last post, at the end of the pier."));
+            L("CHAR_PEZ", "Mi madre está sentada junto a la puerta de la posada. Pídele mi lubina de madera.", "My mum is sitting by the inn door. Ask her for my wooden sea bass."));
         string fPezBoyas = DialogoDeCaja("DLG_CAP3_PEZ_BOYAS", "DLG_CAP3_PEZ_BOYAS",
             L("CHAR_PEZ", "¡Pez de honor! Sigue los barriles hasta la casa del farol. Y no le hables a Candela de peces: no le gustan.", "Honorary fish! Follow the barrels to the lantern house. And don't talk to Candela about fish: she doesn't like them.", NPCEmotion.Happy));
         string fPezDespues = DialogoDeCaja("DLG_CAP3_PEZ_DESPUES", "DLG_CAP3_PEZ_DESPUES",
@@ -337,7 +370,7 @@ public static partial class MontajeDeLosCapitulos
         foreach (var g in new[] { Guardia1, Guardia2 })
             s_personajes.Add(new SituacionesDe { Actor = g, Entradas = { ("Cap. 3 · el cruce", Tramo(null), ActorPresence.Unchanged, null, fGuardia) } });
 
-        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Llegada a la aldea del mar", Senal = S3.LlegadaAldea, Mision = MisionCap3,
+        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Llegada a la aldea del mar", Senal = S3.LlegadaAldea, Mision = MisionDeLaAldea,
             Pos = new Vector3(262f, float.NaN, -414f), Radio = 16f, Tramo = Tramo(S3.Aldea, S3.Pistas) });
         // El sitio junto al fuego del camino del bosque; el minimapa lo marca hasta que anochece con Will allí.
         // Tras ganar al contrabandista del seguimiento, Will sigue solo hasta el claro.
@@ -346,15 +379,12 @@ public static partial class MontajeDeLosCapitulos
         s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Llegada al camino del bosque", Senal = S3.LlegadaBosque, Mision = MisionCap3,
             Pos = new Vector3(-102f, float.NaN, -209f), Radio = 18f, Tramo = Tramo(S3.Noche, S3.CaeLaNoche) });
         // La cerca del huerto: la salida de la aldea hacia el bosque, la última pista (tras la de Candela).
-        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Pista · la cerca del huerto", Dialogo = dlgHuerto, Senal = S3.PistaHuerto, Mision = MisionCap3, Paso = 5,
+        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Pista · la cerca del huerto", Dialogo = dlgHuerto, Senal = S3.PistaHuerto, Mision = MisionCap3, Paso = 0,
             Pos = new Vector3(231f, float.NaN, -399.6f), Tramo = Tramo(S3.Cerca, S3.Noche) });
-        // El recado de Pez: el agua del último pilar, en la punta del muelle (la altura de las tablas la pone ColocarLoDelAgua).
-        s_inspecciones.Add(new Inspeccion { Cap = Cap3, Nombre = "Recado · Doña Lubina", Dialogo = dlgLubina, Senal = S3.Lubina, Mision = MisionCap3, Paso = 3,
-            Pos = new Vector3(PuntaDelMuelle.x, 3.8f, PuntaDelMuelle.y - 3.2f), Tramo = Tramo(S3.Recado, S3.Nada) });
         // Las boyas de Pez, camino de la casa del farol: una tras otra en el minimapa. Su sitio lo pone ColocarLoDelAgua.
-        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Boya 1 (Pez)", Senal = S3.Boya1, Mision = MisionCap3,
+        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Boya 1 (Pez)", Senal = S3.Boya1, Mision = MisionDeLaAldea,
             Pos = new Vector3(PuntaDelMuelle.x - 8f, 0f, PuntaDelMuelle.y), Radio = 3.5f, Tramo = Tramo(S3.Nada, S3.Boya1, S3.Cerca) });
-        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Boya 2 (Pez)", Senal = S3.Boya2, Mision = MisionCap3,
+        s_llegadas.Add(new Llegada { Cap = Cap3, Nombre = "Boya 2 (Pez)", Senal = S3.Boya2, Mision = MisionDeLaAldea,
             Pos = new Vector3(PuntaDelMuelle.x - 16f, 0f, PuntaDelMuelle.y), Radio = 3.5f, Tramo = Tramo(S3.Boya1, S3.Boya2, S3.Cerca) });
 
         // La posada es la casa de pescadores 3; la mesa es la «Mesa de encuentro» de la plaza (279, −427).
@@ -391,30 +421,36 @@ public static partial class MontajeDeLosCapitulos
             // 3.2 · La aldea del mar
             P("aldea", "3.2 · Sigue hacia la aldea del mar (probar desde aquí)", Emitir(S3.Aldea)),
             P("llegada", "3.2 · Llega a la aldea del mar", Esperar(S3.LlegadaAldea)),
-            P("paso-llegar", "Paso: llegar a la aldea", Completar(MisionCap3, "CAP3_LLEGAR")),
+            P("punto-aldea", "3.2 · Punto de arranque: la aldea del mar", Punto("CAP3_ALDEA", "Cap3_Aldea")),
+            P("paso-llegar", "Paso: llegar a la aldea", Completar(MisionDeLaAldea, "CAP3_LLEGAR")),
             P("posadero", "3.2 · Hablar con el posadero", Hablar(Posadero)),
             P("posada", "3.2 · Cinemática: la posada, la cuchara y el trozo del aro", Cinematica("CAP3_POSADA")),
             // La charla sigue sin volver a hablarle: lo que vio, los carros y dónde mirar (INC-1320).
             P("posada-luces", "3.2 · El posadero sigue: las luces que respiran, los carros de noche y dónde mirar", Dialogo(dlgLuces, Posadero)),
-            P("paso-posada", "Paso: preguntar en la posada", Completar(MisionCap3, "CAP3_POSADA")),
+            P("paso-posada", "Paso: preguntar en la posada", Completar(MisionDeLaAldea, "CAP3_POSADA")),
             P("hoja", "3.2 · Will saca su hoja para apuntar lo que vea", Dar(RutaHoja)),
-            // Pez enseña a nadar a cambio de un recado; Candela, la del farol, da la pista; la cerca, de salida.
-            // Recorrido sin vuelta atrás: plaza → punta del muelle → a nado a la casa del farol → playa del barrio
-            // sobre el agua → oeste, por la cerca del huerto → camino del bosque (INC-1311).
+            // El juguete vuelve a Pez antes de la lección y del cruce a nado.
             P("pistas", "3.2 · Pez, Candela y la cerca (probar desde aquí)", Emitir(S3.Pistas)),
-            P("pez-hablar", "3.2 · Hablar con Pez en la punta del muelle", Hablar(Pez)),
-            P("pez-dlg", "3.2 · Pez: «Doña Lubina no me habla desde el martes»", Dialogo(dlgPez, Pez)),
-            P("paso-pez", "Paso: buscar a Pez", Completar(MisionCap3, "CAP3_PEZ")),
-            P("recado", "3.2 · El recado a Doña Lubina", Emitir(S3.Recado)),
-            P("lubina", "3.2 · Le da el recado a Doña Lubina (el agua del último pilar)", Esperar(S3.Lubina)),
-            P("paso-lubina", "Paso: el recado", Completar(MisionCap3, "CAP3_LUBINA")),
-            P("leccion", "3.2 · La lección de Pez", Dialogo(dlgLeccion, Pez)),
+            P("pez-hablar", "3.2 · Hablar con Pez en la playa", Hablar(Pez)),
+            P("pez-dlg", "3.2 · Pez pide su lubina de madera", Dialogo(dlgPez, Pez)),
+            P("paso-pez", "Paso: buscar a Pez", Completar(MisionDeLaAldea, "CAP3_PEZ")),
+            P("recado", "3.2 · El juguete de Pez", Emitir(S3.Recado)),
+            P("lubina", "3.2 · Hablar con Rosario en la entrada de la posada", Hablar(MadreDePez)),
+            P("madre-pez-dlg", "3.2 · Rosario entrega el juguete", Dialogo(dlgMadreDePez, MadreDePez)),
+            P("juguete-pez", "3.2 · Recoger la lubina de madera", Dar(RutaJugueteDePez)),
+            P("juguete-recogido", "3.2 · Ya tiene el juguete", Emitir(S3.Lubina)),
+            P("pez-entrega", "3.2 · Volver a hablar con Pez", Hablar(Pez)),
+            P("pez-recibe-juguete", "3.2 · Entregar la lubina de madera",
+                new RequireInventoryItemNode { Item = jugueteDePez }, "paso-lubina", "lubina"),
+            P("paso-lubina", "Paso: devolver el juguete", Completar(MisionDeLaAldea, "CAP3_LUBINA")),
+            P("leccion", "3.2 · Pez juega con su lubina y le enseña a nadar", Dialogo(dlgLeccion, Pez)),
             P("nadar", "3.2 · Pez de honor: aprende a nadar (aviso de habilidad)", DesbloquearHabilidad(AbilityKey.Swim, "CAP3_NADAR_APRENDIDO")),
             P("pez-adios", "3.2 · Pez se despide: las boyas y el farol de Candela", Dialogo(dlgPezAdios, Pez)),
             P("nada", "3.2 · A nado, siguiendo las boyas", Emitir(S3.Nada)),
             P("candela-hablar", "3.2 · Hablar con Candela en su porche", Hablar(Candela)),
             P("candela-dlg", "3.2 · Candela: el carro sin farol y las jaulas que brillaban", Dialogo(dlgCandela, Candela)),
-            P("paso-farol", "Paso: la casa del farol", Completar(MisionCap3, "CAP3_FAROL")),
+            P("paso-farol", "Paso: hablar con Candela (cierra Pistas en la Aldea del Mar)", Completar(MisionDeLaAldea, "CAP3_FAROL", cerrar: true)),
+            P("mision-marcas", "Misión: las marcas de hierro", new StartQuestNode { QuestId = MisionCap3, NoGiver = true }),
             P("cerca-empieza", "3.2 · La cerca del huerto, de salida hacia el bosque", Emitir(S3.Cerca)),
             P("cerca", "3.2 · La cerca rota: rodadas y paja que brilla", Esperar(S3.PistaHuerto)),
             P("paso-cerca", "Paso: la cerca", Completar(MisionCap3, "CAP3_CERCA")),
@@ -562,38 +598,18 @@ public static partial class MontajeDeLosCapitulos
         ColocarLoDelAgua(raiz, marcas, informe);
     }
 
-    /// Lo del agua del Cap. 3, colocado sobre lo que hay de verdad en la escena: Pez en la orilla junto al
-    /// muelle; el recado sobre las tablas de la punta del muelle; Candela en el porche de la casa del farol (el borde que da al muelle),
-    /// con su farol que se enciende de noche (LuzNocturna); las dos boyas a flote entre el muelle y la casa;
-    /// y el hueco bajo el puente del seguimiento, donde no se ve a quien pasa nadando (Escondite).
-    /// La orilla junto al arranque del muelle (a un lado de las tablas): el primer punto de tierra seca
-    /// yendo de la punta hacia el pueblo. Pez se pone ahí, mirando al mar.
-    private static bool OrillaJuntoAlMuelle(out Vector3 orilla)
-    {
-        const float aUnLado = 5f;
-        for (float d = 0f; d < 70f; d += 0.5f)
-        {
-            var q = AlSuelo(new Vector3(PuntaDelMuelle.x + aUnLado, float.NaN, PuntaDelMuelle.y + d));
-            if (q.y <= 0.2f) continue;
-            orilla = AlSuelo(new Vector3(q.x, float.NaN, q.z + 1.5f));
-            return true;
-        }
-        orilla = default;
-        return false;
-    }
-
+    /// Coloca el farol, las boyas y el escondite bajo el puente sobre la geometría de la escena.
     private static void ColocarLoDelAgua(Transform raiz, Dictionary<string, Transform> marcas, StringBuilder informe)
     {
+        foreach (var objeto in raiz.gameObject.scene.GetRootGameObjects())
+        {
+            var recadoRetirado = objeto.transform.Find(NombreRescatado + "/Recado · Doña Lubina");
+            if (objeto.name == NombreRescatado) recadoRetirado = objeto.transform.Find("Recado · Doña Lubina");
+            if (recadoRetirado != null) recadoRetirado.gameObject.SetActive(false);
+        }
+
         Physics.SyncTransforms();
         var punta = new Vector3(PuntaDelMuelle.x, 0f, PuntaDelMuelle.y);
-        var pez = raiz.Find(Aldea + " · roster/SP_SPAWN_Pez");
-        if (pez == null) informe.AppendLine("AVISO: no está el punto de Pez en el roster de la aldea.");
-        else if (OrillaJuntoAlMuelle(out var enLaOrilla)) pez.SetPositionAndRotation(enLaOrilla, Quaternion.Euler(0f, 180f, 0f));
-        else informe.AppendLine($"AVISO: no encuentro la orilla junto al muelle para Pez (busco tierra seca al norte de {punta.x:F1}, {punta.z:F1}).");
-        var lubina = raiz.Find(Cap3 + " · inspección/Recado · Doña Lubina/Punto");
-        if (lubina != null && TableroCerca(new Vector3(lubina.position.x, 0f, lubina.position.z), 6f, 1f, out var sobreLubina))
-            lubina.position = sobreLubina;
-
         // La casa del farol y el borde de su porche que mira al muelle.
         Transform casa = null;
         foreach (var r in raiz.gameObject.scene.GetRootGameObjects())
@@ -615,22 +631,20 @@ public static partial class MontajeDeLosCapitulos
                 else if (hayPorche) break;
             }
             if (!hayPorche) borde = new Vector3(b.center.x, 1.6f, b.center.z) + hacia * Mathf.Max(b.extents.x, b.extents.z);
-            var lado = Vector3.Cross(Vector3.up, hacia);
             var candela = raiz.Find(Aldea + " · roster/SP_SPAWN_Candela");
             if (candela != null) candela.SetPositionAndRotation(borde - hacia * 0.9f, Quaternion.LookRotation(hacia));
 
-            // El farol, en el porche junto a Candela: de noche se ve desde el puerto.
+            // El farol queda junto al marco de la puerta, visible desde el agua.
             var padre = Hijo(raiz, Cap3 + " · el agua");
+            PonerRampaDelFarol(casa, padre, borde.y, informe);
             var farolPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(FarolDeCandela);
             if (farolPrefab != null)
             {
                 var farol = (GameObject)PrefabUtility.InstantiatePrefab(farolPrefab, raiz.gameObject.scene);
                 farol.name = "Farol de Candela";
                 farol.transform.SetParent(padre, true);
-                farol.transform.SetPositionAndRotation(borde - hacia * 0.5f + lado * 1.1f, Quaternion.LookRotation(hacia));
+                ColocarFarolJuntoALaPuerta(casa, farol.transform);
                 var lf = Limites(farol);
-                farol.transform.position += Vector3.up * (borde.y - lf.min.y);
-                lf = Limites(farol);
                 var luzGo = new GameObject("Luz del farol");
                 luzGo.transform.SetParent(farol.transform, true);
                 luzGo.transform.position = new Vector3(lf.center.x, lf.max.y - lf.size.y * 0.3f, lf.center.z);
@@ -686,6 +700,40 @@ public static partial class MontajeDeLosCapitulos
             EnTramo(tramo, Tramo(S3.CaeLaNoche, S3.EnElClaro), go);
             informe.AppendLine($"Cap. 3: hueco bajo el puente en {centroHueco:F1}, {tamanoHueco.x:F1} × {tamanoHueco.y:F1} × {tamanoHueco.z:F1} m (ancho × alto × largo sobre el cauce).");
         }
+    }
+
+    private static void PonerRampaDelFarol(Transform casa, Transform padre, float alturaPorche, StringBuilder informe)
+    {
+        // La fachada es perpendicular al eje del modelo. Se busca el primer peldaño a ambos lados
+        // del centro para que la colisión quede alineada con el hueco real de la barandilla.
+        var frente = -casa.forward;
+        var transversal = Vector3.Cross(Vector3.up, frente);
+        const float bordeDeTablas = 3.3f;
+        const float centroDeEscalera = 0.375f;
+        var prueba = casa.position + frente * (bordeDeTablas + 0.17f);
+        var lado = transversal * centroDeEscalera;
+        if (!Tablero(prueba + lado, alturaPorche + 0.12f, out _, casa))
+        {
+            lado = -lado;
+            if (!Tablero(prueba + lado, alturaPorche + 0.12f, out _, casa))
+            {
+                informe.AppendLine("AVISO: no se encuentra el peldaño de la casa del farol.");
+                return;
+            }
+        }
+
+        var arriba = casa.position + lado + frente * (bordeDeTablas - 0.12f);
+        arriba.y = alturaPorche + 0.025f;
+        var abajo = arriba + frente * 3.05f;
+        abajo.y = casa.position.y - 0.58f;
+        var eje = abajo - arriba;
+        var rampa = Hijo(padre, "Colisión continua de la escalera del farol");
+        var suelo = casa.GetComponentInChildren<MeshCollider>();
+        rampa.gameObject.layer = suelo != null ? suelo.gameObject.layer : casa.gameObject.layer;
+        rampa.rotation = Quaternion.LookRotation(eje, Vector3.up);
+        rampa.position = (arriba + abajo) * 0.5f - rampa.up * 0.06f;
+        rampa.gameObject.AddComponent<BoxCollider>().size = new Vector3(1.02f, 0.12f, eje.magnitude);
+        informe.AppendLine($"Cap. 3: rampa del farol de {abajo:F2} a {arriba:F2}.");
     }
 
     /// Recorre el tablero del puente del seguimiento y busca el tramo donde queda hueco debajo (el
@@ -769,6 +817,14 @@ public static partial class MontajeDeLosCapitulos
     private const string CasaDelFarol = "Casa apartada (se llega nadando)";
     private const string BarrilDeBoya = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Barrel01_a01.prefab";
     private const string FarolDeCandela = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Lighting/Light01_a01.prefab";
+
+    private static void ColocarFarolJuntoALaPuerta(Transform casa, Transform farol)
+    {
+        // La fachada de CasaDeLaAldea_Amarilla está en z = −1,8 y el porche a 1,6 m.
+        var pie = casa.TransformPoint(new Vector3(0f, 1.6f, -2.15f));
+        farol.SetPositionAndRotation(pie, Quaternion.LookRotation(-casa.forward, casa.up));
+        farol.position += Vector3.up * (pie.y - Limites(farol.gameObject).min.y);
+    }
     /// Hueco bajo el tablero del puente donde no se ve a quien nada (ancho, alto, largo) si no se puede medir el puente.
     private static readonly Vector3 HuecoBajoElPuente = new Vector3(5f, 2.4f, 9f);
     /// El puente del camino que cruzan los contrabandistas en el seguimiento, y el ancho del escondite

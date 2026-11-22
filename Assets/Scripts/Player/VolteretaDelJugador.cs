@@ -62,6 +62,7 @@ public class VolteretaDelJugador : MonoBehaviour
     private bool _bloqueoDeMovimientoAntes;
     private bool _aireSuprimidoAntes;
     private bool _devolverCuerpo;
+    private bool _movimientoRaizAntes;
     private Vector3 _aterrizaje;
     private bool _animacionAjena;   // otro sistema ha puesto su estado: al acabar no se toca el Animator
     private int _hashSuelo, _hashAire, _hashCaida, _hashLocomocion, _hashBloqueo;
@@ -254,6 +255,7 @@ public class VolteretaDelJugador : MonoBehaviour
     private IEnumerator Co_DesdeElSuelo(float alturaEnCabezas, Vector3 desplazamiento, string estado)
     {
         EnCursoDesdeElSuelo = true;
+        _aterrizaje = transform.position;
         Tomar();
         while (true)
         {
@@ -262,7 +264,7 @@ public class VolteretaDelJugador : MonoBehaviour
 
             // Sigue con el segundo tramo desde donde ha aterrizado, sin soltar el cuerpo.
             _hayOtroTramo = false;
-            transform.position = _aterrizaje;
+            ColocarCuerpo(_aterrizaje);
             var t = _otroTramo;
             PrepararTramo(t.tramoDeMovimiento, t.terminaEn, t.duracionFija, t.avance);
             alturaEnCabezas = Mathf.Max(0f, t.altura);
@@ -321,7 +323,7 @@ public class VolteretaDelJugador : MonoBehaviour
             float subida = t > _tramo.x && t < _tramo.y ? alto * 4f * u * (1f - u) : 0f;
             Vector3 p = Vector3.Lerp(inicio, _aterrizaje, Recorrido(u, salidaRelativa));
             p.y += subida;
-            transform.position = p;
+            ColocarCuerpo(p);
             yield return null;
         }
     }
@@ -366,6 +368,12 @@ public class VolteretaDelJugador : MonoBehaviour
         if (!_devolverCuerpo)
         {
             _devolverCuerpo = true;
+            // El arco dirige el cuerpo mientras se reproduce el clip en el sitio.
+            if (animator)
+            {
+                _movimientoRaizAntes = animator.applyRootMotion;
+                if (_movimientoRaizAntes) animator.applyRootMotion = false;
+            }
             if (controller)
             {
                 _controladorAntes = controller.enabled;
@@ -386,6 +394,12 @@ public class VolteretaDelJugador : MonoBehaviour
         PonerBloqueo(true);
     }
 
+    private void ColocarCuerpo(Vector3 posicion)
+    {
+        if (body) body.position = posicion;
+        transform.position = posicion;
+    }
+
     /// Devuelve todo lo tomado y sale de la animación: la voltereta desde el suelo deja al
     /// personaje en su punto de aterrizaje. Idempotente.
     private void Soltar()
@@ -396,7 +410,8 @@ public class VolteretaDelJugador : MonoBehaviour
         if (_devolverCuerpo)
         {
             _devolverCuerpo = false;
-            transform.position = _aterrizaje;
+            ColocarCuerpo(_aterrizaje);
+            if (animator && _movimientoRaizAntes) animator.applyRootMotion = true;
             if (body)
             {
                 body.isKinematic = _cinematicoAntes;

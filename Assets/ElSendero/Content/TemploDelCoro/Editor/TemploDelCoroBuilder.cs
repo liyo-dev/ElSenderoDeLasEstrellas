@@ -62,7 +62,7 @@ public static class TemploDelCoroBuilder
     private const float AnchoDelCorredor = 10f;
     private const string IdDelAncla = "InicioTemploDelCoro";
 
-    private static Transform _pentagramaDeLaSala, _lineasDelCorredor, _compasesDelCorredor;
+    private static Transform _pentagramaDeLaSala;
     // Los recortes importados (para el atrezo de lo que sale del suelo).
     private static Dictionary<string, Pieza> _piezas = new Dictionary<string, Pieza>();
     private static Material _gris, _grisOscuro, _linea, _sombra, _aviso, _humo, _sombraQuePersigue, _brasa, _recuadro, _madera, _onda, _regalo, _telon, _luz, _runas, _rayo, _lagrima, _rosa;
@@ -137,14 +137,16 @@ public static class TemploDelCoroBuilder
     private const float MargenDelCamino = 1f;
     private const float VelocidadLateralDelCamino = 7f;
     private const float MitadDelPasillo = 5f;
-    private static readonly float[] Carriles = { -6f, -4f, -2f, 0f, 2f, 4f, 6f };
+    private static readonly float[] Carriles = { -6f, -3.3f, 0f, 3.3f, 6f };
     // Por dónde va el camino de base, por tramos (desde ese segundo, esa x): largos a un lado o al otro,
     // con frases de la canción; los respiros y el encierro, por el centro.
+    // Tramos del camino modificados: obligan a cruzar de un lado a otro y pasar por obstáculos y saltos,
+    // evitando que el jugador pueda ir siempre por la derecha sin enterarse.
     private static readonly Vector2[] TramosDelCamino =
     {
-        new Vector2(21.5f, 0f), new Vector2(24f, -3f), new Vector2(31.2f, 3f), new Vector2(38.5f, 0f),
-        new Vector2(67.9f, 3f), new Vector2(75.8f, -3f), new Vector2(84.7f, 3f), new Vector2(92.6f, -3f),
-        new Vector2(120.6f, -2f), new Vector2(125.5f, 2f), new Vector2(128.9f, 0f),
+        new Vector2(21.5f, 4f), new Vector2(24f, -4f), new Vector2(28.0f, 0f), new Vector2(31.2f, 4f), new Vector2(35.0f, -4f), new Vector2(38.5f, 0f),
+        new Vector2(67.9f, 4f), new Vector2(72.0f, -4f), new Vector2(75.8f, 2f), new Vector2(80.0f, -4f), new Vector2(84.7f, 4f), new Vector2(89.0f, 0f), new Vector2(92.6f, -4f),
+        new Vector2(120.6f, -4f), new Vector2(123.0f, 4f), new Vector2(125.5f, -2f), new Vector2(128.9f, 0f),
     };
     private static float[] _camino = System.Array.Empty<float>();
     private static float[] _tiempos = System.Array.Empty<float>();
@@ -522,7 +524,7 @@ public static class TemploDelCoroBuilder
         var reloj = CrearReloj(raiz, partitura);
         CrearSala(raiz, escena);
         CrearTenor(raiz, reloj, piezas, "El Tenor (recortes)", new Vector3(0f, 5.9f, -4.35f), 1f);
-        CrearCorredor(raiz, escena);
+        var sueloQueSePierde = CrearCorredor(raiz, reloj);
         CrearLoQueCae(raiz, escena, reloj, partitura, piezas);
         CrearLosasQueSeHunden(raiz, escena, reloj, partitura);
         var montaje = new Montaje();
@@ -533,7 +535,7 @@ public static class TemploDelCoroBuilder
         montaje.Receptores.Add(organo.ReceptorDeLaPuerta);
         montaje.Vuelven.Add(organo.Puerta);
         CrearRegalitos(raiz, reloj, organo.Puerta, piezas, montaje);
-        CrearEscenario(raiz, reloj, partitura, piezas, montaje);
+        CrearEscenario(raiz, reloj, partitura, piezas, montaje, sueloQueSePierde);
         CrearEncierro(raiz, reloj, piezas, montaje);
         CrearFinal(raiz, reloj, partitura, piezas, montaje);
         var sombra = CrearSombra(raiz, escena);
@@ -564,10 +566,10 @@ public static class TemploDelCoroBuilder
         CrearBombardino(raiz, reloj, partitura);
         var camara = CrearCamara(raiz, doReMi);
         PonerRef(camara, "tenorDeLaDespedida", montaje.TenorDelFinal);
-        var recuadro = CrearRecuadro(raiz, 8f, 4f);
+        var recuadro = CrearRecuadro(raiz, 12f, 2f);
         CrearLuces(raiz, reloj, recuadro);
         PonerPlanosDeEscena(camara, montaje);
-        CrearTramo(raiz, reloj, sombra, entrada, camara, recuadro, montaje);
+        CrearTramo(raiz, reloj, sombra, entrada, camara, recuadro, montaje, sueloQueSePierde.ToArray());
 
         EditorSceneManager.MarkSceneDirty(escena);
         EditorSceneManager.SaveScene(escena, RutaEscena);
@@ -582,7 +584,7 @@ public static class TemploDelCoroBuilder
         const string informe = "[Templo del Coro] Montado: afinación, estrofa 1 (notas, losas, antorcha y puente) y " +
                                "estrofa 2 (nave del órgano), regalitos, estribillo en el escenario (huecos de luz y de mente), puente con los coristas, frase triste y final. Abre TemploDelCoro.unity y dale a Play.";
         Debug.Log(informe);
-        OrdenesDelEditor.Avisar("Templo del Coro", informe);
+        if (!Application.isBatchMode) OrdenesDelEditor.Avisar("Templo del Coro", informe);
     }
 
     // ── Datos: partitura y recortes ─────────────────────────────────────────────────────────
@@ -1188,21 +1190,6 @@ public static class TemploDelCoroBuilder
     private static void CrearBombardino(Transform raiz, TempoClock reloj, MusicScore partitura)
     {
         var bombardino = Hijo(raiz, "1b. El bombardino (pum-pam)");
-        void Botar(Transform que, string voz, float alto)
-        {
-            if (que == null) return;
-            var oyente = Hijo(bombardino, voz).gameObject.AddComponent<ScoreCueTrigger>();
-            PonerRef(oyente, "clock", reloj);
-            PonerTextos(oyente, "voices", new[] { voz });
-            var bote = que.gameObject.AddComponent<PulseMotion>();
-            PonerRef(bote, "clock", reloj);
-            PonerVector(bote, "positionKick", new Vector3(0f, alto, 0f));
-            Poner(bote, "decaySeconds", 0.25f);
-            UnityEventTools.AddVoidPersistentListener(oyente.onCue, bote.Kick);
-        }
-        Botar(_lineasDelCorredor, VozBomboPum, 0.3f);
-        Botar(_compasesDelCorredor, VozBomboPam, 0.2f);
-
         var sitios = new List<Vector3>();
         // Sin latigazos al entrar ni durante «¡Visitas, visitas!» (hasta los 24 s): un respiro.
         var pums = DeLaPartitura(partitura, VozBomboPum, DesdeLosLatigazos, DesdeLasGrandesGrabadas);
@@ -1383,39 +1370,94 @@ public static class TemploDelCoroBuilder
     }
 
     /// <summary>El corredor-pentagrama: del 0 al hueco (120 m), con el tramo de las losas cortado.</summary>
-    private static void CrearCorredor(Transform raiz, Scene escena)
+    private static List<Transform> CrearCorredor(Transform raiz, TempoClock reloj)
     {
         var corredor = Hijo(raiz, "1. El corredor");
-        // Suelo por trozos: entre medias van las tres losas que se hunden (ver CrearLosasQueSeHunden).
+        var filas = new List<Transform>();
         var cortes = new List<float> { 0f };
         foreach (float t in SegundosDeLosas) { cortes.Add(Z(t) - 1.5f); cortes.Add(Z(t) + 1.5f); }
         cortes.Add(InicioDelBorde);
         for (int i = 0; i + 1 < cortes.Count; i += 2)
         {
-            float a = cortes[i], b = cortes[i + 1];
-            Caja($"Suelo del corredor {i / 2 + 1}", corredor, new Vector3(0f, -0.5f, (a + b) * 0.5f),
-                 new Vector3(AnchoDelCorredor, 1f, b - a), _gris, true);
+            CrearFilasDeSuelo(corredor, filas, cortes[i], cortes[i + 1]);
         }
         float largo = ZDelFinDeLaNave;
-        Caja("Suelo de la nave del órgano", corredor, new Vector3(0f, -0.5f, (ZDelRellano + ZDelFinDeLaNave) * 0.5f),
-             new Vector3(AnchoDelCorredor, 1f, ZDelFinDeLaNave - ZDelRellano), _gris, true);
+        CrearFilasDeSuelo(corredor, filas, ZDelRellano, ZDelFinDeLaNave);
         Caja("Muro oeste", corredor, new Vector3(-AnchoDelCorredor * 0.5f - 0.2f, AltoDeLosMuros * 0.5f, largo * 0.5f),
              new Vector3(0.4f, AltoDeLosMuros, largo), _grisOscuro, false);
         Caja("Muro este", corredor, new Vector3(AnchoDelCorredor * 0.5f + 0.2f, AltoDeLosMuros * 0.5f, largo * 0.5f),
              new Vector3(0.4f, AltoDeLosMuros, largo), _grisOscuro, false);
-        int tramo = 0;
-        foreach (var (desde, hasta) in new[] { (0f, ZDelHueco), (ZDelRellano, ZDelFinDeLaNave) })
+        var pum = OyenteDelPentagrama(VozBomboPum);
+        var pam = OyenteDelPentagrama(VozBomboPam);
+        for (int i = 0; i < filas.Count; i++)
         {
-            // En el primer tramo, las líneas botan con el «pum» del bombardino y los compases con el «pam».
-            var lineas = Hijo(corredor, tramo == 0 ? "Pentagrama del corredor" : "Pentagrama de la nave");
-            var compases = Hijo(corredor, tramo == 0 ? "Compases del corredor" : "Compases de la nave");
-            for (int i = 0; i < 5; i++)
-                Raya($"Pentagrama {i + 1}", lineas, new Vector3(-4f + i * 2f, 0.01f, (desde + hasta) * 0.5f), new Vector3(0.14f, 0.02f, hasta - desde));
-            // Marca de cada compás en el suelo: se ve el ritmo corriendo.
-            for (float z = desde; z < hasta; z += Velocidad * 4f * 60f / 145.6f)
-                Raya("Compás", compases, new Vector3(0f, 0.018f, z), new Vector3(AnchoDelCorredor, 0.02f, 0.12f));
-            if (tramo == 0) { _lineasDelCorredor = lineas; _compasesDelCorredor = compases; }
-            tramo++;
+            var fila = filas[i];
+            float hasta = fila.position.z;
+            float largoFila = fila.GetChild(0).localScale.z;
+            float desde = hasta - largoFila;
+            var lineas = Hijo(fila, "Pentagrama");
+            var compases = Hijo(fila, "Compases");
+            for (int v = 0; v < 5; v++)
+                Raya("Línea", lineas, new Vector3(-4f + v * 2f, 0.012f, (desde + hasta) * 0.5f),
+                     new Vector3(0.10f, 0.015f, largoFila));
+            const float separacion = Velocidad * 4f * 60f / 145.6f;
+            for (float z = Mathf.Ceil(desde / separacion) * separacion; z < hasta; z += separacion)
+                Raya("Compás", compases, new Vector3(0f, 0.017f, z), new Vector3(AnchoDelCorredor, 0.02f, 0.10f));
+            if (hasta > ZDelHueco) continue;
+            Botar(lineas, pum, 0.08f);
+            if (compases.childCount > 0) Botar(compases, pam, 0.06f);
+        }
+
+        ScoreCueTrigger OyenteDelPentagrama(string voz)
+        {
+            var oyente = Hijo(corredor, voz).gameObject.AddComponent<ScoreCueTrigger>();
+            PonerRef(oyente, "clock", reloj);
+            PonerTextos(oyente, "voices", new[] { voz });
+            return oyente;
+        }
+
+        void Botar(Transform que, ScoreCueTrigger oyente, float alto)
+        {
+            var bote = que.gameObject.AddComponent<PulseMotion>();
+            PonerRef(bote, "clock", reloj);
+            PonerVector(bote, "positionKick", new Vector3(0f, alto, 0f));
+            Poner(bote, "decaySeconds", 0.25f);
+            UnityEventTools.AddVoidPersistentListener(oyente.onCue, bote.Kick);
+        }
+        return filas;
+    }
+
+    private static void CrearFilasDeSuelo(Transform corredor, List<Transform> filas,
+                                        float desde, float hasta, Material material = null, TempoClock reloj = null)
+    {
+        if (hasta - desde < 0.01f) return;
+        int cantidad = Mathf.CeilToInt((hasta - desde) / 4f);
+        for (int i = 0; i < cantidad; i++)
+        {
+            float a = Mathf.Lerp(desde, hasta, i / (float)cantidad);
+            float b = Mathf.Lerp(desde, hasta, (i + 1f) / cantidad);
+            var fila = Hijo(corredor, $"Fila de suelo {filas.Count + 1}");
+            fila.position = new Vector3(0f, 0f, b);
+            Caja("Suelo", fila, new Vector3(0f, -0.5f, (a + b) * 0.5f), new Vector3(AnchoDelCorredor, 1f, b - a), material != null ? material : _gris, true);
+            if (material == _madera)
+            {
+                for (int v = 1; v < 8; v++)
+                    Raya("Veta", fila, new Vector3(-AnchoDelCorredor * 0.5f + v * AnchoDelCorredor / 8f, 0.012f, (a + b) * 0.5f),
+                         new Vector3(0.05f, 0.02f, b - a));
+                float primero = Mathf.Max(a, Z(DesdeElPracticable)), ultimo = Mathf.Min(b, Z(HastaElPracticable));
+                if (ultimo > primero)
+                {
+                    var ribete = Hijo(fila, "Ribete lateral del practicable");
+                    Raya("Línea", ribete, new Vector3(BordeDelPracticable + 0.1f, 0.025f, (primero + ultimo) * 0.5f),
+                         new Vector3(0.14f, 0.015f, ultimo - primero));
+                    var pulso = ribete.gameObject.AddComponent<PulseMotion>();
+                    PonerRef(pulso, "clock", reloj);
+                    Poner(pulso, "onEveryBeat", true);
+                    PonerVector(pulso, "positionKick", new Vector3(0f, 0.045f, 0f));
+                    Poner(pulso, "decaySeconds", 0.25f);
+                }
+            }
+            filas.Add(fila);
         }
     }
 
@@ -1893,7 +1935,7 @@ public static class TemploDelCoroBuilder
     /// lanzan (borde ciruela: no se devuelven, se esquivan con la voltereta), dos trampillas que se
     /// abren y el triple de 1:13 (clave, nota, pilar).
     /// </summary>
-    private static void CrearEscenario(Transform raiz, TempoClock reloj, MusicScore partitura, Dictionary<string, Pieza> piezas, Montaje montaje)
+    private static void CrearEscenario(Transform raiz, TempoClock reloj, MusicScore partitura, Dictionary<string, Pieza> piezas, Montaje montaje, List<Transform> sueloQueSePierde)
     {
         var padre = Hijo(raiz, "4. El escenario (estribillo)");
         float a = ZDelFinDeLaNave, b = ZDelFondoDelEscenario, medio = AnchoDelCorredor * 0.5f;
@@ -1901,14 +1943,8 @@ public static class TemploDelCoroBuilder
         // Tablas, cortadas en los dos huecos de magia (el foso de la orquesta y las tablas que se caen).
         float huecoWill = ZDelHuecoDeMagia(RespiroDeWill), huecoLiam = ZDelHuecoDeMagia(RespiroDeLiam);
         var cortes = new List<float> { a, huecoWill, huecoWill + LargoDelHuecoDeMagia, huecoLiam, huecoLiam + LargoDelHuecoDeMagia, b };
-        var vetas = Hijo(padre, "Vetas de las tablas");
         for (int i = 0; i + 1 < cortes.Count; i += 2)
-        {
-            float z0 = cortes[i], z1 = cortes[i + 1];
-            Caja($"Tablas {i / 2 + 1}", padre, new Vector3(0f, -0.5f, (z0 + z1) * 0.5f), new Vector3(AnchoDelCorredor, 1f, z1 - z0), _madera, true);
-            for (int v = 1; v < 8; v++)
-                Raya("Veta", vetas, new Vector3(-medio + v * AnchoDelCorredor / 8f, 0.01f, (z0 + z1) * 0.5f), new Vector3(0.05f, 0.02f, z1 - z0));
-        }
+            CrearFilasDeSuelo(padre, sueloQueSePierde, cortes[i], cortes[i + 1], _madera, reloj);
         // Will: el foso de la orquesta. Un foco apagado encima: con luz, sale una plataforma de luz.
         HuecoDeMagia("El foso de la orquesta (luz: Will)", padre, huecoWill, MagicElement.Light, _luz, _luz, 0.4f, reloj, montaje);
         // Liam: las tablas se han caído al foso. Una piedra con runas: con mente, sube una tabla.
@@ -2013,13 +2049,8 @@ public static class TemploDelCoroBuilder
         Columnas("Pirotecnia", padre, reloj, VozPirotecnia, Puntos(padre, "Chorro", piro.ToArray()),
                  new Vector3(4.8f, 2.4f, 1.2f), 8f, 2.5f, fogonazo, 0.6f, 0.6f, 0.45f, DesdeElEstribillo, HastaElEstribillo, _brasa, atrezo: "atrezo_llama");
 
-        // «Por arriba»: el practicable a la derecha y el latigazo que barre el suelo de al lado.
+        // La franja del practicable queda al ras. El latigazo barre a su izquierda.
         {
-            float z0 = Z(DesdeElPracticable), z1 = Z(HastaElPracticable), ancho = MitadDelPasillo - BordeDelPracticable;
-            Caja("Practicable (por arriba)", padre, new Vector3(BordeDelPracticable + ancho * 0.5f, AltoDelPracticable * 0.5f, (z0 + z1) * 0.5f),
-                 new Vector3(ancho, AltoDelPracticable, z1 - z0), _madera, true);
-            Raya("Borde del practicable", padre, new Vector3(BordeDelPracticable + 0.1f, AltoDelPracticable + 0.01f, (z0 + z1) * 0.5f), new Vector3(0.2f, 0.02f, z1 - z0));
-            for (float t = DesdeElPracticable; t <= HastaElPracticable; t += 0.4f) AlMapa(t, BordeDelPracticable + ancho * 0.5f, Z(t), ancho * 0.5f, "practicable");
             var barridos = BarridosDelPracticable();
             if (barridos.Count > 0)
             {
@@ -2042,8 +2073,12 @@ public static class TemploDelCoroBuilder
         foreach (float t in DeLaPartitura(partitura, VozNotaDelEstribillo, DesdeElEstribillo, HastaElEstribillo))
         {
             float x = XFueraDelCamino(t, 1.3f, ref turno);
-            notas.Add(new Vector3(x, 0f, Z(t)));
-            AlMapa(t, x, Z(t), 1.3f, "nota");
+            float z = Z(t);
+            // En un foso, la nota cae sobre su borde de entrada. El compás se conserva.
+            if (z >= huecoWill && z < huecoWill + LargoDelHuecoDeMagia) z = huecoWill - 0.5f;
+            if (z >= huecoLiam && z < huecoLiam + LargoDelHuecoDeMagia) z = huecoLiam - 0.5f;
+            notas.Add(new Vector3(x, 0f, z));
+            AlMapa(t, x, z, 1.3f, "nota");
         }
         Caida("Notas del estribillo", padre, reloj, nota, VozNotaDelEstribillo, DesdeElEstribillo, HastaElEstribillo,
               Puntos(padre, "Nota", notas.ToArray()), 1.6f, 12f, 1.3f, pum, 1f, 1.3f);
@@ -2122,6 +2157,8 @@ public static class TemploDelCoroBuilder
         public readonly List<GameObject> SeVan = new List<GameObject>();
         // La cara entera del Tenor del final: a ella mira la despedida de la cámara.
         public Transform TenorDelFinal;
+        public Transform MarcaDelSaludo;
+        public Light FocoDelSaludo;
         public readonly List<(Vector2 segundos, Transform desde, Transform hasta, float campo)> Planos =
             new List<(Vector2, Transform, Transform, float)>();
     }
@@ -2188,6 +2225,9 @@ public static class TemploDelCoroBuilder
                 var go = new GameObject("Muñeco de cartón");
                 go.transform.SetParent(publico, false);
                 go.transform.position = new Vector3(x, y, z);
+                // El frente del recorte es -Z: mira hacia el centro del escenario.
+                Vector3 escenario = new Vector3(0f, y, Mathf.Min(b, z + 3f));
+                go.transform.rotation = Quaternion.LookRotation(go.transform.position - escenario, Vector3.up);
                 go.transform.localScale = Vector3.one * 0.8f;
                 go.AddComponent<SpriteRenderer>().sprite = muneco.sprite;
             }
@@ -2398,6 +2438,7 @@ public static class TemploDelCoroBuilder
                 UnityEventTools.AddVoidPersistentListener(canta.onWarning, abre.Kick);
             }
 
+            UnityEventTools.AddBoolPersistentListener(receptor.alActivarse, receptor.gameObject.SetActive, false);
             UnityEventTools.AddBoolPersistentListener(receptor.alActivarse, dePie.gameObject.SetActive, false);
             UnityEventTools.AddBoolPersistentListener(receptor.alActivarse, rayos.gameObject.SetActive, false);
             montaje.Vuelven.Add(dePie.gameObject);
@@ -2430,23 +2471,26 @@ public static class TemploDelCoroBuilder
         Poner(notas, "aimAtTarget", true);
         Poner(notas, "aimMaxDistance", 6f);
 
-        // La tralla: tras los coristas, una nota en cada corchea que recorre los carriles de un lado a otro.
-        // Cada escala (un compás) cae en una fila, y la siguiente en la otra: ninguna fila es un refugio y
-        // siempre queda una libre. Lo demás del encierro cae en otras filas (el telar, al fondo).
+        // La tralla: tras los coristas, una nota en cada corchea y en cada fila, que recorre los carriles de
+        // un lado a otro. Cada fila va media escala por detrás de la anterior: en cada corchea las notas
+        // caen en carriles distintos y siempre hay hueco al lado. Lo demás del encierro cae en otras filas.
         var tralla = MomentosDeTralla();
         if (tralla.Count > 0)
         {
-            var sitios = new Vector3[tralla.Count];
             int[] escala = { 0, 1, 2, 3, 4, 3, 2, 1 };
-            for (int i = 0; i < tralla.Count; i++)
+            for (int f = 0; f < FilasDeLaTralla.Length; f++)
             {
-                float x = -4f + 2f * escala[i % escala.Length];
-                float z = FilasDeLaTralla[(i / escala.Length) % FilasDeLaTralla.Length] + zs;
-                sitios[i] = new Vector3(x, 0f, z);
-                AlMapa(tralla[i], x, z, 1f, "tralla");
+                var sitios = new Vector3[tralla.Count];
+                float z = FilasDeLaTralla[f] + zs;
+                for (int i = 0; i < tralla.Count; i++)
+                {
+                    float x = -4f + 2f * escala[(i + f * escala.Length / 2) % escala.Length];
+                    sitios[i] = new Vector3(x, 0f, z);
+                    AlMapa(tralla[i], x, z, 1f, "tralla");
+                }
+                Caida($"La tralla (fila {f + 1})", padre, reloj, nota, VozTralla, DesdeLaTralla - 0.1f, SegundoDeLaFraseTriste,
+                      Puntos(padre, $"Nota de la tralla (fila {f + 1})", sitios), 1.2f, 10f, 1f, f == 0 ? pum : null, 0.5f, 0.82f);
             }
-            Caida("La tralla (una escala)", padre, reloj, nota, VozTralla, DesdeLaTralla - 0.1f, SegundoDeLaFraseTriste,
-                  Puntos(padre, "Nota de la tralla", sitios), 1.2f, 10f, 1f, pum, 0.5f, 0.82f);
         }
 
         // La frase triste: plano desde el público, acercándose despacio al Tenor del telón.
@@ -2541,6 +2585,22 @@ public static class TemploDelCoroBuilder
             zTramo = h.y;
         }
         SueloDelFinal(suelo, ++trozo, zTramo, fin);
+        var saludo = Hijo(padre, "Marca del saludo final");
+        saludo.SetPositionAndRotation(new Vector3(0f, 0.15f, Mathf.Lerp(zTramo, fin, 0.55f)),
+                                      Quaternion.LookRotation(Vector3.back, Vector3.up));
+        montaje.MarcaDelSaludo = saludo;
+        var focoDelSaludo = Hijo(padre, "Cenital del saludo final");
+        focoDelSaludo.SetPositionAndRotation(saludo.position + Vector3.up * 12f,
+                                          Quaternion.LookRotation(Vector3.down, Vector3.forward));
+        var luzDelSaludo = focoDelSaludo.gameObject.AddComponent<Light>();
+        luzDelSaludo.type = LightType.Spot;
+        luzDelSaludo.color = new Color(1f, 0.87f, 0.64f);
+        luzDelSaludo.intensity = 26f;
+        luzDelSaludo.range = 21f;
+        luzDelSaludo.spotAngle = 48f;
+        luzDelSaludo.innerSpotAngle = 33f;
+        luzDelSaludo.enabled = false;
+        montaje.FocoDelSaludo = luzDelSaludo;
 
         // Pretiles a los dos lados (con almenas) y una barandilla que no se ve.
         foreach (float lado in new[] { -1f, 1f })
@@ -2628,14 +2688,18 @@ public static class TemploDelCoroBuilder
         piezas.TryGetValue("nota_que_cae", out var nota);
         sitios.Clear();
         int turno = 0;
-        foreach (float t in DeLaPartitura(partitura, VozNotaDelEstribillo, Truenos, SegundoDeLaMeta))
+        foreach (float t in DeLaPartitura(partitura, VozNotaDelEstribillo, FinDeLosPracticables, SegundoDeLaMeta))
         {
             float x = XFueraDelCamino(t, 1.3f, ref turno);
-            sitios.Add(new Vector3(x, 0f, Z(t)));
-            AlMapa(t, x, Z(t), 1.3f, "nota");
+            float z = Mathf.Max(Z(t), zSuelo + 0.5f);
+            foreach (var hueco in huecos)
+                if (z >= hueco.x && z < hueco.y) { z = hueco.x - 0.5f; break; }
+            sitios.Add(new Vector3(x, 0f, z));
+            AlMapa(t, x, z, 1.3f, "nota");
         }
-        Caida("Notas del final", padre, reloj, nota, VozNotaDelEstribillo, Truenos, SegundoDeLaMeta,
-              Puntos(padre, "Nota", sitios.ToArray()), 1.6f, 12f, 1.3f, pum, 1f, 1.3f);
+        if (sitios.Count > 0)
+            Caida("Notas del final", padre, reloj, nota, VozNotaDelEstribillo, FinDeLosPracticables, SegundoDeLaMeta,
+                  Puntos(padre, "Nota", sitios.ToArray()), 1.6f, 12f, 1.3f, pum, 1f, 1.3f);
         var golpes = GolpesEntre(Truenos, SegundoDeLaMeta);
         if (golpes.Count > 0)
         {
@@ -2764,7 +2828,6 @@ public static class TemploDelCoroBuilder
     // huecos de magia; por el suelo de al lado barre un latigazo cada dos tiempos y solo se pasa por encima.
     // Empieza pasado el hueco de Will (si no, por encima se rodeaba el hueco).
     private static float DesdeElPracticable => SegundoAlPasarElHueco(RespiroDeWill) + 0.2f;
-    private const float AltoDelPracticable = 0.7f;
     private const float BordeDelPracticable = 1f;
     private const string VozDelBarrido = "BARRIDO_DEL_PRACTICABLE";
 
@@ -2778,8 +2841,8 @@ public static class TemploDelCoroBuilder
     // recorre los cinco carriles de un lado a otro (una escala).
     private const string VozTralla = "TRALLA";
     private const float DesdeLaTralla = 107.4f;
-    // Filas de la tralla (metros respecto a donde se para el recuadro), una por escala: la de en medio y la de abajo.
-    private static readonly float[] FilasDeLaTralla = { -2f, -5f };
+    // Filas de la tralla (metros respecto a donde se para el recuadro): delante, en medio y abajo; caen todas a la vez.
+    private static readonly float[] FilasDeLaTralla = { 1f, -2f, -5f };
 
     private static List<float> MomentosDeComba()
     {
@@ -3077,7 +3140,7 @@ public static class TemploDelCoroBuilder
     }
 
     private static void CrearTramo(Transform raiz, TempoClock reloj, Transform sombra, Vector3 entrada,
-                                   CamaraDelCoro camara, Transform recuadro, Montaje montaje)
+                                   CamaraDelCoro camara, Transform recuadro, Montaje montaje, Transform[] sueloQueSePierde)
     {
         var go = Hijo(raiz, "La huida (afinación, estrofas 1 y 2, estribillo)");
         var salida = Hijo(go, "Salida (la sala)");
@@ -3117,6 +3180,10 @@ public static class TemploDelCoroBuilder
         Poner(tramo, "reintentarAlFallar", true);
         PonerRef(tramo, "reloj", reloj);
         PonerRef(tramo, "camara", camara);
+        PonerRef(tramo, "marcaDelSaludo", montaje.MarcaDelSaludo);
+        PonerRef(tramo, "focoDelSaludo", montaje.FocoDelSaludo);
+        PonerRef(tramo, "confetiDelSaludo", AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Confetti/Confetti_blast_multicolor.prefab"));
         Poner(tramo, "segundoDeSalida", 0f);
         PonerRefs(tramo, "puntosDeControl", new Object[] { control1, control2, control3, control4, control5, control6 });
         Poner(tramo, "tiemposAntesDelReintento", 4);
@@ -3126,11 +3193,12 @@ public static class TemploDelCoroBuilder
         Poner(tramo, "metrosPorSegundo", Velocidad);
         Poner(tramo, "segundoDeArranque", SegundoDelCorredor);
         Poner(tramo, "zDeArranque", 0f);
-        Poner(tramo, "metrosDeVentaja", 8f);
-        // Corriendo, no se pasa del borde de delante del recuadro; en un respiro (el recuadro parado) se
-        // puede llegar hasta 16 m por delante (cruzar un hueco de magia o el puente de la antorcha).
-        Poner(tramo, "metrosAdelante", 4f);
-        Poner(tramo, "metrosAdelanteEnRespiro", 16f);
+        Poner(tramo, "metrosDeVentaja", 12f);
+        PonerRefs(tramo, "sueloQueSePierde", sueloQueSePierde);
+        PonerRef(tramo, "polvoDelSuelo", AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/VFX/FootDust_Toon.prefab"));
+        // Los huecos de magia necesitan margen para aterrizar durante el calderón.
+        Poner(tramo, "metrosAdelante", 2f);
+        Poner(tramo, "metrosAdelanteEnRespiro", 12f);
         Poner(tramo, "topeLibre", 9f);
         // En el hueco y ante la puerta del órgano, el recuadro y la sombra se paran 3 s: un respiro
         // para cambiar a quien lleva el fuego y disparar. La canción sigue.
@@ -3146,6 +3214,12 @@ public static class TemploDelCoroBuilder
         Poner(tramo, "segundoSinTope", SaltoFinal - 0.1f);
         PonerRef(tramo, "recuadro", recuadro);
         Poner(tramo, "alturaDelFoso", -5f);
+        var ajustesDelTramo = new SerializedObject(tramo);
+        var tralla = MomentosDeTralla();
+        if (tralla.Count > 0)
+            ajustesDelTramo.FindProperty("cierreTrasero").vector4Value = new Vector4(
+                tralla[0] - 2.5f, tralla[0], SegundoDeLaFraseTriste, ZDeLaSala + Mathf.Min(FilasDeLaTralla) - 0.65f);
+        ajustesDelTramo.ApplyModifiedPropertiesWithoutUndo();
         PonerRefs(tramo, "plataformas", montaje.Plataformas.ToArray());
         PonerRefs(tramo, "receptores", montaje.Receptores.ToArray());
     }

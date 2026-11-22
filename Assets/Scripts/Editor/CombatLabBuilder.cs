@@ -154,6 +154,7 @@ public static partial class CombatLabBuilder
         EditorSceneManager.SaveScene(scene, ScenePath);
         RetirarEscenaAntigua();
         AddToBuildSettings(ScenePath);
+        AddToBuildSettings("Assets/Scenes/Worlds/TemploDelCoro.unity");
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("LAB creado (Assets/Scenes/Test/Lab.unity). Tab / Select abre el panel del LAB.");
@@ -207,7 +208,7 @@ public static partial class CombatLabBuilder
             Destino(destinos.GetArrayElementAtIndex(i), lista[i].nombre, lista[i].queHay, punto);
         }
         if (entradaJefes != null)
-            Destino(destinos.GetArrayElementAtIndex(lista.Length), "Zona de jefes (oeste)", "Demonio 1, Demonio 2, Gólem y Mago Oscuro.", entradaJefes);
+            Destino(destinos.GetArrayElementAtIndex(lista.Length), "Zona de jefes (oeste)", "Demonio 1, Demonio 2, Gólem, Mago Oscuro y Templo del Coro.", entradaJefes);
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 

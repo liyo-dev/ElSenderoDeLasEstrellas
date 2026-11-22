@@ -52,7 +52,7 @@ public class LoadingScreenController : MonoBehaviour, ILoadingUI
         // asignado ya (p.ej. en el propio objeto de escena), se busca una vez aquí — no es un
         // FindObjectOfType en Update/LateUpdate, así que no choca con la regla de AGENTS.md.
         if (!characterStage)
-            characterStage = FindAnyObjectByType<LoadingCharacterStage>();
+            characterStage = BuscarEscenario();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // DIAGNÓSTICO TEMPORAL: ver comentario en LoadingCharacterStage.Awake().
@@ -66,6 +66,16 @@ public class LoadingScreenController : MonoBehaviour, ILoadingUI
             panel.alpha = 0f;
             panel.gameObject.SetActive(false);
         }
+    }
+
+    private LoadingCharacterStage BuscarEscenario()
+    {
+        foreach (var raiz in gameObject.scene.GetRootGameObjects())
+        {
+            var escenario = raiz.GetComponentInChildren<LoadingCharacterStage>(true);
+            if (escenario != null) return escenario;
+        }
+        return null;
     }
 
     public void ShowImmediate()

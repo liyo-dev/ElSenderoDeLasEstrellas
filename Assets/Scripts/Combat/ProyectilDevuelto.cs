@@ -44,6 +44,8 @@ public sealed class ProyectilDevuelto : MonoBehaviour
     /// <summary>Está sujeta en un punto, sin volar.</summary>
     public bool Sostenida => _ancla != null;
 
+    public event System.Action<Damageable> AlImpactarEnEnemigo;
+
     // Un solo material para todas las estelas; el color va en los vértices (startColor/endColor).
     private static Material _materialDeEstela;
     private static Material MaterialDeEstela
@@ -200,7 +202,9 @@ public sealed class ProyectilDevuelto : MonoBehaviour
             GolpeandoAhora = true;
             try { MagicProjectile.AplicarImpactoDirecto(col, punto, _dueno, _dano, _elemento); }
             finally { GolpeandoAhora = false; }
-            EfectosDeLaDevolucion.Aplicar(MagicProjectile.EncontrarReceptor(col), _elemento, punto);
+            var receptor = MagicProjectile.EncontrarReceptor(col);
+            EfectosDeLaDevolucion.Aplicar(receptor, _elemento, punto);
+            AlImpactarEnEnemigo?.Invoke(receptor);
         }
         else if (tipo == 3) ReaccionesAMagia.Notificar(col, new ImpactoDeMagia(_elemento, punto, _dueno, true));
         Terminar(punto);

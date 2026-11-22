@@ -127,6 +127,7 @@ public static class SceneTransitionLoader
         LoadingScreenController ui = null;
         ILoadingUI loadingUI = null;
         Scene overlayLoaded = default;
+        GameObject escenarioDeCarga = null;
 
         if (hasOverlay)
         {
@@ -157,8 +158,16 @@ public static class SceneTransitionLoader
             }
             else
             {
-                // Mantener viva la UI durante el cambio de escena
-                Object.DontDestroyOnLoad(ui.gameObject);
+                // La carga Single descarga también la cámara, las luces y los personajes del overlay.
+                if (ui.gameObject.scene == overlayLoaded)
+                {
+                    var raices = overlayLoaded.GetRootGameObjects();
+                    escenarioDeCarga = new GameObject("Escenario de la pantalla de carga");
+                    SceneManager.MoveGameObjectToScene(escenarioDeCarga, overlayLoaded);
+                    foreach (var raiz in raices)
+                        raiz.transform.SetParent(escenarioDeCarga.transform, true);
+                    Object.DontDestroyOnLoad(escenarioDeCarga);
+                }
 
                 // La pantalla de carga tiene que ir POR ENCIMA del telón (FeedbackService lo pinta
                 // en el orden 9998): si no, el negro del telón la tapa en cuanto se cierra para
@@ -192,7 +201,8 @@ public static class SceneTransitionLoader
         }
 
         // 3) Carga asíncrona de la escena destino
-        var op = SceneManager.LoadSceneAsync(targetScene);
+        var op = Application.CanStreamedLevelBeLoaded(targetScene)
+            ? SceneManager.LoadSceneAsync(targetScene) : null;
         if (op == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -205,7 +215,12 @@ public static class SceneTransitionLoader
                 yield return EnsureRunner().StartCoroutine(ui.Fade(1f, 0f));
                 ui.HideImmediate();
                 MarcarPantallaDeCarga(false);
-                Object.Destroy(ui.gameObject);
+                if (escenarioDeCarga != null) Object.Destroy(escenarioDeCarga);
+            }
+            if (overlayLoaded.IsValid() && overlayLoaded.isLoaded)
+            {
+                var descarga = SceneManager.UnloadSceneAsync(overlayLoaded);
+                while (descarga != null && !descarga.isDone) yield return null;
             }
             yield break;
         }
@@ -222,7 +237,7 @@ public static class SceneTransitionLoader
             float normalized = (raw < 0.9f) ? raw / 0.9f : 1f;
             // La escena principal es solo una parte: después el mundo se monta (escenas aditivas,
             // colocar al jugador, interiores). El 100 % no llega hasta que todo está listo.
-            loadingUI?.SetProgress(normalized * ParteDeLaEscenaPrincipal);
+            loadingUI?.SetProgress(Mathf.Min(0.99f, normalized * ParteDeLaEscenaPrincipal));
 
             if (raw >= 0.9f)
             {
@@ -288,8 +303,11 @@ public static class SceneTransitionLoader
             yield return null;
         }
         // Ahora sí: todo listo. Los personajes se giran y hacen su gesto antes de quitar la carga.
-        loadingUI?.SetProgress(1f);
-        if (loadingUI != null) yield return new WaitForSecondsRealtime(Mathf.Max(0.05f, loadingUI.GestureHoldTime));
+        if (!Telon.Cerrado && loadingUI != null)
+        {
+            loadingUI.SetProgress(1f);
+            yield return new WaitForSecondsRealtime(Mathf.Max(0.05f, loadingUI.GestureHoldTime));
+        }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (Telon.Cerrado)
             Debug.LogWarning($"[SceneTransitionLoader] El Telón sigue cerrado {TopeEspera}s después de cargar '{targetScene}'; se quita la pantalla de carga igualmente.");
@@ -302,7 +320,7 @@ public static class SceneTransitionLoader
             yield return EnsureRunner().StartCoroutine(ui.Fade(1f, 0f));
             ui.HideImmediate();
             MarcarPantallaDeCarga(false);
-            Object.Destroy(ui.gameObject);
+            if (escenarioDeCarga != null) Object.Destroy(escenarioDeCarga);
         }
 
         // Descargar la escena overlay si sigue cargada (por si acaso)

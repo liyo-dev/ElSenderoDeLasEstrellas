@@ -14,58 +14,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
   startNodeGuid: cap3-inicio
   nodes:
-  - rid: 6540294773546942910
-  - rid: 6540294773546942911
-  - rid: 6540294773546942912
-  - rid: 6540294773546942913
-  - rid: 6540294773546942914
-  - rid: 6540294773546942915
-  - rid: 6540294773546942916
-  - rid: 6540294773546942917
-  - rid: 6540294773546942918
-  - rid: 6540294773546942919
-  - rid: 6540294773546942920
-  - rid: 6540294773546942921
-  - rid: 6540294773546942922
-  - rid: 6540294773546942923
-  - rid: 6540294773546942924
-  - rid: 6540294773546942925
-  - rid: 6540294773546942926
-  - rid: 6540294773546942927
-  - rid: 6540294773546942928
-  - rid: 6540294773546942929
-  - rid: 6540294773546942930
-  - rid: 6540294773546942931
-  - rid: 6540294773546942932
-  - rid: 6540294773546942933
-  - rid: 6540294773546942934
-  - rid: 6540294773546942935
-  - rid: 6540294773546942936
-  - rid: 6540294773546942937
-  - rid: 6540294773546942938
-  - rid: 6540294773546942939
-  - rid: 6540294773546942940
-  - rid: 6540294773546942941
-  - rid: 6540294773546942942
-  - rid: 6540294773546942943
-  - rid: 6540294773546942944
-  - rid: 6540294773546942945
-  - rid: 6540294773546942946
-  - rid: 6540294773546942947
-  - rid: 6540294773546942948
-  - rid: 6540294773546942949
-  - rid: 6540294773546942950
-  - rid: 6540294773546942951
-  - rid: 6540294773546942952
-  - rid: 6540294773546942953
-  - rid: 6540294773546942954
-  - rid: 6540294773546942955
-  - rid: 6540294773546942956
-  - rid: 6540294773546942957
-  - rid: 6540294773546942958
-  - rid: 6540294773546942959
-  - rid: 6540294773546942960
-  - rid: 6540294773546942961
+  - rid: 6540294796242846187
+  - rid: 6540294796242846188
+  - rid: 6540294796242846189
+  - rid: 6540294796242846190
+  - rid: 6540294796242846191
+  - rid: 6540294796242846192
+  - rid: 6540294796242846193
+  - rid: 6540294796242846194
+  - rid: 6540294796242846195
+  - rid: 6540294796242846373
+  - rid: 6540294796242846196
+  - rid: 6540294796242846197
+  - rid: 6540294796242846198
+  - rid: 6540294796242846199
+  - rid: 6540294796242846200
+  - rid: 6540294796242846201
+  - rid: 6540294796242846202
+  - rid: 6540294796242846203
+  - rid: 6540294796242846204
+  - rid: 6540294796242846205
+  - rid: 6540294796242846206
+  - rid: 6540294796242846207
+  - rid: 6540294796242846208
+  - rid: 6540294796242846209
+  - rid: 6540294796242846210
+  - rid: 6540294796242846211
+  - rid: 6540294796242846212
+  - rid: 6540294796242846213
+  - rid: 6540294796242846214
+  - rid: 6540294796242846215
+  - rid: 6540294796242846216
+  - rid: 6540294796242846217
+  - rid: 6540294796242846218
+  - rid: 6540294796242846219
+  - rid: 6540294796242846220
+  - rid: 6540294796242846221
+  - rid: 6540294796242846222
+  - rid: 6540294796242846223
+  - rid: 6540294796242846224
+  - rid: 6540294796242846225
+  - rid: 6540294796242846226
+  - rid: 6540294796242846227
+  - rid: 6540294796242846228
+  - rid: 6540294796242846229
+  - rid: 6540294796242846230
+  - rid: 6540294796242846231
+  - rid: 6540294796242846232
+  - rid: 6540294796242846233
+  - rid: 6540294796242846234
+  - rid: 6540294796242846235
+  - rid: 6540294796242846236
+  - rid: 6540294796242846237
+  - rid: 6540294796242846238
   - rid: 6540294600349712471
   - rid: 6540294600349712473
   - rid: 6540294600349712474
@@ -88,29 +89,29 @@ MonoBehaviour:
   - rid: 6540294600349712497
   - rid: 6540294600349712498
   - rid: 6540294600349712499
-  - rid: 6540294773546942962
+  - rid: 6540294796242846239
   - rid: 6540294704968237276
-  - rid: 6540294773546942963
-  - rid: 6540294773546942964
+  - rid: 6540294796242846240
+  - rid: 6540294796242846241
   - rid: 6540294727198835146
   - rid: 6540294727198835147
   - rid: 6540294727198835148
-  - rid: 6540294773546942965
-  - rid: 6540294773546942966
-  - rid: 6540294773546942967
-  - rid: 6540294773546942968
-  - rid: 6540294773546942969
-  - rid: 6540294773546942970
-  - rid: 6540294773546942971
-  - rid: 6540294773546942972
-  - rid: 6540294773546942973
-  - rid: 6540294773546942974
-  - rid: 6540294773546942975
-  - rid: 6540294773546942976
-  - rid: 6540294773546942977
-  - rid: 6540294773546942978
-  - rid: 6540294773546942979
-  - rid: 6540294773546942980
+  - rid: 6540294796242846242
+  - rid: 6540294796242846243
+  - rid: 6540294796242846244
+  - rid: 6540294796242846245
+  - rid: 6540294796242846246
+  - rid: 6540294796242846247
+  - rid: 6540294796242846248
+  - rid: 6540294796242846249
+  - rid: 6540294796242846250
+  - rid: 6540294796242846251
+  - rid: 6540294796242846252
+  - rid: 6540294796242846253
+  - rid: 6540294796242846254
+  - rid: 6540294796242846255
+  - rid: 6540294796242846256
+  - rid: 6540294796242846257
   - rid: 6540294747617493570
   - rid: 6540294747617493571
   - rid: 6540294747617493572
@@ -119,11 +120,18 @@ MonoBehaviour:
   - rid: 6540294747617493575
   - rid: 6540294747617493576
   - rid: 6540294747617493577
-  - rid: 6540294773546942981
+  - rid: 6540294796242846258
   - rid: 6540294747617493672
   - rid: 6540294747617493673
   - rid: 6540294747617493674
   - rid: 6540294747617493675
+  - rid: 6540294796242846259
+  - rid: 6540294796242846260
+  - rid: 6540294796242846261
+  - rid: 6540294796242846262
+  - rid: 6540294796242846263
+  - rid: 6540294788729274863
+  - rid: 6540294796242846374
   applicableSceneNames: []
   references:
     version: 2
@@ -372,7 +380,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_anselmo-backtousual-cap-3-la-aldea-del-mar-cap3-fin
-        position: {x: 560, y: 4690}
+        position: {x: 560, y: 4996}
         outputs:
         - pieza-npc_benito-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         actorId: NPC_Anselmo
@@ -392,7 +400,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_benito-backtousual-cap-3-la-aldea-del-mar-cap3-fin
-        position: {x: 840, y: 4690}
+        position: {x: 840, y: 4996}
         outputs:
         - pieza-npc_eusebio-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         actorId: NPC_Benito
@@ -412,7 +420,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_eusebio-backtousual-cap-3-la-aldea-del-mar-cap3-fin
-        position: {x: 1120, y: 4690}
+        position: {x: 1120, y: 4996}
         outputs:
         - pieza-npc_fermin-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         actorId: NPC_Eusebio
@@ -432,7 +440,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_fermin-backtousual-cap-3-la-aldea-del-mar-cap3-fin
-        position: {x: 1400, y: 4690}
+        position: {x: 1400, y: 4996}
         outputs:
         - pieza-npc_remedios-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         actorId: NPC_Fermin
@@ -452,7 +460,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_remedios-backtousual-cap-3-la-aldea-del-mar-cap3-fin
-        position: {x: 1680, y: 4690}
+        position: {x: 1680, y: 4996}
         outputs:
         - pieza-npc_rosario-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         actorId: NPC_Remedios
@@ -472,7 +480,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_rosario-backtousual-cap-3-la-aldea-del-mar-cap3-fin
-        position: {x: 1960, y: 4690}
+        position: {x: 1960, y: 4996}
         outputs:
         - pieza-npc_pez-backtousual-cap-3-esta-noche-cap3-fin
         actorId: NPC_Rosario
@@ -492,7 +500,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_contrabandista1-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
-        position: {x: 1400, y: 2856}
+        position: {x: 840, y: 3162}
         outputs:
         - pieza-npc_contrabandista2-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
         actorId: NPC_Contrabandista1
@@ -512,7 +520,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_contrabandista2-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
-        position: {x: 1680, y: 2856}
+        position: {x: 1120, y: 3162}
         outputs:
         - cap3-paso-noche
         actorId: NPC_Contrabandista2
@@ -553,7 +561,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_lucia-backtousual-cap-3-las-pistas-cap3-noche
-        position: {x: 0, y: 2580}
+        position: {x: 1680, y: 2580}
         outputs:
         - pieza-npc_lucia-usual-cap-3-despues-cap3-noche
         actorId: NPC_Lucia
@@ -573,7 +581,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_lucia-usual-cap-3-despues-cap3-noche
-        position: {x: 280, y: 2580}
+        position: {x: 1960, y: 2580}
         outputs:
         - pieza-npc_posadero-backtousual-cap-3-las-pistas-cap3-noche
         actorId: NPC_Lucia
@@ -635,7 +643,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_posadero-backtousual-cap-3-las-pistas-cap3-noche
-        position: {x: 560, y: 2580}
+        position: {x: 0, y: 2856}
         outputs:
         - pieza-npc_posadero-usual-cap-3-camino-del-bosque-cap3-noche
         actorId: NPC_Posadero
@@ -655,7 +663,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_posadero-usual-cap-3-camino-del-bosque-cap3-noche
-        position: {x: 840, y: 2580}
+        position: {x: 280, y: 2856}
         outputs:
         - pieza-npc_pez-backtousual-cap-3-pez-de-honor-cap3-noche
         actorId: NPC_Posadero
@@ -676,7 +684,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_pez-backtousual-cap-3-pez-de-honor-cap3-noche
-        position: {x: 1120, y: 2580}
+        position: {x: 560, y: 2856}
         outputs:
         - pieza-npc_pez-fromhere-cap-3-esta-noche-cap3-noche
         actorId: NPC_Pez
@@ -696,7 +704,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_pez-fromhere-cap-3-esta-noche-cap3-noche
-        position: {x: 1400, y: 2580}
+        position: {x: 840, y: 2856}
         outputs:
         - cap3-bosque-llega
         actorId: NPC_Pez
@@ -740,7 +748,7 @@ MonoBehaviour:
         guid: pieza-npc_pez-backtousual-cap-3-el-recado-de-pez-cap3-lubina
         position: {x: 0, y: 1998}
         outputs:
-        - cap3-paso-lubina
+        - cap3-madre-pez-dlg
         actorId: NPC_Pez
         layer: 2
         presence: 0
@@ -758,7 +766,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_pez-fromhere-cap-3-pez-de-honor-cap3-nada
-        position: {x: 1680, y: 1998}
+        position: {x: 1120, y: 2274}
         outputs:
         - cap3-candela-hablar
         actorId: NPC_Pez
@@ -779,7 +787,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_pez-backtousual-cap-3-esta-noche-cap3-fin
-        position: {x: 0, y: 4966}
+        position: {x: 0, y: 5272}
         outputs:
         - pieza-npc_candela-backtousual-cap-3-tras-su-pista-cap3-fin
         actorId: NPC_Pez
@@ -799,7 +807,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_candela-backtousual-cap-3-tras-su-pista-cap3-fin
-        position: {x: 280, y: 4966}
+        position: {x: 280, y: 5272}
         outputs: []
         actorId: NPC_Candela
         layer: 2
@@ -818,7 +826,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_candela-fromhere-cap-3-tras-su-pista-cap3-cerca-empieza
-        position: {x: 840, y: 2304}
+        position: {x: 280, y: 2580}
         outputs:
         - cap3-cerca
         actorId: NPC_Candela
@@ -839,7 +847,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_contrabandista1-fromhere-cap-3-huyen-al-campamento-cap3-pillado-huyen
-        position: {x: 280, y: 4280}
+        position: {x: 280, y: 4586}
         outputs:
         - pieza-npc_contrabandista2-fromhere-cap-3-huyen-al-campamento-cap3-pillado-huyen
         actorId: NPC_Contrabandista1
@@ -859,7 +867,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_contrabandista2-fromhere-cap-3-huyen-al-campamento-cap3-pillado-huyen
-        position: {x: 560, y: 4280}
+        position: {x: 560, y: 4586}
         outputs:
         - cap3-pillado-claro
         actorId: NPC_Contrabandista2
@@ -879,7 +887,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_contrabandista1-backtousual-cap-3-huyen-al-campamento-cap3-en-el-claro
-        position: {x: 1680, y: 3522}
+        position: {x: 1680, y: 3828}
         outputs:
         - pieza-npc_contrabandista2-backtousual-cap-3-huyen-al-campamento-cap3-en-el-claro
         actorId: NPC_Contrabandista1
@@ -899,7 +907,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_contrabandista2-backtousual-cap-3-huyen-al-campamento-cap3-en-el-claro
-        position: {x: 1960, y: 3522}
+        position: {x: 1960, y: 3828}
         outputs:
         - cap3-claro
         actorId: NPC_Contrabandista2
@@ -907,7 +915,27 @@ MonoBehaviour:
         presence: 0
         markId: 
         lines: []
-    - rid: 6540294773546942910
+    - rid: 6540294788729274863
+      type: {class: ActorStateNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Pez: vuelve a lo de siempre (acaba \xABCap. 3 \xB7 el recado de Pez\xBB)"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: pieza-npc_pez-backtousual-cap-3-el-recado-de-pez-cap3-juguete-recogido
+        position: {x: 1120, y: 1998}
+        outputs:
+        - cap3-pez-entrega
+        actorId: NPC_Pez
+        layer: 2
+        presence: 0
+        markId: 
+        lines: []
+    - rid: 6540294796242846187
       type: {class: StartNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Inicio del Cap. 3
@@ -922,7 +950,7 @@ MonoBehaviour:
         position: {x: 0, y: 44}
         outputs:
         - cap3-tras-cap2
-    - rid: 6540294773546942911
+    - rid: 6540294796242846188
       type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Tras el Cap. 2 (CH_Cap2_BACK_1)
@@ -941,7 +969,7 @@ MonoBehaviour:
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294773546942912
+    - rid: 6540294796242846189
       type: {class: SetFlagNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Comienza el Cap. 3 (aparece el reparto de la costa y del cruce)
@@ -958,7 +986,7 @@ MonoBehaviour:
         - cap3-adios-hablar
         flagKey: CAP3_INICIADO
         value: 1
-    - rid: 6540294773546942913
+    - rid: 6540294796242846190
       type: {class: AdditiveSceneNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Interludio: carga la torre de Liam (probar desde aqu\xED)"
@@ -976,7 +1004,7 @@ MonoBehaviour:
         operacion: 0
         sceneName: TorreDeLiam
         waitForCompletion: 1
-    - rid: 6540294773546942914
+    - rid: 6540294796242846191
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Cinem\xE1tica: Tob\xEDas en el espejo"
@@ -992,10 +1020,10 @@ MonoBehaviour:
         outputs:
         - cap3-espejo-descarga
         request:
-          rid: 6540294773546942982
+          rid: 6540294796242846264
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942915
+    - rid: 6540294796242846192
       type: {class: AdditiveSceneNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Descarga la torre de Liam"
@@ -1013,7 +1041,7 @@ MonoBehaviour:
         operacion: 1
         sceneName: TorreDeLiam
         waitForCompletion: 1
-    - rid: 6540294773546942916
+    - rid: 6540294796242846193
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Sigue hacia la aldea del mar (probar desde aqu\xED)"
@@ -1029,10 +1057,10 @@ MonoBehaviour:
         outputs:
         - pieza-npc_anselmo-fromhere-cap-3-la-aldea-del-mar-cap3-aldea
         eventKey: CAP3_ALDEA_EMPIEZA
-    - rid: 6540294773546942917
+    - rid: 6540294796242846194
       type: {class: StartQuestNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "Misi\xF3n: las marcas de hierro (aviso de misi\xF3n nueva)"
+        displayTitle: "Misi\xF3n: pistas en la Aldea del Mar"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -1044,11 +1072,11 @@ MonoBehaviour:
         position: {x: 1960, y: 44}
         outputs:
         - cap3-camino
-        questId: CAP3_MARCAS_DE_HIERRO
+        questId: CAP3_PISTAS_ALDEA
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294773546942918
+    - rid: 6540294796242846195
       type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Llega a la aldea del mar"
@@ -1062,12 +1090,12 @@ MonoBehaviour:
         guid: cap3-llegada
         position: {x: 0, y: 1416}
         outputs:
-        - cap3-paso-llegar
+        - cap3-punto-aldea
         eventKey: CAP3_LLEGADA_ALDEA
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294773546942919
+    - rid: 6540294796242846196
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: llegar a la aldea'
@@ -1084,13 +1112,13 @@ MonoBehaviour:
         - cap3-posadero
         standingActorId: 
         standingDialogue: {fileID: 0}
-        questId: CAP3_MARCAS_DE_HIERRO
+        questId: CAP3_PISTAS_ALDEA
         stepConditionIds:
         - CAP3_LLEGAR
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942920
+    - rid: 6540294796242846197
       type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Hablar con el posadero"
@@ -1109,7 +1137,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294773546942921
+    - rid: 6540294796242846198
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Cinem\xE1tica: la posada, la cuchara y el trozo del aro"
@@ -1125,10 +1153,10 @@ MonoBehaviour:
         outputs:
         - cap3-posada-luces
         request:
-          rid: 6540294773546942983
+          rid: 6540294796242846265
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942922
+    - rid: 6540294796242846199
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: preguntar en la posada'
@@ -1145,13 +1173,13 @@ MonoBehaviour:
         - cap3-hoja
         standingActorId: 
         standingDialogue: {fileID: 0}
-        questId: CAP3_MARCAS_DE_HIERRO
+        questId: CAP3_PISTAS_ALDEA
         stepConditionIds:
         - CAP3_POSADA
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942923
+    - rid: 6540294796242846200
       type: {class: GiveInventoryItemNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Will saca su hoja para apuntar lo que vea"
@@ -1170,7 +1198,7 @@ MonoBehaviour:
         amount: 1
         logWarnings: 1
         onlyOnce: 1
-    - rid: 6540294773546942924
+    - rid: 6540294796242846201
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pez, Candela y la cerca (probar desde aqu\xED)"
@@ -1186,7 +1214,7 @@ MonoBehaviour:
         outputs:
         - pieza-npc_lucia-fromhere-cap-3-las-pistas-cap3-pistas
         eventKey: CAP3_PISTAS_EMPIEZA
-    - rid: 6540294773546942925
+    - rid: 6540294796242846202
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Ir andando al camino del bosque (probar desde aqu\xED)"
@@ -1198,11 +1226,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-noche
-        position: {x: 1960, y: 2304}
+        position: {x: 1400, y: 2580}
         outputs:
         - pieza-npc_lucia-backtousual-cap-3-las-pistas-cap3-noche
         eventKey: CAP3_NOCHE_EMPIEZA
-    - rid: 6540294773546942926
+    - rid: 6540294796242846203
       type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Punto de guardado: el camino del bosque"
@@ -1214,7 +1242,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-punto-noche
-        position: {x: 0, y: 3522}
+        position: {x: 0, y: 3828}
         outputs:
         - cap3-carro
         checkpointId: CAP3_ACAMPADA
@@ -1222,7 +1250,7 @@ MonoBehaviour:
           fields:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Acampada","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
-    - rid: 6540294773546942927
+    - rid: 6540294796242846204
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Cinem\xE1tica: llega el carro que esperaba"
@@ -1234,14 +1262,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-carro
-        position: {x: 280, y: 3522}
+        position: {x: 280, y: 3828}
         outputs:
         - cap3-seguir-tuto
         request:
-          rid: 6540294773546942984
+          rid: 6540294796242846266
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942928
+    - rid: 6540294796242846205
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Aviso: seguir sin que te vean"
@@ -1253,14 +1281,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-seguir-tuto
-        position: {x: 560, y: 3522}
+        position: {x: 560, y: 3828}
         outputs:
         - cap3-seguir
         request:
-          rid: 6540294773546942985
+          rid: 6540294796242846267
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942929
+    - rid: 6540294796242846206
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Seguir a los contrabandistas a escondidas hasta el claro (probar desde aqu\xED)"
@@ -1272,15 +1300,15 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-seguir
-        position: {x: 840, y: 3522}
+        position: {x: 840, y: 3828}
         outputs:
         - cap3-paso-carro
         - cap3-pillado
         request:
-          rid: 6540294773546942986
+          rid: 6540294796242846268
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942930
+    - rid: 6540294796242846207
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: seguir al carro'
@@ -1292,7 +1320,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-carro
-        position: {x: 1120, y: 3522}
+        position: {x: 1120, y: 3828}
         outputs:
         - cap3-en-el-claro
         standingActorId: 
@@ -1303,7 +1331,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942931
+    - rid: 6540294796242846208
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Cinem\xE1tica: el claro y \xAB\xBFDebes hacerlo?\xBB"
@@ -1315,14 +1343,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-claro
-        position: {x: 0, y: 4054}
+        position: {x: 0, y: 4360}
         outputs:
         - cap3-decide
         request:
-          rid: 6540294773546942987
+          rid: 6540294796242846269
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942932
+    - rid: 6540294796242846209
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Tras el claro: la pluma (probar desde aqu\xED)"
@@ -1334,11 +1362,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-decide
-        position: {x: 280, y: 4054}
+        position: {x: 280, y: 4360}
         outputs:
         - cap3-pista-pluma
         eventKey: CAP3_DECIDE_EMPIEZA
-    - rid: 6540294773546942933
+    - rid: 6540294796242846210
       type: {class: ShowSpeechBubbleNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will ve la pluma de la zarza"
@@ -1350,7 +1378,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pista-pluma
-        position: {x: 560, y: 4054}
+        position: {x: 560, y: 4360}
         outputs:
         - cap3-pluma-0
         targetTag: Player
@@ -1361,7 +1389,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294773546942934
+    - rid: 6540294796242846211
       type: {class: WaitForItemAddedNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Coge la pluma brillante"
@@ -1373,14 +1401,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-0
-        position: {x: 840, y: 4054}
+        position: {x: 840, y: 4360}
         outputs:
         - cap3-pluma-1
         itemToWaitFor: {fileID: 11400000, guid: 8f9ba5fd085d98d4db490f6ac29cf3fa, type: 2}
         minimumAmount: 0
         completeIfAlreadyOwned: 1
         debugLogs: 0
-    - rid: 6540294773546942935
+    - rid: 6540294796242846212
       type: {class: ShowSpeechBubbleNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 \xABCon esto, Estela tendr\xE1 que escucharme\xBB"
@@ -1392,7 +1420,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pluma-1
-        position: {x: 1120, y: 4054}
+        position: {x: 1120, y: 4360}
         outputs:
         - cap3-paso-claro
         targetTag: Player
@@ -1403,7 +1431,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294773546942936
+    - rid: 6540294796242846213
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: el claro (cierra la misi\xF3n)"
@@ -1415,7 +1443,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-claro
-        position: {x: 1400, y: 4054}
+        position: {x: 1400, y: 4360}
         outputs:
         - cap3-fin-punto
         standingActorId: 
@@ -1426,7 +1454,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
-    - rid: 6540294773546942937
+    - rid: 6540294796242846214
       type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Cap. 3 \xB7 Fin (punto de guardado)"
@@ -1438,7 +1466,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-fin-punto
-        position: {x: 0, y: 4690}
+        position: {x: 0, y: 4996}
         outputs:
         - cap3-fin
         checkpointId: CAP3_FIN
@@ -1446,7 +1474,7 @@ MonoBehaviour:
           fields:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Matorral","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
-    - rid: 6540294773546942938
+    - rid: 6540294796242846215
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Fin del Cap. 3 (CH_Cap3_BACK_1)
@@ -1458,11 +1486,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-fin
-        position: {x: 280, y: 4690}
+        position: {x: 280, y: 4996}
         outputs:
         - pieza-npc_anselmo-backtousual-cap-3-la-aldea-del-mar-cap3-fin
         eventKey: CH_Cap3_BACK_1
-    - rid: 6540294773546942939
+    - rid: 6540294796242846216
       type: {class: GraphNoteNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: Nota
@@ -1474,11 +1502,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-nota
-        position: {x: 0, y: 5302}
+        position: {x: 0, y: 5608}
         outputs: []
         note: "Cap. 3 \xB7 La pista del mar (GDD \xA7 5.7). Lo monta El Sendero \u25B8 Historia \u25B8 Montar los cap\xEDtulos 3 y 4: los nodos \xABcap3-\u2026\xBB se rehacen. Escena: \xABCap\xEDtulos (generado)\xBB en MainWorld (marcas Cap3_*, puntos del roster, pistas, el campamento de los contrabandistas)."
         accent: {r: 1, g: 0.93, b: 0.55, a: 1}
-    - rid: 6540294773546942940
+    - rid: 6540294796242846217
       type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.0 \xB7 Hablar con Eldran en la salida del pueblo (probar desde aqu\xED)"
@@ -1497,7 +1525,7 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294773546942941
+    - rid: 6540294796242846218
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.0 \xB7 Cinem\xE1tica: la despedida (\xABes un hasta pronto\xBB)"
@@ -1513,10 +1541,10 @@ MonoBehaviour:
         outputs:
         - pieza-npc_eldran-backtousual-cap-23-espera-en-la-salida-del-pueblo-cap3-adios
         request:
-          rid: 6540294773546942988
+          rid: 6540294796242846270
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942942
+    - rid: 6540294796242846219
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "Paso: reunirse con Eldran (cierra \xABHora de partir\xBB)"
@@ -1539,7 +1567,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 1
         logWarnings: 1
-    - rid: 6540294773546942943
+    - rid: 6540294796242846220
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Camino del puerto, a pie (probar desde aqu\xED)"
@@ -1555,7 +1583,7 @@ MonoBehaviour:
         outputs:
         - pieza-npc_boticaria-backtousual-cap-2-despedida-de-will-cap3-camino
         eventKey: CAP3_CAMINO_EMPIEZA
-    - rid: 6540294773546942944
+    - rid: 6540294796242846221
       type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Punto de guardado: la salida del pueblo"
@@ -1575,7 +1603,7 @@ MonoBehaviour:
           fields:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Will_SalidaDelPueblo","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
-    - rid: 6540294773546942945
+    - rid: 6540294796242846222
       type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Pasa por la mitad del camino"
@@ -1594,7 +1622,7 @@ MonoBehaviour:
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294773546942946
+    - rid: 6540294796242846223
       type: {class: ScreenFadeNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Se destapa la pantalla y se sigue andando"
@@ -1615,7 +1643,7 @@ MonoBehaviour:
         transicion: {fileID: 0}
         restaurarMusicaDeEscena: 1
         fundidoDeMusica: 2
-    - rid: 6540294773546942947
+    - rid: 6540294796242846224
       type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.1 \xB7 Punto de guardado: a mitad del camino"
@@ -1635,7 +1663,7 @@ MonoBehaviour:
           fields:
           - spawnAnchorId
           data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_AcampadaCamino","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
-    - rid: 6540294773546942948
+    - rid: 6540294796242846225
       type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Llega al camino del bosque"
@@ -1647,14 +1675,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-bosque-llega
-        position: {x: 1680, y: 2580}
+        position: {x: 1120, y: 2856}
         outputs:
         - cap3-paso-bosque
         eventKey: CAP3_LLEGADA_BOSQUE
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294773546942949
+    - rid: 6540294796242846226
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: ir hacia el bosque'
@@ -1666,7 +1694,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-bosque
-        position: {x: 1960, y: 2580}
+        position: {x: 1400, y: 2856}
         outputs:
         - cap3-bosque-dice
         standingActorId: 
@@ -1677,7 +1705,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942950
+    - rid: 6540294796242846227
       type: {class: ShowSpeechBubbleNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will: los carros pasan de noche"
@@ -1689,7 +1717,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-bosque-dice
-        position: {x: 0, y: 2856}
+        position: {x: 1680, y: 2856}
         outputs:
         - cap3-hora
         targetTag: Player
@@ -1700,7 +1728,7 @@ MonoBehaviour:
         animTrigger: 
         emphasis: 0
         speakerName: 
-    - rid: 6540294773546942951
+    - rid: 6540294796242846228
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 \xBFYa es de noche al llegar?"
@@ -1712,15 +1740,15 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hora
-        position: {x: 280, y: 2856}
+        position: {x: 1960, y: 2856}
         outputs:
         - cap3-tuto-noche
         - cap3-hoguera-tuto
         request:
-          rid: 6540294773546942989
+          rid: 6540294796242846271
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942952
+    - rid: 6540294796242846229
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Tutorial (de noche): ve al fuego, o descansa para que se haga de d\xEDa"
@@ -1732,14 +1760,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-tuto-noche
-        position: {x: 560, y: 2856}
+        position: {x: 0, y: 3162}
         outputs:
         - cap3-esperar-noche
         request:
-          rid: 6540294773546942990
+          rid: 6540294796242846272
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942953
+    - rid: 6540294796242846230
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Tutorial (de d\xEDa): las hogueras hacen pasar el tiempo"
@@ -1751,14 +1779,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-hoguera-tuto
-        position: {x: 560, y: 3112}
+        position: {x: 0, y: 3418}
         outputs:
         - cap3-esperar-noche
         request:
-          rid: 6540294773546942991
+          rid: 6540294796242846273
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942954
+    - rid: 6540294796242846231
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Esperar la noche junto al fuego"
@@ -1770,14 +1798,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-esperar-noche
-        position: {x: 840, y: 2856}
+        position: {x: 280, y: 3162}
         outputs:
         - cap3-cae-noche
         request:
-          rid: 6540294773546942992
+          rid: 6540294796242846274
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942955
+    - rid: 6540294796242846232
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Anochece junto al fuego (aparecen los contrabandistas)"
@@ -1789,11 +1817,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-cae-noche
-        position: {x: 1120, y: 2856}
+        position: {x: 560, y: 3162}
         outputs:
         - pieza-npc_contrabandista1-backtousual-cap-3-antes-de-la-noche-cap3-cae-noche
         eventKey: CAP3_CAE_LA_NOCHE
-    - rid: 6540294773546942956
+    - rid: 6540294796242846233
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: esperar la noche'
@@ -1805,7 +1833,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-noche
-        position: {x: 1960, y: 2856}
+        position: {x: 1400, y: 3162}
         outputs:
         - cap3-punto-noche
         standingActorId: 
@@ -1816,7 +1844,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942957
+    - rid: 6540294796242846234
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will llega al claro"
@@ -1828,11 +1856,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-en-el-claro
-        position: {x: 1400, y: 3522}
+        position: {x: 1400, y: 3828}
         outputs:
         - pieza-npc_contrabandista1-backtousual-cap-3-huyen-al-campamento-cap3-en-el-claro
         eventKey: CAP3_EN_EL_CLARO
-    - rid: 6540294773546942958
+    - rid: 6540294796242846235
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Le han visto: \xAB\xBFNos ven\xEDas siguiendo?\xBB"
@@ -1844,13 +1872,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado
-        position: {x: 1120, y: 3748}
+        position: {x: 1120, y: 4054}
         outputs:
         - cap3-pillado-aviso
         dialogue: {fileID: 11400000, guid: 2a7e76a0ccffb184ba5d6a227909de5b, type: 2}
         npcId: NPC_Contrabandista1
         oneShotFlag: 
-    - rid: 6540294773546942959
+    - rid: 6540294796242846236
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Combate contra los dos contrabandistas"
@@ -1862,15 +1890,15 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-combate
-        position: {x: 1680, y: 3748}
+        position: {x: 1680, y: 4054}
         outputs:
         - cap3-pillado-gana
         - cap3-seguir
         request:
-          rid: 6540294773546942993
+          rid: 6540294796242846275
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942960
+    - rid: 6540294796242846237
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Les gana: huyen al campamento"
@@ -1882,13 +1910,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-gana
-        position: {x: 1960, y: 3748}
+        position: {x: 1960, y: 4054}
         outputs:
         - cap3-pillado-huyen
         dialogue: {fileID: 11400000, guid: 2eb4c3109b25833439e9a1f699a07154, type: 2}
         npcId: NPC_Contrabandista1
         oneShotFlag: 
-    - rid: 6540294773546942961
+    - rid: 6540294796242846238
       type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Will sigue solo hasta el claro"
@@ -1900,14 +1928,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-claro
-        position: {x: 840, y: 4280}
+        position: {x: 840, y: 4586}
         outputs:
         - cap3-paso-carro
         eventKey: CAP3_LLEGA_AL_CLARO
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294773546942962
+    - rid: 6540294796242846239
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Aviso: varios enemigos y c\xF3mo cambiar de objetivo"
@@ -1919,14 +1947,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-aviso
-        position: {x: 1400, y: 3748}
+        position: {x: 1400, y: 4054}
         outputs:
         - cap3-pillado-combate
         request:
-          rid: 6540294773546942994
+          rid: 6540294796242846276
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942963
+    - rid: 6540294796242846240
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 El posadero sigue: las luces que respiran, los carros de noche y d\xF3nde mirar"
@@ -1944,7 +1972,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: a1f5635302e8cfc4891aa1129f5ea70f, type: 2}
         npcId: NPC_Posadero
         oneShotFlag: 
-    - rid: 6540294773546942964
+    - rid: 6540294796242846241
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Will ata cabos donde est\xE1 (sin volver a la posada)"
@@ -1956,16 +1984,16 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-cabos
-        position: {x: 1680, y: 2304}
+        position: {x: 1120, y: 2580}
         outputs:
         - cap3-noche
         dialogue: {fileID: 11400000, guid: 3498aaa57e378cb498a857bb642bcf7c, type: 2}
         npcId: 
         oneShotFlag: 
-    - rid: 6540294773546942965
+    - rid: 6540294796242846242
       type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "3.2 \xB7 Hablar con Pez en la punta del muelle"
+        displayTitle: "3.2 \xB7 Hablar con Pez en la playa"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -1981,10 +2009,10 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294773546942966
+    - rid: 6540294796242846243
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "3.2 \xB7 Pez: \xABDo\xF1a Lubina no me habla desde el martes\xBB"
+        displayTitle: "3.2 \xB7 Pez pide su lubina de madera"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -1999,7 +2027,7 @@ MonoBehaviour:
         dialogue: {fileID: 11400000, guid: 7ac51730618014249983ed79d43a4878, type: 2}
         npcId: NPC_Pez
         oneShotFlag: 
-    - rid: 6540294773546942967
+    - rid: 6540294796242846244
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: buscar a Pez'
@@ -2016,16 +2044,16 @@ MonoBehaviour:
         - cap3-recado
         standingActorId: 
         standingDialogue: {fileID: 0}
-        questId: CAP3_MARCAS_DE_HIERRO
+        questId: CAP3_PISTAS_ALDEA
         stepConditionIds:
         - CAP3_PEZ
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942968
+    - rid: 6540294796242846245
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "3.2 \xB7 El recado a Do\xF1a Lubina"
+        displayTitle: "3.2 \xB7 El juguete de Pez"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -2038,10 +2066,10 @@ MonoBehaviour:
         outputs:
         - pieza-npc_pez-fromhere-cap-3-el-recado-de-pez-cap3-recado
         eventKey: CAP3_RECADO_DE_PEZ
-    - rid: 6540294773546942969
-      type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+    - rid: 6540294796242846246
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "3.2 \xB7 Le da el recado a Do\xF1a Lubina (el agua del \xFAltimo pilar)"
+        displayTitle: "3.2 \xB7 Hablar con Rosario en la entrada de la posada"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -2053,14 +2081,14 @@ MonoBehaviour:
         position: {x: 1960, y: 1722}
         outputs:
         - pieza-npc_pez-backtousual-cap-3-el-recado-de-pez-cap3-lubina
-        eventKey: CAP3_RECADO_LUBINA
-        acceptEarlierEvent: 1
-        impliedItem: {fileID: 0}
-        impliedItemAmount: 1
-    - rid: 6540294773546942970
+        npcId: NPC_Rosario
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294796242846247
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: 'Paso: el recado'
+        displayTitle: 'Paso: devolver el juguete'
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -2069,21 +2097,21 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-lubina
-        position: {x: 280, y: 1998}
+        position: {x: 1960, y: 1998}
         outputs:
         - cap3-leccion
         standingActorId: 
         standingDialogue: {fileID: 0}
-        questId: CAP3_MARCAS_DE_HIERRO
+        questId: CAP3_PISTAS_ALDEA
         stepConditionIds:
         - CAP3_LUBINA
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942971
+    - rid: 6540294796242846248
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "3.2 \xB7 La lecci\xF3n de Pez"
+        displayTitle: "3.2 \xB7 Pez juega con su lubina y le ense\xF1a a nadar"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -2092,13 +2120,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-leccion
-        position: {x: 560, y: 1998}
+        position: {x: 0, y: 2274}
         outputs:
         - cap3-nadar
         dialogue: {fileID: 11400000, guid: c966e5b776351c04d9655d7a9cfc707c, type: 2}
         npcId: NPC_Pez
         oneShotFlag: 
-    - rid: 6540294773546942972
+    - rid: 6540294796242846249
       type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pez de honor: aprende a nadar (aviso de habilidad)"
@@ -2110,14 +2138,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-nadar
-        position: {x: 840, y: 1998}
+        position: {x: 280, y: 2274}
         outputs:
         - cap3-pez-adios
         request:
-          rid: 6540294773546942995
+          rid: 6540294796242846277
         ifNobodyAnswers: 0
         timeoutSeconds: 0
-    - rid: 6540294773546942973
+    - rid: 6540294796242846250
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Pez se despide: las boyas y el farol de Candela"
@@ -2129,13 +2157,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pez-adios
-        position: {x: 1120, y: 1998}
+        position: {x: 560, y: 2274}
         outputs:
         - cap3-nada
         dialogue: {fileID: 11400000, guid: 858944cc4c9a6e14ca09b3f52d2f94e3, type: 2}
         npcId: NPC_Pez
         oneShotFlag: 
-    - rid: 6540294773546942974
+    - rid: 6540294796242846251
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 A nado, siguiendo las boyas"
@@ -2147,11 +2175,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-nada
-        position: {x: 1400, y: 1998}
+        position: {x: 840, y: 2274}
         outputs:
         - pieza-npc_pez-fromhere-cap-3-pez-de-honor-cap3-nada
         eventKey: CAP3_NADA_AL_FAROL
-    - rid: 6540294773546942975
+    - rid: 6540294796242846252
       type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Hablar con Candela en su porche"
@@ -2163,14 +2191,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-candela-hablar
-        position: {x: 1960, y: 1998}
+        position: {x: 1400, y: 2274}
         outputs:
         - cap3-candela-dlg
         npcId: NPC_Candela
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294773546942976
+    - rid: 6540294796242846253
       type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 Candela: el carro sin farol y las jaulas que brillaban"
@@ -2182,16 +2210,16 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-candela-dlg
-        position: {x: 0, y: 2304}
+        position: {x: 1680, y: 2274}
         outputs:
         - cap3-paso-farol
         dialogue: {fileID: 11400000, guid: f3d624c762a6edc40950d8d290967228, type: 2}
         npcId: NPC_Candela
         oneShotFlag: 
-    - rid: 6540294773546942977
+    - rid: 6540294796242846254
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: 'Paso: la casa del farol'
+        displayTitle: 'Paso: hablar con Candela (cierra Pistas en la Aldea del Mar)'
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -2200,18 +2228,18 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-farol
-        position: {x: 280, y: 2304}
+        position: {x: 1960, y: 2274}
         outputs:
-        - cap3-cerca-empieza
+        - cap3-mision-marcas
         standingActorId: 
         standingDialogue: {fileID: 0}
-        questId: CAP3_MARCAS_DE_HIERRO
+        questId: CAP3_PISTAS_ALDEA
         stepConditionIds:
         - CAP3_FAROL
         steps: 
-        completeQuest: 0
+        completeQuest: 1
         logWarnings: 1
-    - rid: 6540294773546942978
+    - rid: 6540294796242846255
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 La cerca del huerto, de salida hacia el bosque"
@@ -2223,11 +2251,11 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-cerca-empieza
-        position: {x: 560, y: 2304}
+        position: {x: 0, y: 2580}
         outputs:
         - pieza-npc_candela-fromhere-cap-3-tras-su-pista-cap3-cerca-empieza
         eventKey: CAP3_CERCA_EMPIEZA
-    - rid: 6540294773546942979
+    - rid: 6540294796242846256
       type: {class: WaitCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.2 \xB7 La cerca rota: rodadas y paja que brilla"
@@ -2239,14 +2267,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-cerca
-        position: {x: 1120, y: 2304}
+        position: {x: 560, y: 2580}
         outputs:
         - cap3-paso-cerca
         eventKey: CAP3_PISTA_HUERTO
         acceptEarlierEvent: 1
         impliedItem: {fileID: 0}
         impliedItemAmount: 1
-    - rid: 6540294773546942980
+    - rid: 6540294796242846257
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: 'Paso: la cerca'
@@ -2258,7 +2286,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-paso-cerca
-        position: {x: 1400, y: 2304}
+        position: {x: 840, y: 2580}
         outputs:
         - cap3-cabos
         standingActorId: 
@@ -2269,7 +2297,7 @@ MonoBehaviour:
         steps: 
         completeQuest: 0
         logWarnings: 1
-    - rid: 6540294773546942981
+    - rid: 6540294796242846258
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "3.3 \xB7 Vuelven a su campamento del claro"
@@ -2281,11 +2309,109 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap3-pillado-huyen
-        position: {x: 0, y: 4310}
+        position: {x: 0, y: 4616}
         outputs:
         - pieza-npc_contrabandista1-fromhere-cap-3-huyen-al-campamento-cap3-pillado-huyen
         eventKey: CAP3_HUYEN_AL_CAMPAMENTO
-    - rid: 6540294773546942982
+    - rid: 6540294796242846259
+      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Rosario entrega el juguete"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-madre-pez-dlg
+        position: {x: 280, y: 1998}
+        outputs:
+        - cap3-juguete-pez
+        dialogue: {fileID: 11400000, guid: 6cf02a263cec52046bb9179fb16493e4, type: 2}
+        npcId: NPC_Rosario
+        oneShotFlag: 
+    - rid: 6540294796242846260
+      type: {class: GiveInventoryItemNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Recoger la lubina de madera"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-juguete-pez
+        position: {x: 560, y: 1998}
+        outputs:
+        - cap3-juguete-recogido
+        item: {fileID: 11400000, guid: beb11f87655922440b0686da45108a6b, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 6540294796242846261
+      type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Ya tiene el juguete"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-juguete-recogido
+        position: {x: 840, y: 1998}
+        outputs:
+        - pieza-npc_pez-backtousual-cap-3-el-recado-de-pez-cap3-juguete-recogido
+        eventKey: CAP3_RECADO_LUBINA
+    - rid: 6540294796242846262
+      type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Volver a hablar con Pez"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pez-entrega
+        position: {x: 1400, y: 1998}
+        outputs:
+        - cap3-pez-recibe-juguete
+        npcId: NPC_Pez
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+        showMarker: 1
+    - rid: 6540294796242846263
+      type: {class: RequireInventoryItemNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Entregar la lubina de madera"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-pez-recibe-juguete
+        position: {x: 1680, y: 1998}
+        outputs:
+        - cap3-paso-lubina
+        - cap3-lubina
+        item: {fileID: 11400000, guid: beb11f87655922440b0686da45108a6b, type: 2}
+        requiredAmount: 1
+        consumeOnSuccess: 1
+        logWarnings: 1
+        questId: 
+        questStepIndex: -1
+        autoStartQuestIfInactive: 1
+        completeQuestInstead: 0
+        useAlternateOutputOnMissing: 1
+        alternateOutputIndex: 1
+    - rid: 6540294796242846264
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: "Cap. 3: Tob\xEDas en el espejo"
@@ -2295,7 +2421,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 7534df0a09c9c8c488295ea355a6bc15, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294773546942983
+    - rid: 6540294796242846265
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 3: la posada'
@@ -2305,7 +2431,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 5c05b3a853e0e9f4384818437d0d60dc, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294773546942984
+    - rid: 6540294796242846266
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 3: llegan los contrabandistas'
@@ -2315,7 +2441,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: f16e96c5438700242ade049e1c55e364, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294773546942985
+    - rid: 6540294796242846267
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
         action: 0
@@ -2327,7 +2453,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 1
-    - rid: 6540294773546942986
+    - rid: 6540294796242846268
       type: {class: PedirSeguirSinSerVisto, ns: , asm: Assembly-CSharp}
       data:
         npcId: NPC_Contrabandista1
@@ -2380,7 +2506,7 @@ MonoBehaviour:
         distanciaParaRecolocar: 20
         musica: {fileID: 8300000, guid: c450abf10ccb4544190c889de284ce72, type: 3}
         fundidoDeMusica: 1.5
-    - rid: 6540294773546942987
+    - rid: 6540294796242846269
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 3: el claro'
@@ -2390,7 +2516,7 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: 0a6089819fd1aa94583e647092debf8b, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294773546942988
+    - rid: 6540294796242846270
       type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
       data:
         cinematicName: 'Cap. 3: la despedida en la salida del pueblo'
@@ -2400,11 +2526,11 @@ MonoBehaviour:
         secuencia: {fileID: 11400000, guid: d93b775bb4038c64c936adb7abfb1061, type: 2}
         plantillaDeAjustes: 
         alMandoElProtagonista: 1
-    - rid: 6540294773546942989
+    - rid: 6540294796242846271
       type: {class: PedirSegunHoraDelDia, ns: , asm: Assembly-CSharp}
       data:
         franja: 7
-    - rid: 6540294773546942990
+    - rid: 6540294796242846272
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
         action: 0
@@ -2416,7 +2542,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 0
-    - rid: 6540294773546942991
+    - rid: 6540294796242846273
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
         action: 0
@@ -2428,13 +2554,13 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 1
-    - rid: 6540294773546942992
+    - rid: 6540294796242846274
       type: {class: PedirEsperarHoraDelDia, ns: , asm: Assembly-CSharp}
       data:
         franja: 7
         anchorId: Cap3_Acampada
         radio: 6
-    - rid: 6540294773546942993
+    - rid: 6540294796242846275
       type: {class: PedirCombateContraNpc, ns: , asm: Assembly-CSharp}
       data:
         npcId: NPC_Contrabandista1
@@ -2448,7 +2574,7 @@ MonoBehaviour:
         llevarATerrenoAbierto: 1
         distanciaAlTerrenoAbierto: 20
         radioDeArena: 25
-    - rid: 6540294773546942994
+    - rid: 6540294796242846276
       type: {class: PedirAvisoDeTutorial, ns: , asm: Assembly-CSharp}
       data:
         action: 0
@@ -2460,7 +2586,7 @@ MonoBehaviour:
         cerrarConSenal: 
         cerrarAlEmpezarCinematica: 1
         cerrarAlEmpezarDialogo: 1
-    - rid: 6540294773546942995
+    - rid: 6540294796242846277
       type: {class: PedirDesbloqueo, ns: , asm: Assembly-CSharp}
       data:
         abilityKeysToUnlock: 00000000i
@@ -2469,3 +2595,42 @@ MonoBehaviour:
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: CAP3_NADAR_APRENDIDO
         applyPresetAfterUnlock: 1
+    - rid: 6540294796242846373
+      type: {class: CheckpointNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Punto de arranque: la aldea del mar"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-punto-aldea
+        position: {x: 0, y: 1592}
+        outputs:
+        - cap3-paso-llegar
+        checkpointId: CAP3_ALDEA
+        player:
+          fields:
+          - spawnAnchorId
+          data: '{"MonoBehaviour":{"m_Enabled":true,"m_EditorHideFlags":0,"m_Name":"","m_EditorClassIdentifier":"Assembly-CSharp::PlayerPresetSO","spawnAnchorId":"Cap3_Aldea","level":1,"maxHP":100.0,"currentHP":100.0,"maxMP":50.0,"currentMP":50.0,"ataque":0.0,"defensa":0.0,"sintoniaPuntos":0,"sintoniaHitos":0,"sintoniaHitosPendientes":0,"unlockedAbilities":[],"unlockedSpells":[],"basicSpellIds":[],"companionBasics":[],"companionHealth":[],"flags":[],"abilities":{"swim":false,"jump":false,"magic":false,"fly":false,"sprint":false,"shield":false},"appearance":[],"unlockedWardrobeIds":[],"inventoryItems":[],"defeatedBossIds":[],"narrativeBlackboards":[],"senalesEmitidas":[],"npcPositions":[],"npcRelationships":[],"objetosDelMundo":[],"consumedInteractableIds":[],"completedInteractiveNarratives":[],"seenLorePopupIds":[],"partyMemberIds":[],"activeCharacterSlot":1,"unlockedTeleportPoints":[],"posicionDeAutoguardado":{"valida":false,"posicion":{"x":0.0,"y":0.0,"z":0.0},"rumbo":0.0,"escena":""}}}'
+    - rid: 6540294796242846374
+      type: {class: StartQuestNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "Misi\xF3n: las marcas de hierro"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-mision-marcas
+        position: {x: 1960, y: 2419}
+        outputs:
+        - cap3-cerca-empieza
+        questId: CAP3_MARCAS_DE_HIERRO
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1

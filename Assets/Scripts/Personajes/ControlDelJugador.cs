@@ -238,7 +238,11 @@ public static class ControlDelJugador
         // El que entra toma la pose y la velocidad del jugador.
         Colocar(entra.gameObject, posSale, rotSale);
         var rbEntra = entra.GetComponent<Rigidbody>();
-        if (rbEntra != null && !rbEntra.isKinematic) rbEntra.linearVelocity = velocidad;
+        if (rbEntra != null && !rbEntra.isKinematic)
+        {
+            rbEntra.linearVelocity = velocidad;
+            entra.AjustarPasoDelRelevo(velocidad);
+        }
 
         // El que sale ocupa el sitio del que entra; si estaba lejos, queda detrás del jugador.
         var destino = posEntra;

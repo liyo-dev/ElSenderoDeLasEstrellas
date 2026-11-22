@@ -16,25 +16,10 @@ MonoBehaviour:
   displayNameId: CAP3_MARCAS_DE_HIERRO_NAME
   displayName: Las marcas de hierro
   descriptionId: CAP3_MARCAS_DE_HIERRO_DESC
-  description: "Estela no acepta aprendices. Eldran cree que te escuchar\xE1 si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro."
+  description: Candela vio un carro con jaulas que brillaban. Examina la cerca del huerto y sigue el rastro hacia el bosque.
   detailedDescriptionId: CAP3_MARCAS_DE_HIERRO_DETAIL
-  detailedDescription: "Estela no acepta aprendices. Eldran cree que te escuchar\xE1 si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro."
+  detailedDescription: Candela vio un carro con jaulas que brillaban. Examina la cerca del huerto y sigue el rastro hacia el bosque.
   steps:
-  - descriptionId: CAP3_LLEGAR_PASO
-    description: Llega a la aldea del mar
-    conditionId: CAP3_LLEGAR
-  - descriptionId: CAP3_POSADA_PASO
-    description: Pregunta en la posada
-    conditionId: CAP3_POSADA
-  - descriptionId: CAP3_PEZ_PASO
-    description: Busca a Pez en el muelle
-    conditionId: CAP3_PEZ
-  - descriptionId: CAP3_LUBINA_PASO
-    description: "Lleva el recado de Pez a Do\xF1a Lubina, al final del muelle"
-    conditionId: CAP3_LUBINA
-  - descriptionId: CAP3_FAROL_PASO
-    description: Nada hasta la casa del farol
-    conditionId: CAP3_FAROL
   - descriptionId: CAP3_CERCA_PASO
     description: Mira la cerca del huerto, camino del bosque
     conditionId: CAP3_CERCA

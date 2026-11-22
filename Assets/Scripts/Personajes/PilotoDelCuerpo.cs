@@ -67,6 +67,7 @@ public sealed class PilotoDelCuerpo : MonoBehaviour
     public IReadOnlyList<Behaviour> ConLaIA => conLaIA;
 
     private Animator _animador;
+    private PlayerDialogueAnimator _animadorDeDialogo;
     private RuntimeAnimatorController _animadorConElJugador;
     private Rigidbody _rb;
     private NavMeshAgent _agente;
@@ -127,6 +128,7 @@ public sealed class PilotoDelCuerpo : MonoBehaviour
         if (_preparado) return;
         _preparado = true;
         _animador = GetComponent<Animator>();
+        _animadorDeDialogo = GetComponentInChildren<PlayerDialogueAnimator>(true);
         _animadorConElJugador = _animador != null ? _animador.runtimeAnimatorController : null;
         _rb = GetComponent<Rigidbody>();
         _agente = GetComponent<NavMeshAgent>();
@@ -170,7 +172,25 @@ public sealed class PilotoDelCuerpo : MonoBehaviour
             && NavMesh.SamplePosition(transform.position, out var punto, 3f, NavMesh.AllAreas))
             _agente.Warp(punto.position);
 
+        if (conJugador && avisar && _animador != null)
+        {
+            // La IA puede dejar la capa base en un gesto o con el reloj de animación parado.
+            _animador.speed = 1f;
+            _animadorDeDialogo?.AlRecuperarElControl();
+            _animadorDeDialogo?.ReturnToLocomotion(0.08f);
+            AjustarPasoDelRelevo(Vector3.zero);
+        }
+
         if (avisar) CambioDePiloto?.Invoke(this);
+    }
+
+    /// Ajusta la primera pose a la velocidad que hereda el cuerpo al recibir el mando.
+    internal void AjustarPasoDelRelevo(Vector3 velocidad)
+    {
+        if (_animador == null) return;
+        velocidad.y = 0f;
+        float paso = Game.NPC.Common.NavMeshAgentUtility.FactorDeLocomocion(velocidad.magnitude);
+        _animador.SetFloat(Invector.vCharacterController.vAnimatorParameters.InputMagnitude, paso);
     }
 
     private static void Encender(Behaviour[] lista, bool encender)

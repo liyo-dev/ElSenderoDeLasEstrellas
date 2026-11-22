@@ -116,6 +116,17 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
     const int CapaDeMedioCuerpo = 1;
 
     NPCBehaviourManagerV2 _npc;
+    SequenceActor _actor;
+    Damageable _receptor;
+    GameObject _bolaDePractica;
+    ProyectilDevuelto _devolucion;
+    PresentacionDelCombo _comboVisual;
+    PresentacionDelCombo _modeloDelCombo;
+    Coroutine _hechizos;
+    Coroutine _recuperacion;
+    int _turnoDePreparacion = -1;
+    static readonly ComboButton[] PasosDeLaLluvia = { ComboButton.X, ComboButton.Y, ComboButton.B };
+    static readonly string[] GestosDeLaLluvia = { "MagicLeft", "CastingIdle01", "MagicRight" };
     NPCCombatConfig _configDeAntes;
     NPCCombatConfig _copiaDeConfig;
     PerfilDeCombate _copiaDePerfil;
@@ -197,6 +208,7 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
 
     void EmpezarHechizos()
     {
+        SequenceActor.TryResolve(R.npcId, out _actor);
         _proyectil = R.proyectil;
         _animacion = R.animacionDelHechizo;
         if (_copiaDePerfil != null)
@@ -216,7 +228,7 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
             Terminar();
             return;
         }
-        Runner.StartCoroutine(Co_Hechizos());
+        _hechizos = Runner.StartCoroutine(Co_Hechizos());
     }
 
     // Los hechizos los lanza la lección: nada sale mientras está abierta la caja de diálogo.
@@ -230,6 +242,43 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
         var gesto = new WaitForSeconds(R.segundosDeAviso > 0f ? R.segundosDeAviso : 0.8f);
         var descanso = new WaitForSeconds(Mathf.Max(0.5f, R.segundosEntreTandas));
         GameObject jugador;
+        if (PlayerService.TryGetPlayer(out jugador) && jugador != null)
+        {
+            _actor?.Hold();
+            Vector3 rumbo = _npc.transform.position - jugador.transform.position;
+            rumbo.y = 0f;
+            if (rumbo.sqrMagnitude < 0.01f) rumbo = _npc.transform.forward;
+            float distancia = Mathf.Clamp(5.5f - rumbo.magnitude, 0f, 3.5f);
+            if (_actor != null && distancia > 0.25f &&
+                UnityEngine.AI.NavMesh.SamplePosition(_npc.transform.position + rumbo.normalized * distancia,
+                                                      out var retirada, 0.8f, UnityEngine.AI.NavMesh.AllAreas))
+                yield return SequenceMovement.MoveTo(_actor, retirada.position, 0f, 2.5f, esperaMaxima: 2.5f);
+            Mirar(jugador.transform.position);
+            if (!lluvia)
+            {
+                var aviso = PresentadorDeLinea.Decir(new FraseADecir
+                {
+                    clave = "LECCION_COMBATE_PREPARADO",
+                    textoPorDefecto = "¿Preparado?",
+                    ancla = _npc.transform,
+                    duracion = 1.15f
+                });
+                _turnoDePreparacion = aviso.Turno;
+                if (aviso.Duracion > 0f) yield return new WaitForSeconds(aviso.Duracion);
+                _turnoDePreparacion = -1;
+            }
+            else
+            {
+                _modeloDelCombo = jugador.GetComponentInChildren<PresentacionDelCombo>(true);
+                if (_modeloDelCombo != null)
+                {
+                    _comboVisual = _npc.GetComponent<PresentacionDelCombo>();
+                    if (_comboVisual == null) _comboVisual = _npc.gameObject.AddComponent<PresentacionDelCombo>();
+                    if (_animator != null && _animator.isHuman && !_animator.TryGetComponent<ManosIK>(out _))
+                        _animator.gameObject.AddComponent<ManosIK>();
+                }
+            }
+        }
 
         while (!_parado && !_acabando)
         {
@@ -238,43 +287,68 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
             if (!PlayerService.TryGetPlayer(out jugador) || jugador == null) { yield return esperaCorta; continue; }
 
             Mirar(jugador.transform.position);
-            Gesto();
-            yield return gesto;
+            if (lluvia) yield return CargarLaLluvia(jugador.transform);
+            else
+            {
+                Gesto(_animacion);
+                yield return gesto;
+            }
             if (_parado || _acabando) yield break;
 
             if (lluvia)
             {
                 int n = Mathf.Max(1, R.hechizosPorTanda);
+                GameObject ultima = null;
                 for (int i = 0; i < n && !_parado && !_acabando; i++)
                 {
                     while (_enCaja && !_parado) yield return null;
-                    if (PlayerService.TryGetPlayer(out jugador) && jugador != null) LanzarDesdeArriba(jugador.transform.position);
+                    if (PlayerService.TryGetPlayer(out jugador) && jugador != null) ultima = LanzarDesdeArriba(jugador.transform.position);
                     yield return esperaEntre;
+                }
+                while (ultima != null && !_parado) yield return null;
+                if (!_parado && _aciertos >= Mathf.Max(1, R.veces))
+                {
+                    FinalizarLeccion();
+                    yield break;
                 }
                 yield return descanso;
             }
             else
             {
                 if (!PlayerService.TryGetPlayer(out jugador) || jugador == null) continue;
-                var bola = LanzarBola(jugador.transform.position);
-                float hasta = Time.time + 5f;
-                while (bola != null && Time.time < hasta && !_parado) yield return null;
+                _bolaDePractica = LanzarBola(jugador.transform.position);
+                while (_bolaDePractica != null && !_parado && !_acabando) yield return null;
                 yield return esperaEntre;
             }
         }
     }
 
-    void Mirar(Vector3 donde)
+    IEnumerator CargarLaLluvia(Transform jugador)
     {
-        if (_npc != null && _npc.SimpleAnimator != null) _npc.SimpleAnimator.FaceTarget(donde);
+        if (_comboVisual != null && _modeloDelCombo != null)
+            _comboVisual.AbrirParaNpc(_modeloDelCombo, PasosDeLaLluvia.Length);
+        var pausa = new WaitForSeconds(0.45f);
+        for (int i = 0; i < PasosDeLaLluvia.Length; i++)
+        {
+            if (_parado || _acabando || jugador == null) yield break;
+            Mirar(jugador.position);
+            Gesto(GestosDeLaLluvia[i]);
+            _comboVisual?.MostrarPasoDelNpc(PasosDeLaLluvia[i], i);
+            yield return pausa;
+        }
+        _comboVisual?.CerrarParaNpc(true);
+        Gesto(_animacion);
     }
 
-    void Gesto()
+    void Mirar(Vector3 donde) => _actor?.Face(donde);
+
+    void Gesto(string animacion)
     {
-        if (_animator == null || string.IsNullOrEmpty(_animacion) || _animator.layerCount <= CapaDeMedioCuerpo) return;
-        if (!_animator.HasState(CapaDeMedioCuerpo, Animator.StringToHash(_animacion))) return;
+        if (_animator == null || string.IsNullOrEmpty(animacion) || _animator.layerCount <= CapaDeMedioCuerpo) return;
+        int estado = Animator.StringToHash(animacion);
+        if (!_animator.HasState(CapaDeMedioCuerpo, estado)) return;
         _animator.SetLayerWeight(CapaDeMedioCuerpo, 1f);
-        _animator.Play(_animacion, CapaDeMedioCuerpo, 0f);
+        _animator.CrossFadeInFixedTime(estado, 0.09f, CapaDeMedioCuerpo, 0f);
     }
 
     GameObject LanzarBola(Vector3 piesDelJugador)
@@ -287,7 +361,7 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
         return bola;
     }
 
-    void LanzarDesdeArriba(Vector3 piesDelJugador)
+    GameObject LanzarDesdeArriba(Vector3 piesDelJugador)
     {
         Vector2 azar = UnityEngine.Random.insideUnitCircle * R.radioDeLaLluvia;
         Vector3 destino = SondeoDelTerreno.Pecho(piesDelJugador) + new Vector3(azar.x, 0f, azar.y);
@@ -298,6 +372,7 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
         var bola = UnityEngine.Object.Instantiate(_proyectil, origen, Quaternion.LookRotation(direccion));
         EnemyProjectile.TenirConElemento(bola, R.colorDeLaLluvia);
         Preparar(bola, direccion, false, R.velocidadDeLaLluvia);
+        return bola;
     }
 
     void Preparar(GameObject bola, Vector3 direccion, bool sePuedeDevolver, float velocidad)
@@ -308,6 +383,7 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
         if (rb != null) rb.isKinematic = false;
         proyectil.AsignarLanzador(_npc.gameObject);
         proyectil.PermitirDevolucion(sePuedeDevolver);
+        if (sePuedeDevolver) proyectil.AsignarElemento(MagicElement.Light);
         if (velocidad > 0f) proyectil.SetSpeed(velocidad);
         proyectil.Initialize(direccion, 0f);
     }
@@ -315,6 +391,10 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
     protected override void Stop()
     {
         _parado = true;
+        if (_hechizos != null && Runner != null) Runner.StopCoroutine(_hechizos);
+        if (_recuperacion != null && Runner != null) Runner.StopCoroutine(_recuperacion);
+        if (_turnoDePreparacion >= 0) PresentadorDeLinea.Esconder(_turnoDePreparacion);
+        if (_bolaDePractica != null) UnityEngine.Object.Destroy(_bolaDePractica);
         Desuscribir();
         DejarAlNpc();
     }
@@ -330,6 +410,8 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
     {
         PlayerShieldController.AlPararAtaque -= AlParar;
         PlayerShieldController.AlDevolverAtaque -= AlDevolver;
+        if (_devolucion != null) _devolucion.AlImpactarEnEnemigo -= AlRecibirLaBola;
+        _devolucion = null;
         if (_escudo != null)
         {
             _escudo.AlRomperse -= AlRomperElEscudo;
@@ -337,8 +419,33 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
         }
     }
 
-    void AlParar(GameObject lanzador) { if (_npc != null && lanzador == _npc.gameObject) Acierto(); }
-    void AlDevolver(GameObject lanzador) { if (_npc != null && lanzador == _npc.gameObject) Acierto(); }
+    void AlParar(GameObject lanzador)
+    {
+        if (!_parado && _npc != null && lanzador == _npc.gameObject) _aciertos++;
+    }
+    void AlDevolver(GameObject lanzador)
+    {
+        if (_npc == null || lanzador != _npc.gameObject || _bolaDePractica == null) return;
+        _devolucion = _bolaDePractica.GetComponentInChildren<ProyectilDevuelto>();
+        if (_devolucion != null) _devolucion.AlImpactarEnEnemigo += AlRecibirLaBola;
+    }
+
+    void AlRecibirLaBola(Damageable receptor)
+    {
+        if (receptor == null || receptor != _receptor || _recuperacion != null || _parado) return;
+        _recuperacion = Runner.StartCoroutine(Co_Recuperarse(EstadosDeCombate.De(receptor)));
+    }
+
+    IEnumerator Co_Recuperarse(EstadosDeCombate estados)
+    {
+        if (_animator != null && _animator.layerCount > CapaDeMedioCuerpo) _animator.SetLayerWeight(CapaDeMedioCuerpo, 0f);
+        _npc.SimpleAnimator?.PlayDizzy();
+        yield return null;
+        while (estados != null && estados.EstaIncapacitado) yield return null;
+        _npc.SimpleAnimator?.TransitionToLocomotion();
+        _recuperacion = null;
+        Acierto();
+    }
     void AlRomperElEscudo() => Acierto();
 
     void AlRebotarElemento(MagicElement elemento)
@@ -357,6 +464,11 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
             if (!_enCaja) EnCaja(R.claveAlAcertar, R.fraseAlAcertar, null);
             return;
         }
+        FinalizarLeccion();
+    }
+
+    void FinalizarLeccion()
+    {
         _acabando = true;
         Desuscribir();
         DejarAlNpc();
@@ -443,6 +555,7 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
 
         var dmg = _npc.GetComponent<Damageable>();
         if (dmg == null) dmg = _npc.gameObject.AddComponent<Damageable>();
+        _receptor = dmg;
         float hp = _copiaDeConfig != null ? _copiaDeConfig.health : dmg.Max;
         dmg.SetMaxAndCurrent(hp, hp);
         dmg.SetDestroyOnDeath(false);
@@ -467,6 +580,11 @@ public sealed class LeccionDeCombateEnCurso : NarrativeRequestRun<PedirLeccionDe
     void DejarAlNpc()
     {
         if (_npc == null) return;
+        _comboVisual?.CerrarParaNpc(false);
+        _actor?.EndAgentOverride();
+        _actor?.StopMovement();
+        _actor?.Release();
+        _actor = null;
         if (_escudo != null)
         {
             _escudo.StopDefending();

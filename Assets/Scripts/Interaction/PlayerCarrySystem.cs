@@ -24,9 +24,9 @@ public class PlayerCarrySystem : MonoBehaviour
     // de carga. Mismo criterio que los NPCs con oficio (WorkState). Ver INC-1091.
     private const float VelocidadDeLaCaja = 18f;
     private const float SeparacionMaximaDeLasManos = 0.8f;
-    private const float DelanteMinimoDeLasManos = 0.12f;
+    private const float DelanteMinimoDeLasManos = 0.08f;
     // Hueco entre el eje del cuerpo y la cara trasera de la caja: así nunca se mete dentro del modelo.
-    private const float GrosorDelCuerpo = 0.22f;
+    private const float GrosorDelCuerpo = 0.16f;
 
     /// <summary>
     /// Evento disparado cuando el player suelta un objeto.

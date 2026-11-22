@@ -113,7 +113,7 @@ public sealed class NocheDeLaCaida : MonoBehaviour
     static Color Transparente(Color c) { c.a = 0f; return c; }
 
     /// Negro en los bordes que se aclara hacia el centro.
-    static Texture2D Vineta(int n)
+    internal static Texture2D Vineta(int n)
     {
         var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
         var px = new Color32[n * n];

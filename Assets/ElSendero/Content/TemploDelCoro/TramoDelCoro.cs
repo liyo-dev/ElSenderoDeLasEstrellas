@@ -56,10 +56,10 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [SerializeField, Min(0f)] private float topeLibre = 9f;
     [Tooltip("El recuadro que va con la canción por el suelo (se mueve por el eje Z del tramo).")]
     [SerializeField] private Transform recuadro;
-    [Tooltip("Metros del recuadro por delante de donde marca la canción. Del centro en adelante no se corre más que ella; pasado este borde se va cada vez más despacio (en un respiro no se puede uno adelantar a lo que viene).")]
-    [SerializeField, Min(0f)] private float metrosAdelante = 4f;
+    [Tooltip("Metros por delante de la canción hasta el borde que limita el avance.")]
+    [SerializeField, Min(0f)] private float metrosAdelante = 2.0f;
     [Tooltip("Lo mismo, con el recuadro parado (un respiro): margen para cruzar lo que pide el respiro (un hueco con plataformas).")]
-    [SerializeField, Min(0f)] private float metrosAdelanteEnRespiro = 16f;
+    [SerializeField, Min(0f)] private float metrosAdelanteEnRespiro = 12f;
     [Tooltip("Segundo de la canción desde el que no hay borde por delante del recuadro (un salto largo del final). 0: siempre lo hay.")]
     [SerializeField, Min(0f)] private float segundoSinTope;
     [Tooltip("Calderones en orden (X: la Z donde se paran el recuadro y la sombra; Y: los segundos): un respiro para lo que pide pararse, como cambiar de personaje y encender una antorcha. La canción sigue.")]
@@ -73,12 +73,27 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [Tooltip("Z en la que empieza el corredor.")]
     [SerializeField] private float zDeArranque;
     [Tooltip("Metros del recuadro por detrás de donde marca la canción: ahí va la sombra (quien se queda atrás, repite).")]
-    [SerializeField, Min(0f)] private float metrosDeVentaja = 8f;
+    [SerializeField, Min(0f)] private float metrosDeVentaja = 12f;
+    [Tooltip("Filas de suelo en orden. Desaparecen al quedar por detrás de la sombra y vuelven al reintentar.")]
+    [SerializeField] private Transform[] sueloQueSePierde = System.Array.Empty<Transform>();
+    private int _primeraFilaVisible;
+    private Vector3[] _posicionesDelSuelo;
+    private float[] _iniciosDeCaida;
+    [SerializeField] private GameObject polvoDelSuelo;
+    private CanvasGroup _vineta;
+    private Texture2D _texturaDeLaVineta;
+    private const float SegundosDeAvisoDeSombra = 2.2f;
+    private const float SegundosDeMargenExtra = 0.67f;
+    private const float DistanciaDeAvisoDelSuelo = 5f;
+    private const float DuracionDeCaida = 0.68f;
+    private float _margenPuesto;
     [Tooltip("Segundos tras un cambio de personaje en los que la sombra no gana terreno.")]
     [SerializeField, Min(0f)] private float graciaDelCambio = 0.8f;
 
     [Header("Fin")]
     [SerializeField] private float alturaDelFoso = -5f;
+    [Tooltip("Durante la tralla, la sombra cierra el escenario por detrás. X: inicio del aviso, Y: primera nota, Z: final de la tralla, W: borde trasero del recinto.")]
+    [SerializeField] private Vector4 cierreTrasero;
     [Tooltip("Segundo de la canción desde el que ya no se falla (el golpe final: el suelo se hunde y se cae al vacío). 0: no hay.")]
     [SerializeField, Min(0f)] private float segundoSinFallar;
     [Tooltip("Segundo de la canción en el que se gana sin llegar a la meta (el final de la canción). 0: solo con la meta.")]
@@ -114,27 +129,63 @@ public sealed class TramoDelCoro : PruebaDelJugador
         base.Awake();
         _segundoDeEsteIntento = segundoDeSalida;
         _salidaDelPrimerIntento = salidaDelJugador;
+        _posicionesDelSuelo = new Vector3[sueloQueSePierde.Length];
+        _iniciosDeCaida = new float[sueloQueSePierde.Length];
+        for (int i = 0; i < sueloQueSePierde.Length; i++)
+            _posicionesDelSuelo[i] = sueloQueSePierde[i].localPosition;
+        MontarAvisoDeSombra();
     }
 
     private Transform _salidaDelPrimerIntento;
 
     /// <summary>Ganada: vuelta de cámara de despedida y, al acabar, la pregunta de repetir.</summary>
+    [Header("Saludo final")]
+    [SerializeField] private Transform marcaDelSaludo;
+    [SerializeField] private Light focoDelSaludo;
+    [SerializeField] private GameObject confetiDelSaludo;
+
     private void AlGanar(PruebaDelJugador _)
     {
+        if (marcaDelSaludo != null)
+        {
+            var cuerpo = ControlDelJugador.CuerpoDelJugador;
+            if (cuerpo != null)
+            {
+                TeleportService.TeleportToPosition(cuerpo, marcaDelSaludo.position, marcaDelSaludo.rotation, null);
+                if (PlayerParty.HasInstance) PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true, avisar: false);
+            }
+
+            if (focoDelSaludo != null) focoDelSaludo.enabled = true;
+            var piscina = VfxPoolService.Instance;
+            if (confetiDelSaludo != null && piscina != null)
+            {
+                piscina.Play(confetiDelSaludo, marcaDelSaludo.position - marcaDelSaludo.right * 2.6f, Quaternion.identity, 5f);
+                piscina.Play(confetiDelSaludo, marcaDelSaludo.position + marcaDelSaludo.right * 2.6f, Quaternion.identity, 5f);
+            }
+        }
         if (camara != null) camara.Despedir(PreguntarSiRepetir);
         else PreguntarSiRepetir();
     }
 
     private void PreguntarSiRepetir()
     {
+        bool desdeElLab = VueltaAlLab.LlegoDesdeElLab(gameObject.scene);
         var pregunta = ConfirmationPopupUI.Instance;
-        if (pregunta == null) { SoltarLaCamara(); return; }
+        if (pregunta == null) { CerrarLaFuncion(desdeElLab); return; }
         // Con la pregunta en pantalla, el plano queda limpio: solo el cuadro y el Tenor a la derecha.
         Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
         _hudOculto = true;
-        pregunta.Show(PresentadorDeLinea.Texto("CORO_REPETIR", "¡Bravo! ¿Repetir la función?"), Repetir, SoltarLaCamara,
-                      PresentadorDeLinea.Texto("CORO_REPETIR_SI", "Repetir"), PresentadorDeLinea.Texto("CORO_REPETIR_NO", "Quedarme"),
+        string salida = desdeElLab ? PresentadorDeLinea.Texto("CORO_VOLVER_AL_LAB", "Volver al Lab")
+                                   : PresentadorDeLinea.Texto("CORO_REPETIR_NO", "Quedarme");
+        pregunta.Show(PresentadorDeLinea.Texto("CORO_REPETIR", "¡Bravo! ¿Repetir la función?"), Repetir, () => CerrarLaFuncion(desdeElLab),
+                      PresentadorDeLinea.Texto("CORO_REPETIR_SI", "Repetir"), salida,
                       selectConfirm: true, centrado: true);
+    }
+
+    private void CerrarLaFuncion(bool desdeElLab)
+    {
+        SoltarLaCamara();
+        if (desdeElLab) VueltaAlLab.VolverALaZonaDeJefes();
     }
 
     private bool _hudOculto;
@@ -149,6 +200,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
     private void SoltarLaCamara()
     {
         DevolverElHUD();
+        if (focoDelSaludo != null) focoDelSaludo.enabled = false;
         if (camara != null) camara.Soltar();
     }
 
@@ -180,6 +232,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
         SoltarLaMusica();
         DejarDeCorrer();
         DevolverElHUD();
+        if (focoDelSaludo != null) focoDelSaludo.enabled = false;
         if (camara != null) camara.Soltar();
         Kits.Core.GameContext.Exit(Situaciones.PruebaSinPausa, this);
         SombraDeContacto.SoltarRefuerzo(this);
@@ -212,6 +265,14 @@ public sealed class TramoDelCoro : PruebaDelJugador
             if (objetosQueVuelven[i] != null && !objetosQueVuelven[i].activeSelf) objetosQueVuelven[i].SetActive(true);
         for (int i = 0; i < objetosQueSeVan.Length; i++)
             if (objetosQueSeVan[i] != null && objetosQueSeVan[i].activeSelf) objetosQueSeVan[i].SetActive(false);
+        for (int i = 0; i < sueloQueSePierde.Length; i++)
+        {
+            var fila = sueloQueSePierde[i];
+            fila.localPosition = _posicionesDelSuelo[i];
+            _iniciosDeCaida[i] = -1f;
+            if (!fila.gameObject.activeSelf) fila.gameObject.SetActive(true);
+        }
+        _primeraFilaVisible = 0;
         _sinControl = false;
         if (PlayerParty.HasInstance) PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true, avisar: false);
         var salud = SaludDelGrupo.Instance;
@@ -236,7 +297,11 @@ public sealed class TramoDelCoro : PruebaDelJugador
             _tiempoDeSoltar = i;
             _segundoDeSoltar = partitura.BeatTime(i);
         }
-        ColocarLaSombra(_segundoDeEsteIntento);
+        float borde = ColocarLaSombra(_segundoDeEsteIntento);
+        // Al retomar desde un control, la parte que queda muy atrás ya ha caído.
+        while (_primeraFilaVisible < sueloQueSePierde.Length &&
+               sueloQueSePierde[_primeraFilaVisible].position.z < borde - 4f)
+            sueloQueSePierde[_primeraFilaVisible++].gameObject.SetActive(false);
     }
 
     protected override void Arrancar()
@@ -311,8 +376,78 @@ public sealed class TramoDelCoro : PruebaDelJugador
         {
             float z = ColocarLaSombra((float)reloj.SongTime);
             // Grabando marcas a mano, la sombra no hace repetir.
-            if (jugador.position.z < z && !GrabadorDeMarcas.Grabando) Fallar();
+            if (GrabadorDeMarcas.Grabando || !_corriendo) return;
+            ActualizarSuelo(z, ahora);
+            float distancia = jugador.position.z - z;
+            float distanciaDeAviso = Mathf.Max(0.1f, metrosPorSegundo * SegundosDeAvisoDeSombra);
+            float riesgo = 1f - Mathf.Clamp01(distancia / distanciaDeAviso);
+            // El borde se nota al empezar a rezagarse y se aclara en cuanto se recupera terreno.
+            _vineta.alpha = Mathf.MoveTowards(_vineta.alpha, 0.9f * Mathf.Sqrt(riesgo), dt * 2.5f);
+            if (distancia < 0f) Fallar();
         }
+    }
+
+    private void ActualizarSuelo(float z, float segundo)
+    {
+        for (int i = _primeraFilaVisible; i < sueloQueSePierde.Length; i++)
+        {
+            Transform fila = sueloQueSePierde[i];
+            Vector3 origen = _posicionesDelSuelo[i];
+            float paso = z - fila.parent.TransformPoint(origen).z;
+            if (_iniciosDeCaida[i] < 0f)
+            {
+                if (paso < -DistanciaDeAvisoDelSuelo) break;
+                if (paso < 0f)
+                {
+                    float golpe = Mathf.Sin(segundo * 42f + i);
+                    fila.localPosition = origen + Vector3.up * (0.035f * golpe * (1f + paso / DistanciaDeAvisoDelSuelo));
+                    continue;
+                }
+                _iniciosDeCaida[i] = segundo;
+                if (polvoDelSuelo != null && VfxPoolService.Instance != null)
+                {
+                    float lado = (i & 1) == 0 ? -1f : 1f;
+                    VfxPoolService.Instance.Play(polvoDelSuelo, fila.position + new Vector3(lado * 3.3f, 0f, -0.2f), Quaternion.identity, 0.8f);
+                }
+            }
+            float u = (segundo - _iniciosDeCaida[i]) / DuracionDeCaida;
+            if (u >= 1f)
+            {
+                fila.gameObject.SetActive(false);
+                _primeraFilaVisible = i + 1;
+                continue;
+            }
+            fila.localPosition = origen + new Vector3(Mathf.Sin(i) * 0.15f * u, -8f * u * u, 0f);
+        }
+    }
+
+    private void MontarAvisoDeSombra()
+    {
+        var aviso = new GameObject("Sombra cerca · viñeta", typeof(RectTransform), typeof(Canvas), typeof(CanvasGroup));
+        aviso.transform.SetParent(transform, false);
+        var canvas = aviso.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 1;
+        _vineta = aviso.GetComponent<CanvasGroup>();
+        _vineta.alpha = 0f;
+        _vineta.interactable = false;
+        _vineta.blocksRaycasts = false;
+
+        var capa = new GameObject("Bordes", typeof(RectTransform), typeof(UnityEngine.UI.RawImage));
+        capa.transform.SetParent(aviso.transform, false);
+        var imagen = capa.GetComponent<UnityEngine.UI.RawImage>();
+        _texturaDeLaVineta = NocheDeLaCaida.Vineta(128);
+        imagen.texture = _texturaDeLaVineta;
+        imagen.raycastTarget = false;
+        var rect = imagen.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+    }
+
+    private void OnDestroy()
+    {
+        if (_texturaDeLaVineta != null) Destroy(_texturaDeLaVineta);
     }
 
     protected override void Detener()
@@ -341,6 +476,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
         _corriendo = true;
         SoltarElControl();
         _topePuesto = -1f;
+        _margenPuesto = float.NaN;
         if (reloj != null) AjustarElTope(Jugador != null ? Jugador.position.z : zDeArranque, (float)reloj.SongTime);
     }
 
@@ -354,17 +490,21 @@ public sealed class TramoDelCoro : PruebaDelJugador
         float centro = CentroDelRecuadro(segundo);
         float tope = Mathf.Clamp(metrosPorSegundo + (centro - zDelJugador) * 1.5f, metrosPorSegundo,
                                  Mathf.Max(metrosPorSegundo, topeLibre));
-        // Por delante del borde del recuadro (resolviendo deprisa un respiro), cada vez más despacio:
-        // el recuadro le alcanza y lo que cae vuelve a estar a su paso.
+        // El borde limita solo el avance: se puede cambiar de fila incluso pegado a él.
         bool parado = CentroDelRecuadro(segundo + 0.1f) - centro < 0.01f;
-        // En un respiro no hay prisa: sin el sprint de recuperar, los saltos miden lo de siempre.
         if (parado) tope = metrosPorSegundo;
-        float exceso = zDelJugador - (centro + (parado ? metrosAdelanteEnRespiro : metrosAdelante));
-        if (segundoSinTope > 0f && segundo >= segundoSinTope) exceso = 0f;
-        if (exceso > 0f) tope = Mathf.Max(0.5f, metrosPorSegundo - exceso * 3f);
-        if (Mathf.Abs(tope - _topePuesto) < 0.1f) return;
+        bool conBorde = recuadro != null && (segundoSinTope <= 0f || segundo < segundoSinTope);
+        float margen = conBorde ? (parado ? metrosAdelanteEnRespiro : metrosAdelante) : -1f;
+        if (Mathf.Abs(tope - _topePuesto) < 0.1f && margen == _margenPuesto) return;
         _topePuesto = tope;
-        TopeDeVelocidadDelJugador.Poner(this, tope);
+        _margenPuesto = margen;
+        if (conBorde)
+            TopeDeVelocidadDelJugador.PonerSeguimiento(this, tope, recuadro, Vector3.forward, 0f, -margen);
+        else
+        {
+            TopeDeVelocidadDelJugador.QuitarSeguimiento(this);
+            TopeDeVelocidadDelJugador.Poner(this, tope);
+        }
     }
 
     /// <summary>Segundo de un tiempo de la partitura (o <paramref name="siNo"/> sin partitura).</summary>
@@ -378,6 +518,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
     private void DejarDeCorrer()
     {
         _corriendo = false;
+        if (_vineta != null) _vineta.alpha = 0f;
         TopeDeVelocidadDelJugador.Quitar(this);
     }
 
@@ -459,7 +600,12 @@ public sealed class TramoDelCoro : PruebaDelJugador
             var r = recuadro.position;
             recuadro.position = new Vector3(r.x, r.y, centro);
         }
-        float z = centro - metrosDeVentaja - _cedido;
+        float z = centro - metrosDeVentaja - metrosPorSegundo * SegundosDeMargenExtra - _cedido;
+        if (segundo >= cierreTrasero.x && segundo < cierreTrasero.z)
+        {
+            float progreso = Mathf.InverseLerp(cierreTrasero.x, cierreTrasero.y, segundo);
+            z = Mathf.Lerp(z, Mathf.Max(z, cierreTrasero.w), progreso);
+        }
         if (sombra != null)
         {
             var p = sombra.position;

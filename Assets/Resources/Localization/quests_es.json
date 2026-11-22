@@ -556,11 +556,11 @@
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DESC",
-            "value": "Estela no acepta aprendices. Eldran cree que te escuchará si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro."
+            "value": "Candela vio un carro con jaulas que brillaban. Examina la cerca del huerto y sigue el rastro hacia el bosque."
         },
         {
             "key": "CAP3_MARCAS_DE_HIERRO_DETAIL",
-            "value": "Estela no acepta aprendices. Eldran cree que te escuchará si le llevas pruebas de los aros, y en la aldea del mar han visto animales con aro."
+            "value": "Candela vio un carro con jaulas que brillaban. Examina la cerca del huerto y sigue el rastro hacia el bosque."
         },
         {
             "key": "CAP3_LLEGAR_PASO",
@@ -664,19 +664,31 @@
         },
         {
             "key": "CAP3_PEZ_PASO",
-            "value": "Busca a Pez en el muelle"
+            "value": "Busca a Pez en la playa"
         },
         {
             "key": "CAP3_LUBINA_PASO",
-            "value": "Lleva el recado de Pez a Doña Lubina, al final del muelle"
+            "value": "Recoge el juguete de Pez en la entrada de la posada y llévaselo"
         },
         {
             "key": "CAP3_FAROL_PASO",
-            "value": "Nada hasta la casa del farol"
+            "value": "Nada hasta la casa del farol y habla con Candela"
         },
         {
             "key": "CAP3_CERCA_PASO",
             "value": "Mira la cerca del huerto, camino del bosque"
+        },
+        {
+            "key": "CAP3_PISTAS_ALDEA_NAME",
+            "value": "Pistas en la Aldea del Mar"
+        },
+        {
+            "key": "CAP3_PISTAS_ALDEA_DESC",
+            "value": "Eldran cree que Estela te escuchará si le llevas pruebas de los aros. Pregunta en la Aldea del Mar qué han visto."
+        },
+        {
+            "key": "CAP3_PISTAS_ALDEA_DETAIL",
+            "value": "Eldran cree que Estela te escuchará si le llevas pruebas de los aros. Pregunta en la Aldea del Mar qué han visto."
         }
     ]
 }

@@ -21,6 +21,7 @@ public static class NinosHechosEnBlender
     sealed class Nino
     {
         public Ficha Ficha;          // pelo y ropa; PrefabPropio es su prefab
+        public string[] PiezasDelPack;
         public string Esqueleto;     // su talla
         public Color Iris;
         public int Ojos, Bocas;      // su juego de caras: Eye<Ojos>…, Mouth<Bocas>… en Caras_<Nombre>.fbx
@@ -104,6 +105,15 @@ public static class NinosHechosEnBlender
                 Colores = new (string, Color)[0],
             },
         },
+        new Nino
+        {
+            Esqueleto = EsqueletoPequeno, PiezasDelPack = new[] { "Head01_Male", "Body03", "Eye01", "Mouth02", "Hat13" },
+            Ficha = new Ficha
+            {
+                Nombre = "Pez", Carpeta = Carpeta + "/Pez",
+                PrefabPropio = "Assets/_NPCs/AldeaDelMar/Pez.prefab",
+            },
+        },
     };
 
     [MenuItem("El Sendero/Personajes/NPCs/Niños hechos en Blender (Tobías, Nina, Lucas, Lucía)")]
@@ -117,12 +127,13 @@ public static class NinosHechosEnBlender
         OrdenesDelEditor.Avisar("Niños hechos en Blender", informe.ToString());   // desde el buzón va al registro (un diálogo lo bloquearía)
     }
 
-    public static void Aplicar(StringBuilder informe)
+    public static void Aplicar(StringBuilder informe, string soloNombre = null)
     {
         string estiloCaras = CarasDeLosProtagonistas.RutaDeEstilo();
         foreach (var n in Ninos)
         {
             var f = n.Ficha;
+            if (soloNombre != null && f.Nombre != soloNombre) continue;
             string prefab = f.PrefabPropio;
             if (AssetDatabase.LoadAssetAtPath<GameObject>(prefab) == null) { informe.AppendLine($"{f.Nombre}: no encuentro {prefab}."); continue; }
 
@@ -144,10 +155,15 @@ public static class NinosHechosEnBlender
             try
             {
                 ok = CuerpoDeNino.Poner(raiz, n.Esqueleto, $"{f.Carpeta}/Avatar_{f.Nombre}.asset", informe, n.BrazosAbiertos);
-                if (ok) PrefabUtility.SaveAsPrefabAsset(raiz, prefab);
+                if (ok)
+                {
+                    if (n.PiezasDelPack != null)
+                        GeneradorDeNpcs.SeleccionarPiezas(raiz, n.PiezasDelPack);
+                    PrefabUtility.SaveAsPrefabAsset(raiz, prefab);
+                }
             }
             finally { PrefabUtility.UnloadPrefabContents(raiz); }
-            if (!ok) continue;
+            if (!ok || f.Piezas == null) continue;
 
             // 2 · Pelo y ropa, hechos sobre su talla
             if (!AspectoDeProtagonista.PonerPiezas(f, informe)) continue;

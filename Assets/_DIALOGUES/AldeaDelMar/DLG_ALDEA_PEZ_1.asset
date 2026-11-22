@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - speakerNameId: CHAR_PEZ
     textId: DLG_ALDEA_PEZ_1_01
-    text: "Hoy los boquerones est\xE1n insoportables."
+    text: "Los boquerones van en grupo. Si ves uno, mira detr\xE1s."
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
