@@ -36,6 +36,16 @@ namespace Kits.Puzzles
         [Tooltip("Dónde cae cada marca, en orden; al acabarse la lista vuelve a empezar.")]
         [SerializeField] private Transform[] landingPoints = Array.Empty<Transform>();
 
+        [Header("Ola")]
+        [Tooltip("Piezas por marca, repartidas en línea a lo ancho del golpe: caen como una ola. 1 = una sola.")]
+        [SerializeField, Min(1)] private int wavePieces = 1;
+        [Tooltip("Ancho de la línea (m). 0 = el del golpe rectangular (strikeSize.x).")]
+        [SerializeField, Min(0f)] private float waveWidth;
+        [Tooltip("Segundos que tarda la ola en cruzar la línea, de una punta a la otra. 0 = todas a la vez.")]
+        [SerializeField, Min(0f)] private float waveSeconds = 0.24f;
+        [Tooltip("La ola cruza de izquierda a derecha; si no, de derecha a izquierda.")]
+        [SerializeField] private bool waveToTheRight = true;
+
         [Header("Aspecto")]
         [Tooltip("Lo que cae (se copia; el original se apaga).")]
         [SerializeField] private GameObject fallingTemplate;
@@ -88,25 +98,28 @@ namespace Kits.Puzzles
         [Tooltip("Al tocar el suelo (una sacudida, un efecto).")]
         public UnityEvent onLand = new UnityEvent();
 
-        private const int Copias = 6;
+        private const int CopiasMinimas = 6;
 
         private struct Caida
         {
             public GameObject cuerpo;
             public Transform sombra;
             public float segundo;
+            public float duracion;
             public Vector3 punto;
             public bool activa;
             public bool tocada;
             public bool sonada;
+            public bool golpea;
             public int revisionDelSonido;
         }
 
         private readonly List<float> _tiempos = new List<float>(32);
-        private readonly Caida[] _caidas = new Caida[Copias];
+        private Caida[] _caidas = Array.Empty<Caida>();
         private int _siguiente;
         private double _ultimoSegundo = -1d;
         private bool _preparado;
+        private float _margenDeLaOla;
         private Vector3 _objetivoAntes;
         private Vector3 _velocidadDelObjetivo;
         private bool _hayObjetivoAntes;
@@ -114,10 +127,10 @@ namespace Kits.Puzzles
         private void OnEnable()
         {
             if (clock == null) clock = TempoClock.Current;
-            Preparar();
             _tiempos.Clear();
             if (clock != null && clock.Score != null)
                 clock.Score.CollectCueTimes(voices, fromSeconds, toSeconds, _tiempos);
+            Preparar();
             _ultimoSegundo = -1d;
         }
 
@@ -130,7 +143,10 @@ namespace Kits.Puzzles
         {
             if (_preparado) return;
             _preparado = true;
-            for (int i = 0; i < Copias; i++)
+            int piezas = Mathf.Max(1, wavePieces);
+            _margenDeLaOla = piezas > 1 ? waveSeconds * 0.5f : 0f;
+            _caidas = new Caida[CopiasQueHacenFalta(piezas)];
+            for (int i = 0; i < _caidas.Length; i++)
             {
                 if (fallingTemplate != null)
                 {
@@ -147,6 +163,19 @@ namespace Kits.Puzzles
             if (shadowTemplate != null) shadowTemplate.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Copias que hacen falta: las de una marca entera (una por pieza de la ola) más las que siguen
+        /// en el aire o en el suelo cuando llega la marca siguiente, según el hueco más corto de la partitura.
+        /// </summary>
+        private int CopiasQueHacenFalta(int piezas)
+        {
+            float vida = (fromBelow ? Mathf.Max(riseSeconds, lingerSeconds) : fallSeconds + lingerSeconds) + _margenDeLaOla;
+            float hueco = float.MaxValue;
+            for (int i = 1; i < _tiempos.Count; i++) hueco = Mathf.Min(hueco, _tiempos[i] - _tiempos[i - 1]);
+            int aLaVez = hueco > 0.0001f ? Mathf.CeilToInt(vida / hueco) + 1 : 1;
+            return Mathf.Max(CopiasMinimas, piezas * Mathf.Clamp(aLaVez, 2, 16));
+        }
+
         private void Update()
         {
             if (clock == null || !clock.IsRunning || !clock.FollowsSong || landingPoints.Length == 0) return;
@@ -155,7 +184,7 @@ namespace Kits.Puzzles
             _ultimoSegundo = t;
             if (aimAtTarget) SeguirAlObjetivo();
 
-            while (_siguiente < _tiempos.Count && t >= _tiempos[_siguiente] - fallSeconds)
+            while (_siguiente < _tiempos.Count && t >= _tiempos[_siguiente] - fallSeconds - _margenDeLaOla)
             {
                 Soltar(_siguiente, t);
                 _siguiente++;
@@ -166,7 +195,7 @@ namespace Kits.Puzzles
                 if (!_caidas[i].activa) continue;
                 ref var c = ref _caidas[i];
                 float falta = (float)(c.segundo - t);
-                if (landingSound != null && !c.tocada)
+                if (landingSound != null && c.golpea && !c.tocada)
                 {
                     if (clock.SchedulesCueAudio)
                     {
@@ -182,7 +211,7 @@ namespace Kits.Puzzles
                 }
                 if (falta > 0f)
                 {
-                    float u = 1f - Mathf.Clamp01(falta / fallSeconds);
+                    float u = 1f - Mathf.Clamp01(falta / Mathf.Max(0.0001f, c.duracion));
                     // Lo que cae acelera todo el camino; lo que sale del suelo espera escondido y sube de golpe.
                     float queda = fromBelow ? Mathf.Clamp01(falta / riseSeconds) : 1f - u * u;
                     Colocar(ref c, c.punto + Escondido(c.punto) * queda, u);
@@ -192,8 +221,11 @@ namespace Kits.Puzzles
                 {
                     c.tocada = true;
                     Colocar(ref c, c.punto, 1f);
-                    if (damage > 0f) Golpear(c.punto);
-                    onLand.Invoke();
+                    if (c.golpea)
+                    {
+                        if (damage > 0f) Golpear(c.punto);
+                        onLand.Invoke();
+                    }
                 }
                 if (fromBelow)
                 {
@@ -240,30 +272,47 @@ namespace Kits.Puzzles
 
         private void Soltar(int marca, double ahora)
         {
-            int libre = -1;
-            for (int i = 0; i < _caidas.Length; i++) if (!_caidas[i].activa) { libre = i; break; }
-            if (libre < 0) return;
-            var punto = landingPoints[marca % landingPoints.Length];
-            if (punto == null) return;
-            ref var c = ref _caidas[libre];
-            c.activa = true;
-            c.tocada = false;
-            c.sonada = false;
-            c.revisionDelSonido = -1;
-            c.segundo = _tiempos[marca];
-            c.punto = punto.position;
+            var donde = landingPoints[marca % landingPoints.Length];
+            if (donde == null) return;
+            Vector3 baseDelGolpe = donde.position;
+            float segundo = _tiempos[marca];
             if (aimAtTarget && _hayObjetivoAntes)
             {
-                float falta = Mathf.Max(0f, (float)(c.segundo - ahora));
+                float falta = Mathf.Max(0f, (float)(segundo - ahora));
                 Vector3 apunta = _objetivoAntes + _velocidadDelObjetivo * (falta * aimLead);
-                Vector3 desvio = apunta - c.punto;
+                Vector3 desvio = apunta - baseDelGolpe;
                 desvio.y = 0f;
                 if (aimAlongForwardOnly) desvio = Vector3.Project(desvio, transform.forward);
-                c.punto += Vector3.ClampMagnitude(desvio, aimMaxDistance);
+                baseDelGolpe += Vector3.ClampMagnitude(desvio, aimMaxDistance);
             }
-            if (c.cuerpo != null) c.cuerpo.SetActive(true);
-            if (c.sombra != null) c.sombra.gameObject.SetActive(true);
-            Colocar(ref c, c.punto + Escondido(c.punto), 0f);
+
+            int piezas = Mathf.Max(1, wavePieces);
+            float ancho = waveWidth > 0f ? waveWidth : Mathf.Max(0f, strikeSize.x);
+            int laQueGolpea = (piezas - 1) / 2;
+            for (int i = 0; i < piezas; i++)
+            {
+                int libre = -1;
+                for (int k = 0; k < _caidas.Length; k++) if (!_caidas[k].activa) { libre = k; break; }
+                if (libre < 0) break;
+                // La ola cae de una punta a la otra: la primera empieza antes y la última acaba después,
+                // y la de en medio toca el suelo justo en el golpe (es la que golpea y suena).
+                float fraccion = piezas == 1 ? 0.5f : (float)i / (piezas - 1);
+                float desfase = i == laQueGolpea ? 0f : -_margenDeLaOla + fraccion * waveSeconds;
+                float lateral = ancho > 0f ? (waveToTheRight ? fraccion - 0.5f : 0.5f - fraccion) * ancho : 0f;
+                ref var c = ref _caidas[libre];
+                c.activa = true;
+                c.tocada = false;
+                c.sonada = false;
+                c.revisionDelSonido = -1;
+                c.golpea = i == laQueGolpea;
+                c.segundo = segundo + desfase;
+                c.duracion = fallSeconds + _margenDeLaOla + desfase;
+                c.punto = baseDelGolpe + transform.right * lateral;
+                if (c.cuerpo != null) c.cuerpo.SetActive(true);
+                // La sombra es el aviso del golpe (una franja o un círculo), no la de cada nota de la ola.
+                if (c.sombra != null) c.sombra.gameObject.SetActive(c.golpea);
+                Colocar(ref c, c.punto + Escondido(c.punto), 0f);
+            }
         }
 
         /// <summary>
@@ -307,7 +356,7 @@ namespace Kits.Puzzles
         {
             for (int i = 0; i < _caidas.Length; i++) Apagar(i);
             _siguiente = 0;
-            while (_siguiente < _tiempos.Count && _tiempos[_siguiente] - fallSeconds < t) _siguiente++;
+            while (_siguiente < _tiempos.Count && _tiempos[_siguiente] - fallSeconds - _margenDeLaOla < t) _siguiente++;
         }
 
 #if UNITY_EDITOR

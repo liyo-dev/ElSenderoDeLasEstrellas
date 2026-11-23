@@ -33,6 +33,11 @@ public class TemploDelCoroTrallaTests
                     Assert.IsTrue(centros.Add(sitio.position.z));
                     Assert.AreEqual(new Vector2(10f, 3f), datos.FindProperty("strikeSize").vector2Value);
                     Assert.GreaterOrEqual(datos.FindProperty("fallSeconds").floatValue, 0.7f);
+                    // La tralla cae en ola: varias semicorcheas en línea a lo ancho de la fila.
+                    Assert.AreEqual(5, datos.FindProperty("wavePieces").intValue);
+                    Assert.AreEqual(6.4f, datos.FindProperty("waveWidth").floatValue, 0.01f);
+                    Assert.Greater(datos.FindProperty("waveSeconds").floatValue, 0f);
+                    Assert.IsTrue(datos.FindProperty("waveToTheRight").boolValue);
                     relojDelCoro = (TempoClock)datos.FindProperty("clock").objectReferenceValue;
                     var tiempos = new List<float>();
                     relojDelCoro.Score.CollectCueTimes(new[] { voz }, 0f, float.MaxValue, tiempos);

@@ -2608,6 +2608,7 @@ public static class TemploDelCoroBuilder
                 SegundoDeLaFraseTriste, Puntos(padre, "Fila", new[] { new Vector3(0f, 0f, z) }),
                 1.45f, 14f, 1f, null, 0f, 0.72f);
             ConfigurarFranja(caida, new Vector2(AnchoDelCorredor, AnchoDeFilaDelCoro), 5f);
+            ConfigurarOla(caida, SemicorcheasDeLaOla, AnchoDeLaOla, SegundosDeLaOla);
         }
         var golpeDelCoro = Hijo(padre, "Golpe de las semicorcheas").gameObject.AddComponent<CueDrop>();
         PonerRef(golpeDelCoro, "clock", reloj);
@@ -2674,6 +2675,18 @@ public static class TemploDelCoroBuilder
         datos.FindProperty("shadowStartScale").floatValue = 1f;
         datos.FindProperty("shadowEndScale").floatValue = 1f;
         datos.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    /// <summary>
+    /// La ola de la tralla: varias semicorcheas en línea a lo ancho del golpe, cayendo de una punta a la
+    /// otra. La de en medio toca el suelo en el golpe (es la que golpea y suena).
+    /// </summary>
+    private static void ConfigurarOla(CueDrop caida, int piezas, float ancho, float segundos)
+    {
+        Poner(caida, "wavePieces", piezas);
+        Poner(caida, "waveWidth", ancho);
+        Poner(caida, "waveSeconds", segundos);
+        Poner(caida, "waveToTheRight", true);
     }
 
     private static void HacerNotaSolida(CueDrop caida)
@@ -3038,6 +3051,11 @@ public static class TemploDelCoroBuilder
     private const float DesdeLaTralla = 107.4f;
     private const float AnchoDeFilaDelCoro = 3f;
     private static readonly float[] FilasDeLaTralla = { 1f, -2f, -5f };
+    // La tralla cae como una ola: cinco semicorcheas en línea a lo ancho de la fila (sin llegar a las
+    // paredes del corredor) y cruzando de izquierda a derecha, para que se vea llegar la ola.
+    private const int SemicorcheasDeLaOla = 5;
+    private const float AnchoDeLaOla = 6.4f;
+    private const float SegundosDeLaOla = 0.24f;
 
     private static bool EnTramoDeComba(float segundo)
     {
