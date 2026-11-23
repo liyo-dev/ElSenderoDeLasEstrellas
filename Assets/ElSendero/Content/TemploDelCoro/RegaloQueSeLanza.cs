@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Kits.Puzzles;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// El regalito del Tenor: aparece en <see cref="segundoDeEnsenar"/> (en «un regalito…») y tiembla, y en
@@ -25,7 +25,7 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float anticipacion = 0.5f;
     [Tooltip("Si se pone, el regalo sale como esta bola de enemigo (devolvible con la defensa).")]
     [SerializeField] private GameObject prefabDevolvible;
-    [Tooltip("Adónde vuela al devolverlo (lo que abre: una puerta que solo se rompe con lo devuelto).")]
+    [Tooltip("Objetivo fijo al que vuelve la bola con la defensa.")]
     [SerializeField] private GameObject destino;
     [Tooltip("Si se pone, va a este sitio y no a por el jugador (una coreografía fija).")]
     [SerializeField] private Transform sitio;
@@ -42,9 +42,6 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
     [SerializeField] private float giro;
     [Tooltip("Ráfaga: segundos de la canción en que llega cada regalo (para pararlos con el escudo mantenido). Vacío: uno solo, en segundoDeLanzar.")]
     [SerializeField] private float[] choques = System.Array.Empty<float>();
-    [Tooltip("Al devolver la bola con la defensa, cuando desaparece (haya dado donde haya dado): lo que abre no depende de que llegue limpia.")]
-    public UnityEvent alDevolverlo = new UnityEvent();
-
     private Vector3 _base;
     private Quaternion _giroBase = Quaternion.identity;
     private bool _visible = true;
@@ -54,11 +51,20 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
     private bool _esperado;
     private Vector3 _antes;
     private Vector3 _velocidad;
-    // La bola devolvible en vuelo: devuelta cuando la defensa la toma (apaga su EnemyProjectile).
-    private GameObject _bola;
-    private EnemyProjectile _proyectil;
-    private bool _devuelta;
     private int _siguiente;
+    private readonly List<GameObject> _enVuelo = new List<GameObject>();
+
+    public void LimpiarRegalosEnVuelo()
+    {
+        for (int i = 0; i < _enVuelo.Count; i++)
+        {
+            var bola = _enVuelo[i];
+            if (bola == null) continue;
+            bola.SetActive(false);
+            Destroy(bola);
+        }
+        _enVuelo.Clear();
+    }
 
     private void Awake()
     {
@@ -68,7 +74,6 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
 
     private void Update()
     {
-        if (_proyectil != null || _devuelta) VigilarLaBola();
         if (reloj == null || !reloj.IsRunning || regalo == null) return;
         double t = reloj.SongTime;
         if (t < segundoDeEnsenar)
@@ -133,6 +138,7 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
             return;
         }
         var bola = lanzarConSuForma ? ConSuForma(desde) : Cubo(desde, recorrido);
+        _enVuelo.Add(bola);
         var proyectil = bola.AddComponent<EnemyProjectile>();
         var cuerpoFisico = bola.GetComponent<Rigidbody>();
         if (cuerpoFisico != null)
@@ -180,9 +186,7 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
         var bola = Instantiate(prefabDevolvible, desde, Quaternion.LookRotation(recorrido));
         var proyectil = bola.GetComponentInChildren<EnemyProjectile>();
         if (proyectil == null) { Destroy(bola); return; }
-        _bola = bola;
-        _proyectil = proyectil;
-        _devuelta = false;
+        _enVuelo.Add(bola);
         // El regalo, dentro de la bola: se ve qué es lo que hay que devolver.
         if (lanzarConSuForma)
         {
@@ -203,23 +207,14 @@ public sealed class RegaloQueSeLanza : MonoBehaviour
         var cuerpoFisico = proyectil.GetComponent<Rigidbody>();
         if (cuerpoFisico != null) cuerpoFisico.isKinematic = false;
         proyectil.AsignarLanzador(destino != null ? destino : gameObject);
+        if (destino != null) proyectil.FijarObjetivoDeDevolucion(destino.transform);
         proyectil.SetSpeed(distancia / segundosDeVuelo);
         proyectil.Initialize(recorrido, dano);
     }
 
-    /// <summary>Devuelta (la defensa apaga su proyectil y la lleva ella) y ya no está: avisa una vez.</summary>
-    private void VigilarLaBola()
-    {
-        if (!_devuelta && _proyectil != null && !_proyectil.enabled) _devuelta = true;
-        if (_bola != null) return;
-        _proyectil = null;
-        if (!_devuelta) return;
-        _devuelta = false;
-        alDevolverlo.Invoke();
-    }
-
     private void SeguirAlJugador()
     {
+        if (sitio != null || anticipacion <= 0f) return;
         var cuerpo = ControlDelJugador.CuerpoDelJugador;
         if (cuerpo == null || Time.deltaTime <= 0f) return;
         Vector3 p = cuerpo.transform.position;

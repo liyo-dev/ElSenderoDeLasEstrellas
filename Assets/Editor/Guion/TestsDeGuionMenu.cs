@@ -7,7 +7,7 @@ using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 
 /// Lanza los tests EditMode del guion y deja el resultado en «Guiones/_ordenes/tests_guion.md», para
-/// poder pedirlos desde el buzón («menu El Sendero/Cinemáticas/Tests del guion») sin tocar el Test Runner.
+/// poder pedirlos desde el buzón con «tests-guion» sin tocar el Test Runner.
 public static class TestsDeGuionMenu
 {
     private static readonly string[] Clases =
@@ -17,7 +17,6 @@ public static class TestsDeGuionMenu
 
     private static readonly string Salida = Path.Combine("Guiones", "_ordenes", "tests_guion.md");
 
-    [MenuItem("El Sendero/Cinemáticas/Tests del guion")]
     public static void Lanzar()
     {
         var api = ScriptableObject.CreateInstance<TestRunnerApi>();

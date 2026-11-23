@@ -1,0 +1,46 @@
+GUION Cap3_02b_LaVentanaDeCandela
+ESCENA MainWorld
+ZONA CasaDelFarol 241 -519 10
+SECUENCIA Assets/_SEQUENCES/SEQ_Cap3_02b_LaVentanaDeCandela.asset
+TEXTO subtitulo
+RITMO entre_frases=0.25 mismo_hablante=0.18
+
+REPARTO
+will     Player       nombre=CHAR_WILL color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+candela  NPC_Candela  nombre=CHAR_CANDELA color=E7C9A0 prefab=Assets/_NPCs/AldeaDelMar/Candela.prefab
+
+PUNTOS
+p_will        CandelaVentana_Will
+p_candela     CandelaVentana_Candela
+cam_fuera     CandelaVentana_CamaraExterior
+cam_dentro    CandelaVentana_CamaraInterior
+mira_candela  CandelaVentana_MiraCandela
+mira_will     CandelaVentana_MiraWill
+
+HILO
+@apertura
+will en p_will mirando p_candela
+& candela en p_candela mirando p_will
+& efecto HojasConBisagraBeat grupo="Casa del farol" abrir=false segundos=0
+plano fijo desde=cam_fuera mira=mira_candela altura=0 altura_foco=0 lente=43 suave=0
+espera 0.25
+& candela gesto Opening01_Begin
+& efecto HojasConBisagraBeat grupo="Casa del farol" abrir=true segundos=0.65
+espera 0.8
+candela dice DLG_CAP3_CANDELA_01 cara=triste mira=will gesto=Talk01
+
+@la_pista
+plano fijo desde=cam_dentro mira=mira_will altura=0 altura_foco=0 lente=39 suave=0 interior=si
+will dice DLG_CAP3_CANDELA_02 mira=candela gesto=Talk01
+plano fijo desde=cam_fuera mira=mira_candela altura=0 altura_foco=0 lente=38 suave=0
+candela dice DLG_CAP3_CANDELA_03 mira=will
+candela dice DLG_CAP3_CANDELA_04 cara=preocupado mira=will
+candela dice DLG_CAP3_CANDELA_05 cara=preocupado mira=will
+candela dice DLG_CAP3_CANDELA_06 mira=will
+
+@despedida
+plano fijo desde=cam_dentro mira=mira_will altura=0 altura_foco=0 lente=39 suave=0 interior=si
+will dice DLG_CAP3_CANDELA_07 cara=decidido mira=candela gesto=HeadNod01
+plano fijo desde=cam_fuera mira=mira_candela altura=0 altura_foco=0 lente=38 suave=0
+candela dice DLG_CAP3_CANDELA_08 mira=will
+espera 0.3

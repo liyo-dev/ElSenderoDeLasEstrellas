@@ -5283,9 +5283,9 @@ Una sola ventana para ver y tocar lo que ya está rodado. Menú **Liyodev ▸ Di
 |---|---|---|
 | `DirectorWindow` | `Packages/com.liyodev.cinematics/Editor/DirectorWindow.cs` | Lista de cinemáticas, visor con play, tira de planos y la botonera |
 | Puerto | `Editor/ICinematicsEditorBridge.cs` (`CinematicsEditorServices`) | Lo único que la mesa sabe del proyecto: lista, detalle, voces y acciones. Se auto-descubre |
-| Enchufe del juego | `Assets/ElSendero/Connections/Cinematics/Editor/SenderoCinematicsBridge.cs` | Contesta con los `GuionHorneado`, el `informe.md`, los textos y las voces, y hace hornear / taller / página anotable |
+| Enchufe del juego | `Assets/ElSendero/Connections/Cinematics/Editor/SenderoCinematicsBridge.cs` | Contesta con los `GuionHorneado`, el `informe.md`, los textos y las voces, y permite actualizar la cinemática y exportar el guion y el storyboard |
 | Voces del flipbook | `Editor/EditorAudioPreview.cs` | Suena un clip en el Editor con `UnityEditor.AudioUtil` (API interna: si falta, silencio y nada roto) |
-| Comprobador | `Editor/CinematicsKitQa.cs` · *Liyodev ▸ Director ▸ Herramientas ▸ Comprobar el kit* | Que el paquete no nombre al grafo ni a El Sendero, y cuántas cinemáticas ve |
+| Comprobador | `Editor/CinematicsKitQa.cs` · orden interna `comprobar-kit-director` | Que el paquete no nombre al grafo ni a El Sendero, y cuántas cinemáticas ve |
 
 **Independencia:** el paquete no referencia `Liyodev.NarrativeGraph` ni un solo tipo del juego; todo
 entra por el puerto. Es la regla 1 del plan, y la comprueba el comprobador.
@@ -5298,8 +5298,8 @@ del archivo (Al día / Texto cambiado / Sin hornear) y los errores y avisos del 
 como mucho cinco: `001.png`, `001_02.png`…) a su duración real, con las bandas de cine y el subtítulo de
 la frase que toca. Las **voces** suenan por el canal de previz del Editor y la **música y los SFX** por el
 segundo canal (`AudioUtil.PlayClip`), resolviendo el clip de cada `SfxBeat` y la música de
-`AudioGraphProfile`; si el Editor no tiene ese segundo canal, el animatic va solo con voces. La barra de
-tiempo lleva los planos y las frases, y se arrastra.
+`AudioGraphProfile`. Con un solo canal, la voz tiene prioridad y la música retoma su posición cuando acaba.
+La mezcla completa se oye en Play. La barra de tiempo lleva los planos y las frases, y se puede pulsar o arrastrar.
 
 **La pizarra:** sobre el fotograma se elige el elemento (quien sale, quien habla aunque sea fuera de
 escena, o la cámara), se escribe una nota y se **dibuja** con el lápiz. Todo se guarda en el proyecto, en
@@ -5314,40 +5314,20 @@ así que no sale el prólogo encima; al salir de Play se restaura el arranque. `
 haría el grafo; si ya hay una cinemática en marcha no lanza otra, y si falta la secuencia o la escena, lo
 dice. Empieza por el segundo del timeline (`desde`, vía `SequencePlayer.EmpezarEnOverride` en `GuionBeat`).
 
-**Las puertas:** en la fila de usuario, **Ver en Unity**, Ver el guion, Página anotable, Storyboard y
-Aplicar correcciones; hornear y el taller de rodaje quedan en el desplegable **Herramientas** (son
-herramientas de autor, no del que dirige). **Nueva cinemática…** abre una ventanita (nombre y escena,
-sacadas del proyecto) y escribe el esqueleto del `.guion.txt` listo para escribir y hornear.
+**La Mesa del Director** reúne la revisión, la reproducción, las notas y los encargos. **Guion**
+abre el texto que se está usando. **Acciones** permite actualizar la cinemática y exportar el guion
+o un storyboard detallado en ZIP. El HTML del storyboard muestra los fotogramas de cada plano con
+sus tiempos, notas del horneado y diálogos. Se puede abrir cada imagen a tamaño completo. La barra de
+tiempo, el dibujo y la revisión se usan en Unity. **Nueva cinemática…** está en la lista general.
 
-**Notas en el timeline:** pinchar un clip y escribir una nota la clava a **su segundo** y a su elemento
-(actor, marca o cámara). Se guarda en la misma pizarra del proyecto, sale como marca blanca en la pista y
-en la lista de notas del plano, y «Aplicar correcciones» la manda por el mismo circuito. Así el timeline
-no es un editor de curvas: es una pizarra por instante que se complementa con la del fotograma.
-
-**De la nota al horno (el circuito cerrado):** la página del storyboard **no edita**: anota. Su botón
-**Guardar correcciones** deja `correcciones-<guion>.json`. En Unity, **Liyodev ▸ Director ▸ Aplicar
-correcciones del storyboard…** (o la orden `revisiones <fichero>` del buzón) lee ese fichero y, nota por
-nota, hace lo que sabe traducir: si la nota es de la **cámara** y dice `alejar/abrir/atrás` baja el
-`lente` 6 (abre el plano) y si dice `acercar/cerrar/primer plano` lo sube 8; escribe ese `lente=` en **la
-línea exacta del plano** (`GuionTextoEditable`, conservando el resto de la línea), rehornea con
-storyboard, regenera la página y avisa a la mesa para que repinte lista y timeline. Probado el 16 nov
-2026 con la nota real de Raúl en `Cap1_PerasEldran` P01: `L38: lente 24 → 18`, un solo cambio en el
-`.guion.txt`, horneado de 34,8 s sin errores y página regenerada.
-
-**Lo que no se sabe traducir no se tira: va de encargo a la IA.** Cada nota que no es un ajuste de
-`lente` (una cámara mal colocada, un carro que no sale, un gesto que falta) se guarda con su contexto en
-`Guiones/_revisiones/encargos-<slug>.json`, y en su vista para leerla entera —panel, elemento, pedido,
-línea del guion y fotograma— `encargos-<slug>.md`. La mesa lo enseña en la lista (`IA · N`) y en el
-botón **Encargos de la IA (N)** de la botonera. Una sesión de IA los lee por el buzón
-(`encargos <guion>`), hace el cambio donde toque —el guion, el previz o el código que lo pida—,
-rehornea y los cierra con `revisiones-hechas <guion>` (o solo algunos planos:
-`revisiones-hechas <guion> P06`): eso los apunta en `aplicadas-<slug>.json`, los borra de la cola y de
-la pizarra, y una nota no se puede aplicar dos veces. Si la cola queda a cero, sus dos ficheros
-desaparecen. La foto de la página es el **último fotograma** del animatic: enseña cómo acaba el plano,
-no cómo empieza. Probado el 17 nov 2026 con las dos notas reales de Raúl en `Cap3_03_ElCarro`: la P06
-(`conjunto will c1 c2`, que salía dentro de un tronco) pasa a `dos c1 c2`; la P02 pide el carro y el
-storyboard lo pone detrás de quien tira (`CargaArrastrada.PoseDetrasDe`); las dos se cierran y volver a
-mandar el mismo fichero responde «2 ya aplicada(s) antes».
+**Notas y encargos:** la nota se ancla al segundo y al elemento elegidos. **Pasar las notas a encargos**
+guarda las que quedan por resolver en `Guiones/_revisiones/encargos-<slug>.json`, con su vista en Markdown.
+**Pedir propuesta a la IA** prepara cambios para revisar y aplicar en el chat. Un encargo se cierra si la
+propuesta modifica el guion, se hornea y se guarda correctamente, y lo identifica por su clave. Una
+propuesta antigua puede identificarlo por plano si solo hay un encargo en él. Las correcciones hechas
+fuera del asistente se pueden cerrar individualmente con **Marcar como resuelto**, o por el buzón con
+`revisiones-hechas <guion> <clave>`. El cierre se guarda en `aplicadas-<slug>.json`, retira la nota
+de la pizarra y actualiza el contador. El buzón conserva la importación de revisiones JSON antiguas.
 
 **El timeline (retirado de la Mesa en INC-1291; las pistas siguen en el puente para el sonido del animatic):** una fila por *cosa*, no por detalle — **Cámara** (un clip por
 plano), **Voz · \<personaje\>** (frases y voces fuera de escena), **Movimiento · \<personaje\>** (tramos de

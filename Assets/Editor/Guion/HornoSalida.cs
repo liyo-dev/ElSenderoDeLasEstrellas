@@ -872,11 +872,14 @@ internal sealed partial class Horno
                 if (cuadro == 0)
                 {
                     var lineas = asset.lineas.Where(l => l.t1 > p.t0 && l.t0 < p.t1)
-                        .Select(l => $"<b>{_actores.Values.FirstOrDefault(x => x.id == l.actor)?.alias}</b>: {System.Security.SecurityElement.Escape((TextoDe(l.clave) ?? l.clave).Replace("\n", " "))}");
-                    html.Append($"<div style='width:480px'><img src='{archivo}' style='width:480px'><div><b>{n}</b> · {Tiempo(p.t0)} · {p.t1 - p.t0:0.0} s · {System.Security.SecurityElement.Escape(p.descripcion)}</div>" +
-                                $"<div style='font-size:12px;color:#8ab'>{System.Security.SecurityElement.Escape(NotasDePlano.TryGetValue(p.t0, out var nota) ? nota : "")}</div>" +
-                                $"<div style='font-size:13px;color:#bbb'>{string.Join("<br>", lineas)}</div></div>\n");
+                        .Select(l => $"<b>{Escapar(_actores.Values.FirstOrDefault(x => x.id == l.actor)?.alias)}</b>: {Escapar((TextoDe(l.clave) ?? l.clave).Replace("\n", " "))}");
+                    html.Append($"<section style='width:480px'><h2 style='font-size:16px'>P{n:00} · {Tiempo(p.t0)} – {Tiempo(p.t1)} · {Escapar(p.descripcion)}</h2>" +
+                                $"<p style='font-size:12px;color:#8ab'>{Escapar(NotasDePlano.TryGetValue(p.t0, out var nota) ? nota : "")}</p>" +
+                                $"<p style='font-size:13px;color:#ccc'>{string.Join("<br>", lineas)}</p>");
                 }
+                html.Append($"<figure style='display:inline-block;width:48%;margin:0 1% 8px 0'><a href='{archivo}'><img src='{archivo}' style='width:100%' alt='Plano {n}, fotograma {cuadro + 1}'></a>" +
+                            $"<figcaption>{Tiempo(t)}</figcaption></figure>\n");
+                if (cuadro == cuantos - 1) html.Append("</section>\n");
                 }
             }
             UnityEngine.Object.DestroyImmediate(png);
@@ -898,7 +901,9 @@ internal sealed partial class Horno
             UnityEngine.Object.DestroyImmediate(rt);
         }
         html.Append("</div>");
-        try { File.WriteAllText(Path.Combine(carpeta, "storyboard.html"), html.ToString()); } catch { }
+        File.WriteAllText(Path.Combine(carpeta, "storyboard.html"), html.ToString());
+
+        static string Escapar(string texto) => System.Security.SecurityElement.Escape(texto ?? string.Empty);
     }
 
     /// ¿El prefab se ve tal cual? Los aldeanos modulares montan su cuerpo al jugar y en el

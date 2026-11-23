@@ -257,11 +257,13 @@ public class SequencePlayer : CinematicSequencerBase
     /// El clip que suena con ese id de música (regla de secuencia del perfil), o null.
     public AudioClip ClipDeMusica(string musicId) => ResolveAudioProfile()?.GetSequenceRule(musicId)?.music;
 
-    public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = 0f, float desdeSegundo = -1f)
+    public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = 0f,
+        float desdeSegundo = -1f, bool corteInmediato = false)
     {
         var regla = ResolveAudioProfile()?.GetSequenceRule(musicId);
         if (regla?.music != null && AudioService.Instance != null)
-            AudioService.Instance.PlayMusic(regla.music, fadeIn > 0f ? fadeIn : regla.fadeIn, continuarDondeIba, desdeSegundo);
+            AudioService.Instance.PlayMusic(regla.music, corteInmediato ? 0f : fadeIn > 0f ? fadeIn : regla.fadeIn,
+                continuarDondeIba, desdeSegundo);
         else PlaySequenceMusic(musicId);
     }
 
@@ -486,10 +488,10 @@ public class SequencePlayer : CinematicSequencerBase
         {
             ApplyOpeningShotIfDescribed();
 
-            PrepararBeats();
-
             if (!string.IsNullOrEmpty(_definition.musicId))
                 PlaySequenceMusic(_definition.musicId);
+
+            PrepararBeats();
         });
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

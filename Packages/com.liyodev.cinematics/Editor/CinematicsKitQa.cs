@@ -8,7 +8,7 @@ namespace Liyodev.Cinematics
 {
     /// Comprueba que el paquete sigue siendo independiente y que el proyecto contesta: el Director no
     /// puede nombrar al grafo, ni a ningún ensamblado del juego, ni a sus datos. Se puede lanzar desde
-    /// el buzón de órdenes (`menu Liyodev/Director/Herramientas/Comprobar el kit`).
+    /// el buzón de órdenes con «comprobar-kit-director».
     public static class CinematicsKitQa
     {
         private static readonly string[] Prohibidas =
@@ -23,7 +23,6 @@ namespace Liyodev.Cinematics
             "GuionHorneado",
         };
 
-        [MenuItem("Liyodev/Director/Herramientas/Comprobar el kit", false, 100)]
         public static void Comprobar()
         {
             var problemas = new List<string>();

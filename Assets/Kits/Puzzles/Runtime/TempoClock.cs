@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Kits.Puzzles
 {
@@ -18,6 +19,7 @@ namespace Kits.Puzzles
     public sealed class TempoClock : MonoBehaviour
     {
         public static TempoClock Current { get; private set; }
+        public static Func<AudioMixerGroup> CueOutputGroup;
 
         [Header("Ritmo")]
         [Tooltip("Pulsos por minuto del tramo. Marca lo rápido que late: a 120, un tiempo cada 0,5 s y un compás 4/4 cada 2 s.")]
@@ -36,6 +38,8 @@ namespace Kits.Puzzles
         [SerializeField] private AudioSource source;
         [Tooltip("Segundos que se suman al retardo de la salida de audio (el del búfer se mide solo). Positivo: lo que va a la música llega más tarde.")]
         [SerializeField, Range(-0.2f, 0.3f)] private float extraLatency;
+        [Tooltip("Programa la canción y los impactos de la partitura en el mismo reloj de audio.")]
+        [SerializeField] private bool scheduleCueAudio;
 
         /// <summary>Un tiempo: (compás, tiempo dentro del compás 0..n-1).</summary>
         public event Action<int, int> Beat;
@@ -91,12 +95,22 @@ namespace Kits.Puzzles
         private float _latencia;
         private float _segundoPendiente = -1f;
         private bool _pausadaPorElJuego;
+        private const float MargenDeProgramacion = 0.16f;
+        private const int VocesDeAudio = 12;
+        private AudioSource[] _vocesDeImpacto;
+        private double[] _finDeLasVoces;
+        private double _origenDsp;
+        private double _pausaDsp;
+        private bool _audioProgramado;
+        public bool SchedulesCueAudio => scheduleCueAudio && FollowsSong && score.Clip != null;
+        public int CueAudioRevision { get; private set; }
 
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics()
         {
             Current = null;
+            CueOutputGroup = null;
         }
 #endif
 
@@ -118,6 +132,7 @@ namespace Kits.Puzzles
         {
             if (Current == this) Current = null;
             IsRunning = false;
+            CancelarImpactos();
             if (source != null) source.Stop();
         }
 
@@ -148,6 +163,8 @@ namespace Kits.Puzzles
         {
             if (!FollowsSong) return;
             seconds = Mathf.Max(0f, seconds);
+            CancelarImpactos();
+            _latencia = MedirLatencia();
             var clip = score.Clip;
             if (clip != null)
             {
@@ -159,7 +176,8 @@ namespace Kits.Puzzles
                 }
                 source.clip = clip;
                 source.loop = false;
-                if (source.isPlaying) source.Stop();
+                source.Stop();
+                _audioProgramado = false;
                 _segundoPendiente = seconds;
                 // Sin cargar del todo, la fuente ignora el segundo pedido: se espera a que esté.
                 if (clip.loadState != AudioDataLoadState.Loaded) clip.LoadAudioData();
@@ -168,7 +186,6 @@ namespace Kits.Puzzles
             _ultimaMuestra = -1;
             _segundoDeLaMuestra = seconds;
             _realDeLaMuestra = Time.unscaledTimeAsDouble;
-            _latencia = MedirLatencia();
             _origenSinCancion = Time.timeAsDouble - seconds;
             _pausadaPorElJuego = false;
             SongTime = clip != null ? seconds - _latencia : seconds;
@@ -184,6 +201,9 @@ namespace Kits.Puzzles
         public void StopPulse()
         {
             IsRunning = false;
+            CancelarImpactos();
+            if (_audioProgramado && source != null) source.Stop();
+            _audioProgramado = false;
             if (source != null && source.isPlaying) source.Pause();
         }
 
@@ -229,11 +249,72 @@ namespace Kits.Puzzles
         private void TocarDesde(float seconds)
         {
             _segundoPendiente = -1f;
-            source.time = Mathf.Min(seconds, Mathf.Max(0f, source.clip.length - 0.01f));
-            source.Play();
+            float comienzo = Mathf.Min(seconds, Mathf.Max(0f, source.clip.length - 0.01f));
+            if (SchedulesCueAudio)
+            {
+                PrepararVocesDeImpacto();
+                int muestraInicial = Mathf.RoundToInt(comienzo * source.clip.frequency);
+                source.timeSamples = muestraInicial;
+                double inicioDsp = AudioSettings.dspTime + MargenDeProgramacion;
+                _origenDsp = inicioDsp - (double)muestraInicial / source.clip.frequency;
+                _audioProgramado = true;
+                source.PlayScheduled(inicioDsp);
+            }
+            else
+            {
+                source.time = comienzo;
+                source.Play();
+            }
             _ultimaMuestra = -1;
             _segundoDeLaMuestra = seconds;
             _realDeLaMuestra = Time.unscaledTimeAsDouble;
+        }
+
+        private void PrepararVocesDeImpacto()
+        {
+            if (_vocesDeImpacto != null) return;
+            _vocesDeImpacto = new AudioSource[VocesDeAudio];
+            _finDeLasVoces = new double[VocesDeAudio];
+            var grupo = CueOutputGroup?.Invoke();
+            for (int i = 0; i < _vocesDeImpacto.Length; i++)
+            {
+                var voz = gameObject.AddComponent<AudioSource>();
+                voz.playOnAwake = false;
+                voz.spatialBlend = 0f;
+                voz.outputAudioMixerGroup = grupo;
+                _vocesDeImpacto[i] = voz;
+            }
+        }
+
+        private void CancelarImpactos()
+        {
+            CueAudioRevision++;
+            for (int i = 0; _vocesDeImpacto != null && i < _vocesDeImpacto.Length; i++)
+            {
+                _vocesDeImpacto[i].Stop();
+                _finDeLasVoces[i] = 0d;
+            }
+        }
+
+        /// <summary>Reserva un impacto próximo en la línea de muestras de la canción.</summary>
+        public bool TryScheduleCue(AudioClip clip, float segundo, float volumen)
+        {
+            if (!_audioProgramado || _pausadaPorElJuego || Time.timeScale <= 0f || clip == null) return false;
+            double ahora = AudioSettings.dspTime;
+            double inicio = _origenDsp + segundo;
+            if (inicio - ahora > MargenDeProgramacion) return false;
+            for (int i = 0; i < _vocesDeImpacto.Length; i++)
+            {
+                if (_finDeLasVoces[i] > ahora) continue;
+                var voz = _vocesDeImpacto[i];
+                voz.clip = clip;
+                voz.volume = volumen;
+                inicio = Math.Max(inicio, ahora);
+                voz.PlayScheduled(inicio);
+                _finDeLasVoces[i] = inicio + clip.length;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>Lo que tarda en oírse una muestra: los búferes de la mezcla más el ajuste del Inspector.</summary>
@@ -253,12 +334,24 @@ namespace Kits.Puzzles
             {
                 if (juegoParado)
                 {
-                    if (source.isPlaying) { source.Pause(); _pausadaPorElJuego = true; }
+                    if (!_pausadaPorElJuego && (source.isPlaying || _audioProgramado))
+                    {
+                        _pausaDsp = AudioSettings.dspTime;
+                        source.Pause();
+                        _pausadaPorElJuego = true;
+                        CancelarImpactos();
+                    }
                     return;
                 }
                 if (_pausadaPorElJuego)
                 {
-                    source.UnPause();
+                    if (_audioProgramado)
+                    {
+                        double segundo = Math.Max(_segundoDeLaMuestra, _pausaDsp - _origenDsp);
+                        source.Stop();
+                        TocarDesde((float)segundo);
+                    }
+                    else source.UnPause();
                     _pausadaPorElJuego = false;
                     _ultimaMuestra = -1;
                 }
@@ -273,7 +366,12 @@ namespace Kits.Puzzles
                 TocarDesde(_segundoPendiente);
                 return;
             }
-            if (source != null && source.clip != null && source.isPlaying)
+            if (_audioProgramado)
+            {
+                double transcurrido = AudioSettings.dspTime - _origenDsp;
+                SongTime = Math.Max(_segundoDeLaMuestra, transcurrido) - _latencia;
+            }
+            else if (source != null && source.clip != null && source.isPlaying)
             {
                 int muestra = source.timeSamples;
                 if (muestra != _ultimaMuestra)

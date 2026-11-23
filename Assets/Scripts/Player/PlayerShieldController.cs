@@ -366,8 +366,8 @@ public class PlayerShieldController : MonoBehaviour
         {
             if (!(proyectiles[i] is IDevolvible bola) || bola.TipoDeAmenaza != TipoDeAmenaza.Devolvible ||
                 TiempoHastaElPecho(bola) > segundosDeAtrapado) continue;
-            Transform objetivo = null;
-            if (_magicCaster != null) _magicCaster.TryGetTarget(out objetivo);
+            Transform objetivo = bola is EnemyProjectile proyectil ? proyectil.ObjetivoFijoDeDevolucion : null;
+            if (objetivo == null && _magicCaster != null) _magicCaster.TryGetTarget(out objetivo);
             if (objetivo == null && bola.Lanzador != null) objetivo = bola.Lanzador.transform;
             Vector3 direccion = -bola.VelocidadDeAmenaza;
             Vector3 punto = bola.PosicionDeAmenaza;

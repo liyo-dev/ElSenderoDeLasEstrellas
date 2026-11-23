@@ -45,7 +45,6 @@ public class TallerDeRodajeWindow : EditorWindow
     private bool _ocupado;
     private string _mensaje;
 
-    [MenuItem("El Sendero/Cinemáticas/Guion/Taller de rodaje", false, 19)]
     public static void Abrir()
     {
         var ventana = GetWindow<TallerDeRodajeWindow>("Taller de rodaje");

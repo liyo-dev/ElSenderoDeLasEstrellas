@@ -39,6 +39,9 @@ public static class EnchufeDePuzzlesDelJuego
     private static void GolpeDeLoQueCae(Vector3 centro, float radio, float dano, float alto)
         => DanoEnZona.GolpearEnCilindro(centro, radio, alto > 0f ? alto : 2.2f, 0.3f, dano, 5f);
 
+    private static void GolpeRectangular(Vector3 centro, Vector2 tamano, float dano, float alto)
+        => DanoEnZona.GolpearEnRectangulo(centro, tamano, alto > 0f ? alto : 3f, 0.3f, dano);
+
     private static Transform CuerpoDeQuienVaAlMando() => ControlDelJugador.CuerpoDelJugador?.transform;
 
     private static Transform RaizDelJugador(Collider col)
@@ -92,7 +95,9 @@ public static class EnchufeDePuzzlesDelJuego
         WeightPlate.ResolveWeightBody = CuerpoQuePesa;
         PulseTide.IsTarget = EsElJugador;
         CueDrop.Strike = GolpeDeLoQueCae;
+        CueDrop.StrikeRectangle = GolpeRectangular;
         CueDrop.PlaySound = SonidoDeLoQueCae;
+        TempoClock.CueOutputGroup = () => AudioService.Instance?.sfxGroup;
         CueDrop.TargetPosition = PosicionDelJugador;
         FollowSpot.Target = PosicionDelJugador;
         BeatSway.Rider = CuerpoDeQuienVaAlMando;

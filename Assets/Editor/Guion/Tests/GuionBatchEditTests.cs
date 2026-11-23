@@ -22,6 +22,25 @@ espera 1
 ";
 
     [Test]
+    public void CerrarPorClaveDistingueLosEncargosDelMismoPlano()
+    {
+        var pendientes = new System.Collections.Generic.List<Liyodev.Cinematics.CinemaEncargo>
+        {
+            new() { panel = "P18", clave = "p18-encuadre" },
+            new() { panel = "P18", clave = "p18-manchon" },
+        };
+        var propuesta = new GuionBatchEdit.Resultado();
+        propuesta.Cerrar.Add("p18-manchon");
+
+        Assert.IsTrue(GuionBatchEdit.ResolverClavesDeEncargos(pendientes, propuesta));
+        CollectionAssert.AreEqual(new[] { "p18-manchon" }, propuesta.Cerrar);
+
+        propuesta.Cerrar[0] = "P18";
+        Assert.IsFalse(GuionBatchEdit.ResolverClavesDeEncargos(pendientes, propuesta));
+        Assert.That(propuesta.Errors[0], Does.Contain("tiene 2 encargos"));
+    }
+
+    [Test]
     public void SetOptionsConservaComentarioYOtrasOpciones()
     {
         string json = "{\"ops\":[{\"op\":\"set_options\",\"line\":12,\"match\":\"plano medio\"," +

@@ -28,7 +28,11 @@ namespace Liyodev.Cinematics
 
         public bool Busy => _view != null && _view.Busy;
 
-        public void SendQuickAction() => _view?.SendQuickAction();
+        public void SendQuickAction()
+        {
+            if (!AssistantSettings.IsReady) { OpenConnect(); return; }
+            _view?.SendQuickAction();
+        }
 
         public string ConnectLabel => AssistantSettings.IsReady
             ? "IA: " + AssistantSettings.Name(AssistantSettings.Current)

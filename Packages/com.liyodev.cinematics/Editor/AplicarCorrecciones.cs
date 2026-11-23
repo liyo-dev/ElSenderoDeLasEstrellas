@@ -11,8 +11,6 @@ namespace Liyodev.Cinematics
     /// página. El texto sigue siendo la única verdad; esto solo ahorra el viaje de copiar y pegar.
     public static class AplicarCorrecciones
     {
-        private const string PrefCarpeta = "Director.CarpetaDeCorrecciones";
-
         [Serializable]
         private class LoteDeCorrecciones
         {
@@ -20,24 +18,7 @@ namespace Liyodev.Cinematics
             public CinemaNota[] anotaciones;
         }
 
-        [MenuItem("Liyodev/Director/Aplicar correcciones del storyboard…", false, 2)]
-        public static void Abrir()
-        {
-            string raiz = Directory.GetParent(Application.dataPath).FullName;
-            string carpeta = EditorPrefs.GetString(PrefCarpeta, Path.Combine(raiz, "Guiones/_revisiones"));
-            if (!Directory.Exists(carpeta)) carpeta = raiz;
-
-            string ruta = EditorUtility.OpenFilePanel("Correcciones del storyboard", carpeta, "json");
-            if (string.IsNullOrEmpty(ruta)) return;
-            EditorPrefs.SetString(PrefCarpeta, Path.GetDirectoryName(ruta));
-
-            var puente = CinematicsEditorServices.Bridge;
-            string resumen = AplicarRuta(ruta);
-            if (puente != null) puente.Avisar("Director · correcciones", resumen);
-            else EditorUtility.DisplayDialog("Director", resumen, "Aceptar");
-        }
-
-        /// <summary>El trabajo, sin ventanas: vale para el menú y para el buzón de órdenes.</summary>
+        /// Importa una revisión antigua por el buzón de órdenes.
         public static string AplicarRuta(string ruta)
         {
             var puente = CinematicsEditorServices.Bridge;

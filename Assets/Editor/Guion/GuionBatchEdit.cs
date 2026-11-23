@@ -87,9 +87,15 @@ public static class GuionBatchEdit
 
         if (string.Equals(nuevo, fuente, StringComparison.Ordinal))
         {
-            CerrarEncargos(actual, resultado);
-            resultado.Applied = true;
-            resultado.Resumen = "Sin cambios de texto; encargos cerrados.";
+            resultado.Errors.Add("La propuesta no produce cambios en el guion. Los encargos siguen pendientes.");
+            resultado.Resumen = "No se aplicó nada.";
+            return resultado;
+        }
+
+        if (resultado.Cerrar.Count > 0 &&
+            !ResolverClavesDeEncargos(SenderoCinematicsBridge.LeerColaDeEncargos(actual.nombre).encargos, resultado))
+        {
+            resultado.Resumen = "No se aplicó nada: revisa los encargos que incluye la propuesta.";
             return resultado;
         }
 
@@ -149,7 +155,11 @@ public static class GuionBatchEdit
         }
         CerrarEscenasNuevas(abiertasAntes);
 
-        CerrarEncargos(actual, resultado);
+        if (resultado.Cerrar.Count > 0)
+        {
+            string encargos = string.Join(" ", resultado.Cerrar);
+            resultado.Done.Add(SenderoCinematicsBridge.MarcarRevisionesHechas(actual.nombre + " " + encargos));
+        }
         resultado.Applied = true;
         resultado.Resumen = $"Aplicado y rehorneado · {resultado.Diff.Count} cambio(s) en el horneado.";
         CinematicsEditorServices.AvisarCambio();
@@ -337,7 +347,6 @@ public static class GuionBatchEdit
                         break;
                     }
                     resultado.Cerrar.Add(op.task.Trim());
-                    resultado.Done.Add($"encargo {op.task.Trim()}: cerrado al aplicar");
                     break;
                 }
 
@@ -515,20 +524,27 @@ public static class GuionBatchEdit
             "ultimo-antes-de-ia-" + nombre + ".guion.txt");
     }
 
-    private static void CerrarEncargos(GuionHorneado actual, Resultado resultado)
+    internal static bool ResolverClavesDeEncargos(List<CinemaEncargo> pendientes, Resultado resultado)
     {
-        if (resultado.Cerrar.Count == 0) return;
-
-        bool todas = resultado.Cerrar.Any(t =>
-            string.IsNullOrWhiteSpace(t) || t.Equals("all", StringComparison.OrdinalIgnoreCase));
-        if (todas)
+        for (int i = 0; i < resultado.Cerrar.Count; i++)
         {
-            resultado.Done.Add(SenderoCinematicsBridge.MarcarRevisionesHechas(actual.nombre));
-            return;
-        }
+            string pedido = resultado.Cerrar[i];
+            var exacto = pendientes.Find(e => string.Equals(e.clave, pedido, StringComparison.OrdinalIgnoreCase));
+            if (exacto != null)
+            {
+                resultado.Cerrar[i] = exacto.clave;
+                continue;
+            }
 
-        foreach (string tarea in resultado.Cerrar.Distinct())
-            resultado.Done.Add(SenderoCinematicsBridge.MarcarRevisionesHechas(actual.nombre + " " + tarea));
+            // Las propuestas antiguas pueden citar el plano si identifica un solo encargo.
+            var delPlano = pendientes.FindAll(e => string.Equals(e.panel, pedido, StringComparison.OrdinalIgnoreCase));
+            if (delPlano.Count == 1) resultado.Cerrar[i] = delPlano[0].clave;
+            else if (delPlano.Count > 1)
+                resultado.Errors.Add($"El plano {pedido} tiene {delPlano.Count} encargos. Indica la clave de cada uno.");
+            else
+                resultado.Errors.Add($"«{pedido}» no identifica un encargo pendiente.");
+        }
+        return resultado.Errors.Count == 0;
     }
 }
 #endif

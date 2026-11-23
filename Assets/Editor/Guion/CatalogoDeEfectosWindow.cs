@@ -18,7 +18,6 @@ public class CatalogoDeEfectosWindow : EditorWindow
     private Type _seleccionado;
     private string _linea = string.Empty;
 
-    [MenuItem("El Sendero/Cinemáticas/Guion/Catálogo de efectos", false, 21)]
     public static void Abrir()
     {
         var ventana = GetWindow<CatalogoDeEfectosWindow>("Catálogo de efectos");

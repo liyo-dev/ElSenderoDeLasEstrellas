@@ -438,6 +438,19 @@ public static class OrdenesDelEditor
             }
             case "menu":
                 return EditorApplication.ExecuteMenuItem(resto) ? "menú ejecutado" : "no existe ese menú";
+            case "comprobar-kit-director":
+                Liyodev.Cinematics.CinematicsKitQa.Comprobar();
+                return "comprobación del kit ejecutada";
+            case "tests-guion":
+                TestsDeGuionMenu.Lanzar();
+                return "tests de guion iniciados";
+            case "taller":
+            {
+                var puente = Liyodev.Cinematics.CinematicsEditorServices.Bridge;
+                if (puente == null || resto.Length == 0) return "uso: taller <guion>";
+                puente.AbrirTaller(resto);
+                return "taller abierto";
+            }
             case "revisiones":
             {
                 if (resto.Length == 0) return "falta la ruta del .json de correcciones";
@@ -456,15 +469,6 @@ public static class OrdenesDelEditor
             {
                 if (resto.Length == 0) return "uso: revisiones-hechas <guion|ruta.json> [P01…|clave…]";
                 return SenderoCinematicsBridge.MarcarRevisionesHechas(resto.Trim().Trim('"'));
-            }
-            case "storyboard":            {
-                if (resto.Length == 0) return "falta la ruta del guion horneado";
-                var guion = AssetDatabase.LoadAssetAtPath<GuionHorneado>(resto);
-                if (guion == null)
-                    guion = AssetDatabase.LoadAssetAtPath<GuionHorneado>(
-                        "Assets/_SEQUENCES/Guiones/" + resto + "_Horneado.asset");
-                if (guion == null) return "no encuentro ese guion horneado: " + resto;
-                return StoryboardAnotable.Generar(guion);
             }
             case "play":
                 // Desde el buzón nadie le da el foco al Editor: el juego sigue corriendo en segundo plano.

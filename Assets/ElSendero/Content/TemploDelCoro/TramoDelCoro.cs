@@ -1,18 +1,19 @@
 using Game.NPC;
+using Invector.vCharacterController;
 using Kits.Puzzles;
 using UnityEngine;
 
 /// <summary>
 /// Un tramo del Templo del Coro: se corre con la canción del guardián sonando, y lo que cae, se hunde
 /// o se abre va a sus golpes (lo leen las piezas del kit de la partitura). Detrás viene la sombra a
-/// la velocidad de la canción: pararse es que te alcance. Al fallar (la sombra, el foso o caer
+/// la velocidad de la canción y va hundiendo el suelo. Al fallar (el foso o caer
 /// rendido) se vuelve en el acto al punto de reintento con la canción en su sitio.
 ///
 /// El primer intento empieza donde diga <see cref="PruebaDelJugador"/> (la sala de la afinación, con
 /// la canción desde el principio); los siguientes, desde el último <see cref="puntosDeControl"/>
 /// pasado, con la canción un compás antes de que toque salir de él. El grupo espera quieto hasta
 /// ese segundo y luego hay que mantenerse dentro del recuadro que va con la canción por el suelo: por detrás espera la
-/// sombra (quien se queda atrás, repite) y al borde de delante no se corre más que la canción (lo que
+/// sombra y al borde de delante no se corre más que la canción (lo que
 /// cae está puesto a su paso). Dentro, el sprint va libre. En los <see cref="calderones"/> (lo que
 /// pide pararse: cambiar de personaje, disparar) el recuadro y la sombra se paran unos segundos y
 /// siguen; la canción no para.
@@ -60,7 +61,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [SerializeField, Min(0f)] private float metrosAdelante = 2.0f;
     [Tooltip("Lo mismo, con el recuadro parado (un respiro): margen para cruzar lo que pide el respiro (un hueco con plataformas).")]
     [SerializeField, Min(0f)] private float metrosAdelanteEnRespiro = 12f;
-    [Tooltip("Segundo de la canción desde el que no hay borde por delante del recuadro (un salto largo del final). 0: siempre lo hay.")]
+    [Tooltip("Segundo de la canción en el que se quita el borde delantero para el salto final.")]
     [SerializeField, Min(0f)] private float segundoSinTope;
     [Tooltip("Calderones en orden (X: la Z donde se paran el recuadro y la sombra; Y: los segundos): un respiro para lo que pide pararse, como cambiar de personaje y encender una antorcha. La canción sigue.")]
     [SerializeField] private Vector2[] calderones = System.Array.Empty<Vector2>();
@@ -72,7 +73,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [SerializeField] private float segundoDeArranque;
     [Tooltip("Z en la que empieza el corredor.")]
     [SerializeField] private float zDeArranque;
-    [Tooltip("Metros del recuadro por detrás de donde marca la canción: ahí va la sombra (quien se queda atrás, repite).")]
+    [Tooltip("Metros por detrás de la música donde la sombra empieza a hundir el suelo.")]
     [SerializeField, Min(0f)] private float metrosDeVentaja = 12f;
     [Tooltip("Filas de suelo en orden. Desaparecen al quedar por detrás de la sombra y vuelven al reintentar.")]
     [SerializeField] private Transform[] sueloQueSePierde = System.Array.Empty<Transform>();
@@ -90,16 +91,34 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [Tooltip("Segundos tras un cambio de personaje en los que la sombra no gana terreno.")]
     [SerializeField, Min(0f)] private float graciaDelCambio = 0.8f;
 
+    [Header("Foco de la ruta")]
+    [SerializeField] private FollowSpot focoDeRuta;
+    [SerializeField] private AnimationCurve recorridoLateralDelFoco;
+    [SerializeField] private Vector2[] tramosDelFoco = System.Array.Empty<Vector2>();
+    [SerializeField] private float segundoDeEstrecharElFoco;
+    [SerializeField, Min(0.5f)] private float radioDelFoco = 3.3f;
+    [SerializeField, Min(0.5f)] private float radioDelFocoEstrecho = 2.55f;
+    private float _segundosFueraDelFoco;
+    private float _presionDelFoco;
+
+    [Header("Arena del coro")]
+    [SerializeField] private Transform recintoDelCoro;
+    [Tooltip("Límites en metros del recinto (X: semiancho, Y: semilargo).")]
+    [SerializeField] private Vector2 limitesDelCoro;
+    [Tooltip("Inicio y fin del plano de la arena, en segundos de canción.")]
+    [SerializeField] private Vector2 tramoDelCoro;
+
     [Header("Fin")]
     [SerializeField] private float alturaDelFoso = -5f;
-    [Tooltip("Durante la tralla, la sombra cierra el escenario por detrás. X: inicio del aviso, Y: primera nota, Z: final de la tralla, W: borde trasero del recinto.")]
-    [SerializeField] private Vector4 cierreTrasero;
-    [Tooltip("Segundo de la canción desde el que ya no se falla (el golpe final: el suelo se hunde y se cae al vacío). 0: no hay.")]
-    [SerializeField, Min(0f)] private float segundoSinFallar;
-    [Tooltip("Segundo de la canción en el que se gana sin llegar a la meta (el final de la canción). 0: solo con la meta.")]
-    [SerializeField, Min(0f)] private float segundoDeGanar;
+    [SerializeField] private Transform controlDeLaCoda;
+    [SerializeField] private TenorQueCanta tenorDeLosRegalos;
+    [SerializeField] private RegaloQueSeLanza[] lanzadoresDeRegalos = System.Array.Empty<RegaloQueSeLanza>();
+    [Tooltip("Acento del saludo. Si ya se ha aterrizado en la meta, el saludo espera a este segundo.")]
+    [SerializeField, Min(0f)] private float segundoDelSaludo;
+    [Tooltip("Último segundo para aterrizar al otro lado del salto.")]
+    [SerializeField, Min(0f)] private float segundoLimiteDeLaCoda;
     [SerializeField] private Transform meta;
-    [SerializeField, Min(0.5f)] private float radioDeLaMeta = 3f;
+    [SerializeField, Min(0.5f)] private float semianchoDeLaMeta = 5f;
 
     [Tooltip("Plataformas que aparecen durante el tramo: al reintentar se esconden.")]
     [SerializeField] private PlataformaTemporal[] plataformas;
@@ -120,6 +139,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
     private bool _sinControl;
     private GameObject _cuerpoDelCaster;
     private MagicCaster _caster;
+    private vThirdPersonMotor _motor;
 
     /// <summary>El grupo no se mueve hasta que toca correr (lo suelta <see cref="Actualizar"/>).</summary>
     protected override bool SoltarElControlAlEmpezar => false;
@@ -220,15 +240,21 @@ public sealed class TramoDelCoro : PruebaDelJugador
         Fallada += AlFallar;
         Ganada += AlGanar;
         PartyControlManager.OnActiveCharacterChanged += AlCambiarDePersonaje;
+        PlayerService.OnPlayerRegistered += CachearMotor;
+        CachearMotor(PlayerService.Player);
     }
 
     private void AlCambiarDePersonaje(int _) => _ultimoCambio = Time.time;
+
+    private void CachearMotor(GameObject _) => PlayerService.TryGetComponent(out _motor);
 
     protected override void OnDisable()
     {
         Fallada -= AlFallar;
         Ganada -= AlGanar;
         PartyControlManager.OnActiveCharacterChanged -= AlCambiarDePersonaje;
+        PlayerService.OnPlayerRegistered -= CachearMotor;
+        _motor = null;
         SoltarLaMusica();
         DejarDeCorrer();
         DevolverElHUD();
@@ -257,6 +283,9 @@ public sealed class TramoDelCoro : PruebaDelJugador
     protected override void PrepararIntento()
     {
         if (reloj != null) reloj.StopPulse();
+        foreach (var lanzador in lanzadoresDeRegalos)
+            if (lanzador != null) lanzador.LimpiarRegalosEnVuelo();
+        if (recintoDelCoro != null && recintoDelCoro.gameObject.activeSelf) recintoDelCoro.gameObject.SetActive(false);
         for (int i = 0; plataformas != null && i < plataformas.Length; i++)
             if (plataformas[i] != null) plataformas[i].OcultarYa();
         for (int i = 0; receptores != null && i < receptores.Length; i++)
@@ -285,6 +314,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
         DejarDeCorrer();
         // Segundo en el que hay que salir para pasar por el arranque justo con la canción.
         float desde = salidaDelJugador != null ? salidaDelJugador.position.z : zDeArranque;
+        if (tenorDeLosRegalos != null) tenorDeLosRegalos.PrepararMarcaDelRegalo(desde);
         _segundoDeSoltar = metrosPorSegundo > 0f ? SegundoEnZ(desde) : _segundoDeEsteIntento;
         // La salida cae en el tiempo de la canción más cercano, para contarla al compás.
         _tiempoDeSoltar = -1;
@@ -331,10 +361,6 @@ public sealed class TramoDelCoro : PruebaDelJugador
         if (jugador == null) return;
         float ahora = reloj != null && reloj.IsRunning ? (float)reloj.SongTime : -1f;
 
-        if (segundoDeGanar > 0f && ahora >= segundoDeGanar) { Ganar(); return; }
-        // Pasado el golpe final ya no se falla: se cae al vacío con el suelo.
-        if (segundoSinFallar > 0f && ahora >= segundoSinFallar) return;
-
         if (jugador.position.y < alturaDelFoso) { Fallar(); return; }
 
         if (SaludDelGrupo.EstaCaido(ControlDelJugador.Activo)) { Fallar(); return; }
@@ -350,9 +376,20 @@ public sealed class TramoDelCoro : PruebaDelJugador
             }
         }
 
-        if (meta != null && (jugador.position - meta.position).sqrMagnitude <= radioDeLaMeta * radioDeLaMeta)
+        bool enLaArena = AjustarElRecinto(jugador, ahora);
+        Vector3 posicion = jugador.position;
+        ActualizarFoco(ahora, posicion, dt);
+        if (_corriendo && ahora >= segundoDelSaludo && meta != null && _motor != null && _motor.PisandoSuelo
+            && posicion.z >= meta.position.z && Mathf.Abs(posicion.x - meta.position.x) <= semianchoDeLaMeta
+            && Mathf.Abs(posicion.y - meta.position.y) <= 0.6f)
         {
             Ganar();
+            return;
+        }
+
+        if (segundoLimiteDeLaCoda > 0f && ahora >= segundoLimiteDeLaCoda)
+        {
+            Fallar();
             return;
         }
 
@@ -365,7 +402,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
             float avance = jugador.position.z - _zAntes;
             if (EstaOcupado() && dt > 0f)
                 _cedido += Mathf.Max(0f, metrosPorSegundo * dt - Mathf.Max(0f, avance));
-            if (reloj != null && reloj.IsRunning) AjustarElTope(jugador.position.z, (float)reloj.SongTime);
+            if (ahora >= 0f) AjustarElTope(jugador.position.z, ahora);
         }
         _zAntes = jugador.position.z;
         while (_puntoPasado + 1 < puntosDeControl.Length && puntosDeControl[_puntoPasado + 1] != null
@@ -375,16 +412,87 @@ public sealed class TramoDelCoro : PruebaDelJugador
         if (reloj != null && reloj.IsRunning)
         {
             float z = ColocarLaSombra((float)reloj.SongTime);
-            // Grabando marcas a mano, la sombra no hace repetir.
+            // Al grabar marcas, el suelo se conserva para poder recorrer el escenario.
             if (GrabadorDeMarcas.Grabando || !_corriendo) return;
             ActualizarSuelo(z, ahora);
             float distancia = jugador.position.z - z;
             float distanciaDeAviso = Mathf.Max(0.1f, metrosPorSegundo * SegundosDeAvisoDeSombra);
             float riesgo = 1f - Mathf.Clamp01(distancia / distanciaDeAviso);
-            // El borde se nota al empezar a rezagarse y se aclara en cuanto se recupera terreno.
-            _vineta.alpha = Mathf.MoveTowards(_vineta.alpha, 0.9f * Mathf.Sqrt(riesgo), dt * 2.5f);
-            if (distancia < 0f) Fallar();
+            // La sombra avisa por los bordes. Solo el suelo que cae hace fallar el salto.
+            float intensidad = enLaArena ? 0f : 0.28f;
+            _vineta.alpha = Mathf.MoveTowards(_vineta.alpha, intensidad * Mathf.Sqrt(riesgo), dt * 2.5f);
         }
+    }
+
+    private void ActualizarFoco(float segundo, Vector3 posicion, float dt)
+    {
+        if (focoDeRuta == null || recorridoLateralDelFoco == null || !_corriendo || !EnVentanaDelFoco(segundo))
+        {
+            if (focoDeRuta != null) focoDeRuta.SetStageMark(null);
+            _segundosFueraDelFoco = 0f;
+            _presionDelFoco = Mathf.MoveTowards(_presionDelFoco, 0f, dt);
+            return;
+        }
+
+        float radio = segundo >= segundoDeEstrecharElFoco ? radioDelFocoEstrecho : radioDelFoco;
+        Vector3 marca = new Vector3(recorridoLateralDelFoco.Evaluate(segundo), 0f, CentroDelRecuadro(segundo));
+        focoDeRuta.SetStageMark(marca, radio);
+        Vector3 distancia = posicion - marca;
+        distancia.y = 0f;
+        bool fuera = !GrabadorDeMarcas.Grabando && distancia.sqrMagnitude > radio * radio
+            && (_motor == null || _motor.PisandoSuelo);
+        if (fuera)
+        {
+            const float demoraDelAviso = 0.38f;
+            float antes = _segundosFueraDelFoco;
+            _segundosFueraDelFoco += dt;
+            if (antes < demoraDelAviso && _segundosFueraDelFoco >= demoraDelAviso)
+                HudToastService.Instance?.ShowRaw(PresentadorDeLinea.Texto("CORO_VUELVE_AL_FOCO", "¡Vuelve al foco!"), 1f);
+            if (_segundosFueraDelFoco >= demoraDelAviso)
+                _presionDelFoco = Mathf.MoveTowards(_presionDelFoco, 4.5f, dt * 3f);
+        }
+        else
+        {
+            _segundosFueraDelFoco = 0f;
+            _presionDelFoco = Mathf.MoveTowards(_presionDelFoco, 0f, dt);
+        }
+    }
+
+    private bool EnVentanaDelFoco(float segundo)
+    {
+        for (int i = 0; i < tramosDelFoco.Length; i++)
+            if (segundo >= tramosDelFoco[i].x && segundo < tramosDelFoco[i].y) return true;
+        return false;
+    }
+
+    private bool AjustarElRecinto(Transform jugador, float segundo)
+    {
+        if (recintoDelCoro == null) return false;
+        bool dentro = segundo >= tramoDelCoro.x && segundo < tramoDelCoro.y;
+        var recinto = recintoDelCoro.gameObject;
+        if (recinto.activeSelf == dentro) return dentro;
+        if (dentro)
+        {
+            // En el corte de cámara, quien llega fuera queda en la fila más próxima.
+            Vector3 centro = recintoDelCoro.position;
+            Vector3 posicion = jugador.position;
+            float x = limitesDelCoro.x - 0.7f;
+            float z = limitesDelCoro.y - 0.7f;
+            if (Mathf.Abs(posicion.x - centro.x) > x || Mathf.Abs(posicion.z - centro.z) > z)
+            {
+                posicion.x = Mathf.Clamp(posicion.x, centro.x - x, centro.x + x);
+                posicion.y = centro.y + 0.15f;
+                posicion.z = Mathf.Clamp(posicion.z, centro.z - z, centro.z + z);
+                var cuerpo = ControlDelJugador.CuerpoDelJugador;
+                if (cuerpo != null)
+                {
+                    TeleportService.TeleportToPosition(cuerpo, posicion, Quaternion.identity, null);
+                    if (PlayerParty.HasInstance) PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true, avisar: false);
+                }
+            }
+        }
+        recinto.SetActive(dentro);
+        return dentro;
     }
 
     private void ActualizarSuelo(float z, float segundo)
@@ -518,6 +626,9 @@ public sealed class TramoDelCoro : PruebaDelJugador
     private void DejarDeCorrer()
     {
         _corriendo = false;
+        _segundosFueraDelFoco = 0f;
+        _presionDelFoco = 0f;
+        if (focoDeRuta != null) focoDeRuta.SetStageMark(null);
         if (_vineta != null) _vineta.alpha = 0f;
         TopeDeVelocidadDelJugador.Quitar(this);
     }
@@ -600,12 +711,10 @@ public sealed class TramoDelCoro : PruebaDelJugador
             var r = recuadro.position;
             recuadro.position = new Vector3(r.x, r.y, centro);
         }
-        float z = centro - metrosDeVentaja - metrosPorSegundo * SegundosDeMargenExtra - _cedido;
-        if (segundo >= cierreTrasero.x && segundo < cierreTrasero.z)
-        {
-            float progreso = Mathf.InverseLerp(cierreTrasero.x, cierreTrasero.y, segundo);
-            z = Mathf.Lerp(z, Mathf.Max(z, cierreTrasero.w), progreso);
-        }
+        float z = centro - metrosDeVentaja - metrosPorSegundo * SegundosDeMargenExtra - _cedido + _presionDelFoco;
+        // El último rellano deja preparar el salto. El plazo de la coda limita la espera.
+        if (controlDeLaCoda != null)
+            z = Mathf.Min(z, controlDeLaCoda.position.z - metrosPorSegundo * SegundosDeAvisoDeSombra);
         if (sombra != null)
         {
             var p = sombra.position;

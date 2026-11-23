@@ -18,7 +18,6 @@ public static class RepartoDeEscenaSegunElGuion
 {
     private const string CarpetaDeGuiones = "Assets/_SEQUENCES/Guiones";
 
-    [MenuItem("El Sendero/Cinemáticas/Reparto: actores de escena con el prefab del guion")]
     public static void Aplicar()
     {
         var informe = new StringBuilder();

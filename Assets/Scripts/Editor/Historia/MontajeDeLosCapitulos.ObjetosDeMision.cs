@@ -23,6 +23,23 @@ public static partial class MontajeDeLosCapitulos
     private sealed class ObjetoDeMision { public string Cap, Nombre, Prefab; public Vector3 Pos; public float Rumbo; public TramoDeHistoria Tramo; }
 
     public const string NombreRescatado = "Puesto a mano (rescatado del montaje)";
+
+    private static bool RetirarInspeccionesAntiguasDePez(Scene escena)
+    {
+        var rescatado = escena.GetRootGameObjects().FirstOrDefault(g => g.name == NombreRescatado);
+        if (rescatado == null) return false;
+
+        // Rosario entrega el juguete por el grafo. La cerca del huerto es la inspección de las marcas.
+        bool cambio = false;
+        foreach (var nombre in new[] { "Recado · Doña Lubina", "Pista · el cobertizo de las redes" })
+        {
+            var inspeccion = rescatado.transform.Find(nombre);
+            if (inspeccion == null || !inspeccion.gameObject.activeSelf) continue;
+            inspeccion.gameObject.SetActive(false);
+            cambio = true;
+        }
+        return cambio;
+    }
     private const string Cap1 = "Cap1";
 
     /// <summary>La tabla. Y en NaN: se apoya en el suelo al montar.</summary>

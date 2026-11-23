@@ -433,6 +433,7 @@ public static partial class MontajeDeLosCapitulos
         PonerExtrasDeEscena(raiz.transform, marcas, informe);
 
         RescatarLoPuestoAMano(escena, anteriores, raiz.transform, informe);
+        RetirarInspeccionesAntiguasDePez(escena);
         foreach (var r in anteriores) Object.DestroyImmediate(r);
 
         EditorSceneManager.MarkSceneDirty(escena);

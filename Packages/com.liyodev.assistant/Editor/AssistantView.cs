@@ -142,11 +142,12 @@ namespace Liyodev.Assistant
             _send.SetEnabled(false);
             var thinking = Note(AssistantText.T("Trabajando…", "Working…"));
             string system = _context.RolePrompt() + "\n\n" + _context.Manual() + "\n\n" + _context.State();
+            string destino = _context.TargetName;
             AssistantClient.Send(system, _turns, answer =>
             {
                 Done(thinking);
                 _turns.Add(new AssistantTurn(false, answer));
-                Show(answer);
+                Show(answer, destino);
             }, error =>
             {
                 Done(thinking);
@@ -164,7 +165,7 @@ namespace Liyodev.Assistant
             _send.SetEnabled(_context != null);
         }
 
-        private void Show(string answer)
+        private void Show(string answer, string destino)
         {
             var match = ChangesBlock.Match(answer ?? string.Empty);
             string prose = match.Success ? answer.Remove(match.Index, match.Length).Trim() : answer;
@@ -176,7 +177,7 @@ namespace Liyodev.Assistant
                 if (ops != null)
                     foreach (var op in ops)
                         NormalizarOp(op as JObject);
-                if (ops != null && ops.Count > 0) Proposal(ops);
+                if (ops != null && ops.Count > 0) Proposal(ops, destino);
             }
             catch (Exception)
             {
@@ -193,7 +194,7 @@ namespace Liyodev.Assistant
             if (nombre != null) op["op"] = nombre.ToString();
         }
 
-        private void Proposal(JArray ops)
+        private void Proposal(JArray ops, string destino)
         {
             var box = new VisualElement();
             box.AddToClassList("story-assistant__proposal");
@@ -208,6 +209,13 @@ namespace Liyodev.Assistant
             Button apply = null, discard = null;
             apply = new Button(() =>
             {
+                if (_context != null && !string.Equals(_context.TargetName, destino, StringComparison.Ordinal))
+                {
+                    Note(AssistantText.T($"Vuelve a abrir «{destino}» para aplicar esta propuesta.",
+                                         $"Reopen “{destino}” to apply this proposal."), true);
+                    return;
+                }
+
                 var result = _context != null ? _context.Apply(new JObject { ["ops"] = ops }.ToString()) : null;
                 bool applied = result != null && result.Applied;
                 Note(applied

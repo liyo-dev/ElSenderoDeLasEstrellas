@@ -89,7 +89,8 @@ namespace Sendero.UI
                 float x = 946f + (i % 2) * 424f, y = 702f + (i / 2) * 82f;
                 var n = P.Titulo("Habilidad " + i, cuerpo, "", 24f, PaletaUI.TintaDeTexto, TextAlignmentOptions.TopLeft);
                 PiezasDeUI.ColocarArribaIzquierda(n.rectTransform, x, y, 404f, 32f);
-                var f = P.Txt("Frase " + i, cuerpo, "", 19f, P.TextoMaqueta, false, TextAlignmentOptions.TopLeft, envolver: true);
+                var f = P.TxtConIconos("Frase " + i, cuerpo, "", 19f, P.TextoMaqueta, TextAlignmentOptions.TopLeft);
+                f.textWrappingMode = TextWrappingModes.Normal;
                 PiezasDeUI.ColocarArribaIzquierda(f.rectTransform, x, y + 32f, 404f, 46f);
                 f.enableAutoSizing = true; f.fontSizeMin = 15f; f.fontSizeMax = 19f;
                 _nombresDeHabilidad.Add(n); _frasesDeHabilidad.Add(f);

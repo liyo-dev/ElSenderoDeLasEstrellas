@@ -36,8 +36,8 @@ namespace Liyodev.Cinematics
             "- replace_line {line, match, text}: replace the whole line (a trailing # comment is kept if the new text has none).\n" +
             "- insert_after {line|anchor, text} / insert_before {line|anchor, text}: insert one or more lines; anchor can be a section (PUNTOS) or a label (@inicio).\n" +
             "- delete_line {line, match}: remove the line.\n" +
-            "- resolve_task {task:\"P06\"|\"all\"}: close those pending tasks after the change.\n" +
-            "Every operation is an object whose \"op\" key names it, for example: {\"ops\":[{\"op\":\"set_options\",\"line\":12,\"match\":\"plano medio will\",\"options\":[{\"name\":\"lente\",\"value\":\"35\"}]},{\"op\":\"resolve_task\",\"task\":\"P03\"}]}.\n" +
+            "- resolve_task {task:\"exact task key from the state\"}: close one pending task after the edit that resolves it. Include one operation per resolved task. Never use a panel ID or close a task a text edit cannot fix.\n" +
+            "Every operation is an object whose \"op\" key names it, for example: {\"ops\":[{\"op\":\"set_options\",\"line\":12,\"match\":\"plano medio will\",\"options\":[{\"name\":\"lente\",\"value\":\"35\"}]},{\"op\":\"resolve_task\",\"task\":\"p03-camara-ejemplo\"}]}.\n" +
             "Lines are the L... from the state, on the original text. Use match whenever you change a line, so the game can check it is still the same line. Apply the minimum change and use only the aliases, points, labels, animation states and beat fields from the manual and the state. Cite the line and the shot. The game writes the guion, bakes it and closes the tasks only if the bake accepts the change.";
 
         /// El manual del guion solo hace falta con una cinemática abierta: sin ella no se proponen
@@ -177,7 +177,7 @@ namespace Liyodev.Cinematics
         public string QuickActionLabel => AssistantText.T("Resolver encargos", "Resolve tasks");
 
         public string QuickActionPrompt() =>
-            "Resuelve los encargos pendientes de esta cinemática (la lista está en el estado). Lee el estado y el guion, haz los cambios mínimos y termina con un único bloque {\"ops\":[...]}. Incluye resolve_task para cada Pxx que hayas resuelto de verdad; no cierres uno que no hayas podido resolver y explica por qué. Si no hay encargos pendientes, dilo y no emitas ops.";
+            "Resuelve los encargos pendientes de esta cinemática (la lista está en el estado). Lee el estado y el guion, haz los cambios mínimos y termina con un único bloque {\"ops\":[...]}. Incluye un resolve_task con la clave exacta de cada encargo que resuelva la propuesta. Puede haber varios en un mismo plano. Si alguno requiere un cambio fuera del guion, explica qué queda pendiente. Si no hay encargos pendientes, dilo y no emitas ops.";
 
         public IReadOnlyList<AssistantTarget> Targets()
         {

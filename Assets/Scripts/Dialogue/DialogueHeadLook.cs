@@ -124,7 +124,7 @@ public class DialogueHeadLook : MonoBehaviour
     /// Busca el hueso "head" del objetivo para mirarle a la cara (y no al pecho/root).
     /// Se resuelve una vez por cambio de objetivo, no por frame.
     /// </summary>
-    private static Transform FindTargetHead(Transform target)
+    internal static Transform FindTargetHead(Transform target)
     {
         if (target == null) return null;
 

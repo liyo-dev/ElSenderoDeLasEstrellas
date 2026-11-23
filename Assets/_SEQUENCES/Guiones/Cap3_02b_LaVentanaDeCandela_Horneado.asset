@@ -1,0 +1,887 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap3_02b_LaVentanaDeCandela_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap3_02b_LaVentanaDeCandela
+  escena: MainWorld
+  rutaDelTexto: Assets/_SEQUENCES/Guiones/Cap3_02b_LaVentanaDeCandela.guion.txt
+  duracion: 47.499996
+  presentacion: 1
+  huella: "2026-11-23 09:23 \xB7 d26072b33e3d531c4d6939b840ba3daa"
+  actores:
+  - id: Player
+    prefab: Assets/Prefabs/_WILL.prefab
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_WILL
+    posiciones:
+    - t: 0
+      p: {x: 238.05588, y: 1.6199998, z: -520.2558}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 239.25006, y: 1.6199998, z: -521.39655}
+      actor: 
+    - t: 1.1999999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 6.965
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 11.014999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 19.71
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 28.275
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 36.45
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 42.28
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 43.925
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    cabezas:
+    - t: 1.15
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 6.965
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 10.964999
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 19.66
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 28.225
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 36.4
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 42.28
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    - t: 43.875
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Candela
+    animacion:
+    - fundido: 0
+      t: 1.75
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 6.965
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 7.045
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 9.511667
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 10.915
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 11.565
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 14.365
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
+      t: 20.26
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 23.115
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
+      t: 28.825
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 31.615
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
+      t: 37
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 39.864998
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 2
+    - fundido: 0
+      t: 42.28
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 42.36
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 43.824997
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 44.475
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    caras:
+    - t: 1.65
+      emocion: sorpresa
+      dura: 2
+    - t: 42.28
+      emocion: decidido
+      dura: 1.8949999
+    visible: []
+    deslizando: []
+  - id: NPC_Candela
+    prefab: Assets/_NPCs/AldeaDelMar/Candela.prefab
+    alias: candela
+    colorDelNombre: {r: 0.90588236, g: 0.7882353, b: 0.627451, a: 1}
+    claveDelNombre: CHAR_CANDELA
+    posiciones:
+    - t: 0
+      p: {x: 239.25006, y: 1.6199998, z: -521.39655}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 238.05588, y: 1.6199998, z: -520.2558}
+      actor: 
+    - t: 1.05
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 7.1150002
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 10.865
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.56
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 28.125
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 36.3
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 42.43
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 43.774998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    cabezas:
+    - t: 1.05
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 7.065
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 10.865
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 19.56
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 28.125
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 36.3
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 42.38
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 43.774998
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 0.25
+      tipo: 2
+      estado: Opening01_Begin
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 0.8326667
+      tipo: 5
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 1.05
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 1.13
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 3.5966668
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 7.0150003
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 7.665
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 10.865
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 10.945
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 14.111667
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 16.628334
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 19.429998
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 19.56
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 19.64
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 22.106667
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 24.723333
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 27.994999
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 28.125
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 28.205
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 31.371668
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 33.888336
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 36.17
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 36.3
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 36.38
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 38.946667
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 42.329998
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 42.878
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 43.774998
+      tipo: 3
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 43.855
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    - fundido: 0
+      t: 46.749996
+      tipo: 4
+      estado: 
+      congelar: 0
+      alFinal: 0
+      voz: 
+      origen: 0
+    caras:
+    - t: 1.05
+      emocion: triste
+      dura: 6.315
+    - t: 19.56
+      emocion: preocupado
+      dura: 8.784999
+    - t: 28.125
+      emocion: preocupado
+      dura: 8.3949995
+    visible: []
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1.05
+    t1: 6.965
+    actor: NPC_Candela
+    clave: DLG_CAP3_CANDELA_01
+    linea: 30
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 6.965
+    t1: 10.865
+    actor: Player
+    clave: DLG_CAP3_CANDELA_02
+    linea: 34
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 10.865
+    t1: 19.38
+    actor: NPC_Candela
+    clave: DLG_CAP3_CANDELA_03
+    linea: 36
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 19.56
+    t1: 27.945
+    actor: NPC_Candela
+    clave: DLG_CAP3_CANDELA_04
+    linea: 37
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 28.125
+    t1: 36.12
+    actor: NPC_Candela
+    clave: DLG_CAP3_CANDELA_05
+    linea: 38
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 36.3
+    t1: 42.28
+    actor: NPC_Candela
+    clave: DLG_CAP3_CANDELA_06
+    linea: 39
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 42.28
+    t1: 43.774998
+    actor: Player
+    clave: DLG_CAP3_CANDELA_07
+    linea: 43
+    gesto: HeadNod01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 43.774998
+    t1: 46.699997
+    actor: NPC_Candela
+    clave: DLG_CAP3_CANDELA_08
+    linea: 45
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos:
+    - t: 0
+      p: {x: 239.29391, y: 2.7799997, z: -521.29565}
+    t0: 0
+    t1: 6.965
+    linea: 25
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 0
+      p: {x: 236.30028, y: 3.1499999, z: -520.5066}
+    lente: 43
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 239.29391, y: 2.7799997, z: -521.29565}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 6.965
+      p: {x: 238.02797, y: 2.7299998, z: -520.32}
+    t0: 6.965
+    t1: 10.865
+    linea: 33
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 6.965
+      p: {x: 240.79552, y: 2.9299998, z: -521.1525}
+    lente: 39
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 238.02797, y: 2.7299998, z: -520.32}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 10.865
+      p: {x: 239.29391, y: 2.7799997, z: -521.29565}
+    t0: 10.865
+    t1: 42.28
+    linea: 35
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 10.865
+      p: {x: 236.30028, y: 3.1499999, z: -520.5066}
+    lente: 38
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 239.29391, y: 2.7799997, z: -521.29565}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 42.28
+      p: {x: 238.02797, y: 2.7299998, z: -520.32}
+    t0: 42.28
+    t1: 43.774998
+    linea: 42
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 42.28
+      p: {x: 240.79552, y: 2.9299998, z: -521.1525}
+    lente: 39
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 238.02797, y: 2.7299998, z: -520.32}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 43.774998
+      p: {x: 239.29391, y: 2.7799997, z: -521.29565}
+    t0: 43.774998
+    t1: 47.499996
+    linea: 44
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 43.774998
+      p: {x: 236.30028, y: 3.1499999, z: -520.5066}
+    lente: 38
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 239.29391, y: 2.7799997, z: -521.29565}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294813527048353
+    linea: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 6540294813527048354
+    linea: 24
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0.25
+    beat:
+      rid: 6540294813527048355
+    linea: 28
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.499996
+    beat:
+      rid: 6540294813527048356
+    linea: 0
+  etiquetas:
+  - nombre: apertura
+    t: 0
+  - nombre: la_pista
+    t: 6.965
+  - nombre: despedida
+    t: 42.28
+  puntos:
+  - nombre: p_will
+    posicion: {x: 238.05588, y: 1.6199998, z: -520.2558}
+  - nombre: p_candela
+    posicion: {x: 239.25006, y: 1.6199998, z: -521.39655}
+  - nombre: cam_fuera
+    posicion: {x: 236.30028, y: 3.1499999, z: -520.5066}
+  - nombre: cam_dentro
+    posicion: {x: 240.79552, y: 2.9299998, z: -521.1525}
+  - nombre: mira_candela
+    posicion: {x: 239.29391, y: 2.7799997, z: -521.29565}
+  - nombre: mira_will
+    posicion: {x: 238.02797, y: 2.7299998, z: -520.32}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6540294813527048353
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 6540294813527048354
+      type: {class: HojasConBisagraBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        grupo: Casa del farol
+        nombre: 
+        abrir: 0
+        segundos: 0
+        escalonado: 0
+        golpe: 0
+    - rid: 6540294813527048355
+      type: {class: HojasConBisagraBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        grupo: Casa del farol
+        nombre: 
+        abrir: 1
+        segundos: 0.65
+        escalonado: 0
+        golpe: 0
+    - rid: 6540294813527048356
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0

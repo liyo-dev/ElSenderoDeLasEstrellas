@@ -29,17 +29,51 @@ namespace Kits.Puzzles
 
         private Vector3 _apunta;
         private bool _hay;
+        private Transform _soporte;
+        private Light _luz;
+        private Vector3? _marca;
+        private float _radio;
+        private float _anguloOriginal, _anguloInteriorOriginal;
+        private static readonly Quaternion Cenital = Quaternion.Euler(90f, 0f, 0f);
+
+        private void Awake()
+        {
+            _soporte = transform;
+            _luz = GetComponent<Light>();
+            _anguloOriginal = _luz.spotAngle;
+            _anguloInteriorOriginal = _luz.innerSpotAngle;
+        }
+
+        /// <summary>Ilumina una marca de escenario desde arriba. Sin marca vuelve a seguir al intérprete.</summary>
+        public void SetStageMark(Vector3? mark, float radius = 0f)
+        {
+            if (_marca.HasValue != mark.HasValue || !Mathf.Approximately(_radio, radius))
+            {
+                float altura = Mathf.Max(1f, offset.y);
+                float angulo = 2f * Mathf.Atan(radius / altura) * Mathf.Rad2Deg;
+                _luz.spotAngle = mark.HasValue ? angulo : _anguloOriginal;
+                _luz.innerSpotAngle = mark.HasValue ? angulo * 0.74f : _anguloInteriorOriginal;
+                _radio = radius;
+                _hay = false;
+            }
+            _marca = mark;
+        }
 
         private void LateUpdate()
         {
+            if (_marca.HasValue)
+            {
+                _soporte.SetPositionAndRotation(_marca.Value + Vector3.up * Mathf.Max(1f, offset.y), Cenital);
+                return;
+            }
             var donde = Target != null ? Target() : null;
             if (!donde.HasValue) return;
             Vector3 objetivo = donde.Value + Vector3.up * aimHeight;
             float k = _hay ? 1f - Mathf.Exp(-Time.deltaTime / lag) : 1f;
             _apunta = Vector3.Lerp(_apunta, objetivo, k);
             _hay = true;
-            transform.position = _apunta - Vector3.up * aimHeight + offset;
-            transform.rotation = Quaternion.LookRotation(_apunta - transform.position, Vector3.up);
+            Vector3 posicion = _apunta - Vector3.up * aimHeight + offset;
+            _soporte.SetPositionAndRotation(posicion, Quaternion.LookRotation(_apunta - posicion, Vector3.up));
         }
     }
 }

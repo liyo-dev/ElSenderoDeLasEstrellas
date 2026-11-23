@@ -98,6 +98,8 @@ public class DialogueCinematicController : MonoBehaviour
     // Interpolación suave del lookAt en modo grupal
     private Vector3 _groupLookAtTarget;
     private Vector3 _groupLookAtVelocity;
+    private Transform _shotTarget;
+    private Transform _shotHead;
 
     // Máscara de colisión para obstrucciones de cámara (cacheada en Awake)
     private int _camObstructionMask;
@@ -482,19 +484,24 @@ public class DialogueCinematicController : MonoBehaviour
             // Actualizar rotación de la cámara virtual activa y su lookAt target
             if (currentVirtualCamera != null)
             {
-                Vector3 lookDir = _groupLookAtTarget - currentVirtualCamera.transform.position;
+                Transform shotTransform = currentVirtualCamera.transform;
+                Vector3 lookDir = _groupLookAtTarget - shotTransform.position;
                 if (lookDir.sqrMagnitude > 0.001f)
-                    currentVirtualCamera.transform.rotation = Quaternion.LookRotation(lookDir);
+                    shotTransform.rotation = EncuadrarCara(shotTransform.position,
+                        Quaternion.LookRotation(lookDir), groupFieldOfView);
 
                 if (currentVirtualCamera.Target.LookAtTarget != null)
-                    currentVirtualCamera.Target.LookAtTarget.position = _groupLookAtTarget;
+                    currentVirtualCamera.Target.LookAtTarget.position =
+                        shotTransform.position + shotTransform.forward * lookDir.magnitude;
             }
             // Aplicar también a la cámara de diálogo directamente (por si el Brain ya procesó este frame)
             if (dialogueCamera != null && dialogueCamera.enabled)
             {
-                Vector3 lookDir = _groupLookAtTarget - dialogueCamera.transform.position;
+                Transform renderedTransform = dialogueCamera.transform;
+                Vector3 lookDir = _groupLookAtTarget - renderedTransform.position;
                 if (lookDir.sqrMagnitude > 0.001f)
-                    dialogueCamera.transform.rotation = Quaternion.LookRotation(lookDir);
+                    renderedTransform.rotation = EncuadrarCara(renderedTransform.position,
+                        Quaternion.LookRotation(lookDir), dialogueCamera.fieldOfView);
             }
         }
     }
@@ -988,6 +995,8 @@ public class DialogueCinematicController : MonoBehaviour
         currentPlayer = null;
         currentNPC = null;
         currentVirtualCamera = null;
+        _shotTarget = null;
+        _shotHead = null;
         currentLineIndex = 0;
     }
 
@@ -1279,7 +1288,9 @@ public class DialogueCinematicController : MonoBehaviour
         if (activeCam == null) return;
 
         Vector3 camPos = activeCam.transform.position;
-        Vector3 headPos = focusTarget.position + Vector3.up * 1.5f;
+        Vector3 headPos = focusTarget == _shotTarget && _shotHead != null
+            ? _shotHead.position
+            : focusTarget.position + Vector3.up * 1.5f;
         Vector3 toHead = headPos - camPos;
         float dist = toHead.magnitude;
         if (dist < 0.5f) return;
@@ -1684,6 +1695,14 @@ public class DialogueCinematicController : MonoBehaviour
         /// </summary>
         private void ConfigureCameraForShot(CinemachineCamera vcam, CinematicCameraShot shot, Transform target, bool forceCut = false)
         {
+            bool encuadrarCara = shot.shotType == DialogueShotType.CloseUpNPC ||
+                                 shot.shotType == DialogueShotType.MediumNPC;
+            if (!encuadrarCara)
+                _shotHead = null;
+            else if (target != _shotTarget || _shotHead == null)
+                _shotHead = DialogueHeadLook.FindTargetHead(target);
+            _shotTarget = target;
+
             // Calcular posición base según el tipo de plano
             Vector3 position = CalculateCameraPosition(shot, target);
 
@@ -1745,6 +1764,11 @@ public class DialogueCinematicController : MonoBehaviour
 
             // Configurar lens (FOV): en modo grupal usar FOV propio más abierto
             vcam.Lens.FieldOfView = _isGroupConversation ? groupFieldOfView : shot.FieldOfView;
+            if (_shotHead != null)
+            {
+                vcam.transform.rotation = EncuadrarCara(position, vcam.transform.rotation, vcam.Lens.FieldOfView);
+                lookAtTarget.position = position + vcam.transform.forward * Vector3.Distance(position, lookAtPos);
+            }
 
             // Configurar blend time en el brain de diálogo
             // IMPORTANTE: Detectar si el cambio de ángulo es muy grande (>90°) para usar corte
@@ -1774,6 +1798,22 @@ public class DialogueCinematicController : MonoBehaviour
             
             // Asegurar que las cámaras virtuales estén en el canal correcto
             vcam.OutputChannel = (OutputChannels)1; // Canal 1 para diálogos
+        }
+
+        // Reserva el centro del cuadro para la cara cuando el punto de mira del plano queda demasiado alto.
+        private Quaternion EncuadrarCara(Vector3 position, Quaternion rotation, float fieldOfView)
+        {
+            if (_shotHead == null) return rotation;
+
+            const float alturaMinimaEnPantalla = 0.52f;
+            Vector3 localHead = Quaternion.Inverse(rotation) * (_shotHead.position - position);
+            if (localHead.z <= 0f) return rotation;
+
+            float pendiente = (2f * alturaMinimaEnPantalla - 1f) * Mathf.Tan(fieldOfView * 0.5f * Mathf.Deg2Rad);
+            float correccion = Mathf.Atan(pendiente) - Mathf.Atan2(localHead.y, localHead.z);
+            return correccion > 0f
+                ? rotation * Quaternion.Euler(correccion * Mathf.Rad2Deg, 0f, 0f)
+                : rotation;
         }
 
         /// <summary>
@@ -2120,7 +2160,10 @@ public class DialogueCinematicController : MonoBehaviour
             // (a la misma distancia, nunca menos de dialogueCameraMinDistance) hasta encontrar una
             // vista limpia de su cara, contando también lo que tapa sin colliders (CameraOccluder,
             // p. ej. un carro). Solo si no hay ninguna se acerca, como siempre. Ver INC-1331.
-            camPos = AnguloDespejado(target, camPos, Mathf.Max(shot.Height, 1.2f));
+            Vector3 headPos = _shotHead != null
+                ? _shotHead.position
+                : target.position + Vector3.up * Mathf.Max(shot.Height, 1.2f);
+            camPos = AnguloDespejado(target, camPos, headPos);
 
             // ── Evitar obstrucciones (modo 1:1) ──
             // Si hay geometría (muro, árbol, roca...) entre el personaje y la posición calculada
@@ -2136,7 +2179,6 @@ public class DialogueCinematicController : MonoBehaviour
             // (dialogueCameraSelfClearance), y (2) el mínimo de seguridad (dialogueCameraMinDistance)
             // sube a una distancia acorde a los planos normales (3-5m) en vez de un
             // primerísimo plano roto. Ambos valores son ajustables desde el Inspector.
-            Vector3 headPos = target.position + Vector3.up * Mathf.Max(shot.Height, 1.2f);
             Vector3 toCam = camPos - headPos;
             float camposDist = toCam.magnitude;
             if (camposDist > dialogueCameraSelfClearance + 0.05f)
@@ -2238,9 +2280,8 @@ public class DialogueCinematicController : MonoBehaviour
 
         // Gira la cámara alrededor de 'target' hasta que ve su cabeza sin nada en medio; si ningún
         // giro lo consigue, la deja como estaba.
-        private Vector3 AnguloDespejado(Transform target, Vector3 camPos, float alturaDeLaCabeza)
+        private Vector3 AnguloDespejado(Transform target, Vector3 camPos, Vector3 cabeza)
         {
-            Vector3 cabeza = target.position + Vector3.up * alturaDeLaCabeza;
             Vector3 plano = camPos - target.position;
             float alto = plano.y;
             plano.y = 0f;

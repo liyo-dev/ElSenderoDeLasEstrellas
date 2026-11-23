@@ -17,6 +17,8 @@ namespace Kits.Puzzles
     {
         /// <summary>Golpe al tocar el suelo: (centro, radio, daño, alto; alto 0 = el de siempre del juego). Lo pone el juego.</summary>
         public static Action<Vector3, float, float, float> Strike;
+        /// <summary>Golpe rectangular en XZ: (centro, tamaño, daño, alto).</summary>
+        public static Action<Vector3, Vector2, float, float> StrikeRectangle;
         /// <summary>
         /// Suena el golpe: (sonido, sitio, volumen). Lo pone el juego para que pase por su mezcla;
         /// sin él, suena con <see cref="AudioSource.PlayClipAtPoint(AudioClip, Vector3, float)"/>.
@@ -60,6 +62,8 @@ namespace Kits.Puzzles
         [Header("Puntería")]
         [Tooltip("Cae donde va a estar el objetivo al tocar el suelo (su sitio más su velocidad), decidido al soltarse: la sombra avisa y da tiempo a apartarse. Sin objetivo, en su punto de la lista.")]
         [SerializeField] private bool aimAtTarget;
+        [Tooltip("Al apuntar, solo corrige el avance. Conserva la fila o el lado marcados en la escena.")]
+        [SerializeField] private bool aimAlongForwardOnly;
         [Tooltip("Metros que puede apartarse de su punto de la lista como mucho (para no salirse del sitio).")]
         [SerializeField, Min(0f)] private float aimMaxDistance = 5f;
         [Tooltip("Cuánto cuenta la velocidad del objetivo al apuntar (1 = donde estará si sigue igual).")]
@@ -69,13 +73,15 @@ namespace Kits.Puzzles
         [SerializeField, Min(0f)] private float radius = 1.3f;
         [Tooltip("Largo del golpe a lo largo del «adelante» de este objeto (0 = solo un círculo): una franja, como un rayo que barre una línea.")]
         [SerializeField, Min(0f)] private float strikeLength;
+        [Tooltip("Tamaño del golpe rectangular en XZ. Con una dimensión a cero se usa el golpe radial.")]
+        [SerializeField] private Vector2 strikeSize;
         [Tooltip("Daño al tocar el suelo. 0: solo se ve (una presentación).")]
         [SerializeField, Min(0f)] private float damage = 10f;
         [Tooltip("Altura del golpe sobre el suelo. 0: la de siempre (alcanza aunque se salte). Bajo: algo que barre el suelo y se salta.")]
         [SerializeField, Min(0f)] private float strikeHeight;
 
         [Header("Sonido")]
-        [Tooltip("Lo que suena al tocar el suelo. Se lanza con el adelanto del retardo de audio del reloj, para oírse justo en el golpe.")]
+        [Tooltip("Lo que suena al tocar el suelo. Con audio programado comparte el reloj de muestras de la canción.")]
         [SerializeField] private AudioClip landingSound;
         [SerializeField, Range(0f, 1f)] private float soundVolume = 1f;
 
@@ -93,6 +99,7 @@ namespace Kits.Puzzles
             public bool activa;
             public bool tocada;
             public bool sonada;
+            public int revisionDelSonido;
         }
 
         private readonly List<float> _tiempos = new List<float>(32);
@@ -159,10 +166,19 @@ namespace Kits.Puzzles
                 if (!_caidas[i].activa) continue;
                 ref var c = ref _caidas[i];
                 float falta = (float)(c.segundo - t);
-                if (!c.sonada && landingSound != null && falta <= clock.OutputLatency)
+                if (landingSound != null && !c.tocada)
                 {
-                    c.sonada = true;
-                    Sonar(c.punto);
+                    if (clock.SchedulesCueAudio)
+                    {
+                        if (c.revisionDelSonido != clock.CueAudioRevision
+                            && clock.TryScheduleCue(landingSound, c.segundo, soundVolume))
+                            c.revisionDelSonido = clock.CueAudioRevision;
+                    }
+                    else if (!c.sonada && falta <= clock.OutputLatency)
+                    {
+                        c.sonada = true;
+                        Sonar(c.punto);
+                    }
                 }
                 if (falta > 0f)
                 {
@@ -192,6 +208,11 @@ namespace Kits.Puzzles
         /// <summary>Un círculo en el punto o, con <see cref="strikeLength"/>, círculos seguidos a lo largo de la franja.</summary>
         private void Golpear(Vector3 punto)
         {
+            if (strikeSize.x > 0f && strikeSize.y > 0f && StrikeRectangle != null)
+            {
+                StrikeRectangle(punto, strikeSize, damage, strikeHeight);
+                return;
+            }
             if (Strike == null) return;
             if (strikeLength <= radius * 2f || radius <= 0f) { Strike(punto, radius, damage, strikeHeight); return; }
             Vector3 adelante = transform.forward;
@@ -228,6 +249,7 @@ namespace Kits.Puzzles
             c.activa = true;
             c.tocada = false;
             c.sonada = false;
+            c.revisionDelSonido = -1;
             c.segundo = _tiempos[marca];
             c.punto = punto.position;
             if (aimAtTarget && _hayObjetivoAntes)
@@ -236,6 +258,7 @@ namespace Kits.Puzzles
                 Vector3 apunta = _objetivoAntes + _velocidadDelObjetivo * (falta * aimLead);
                 Vector3 desvio = apunta - c.punto;
                 desvio.y = 0f;
+                if (aimAlongForwardOnly) desvio = Vector3.Project(desvio, transform.forward);
                 c.punto += Vector3.ClampMagnitude(desvio, aimMaxDistance);
             }
             if (c.cuerpo != null) c.cuerpo.SetActive(true);
@@ -292,6 +315,7 @@ namespace Kits.Puzzles
         private static void ResetStatics()
         {
             Strike = null;
+            StrikeRectangle = null;
             PlaySound = null;
             TargetPosition = null;
         }

@@ -212,7 +212,7 @@ internal sealed partial class Horno
                 // volcada) o con un decorado entre ella y el sujeto: el plano sale un gris liso o
                 // tapado, y no hay forma de arreglarlo mirando el plano, porque el encuadre está
                 // bien: lo que está mal es la cámara. Si es así, se busca otro ángulo.
-                if (CamaraAdentro(e.camara) || SinVerAlSujeto(e))
+                if (CamaraAdentro(e.camara, o.Tiene("interior")) || SinVerAlSujeto(e))
                 {
                     Aviso($"{o}: la cámara de «{desde}» no ve al sujeto (dentro del decorado o tapada); busco otro ángulo.");
                     Buscar(e);
@@ -490,11 +490,11 @@ internal sealed partial class Horno
     /// Las cajas de los renderers solo cuentan si son pequeñas (un prop): la caja de una casa
     /// incluye el espacio de delante, y una cámara en la calle «dentro» de esa caja no está dentro
     /// de la casa. Para las casas está el collider, que sí es exacto.
-    private bool CamaraAdentro(Vector3 c)
+    private bool CamaraAdentro(Vector3 c, bool interior = false)
     {
         int mascara = MascaraDeDecorado;
         if (Physics.CheckSphere(c, 0.3f, mascara, QueryTriggerInteraction.Ignore)) return true;
-        if (DentroDeUnaCasa(c)) return true;
+        if (DentroDeUnaCasa(c, interior)) return true;
         foreach (var b in Cajas())
         {
             if (Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z)) > 4.5f) continue;
@@ -836,11 +836,13 @@ internal sealed partial class Horno
     /// ¿Está la cámara dentro de una casa? Tocando una pared, o encerrada: casa encima y debajo.
     /// ModelosDeLasZonas crea un hijo "Colisión (suelo)" por cada malla, así que techo y suelo son
     /// objetos distintos: comprobar que ambos rayos encuentren una casa, no que sea el mismo objeto.
-    private static bool DentroDeUnaCasa(Vector3 c)
+    private static bool DentroDeUnaCasa(Vector3 c, bool interior)
     {
         int n = Physics.OverlapSphereNonAlloc(c, 0.3f, s_casasCerca, CapaDeSuelo, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < n; i++) if (EsCasa(s_casasCerca[i])) return true;
 
+        // Un plano interior colocado a mano puede tener suelo y techo sin tocar la malla.
+        if (interior) return false;
         if (PrimeraCasa(c, Vector3.up, 15f) == null) return false;
         return PrimeraCasa(c, Vector3.down, 15f) != null;
     }

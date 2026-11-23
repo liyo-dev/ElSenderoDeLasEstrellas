@@ -113,13 +113,16 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     public float DanoEntrante => damage;
     public float VelocidadDeVuelo => EffectiveSpeed;
     public void AsignarLanzador(GameObject lanzador) => Lanzador = lanzador;
+    public Transform ObjetivoFijoDeDevolucion { get; private set; }
+    public void FijarObjetivoDeDevolucion(Transform objetivo) => ObjetivoFijoDeDevolucion = objetivo;
     public void Devolver(GameObject nuevoDueno, Transform objetivo, Vector3 direccionSiNoHayObjetivo, float dano)
     {
         if (!initialized || hasHit || !_sePuedeDevolver) return;
         float velocidad = VelocidadDeAmenaza.magnitude;
         hasHit = true;
         var devuelto = GetComponent<ProyectilDevuelto>() ?? gameObject.AddComponent<ProyectilDevuelto>();
-        devuelto.TomarControl(this, nuevoDueno, objetivo, direccionSiNoHayObjetivo, velocidad, dano, hitEffectPrefab, Lanzador);
+        devuelto.TomarControl(this, nuevoDueno, ObjetivoFijoDeDevolucion != null ? ObjetivoFijoDeDevolucion : objetivo,
+            direccionSiNoHayObjetivo, velocidad, dano, hitEffectPrefab, Lanzador);
     }
     void OnEnable() { if (initialized && !hasHit) AmenazasAlJugador.Registrar(this); }
     void OnDisable() => AmenazasAlJugador.Quitar(this);

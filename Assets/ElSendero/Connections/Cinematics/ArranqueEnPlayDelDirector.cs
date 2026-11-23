@@ -87,11 +87,8 @@ public static class ArranqueEnPlayDelDirector
                 yield break;
             }
 
-            if (_desde > 0f)
-            {
-                reproductor.EmpezarEnOverride = _desde;
-                reproductor.EmpezarEnGuion = _nombre;
-            }
+            reproductor.EmpezarEnOverride = _desde;
+            reproductor.EmpezarEnGuion = _nombre;
 
             Debug.Log($"[Director] Rodando «{_nombre}» en Play (señal {_senal}" +
                       (_desde > 0f ? $", desde {_desde:0.0} s" : string.Empty) + ").");

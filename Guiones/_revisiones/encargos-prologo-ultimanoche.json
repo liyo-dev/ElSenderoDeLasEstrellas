@@ -2,24 +2,8 @@
     "guion": "Prologo_UltimaNoche",
     "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
     "escena": "Prologo_Valle",
-    "actualizado": "2026-11-18 22:01",
+    "actualizado": "2026-11-23 11:39",
     "encargos": [
-        {
-            "clave": "p07-npc-archimago-cerca-de-este-clip-esta-el-momento-donde-liora-pierda-la-cabeza-se-le-cae-hacia-atras",
-            "panel": "P07",
-            "elemento": "NPC_Archimago",
-            "etiquetaElemento": "NPC_Archimago",
-            "tipo": "nota",
-            "texto": "Cerca de este clip esta el momento donde liora pierda la cabeza. Se le cae hacia atras",
-            "t": 86.8888931274414,
-            "t0": 86.8888931274414,
-            "t1": 91.04236602783203,
-            "linea": 529,
-            "ordenGuion": "L529: plano hombro archimago v06 lente=30",
-            "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
-            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/007_05.png",
-            "fecha": "2026-11-18 17:55"
-        },
         {
             "clave": "p18-npc-archimago-vamos-a-cambiar-este-plano-enfoca-al-cielo-y-no-se-ve-bien",
             "panel": "P18",
@@ -33,7 +17,7 @@
             "linea": 619,
             "ordenGuion": "L619: plano general cielo_oeste desde=rio_l_fin altura=1.3 lente=40",
             "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
-            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/018_05.png",
+            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/018_03.png",
             "fecha": "2026-11-18 17:56"
         },
         {
@@ -46,11 +30,27 @@
             "t": 136.42279052734375,
             "t0": 136.42279052734375,
             "t1": 140.42279052734375,
-            "linea": 638,
-            "ordenGuion": "L638: plano conjunto mago contrapicado lente=30 suave=0.4",
+            "linea": 639,
+            "ordenGuion": "L639: plano conjunto mago desde=entrada altura=5.5 lente=34 suave=0.4",
             "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
-            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/020_05.png",
+            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/020_04.png",
             "fecha": "2026-11-18 17:57"
+        },
+        {
+            "clave": "p18-camara-en-este-clip-cuando-aparece-el-mago-oscuro-sale-una-mancha-marron-que-ocupa-toda-la-pantalla-en-lugar-de-enfocar-al-mago",
+            "panel": "P18",
+            "elemento": "camara",
+            "etiquetaElemento": "Cámara",
+            "tipo": "nota",
+            "texto": "en este clip cuando aparece el mago oscuro sale una mancha marron que ocupa toda la pantalla en lugar de enfocar al mago",
+            "t": 133.41543579101563,
+            "t0": 131.62278747558594,
+            "t1": 134.42279052734375,
+            "linea": 619,
+            "ordenGuion": "L619: plano general cielo_oeste desde=rio_l_fin altura=1.3 lente=40",
+            "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
+            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/018_03.png",
+            "fecha": "2026-11-22 18:26"
         }
     ]
 }

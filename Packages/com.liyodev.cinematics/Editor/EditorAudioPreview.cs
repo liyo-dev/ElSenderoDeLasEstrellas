@@ -11,8 +11,8 @@ namespace Liyodev.Cinematics
     /// (no documentada): si Unity cambia la firma, esto se queda en silencio y no rompe nada.
     ///
     /// Hay dos canales de previz: las **voces** van por `PlayPreviewClip` (un solo clip a la vez) y la
-    /// **música y los efectos** por `PlayClip`. Si el Editor no tiene el segundo, el animatic va con
-    /// voces y la mezcla completa se ve en PlayMode.
+    /// **música y los efectos** por `PlayClip`. Si el Editor solo tiene un canal, la mesa da prioridad
+    /// a la voz y recupera el fondo en el segundo que corresponde.
     internal static class EditorAudioPreview
     {
         private static MethodInfo s_play;
@@ -32,14 +32,15 @@ namespace Liyodev.Cinematics
         }
 
         /// Suena la voz desde `desde` segundos (corta la voz anterior).
-        public static void Play(AudioClip clip, float desde)
+        public static void Play(AudioClip clip, float desde, bool enBucle = false)
         {
             if (clip == null) return;
             Buscar();
             if (s_play == null) return;
 
             int muestra = Mathf.Clamp(Mathf.RoundToInt(desde * clip.frequency), 0, Mathf.Max(0, clip.samples - 1));
-            try { s_play.Invoke(null, new object[] { clip, muestra, false }); }
+            Stop();
+            try { s_play.Invoke(null, new object[] { clip, muestra, enBucle }); }
             catch { s_play = null; }
         }
 
@@ -52,14 +53,14 @@ namespace Liyodev.Cinematics
         }
 
         /// Música y efectos, por el canal de al lado (no corta la voz).
-        public static void PlayFondo(AudioClip clip, float desde)
+        public static void PlayFondo(AudioClip clip, float desde, bool enBucle = false)
         {
             if (clip == null) return;
             Buscar();
             if (s_playFondo == null) return;
 
             int muestra = Mathf.Clamp(Mathf.RoundToInt(desde * clip.frequency), 0, Mathf.Max(0, clip.samples - 1));
-            try { s_playFondo.Invoke(null, new object[] { clip, muestra, false }); }
+            try { s_playFondo.Invoke(null, new object[] { clip, muestra, enBucle }); }
             catch { s_playFondo = null; }
         }
 

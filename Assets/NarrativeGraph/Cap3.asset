@@ -107,7 +107,7 @@ MonoBehaviour:
   - rid: 6540294796242846250
   - rid: 6540294796242846251
   - rid: 6540294796242846252
-  - rid: 6540294796242846253
+  - rid: 6540294813527048358
   - rid: 6540294796242846254
   - rid: 6540294796242846255
   - rid: 6540294796242846256
@@ -2182,7 +2182,7 @@ MonoBehaviour:
     - rid: 6540294796242846252
       type: {class: WaitNpcInteractionNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
-        displayTitle: "3.2 \xB7 Hablar con Candela en su porche"
+        displayTitle: "3.2 \xB7 Llamar a la ventana de Candela"
         chapter: Cap. 3
         section: 
         blockSaving: 0
@@ -2198,24 +2198,6 @@ MonoBehaviour:
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
         showMarker: 1
-    - rid: 6540294796242846253
-      type: {class: PlayDialogueNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
-      data:
-        displayTitle: "3.2 \xB7 Candela: el carro sin farol y las jaulas que brillaban"
-        chapter: Cap. 3
-        section: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: cap3-candela-dlg
-        position: {x: 1680, y: 2274}
-        outputs:
-        - cap3-paso-farol
-        dialogue: {fileID: 11400000, guid: f3d624c762a6edc40950d8d290967228, type: 2}
-        npcId: NPC_Candela
-        oneShotFlag: 
     - rid: 6540294796242846254
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
@@ -2634,3 +2616,32 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
+    - rid: 6540294813527048358
+      type: {class: GameStepNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
+      data:
+        displayTitle: "3.2 \xB7 Candela abre la ventana"
+        chapter: Cap. 3
+        section: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap3-candela-dlg
+        position: {x: 1680, y: 2274}
+        outputs:
+        - cap3-paso-farol
+        request:
+          rid: 6540294813527048359
+        ifNobodyAnswers: 0
+        timeoutSeconds: 0
+    - rid: 6540294813527048359
+      type: {class: PedirCinematica, ns: , asm: Assembly-CSharp}
+      data:
+        cinematicName: "3.2 \xB7 Candela abre la ventana"
+        signalIn: CAP3_VENTANA_CANDELA_START
+        signalDone: CAP3_VENTANA_CANDELA_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: cc7bb174294e0d34688928b7d0327b26, type: 2}
+        plantillaDeAjustes: SEQ_Cap3_02_LaPosada
+        alMandoElProtagonista: 1

@@ -12,6 +12,14 @@ using UnityEngine;
 public sealed class TenorQueCanta : MonoBehaviour
 {
     [SerializeField] private TempoClock reloj;
+    [Header("Golpe del regalo")]
+    [SerializeField] private Transform siguienteMarca;
+    [SerializeField] private Collider pasoQueBloquea;
+    private Transform _cuerpo;
+    private Vector3 _posicionInicial;
+    private Quaternion _giroInicial;
+    private bool _desplazado;
+    private float _inicioDelEmpujon;
 
     [Header("Boca")]
     [Tooltip("Pivote de la mandíbula (el recorte, dentro).")]
@@ -46,6 +54,9 @@ public sealed class TenorQueCanta : MonoBehaviour
 
     private void Awake()
     {
+        _cuerpo = transform;
+        _posicionInicial = _cuerpo.position;
+        _giroInicial = _cuerpo.rotation;
         if (mandibula != null)
         {
             _bocaEnReposo = mandibula.localPosition;
@@ -70,6 +81,17 @@ public sealed class TenorQueCanta : MonoBehaviour
 
     private void Update()
     {
+        if (_desplazado && siguienteMarca != null)
+        {
+            float progreso = Mathf.Clamp01(((float)reloj.SongTime - _inicioDelEmpujon) / 0.85f);
+            float viaje = 1f - (1f - progreso) * (1f - progreso);
+            float vuelo = Mathf.Sin(progreso * Mathf.PI);
+            Vector3 posicion = Vector3.Lerp(_posicionInicial, siguienteMarca.position, viaje);
+            posicion.y += 4f * vuelo;
+            Quaternion giro = Quaternion.Slerp(_giroInicial, siguienteMarca.rotation, viaje)
+                * Quaternion.Euler(vuelo * 20f, 0f, 0f);
+            _cuerpo.SetPositionAndRotation(posicion, giro);
+        }
         float volumen = 0f;
         var fuente = reloj != null ? reloj.Source : null;
         bool suena = fuente != null && fuente.isPlaying;
@@ -106,5 +128,23 @@ public sealed class TenorQueCanta : MonoBehaviour
             manos[i].localPosition = Vector3.Lerp(_manosEnReposo[i], _manosEnLaBoca[i], u);
             manos[i].localRotation = Quaternion.Slerp(_giroDeLasManosEnReposo[i], _giroDeLasManosEnLaBoca[i], u);
         }
+    }
+
+    public void EmpujarConElRegalo()
+    {
+        if (_desplazado || siguienteMarca == null) return;
+        _inicioDelEmpujon = (float)reloj.SongTime;
+        _desplazado = true;
+        if (pasoQueBloquea != null) pasoQueBloquea.enabled = false;
+    }
+
+    public void PrepararMarcaDelRegalo(float zDeSalida)
+    {
+        if (siguienteMarca == null) return;
+        _desplazado = zDeSalida > _posicionInicial.z + 0.5f;
+        _inicioDelEmpujon = float.NegativeInfinity;
+        if (pasoQueBloquea != null) pasoQueBloquea.enabled = !_desplazado;
+        if (_desplazado) _cuerpo.SetPositionAndRotation(siguienteMarca.position, siguienteMarca.rotation);
+        else _cuerpo.SetPositionAndRotation(_posicionInicial, _giroInicial);
     }
 }

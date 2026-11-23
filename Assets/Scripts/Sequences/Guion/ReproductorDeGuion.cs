@@ -144,7 +144,11 @@ public sealed class ReproductorDeGuion
         // Deja el estado exacto del segundo al que se salta (incluida la frase que lo cubre), no el
         // del fotograma anterior. La siguiente vuelta del bucle lo repite sin duplicar nada.
         Avanzar(t);
-        if (_pausado) VfxPoolService.Instance?.PausarActivos(true);
+        if (_pausado)
+        {
+            AudioService.Instance?.PausarSonidoDeCine(true);
+            VfxPoolService.Instance?.PausarActivos(true);
+        }
     }
 
     /// Detiene el reloj del guion y todo lo que suena con él: el juego (timeScale), la música, las
@@ -248,7 +252,7 @@ public sealed class ReproductorDeGuion
 
         // También en el segundo 0: el guion puede empezar con alguien ya sentado o tumbado y la
         // escena tiene que aparecer así desde el primer fotograma, no recomponerse a la vista.
-        SaltarHasta(_inicio);
+        SaltarHasta(_inicio, alPreparar: true);
     }
 
     public void Terminar()
@@ -327,19 +331,37 @@ public sealed class ReproductorDeGuion
 
     /// Para probar desde la mitad: coloca a todos y pone el estado (hora, música...) sin
     /// reproducir lo que ya pasó.
-    private void SaltarHasta(float t)
+    private void SaltarHasta(float t, bool alPreparar = false)
     {
-        if (t <= 0f) return;
+        if (alPreparar && t <= 0f) return;
+        EfectoHorneado ultimaMusica = null;
         while (_iEfecto < _g.efectos.Count && _g.efectos[_iEfecto].t < t)
         {
             var e = _g.efectos[_iEfecto++];
             if (e.beat == null || !EsDeEstado(e.beat)) continue;
+            if (e.beat is MusicBeat)
+            {
+                if (CumpleCondicion(e.onlyIfFlag, e.skipIfFlag)) ultimaMusica = e;
+                continue;
+            }
 
             _ctx.SegundoActual = t;
             _ctx.TiempoDelEfecto = e.t;
             _ctx.Saltando = true;
             Lanzar(e);
             _ctx.Saltando = false;
+        }
+        if (ultimaMusica != null)
+        {
+            _ctx.SegundoActual = t;
+            _ctx.TiempoDelEfecto = ultimaMusica.t;
+            _ctx.Saltando = true;
+            Lanzar(ultimaMusica);
+            _ctx.Saltando = false;
+        }
+        else if (_ctx.Player is SequencePlayer player && !string.IsNullOrEmpty(player.Definition?.musicId))
+        {
+            player.PlayMusic(player.Definition.musicId, desdeSegundo: t, corteInmediato: true);
         }
         while (_iLinea < _g.lineas.Count && _g.lineas[_iLinea].t1 <= t) _iLinea++;
         while (_iPlano + 1 < _g.planos.Count && _g.planos[_iPlano + 1].t0 <= t) _iPlano++;

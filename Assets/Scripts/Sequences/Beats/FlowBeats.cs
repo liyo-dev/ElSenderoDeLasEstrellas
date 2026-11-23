@@ -416,7 +416,7 @@ public class MusicBeat : SequenceBeat
 
         if (string.IsNullOrWhiteSpace(musicId))
         {
-            player.StopMusicNow(fadeOut);
+            player.StopMusicNow(ctx.Saltando ? 0f : fadeOut);
             yield break;
         }
 
@@ -435,7 +435,7 @@ public class MusicBeat : SequenceBeat
         if (!ctx.Saltando && !corteSeco && fundido < FundidoMinimo && OtroTemaSonando(player, musicId))
             fundido = FundidoMinimo;
 
-        player.PlayMusic(musicId, continuar, fundido, desde);
+        player.PlayMusic(musicId, continuar, fundido, desde, corteInmediato: ctx.Saltando);
         yield break;
     }
 

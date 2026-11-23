@@ -447,8 +447,8 @@ public static partial class MontajeDeLosCapitulos
             P("nadar", "3.2 · Pez de honor: aprende a nadar (aviso de habilidad)", DesbloquearHabilidad(AbilityKey.Swim, "CAP3_NADAR_APRENDIDO")),
             P("pez-adios", "3.2 · Pez se despide: las boyas y el farol de Candela", Dialogo(dlgPezAdios, Pez)),
             P("nada", "3.2 · A nado, siguiendo las boyas", Emitir(S3.Nada)),
-            P("candela-hablar", "3.2 · Hablar con Candela en su porche", Hablar(Candela)),
-            P("candela-dlg", "3.2 · Candela: el carro sin farol y las jaulas que brillaban", Dialogo(dlgCandela, Candela)),
+            P("candela-hablar", "3.2 · Llamar a la ventana de Candela", Hablar(Candela)),
+            P("candela-dlg", TituloVentanaCandela, CinematicaVentanaCandela() ?? Dialogo(dlgCandela, Candela)),
             P("paso-farol", "Paso: hablar con Candela (cierra Pistas en la Aldea del Mar)", Completar(MisionDeLaAldea, "CAP3_FAROL", cerrar: true)),
             P("mision-marcas", "Misión: las marcas de hierro", new StartQuestNode { QuestId = MisionCap3, NoGiver = true }),
             P("cerca-empieza", "3.2 · La cerca del huerto, de salida hacia el bosque", Emitir(S3.Cerca)),
@@ -601,13 +601,6 @@ public static partial class MontajeDeLosCapitulos
     /// Coloca el farol, las boyas y el escondite bajo el puente sobre la geometría de la escena.
     private static void ColocarLoDelAgua(Transform raiz, Dictionary<string, Transform> marcas, StringBuilder informe)
     {
-        foreach (var objeto in raiz.gameObject.scene.GetRootGameObjects())
-        {
-            var recadoRetirado = objeto.transform.Find(NombreRescatado + "/Recado · Doña Lubina");
-            if (objeto.name == NombreRescatado) recadoRetirado = objeto.transform.Find("Recado · Doña Lubina");
-            if (recadoRetirado != null) recadoRetirado.gameObject.SetActive(false);
-        }
-
         Physics.SyncTransforms();
         var punta = new Vector3(PuntaDelMuelle.x, 0f, PuntaDelMuelle.y);
         // La casa del farol y el borde de su porche que mira al muelle.
@@ -633,6 +626,7 @@ public static partial class MontajeDeLosCapitulos
             if (!hayPorche) borde = new Vector3(b.center.x, 1.6f, b.center.z) + hacia * Mathf.Max(b.extents.x, b.extents.z);
             var candela = raiz.Find(Aldea + " · roster/SP_SPAWN_Candela");
             if (candela != null) candela.SetPositionAndRotation(borde - hacia * 0.9f, Quaternion.LookRotation(hacia));
+            MontarVentanaDeCandela(casa, candela, informe);
 
             // El farol queda junto al marco de la puerta, visible desde el agua.
             var padre = Hijo(raiz, Cap3 + " · el agua");

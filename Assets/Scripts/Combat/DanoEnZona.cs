@@ -149,6 +149,20 @@ public static class DanoEnZona
         return alcanzados;
     }
 
+    /// Daña a los miembros del grupo cuyos pies están dentro del rectángulo.
+    public static void GolpearEnRectangulo(Vector3 centro, Vector2 tamano, float alto, float bajo, float dano)
+    {
+        Vector2 mitad = tamano * 0.5f;
+        int n = CuerposDelGrupo(out var cuerpos);
+        for (int i = 0; i < n; i++)
+        {
+            var cuerpo = cuerpos[i];
+            Vector3 d = cuerpo.Posicion - centro;
+            if (Mathf.Abs(d.x) <= mitad.x && Mathf.Abs(d.z) <= mitad.y && d.y >= -bajo && d.y <= alto)
+                Danar(cuerpo, dano);
+        }
+    }
+
     /// Daña a todos los del grupo que toquen una esfera y aparta al que va al mando hacia fuera,
     /// con algo de elevación (0 = horizontal). Devuelve a cuántos ha alcanzado el golpe.
     public static int GolpearEnEsfera(Vector3 centro, float radio, float dano, float empuje = 0f,

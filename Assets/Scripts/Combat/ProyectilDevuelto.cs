@@ -167,8 +167,12 @@ public sealed class ProyectilDevuelto : MonoBehaviour
             // Golpe asegurado: si en este paso llega, le da (no se pasa de largo ni se pone a orbitar).
             if (lejos <= distancia + 0.5f && _colliderDelObjetivo != null)
             {
-                Golpear(_colliderDelObjetivo, alObjetivo, 2);
-                return;
+                int tipoDelObjetivo = TipoDeContacto(_colliderDelObjetivo);
+                if (tipoDelObjetivo != 0)
+                {
+                    Golpear(_colliderDelObjetivo, alObjetivo, tipoDelObjetivo);
+                    return;
+                }
             }
             if (lejos > 0.001f)
             {

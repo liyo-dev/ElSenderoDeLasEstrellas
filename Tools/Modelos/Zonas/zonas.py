@@ -7,7 +7,7 @@
 import bpy, bmesh, sys, os, math
 from mathutils import Vector, Matrix
 
-ARGS = [a for a in sys.argv[1:] if not a.startswith("-")]
+ARGS = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
 OUT = ARGS[0] if ARGS else "salida"
 FOTOS = "fotos" in ARGS
 os.makedirs(OUT, exist_ok=True)
@@ -201,7 +201,7 @@ ALTO_PLATAFORMA = 1.6
 
 SOMBRA_DE_TEJA = {"TejaTurquesa": "TejaSombra", "TejaAzul": "PizarraOscura", "TejaCoral": "TejaCoralSombra", "TejaAmarilla": "TejaAmarillaSombra"}
 
-def casa_de_la_aldea(nombre, teja="TejaTurquesa", carpinteria="Carpinteria", espejo=False, zocalo="Zocalo", ancho=4.6, fondo=3.6, plantas=1, en_tierra=False):
+def casa_de_la_aldea(nombre, teja="TejaTurquesa", carpinteria="Carpinteria", espejo=False, zocalo="Zocalo", ancho=4.6, fondo=3.6, plantas=1, en_tierra=False, ventana_practicable=False):
     """«en_tierra»: sin pilotes, sobre un zócalo de piedra de 0,45 m y con dos peldaños delante."""
     a, f, zp = ancho, fondo, (0.45 if en_tierra else ALTO_PLATAFORMA)
     porche = 1.5
@@ -227,7 +227,23 @@ def casa_de_la_aldea(nombre, teja="TejaTurquesa", carpinteria="Carpinteria", esp
             o.append(viga((xr - 0.2, y, 0.25), (0.0, y, zp - 0.4), 0.12, "MaderaOscura"))
     # Muros encalados con zócalo de color.
     zt = zp + 2.5 * plantas
-    o.append(caja(-a / 2, a / 2, -f / 2, f / 2, zp, zt, "Cal", 0.06))
+    if ventana_practicable:
+        frente, centro = -f / 2, a * 0.25
+        izquierda, derecha = centro - 0.64, centro + 0.64
+        borde_inferior, borde_superior = zp + 0.67, zp + 2.20
+        for x0, x1, z0, z1 in ((-a / 2, izquierda, zp, zt), (derecha, a / 2, zp, zt),
+                               (izquierda, derecha, zp, borde_inferior), (izquierda, derecha, borde_superior, zt)):
+            o.append(caja(x0, x1, frente, frente + 0.15, z0, z1, "Cal", 0.01))
+        for x0, x1 in ((-a / 2, -a / 2 + 0.15), (a / 2 - 0.15, a / 2)):
+            o.append(caja(x0, x1, frente + 0.15, f / 2, zp, zt, "Cal", 0.01))
+        o.append(caja(-a / 2, a / 2, f / 2 - 0.15, f / 2, zp, zt, "Cal", 0.01))
+        o.append(caja(-a / 2, a / 2, frente, f / 2, zp + 2.48, zp + 2.58, "MaderaOscura", 0.01))
+        for x0, x1 in ((izquierda - 0.08, izquierda + 0.035), (derecha - 0.035, derecha + 0.08)):
+            o.append(caja(x0, x1, frente - 0.07, frente + 0.17, borde_inferior, borde_superior, carpinteria, 0.015))
+        o.append(caja(izquierda - 0.1, derecha + 0.1, frente - 0.14, frente + 0.17, borde_inferior - 0.08, borde_inferior + 0.025, "MaderaOscura", 0.015))
+        o.append(caja(izquierda - 0.08, derecha + 0.08, frente - 0.07, frente + 0.17, borde_superior - 0.035, borde_superior + 0.06, carpinteria, 0.015))
+    else:
+        o.append(caja(-a / 2, a / 2, -f / 2, f / 2, zp, zt, "Cal", 0.06))
     o.append(caja(-a / 2 - 0.04, a / 2 + 0.04, -f / 2 - 0.04, f / 2 + 0.04, zp, zp + 0.6, zocalo, 0.03))
     if plantas > 1:
         o.append(caja(-a / 2 - 0.05, a / 2 + 0.05, -f / 2 - 0.05, f / 2 + 0.05, zp + 2.42, zp + 2.6, "MaderaOscura", 0.03))
@@ -248,7 +264,8 @@ def casa_de_la_aldea(nombre, teja="TejaTurquesa", carpinteria="Carpinteria", esp
     o.append(caja(xd - 0.6, xd + 0.6, -f / 2 - 0.07, -f / 2 + 0.02, zp, zp + 2.1, "MaderaOscura", 0.02))
     o.append(caja(xd - 0.48, xd + 0.48, -f / 2 - 0.11, -f / 2 - 0.03, zp + 0.02, zp + 1.98, carpinteria, 0.02))
     o.append(bola((xd + 0.32, -f / 2 - 0.14, zp + 1.0), 0.05, "Oro"))
-    o += poner(ventana(min(0.9, a * 0.2), 1.0, carpinteria, "MaderaOscura"), a * 0.25, -f / 2, zp + 1.05)
+    if not ventana_practicable:
+        o += poner(ventana(min(0.9, a * 0.2), 1.0, carpinteria, "MaderaOscura"), a * 0.25, -f / 2, zp + 1.05)
     o += poner(ventana(0.8, 0.9, carpinteria, "MaderaOscura", jardinera=False), a / 2, 0.0, zp + 1.15, 90)
     o += poner(ventana(0.8, 0.9, carpinteria, "MaderaOscura", jardinera=False), -a / 2, 0.0, zp + 1.15, -90)
     # Barandilla del porche con cabo, y boyas colgadas.
@@ -469,7 +486,7 @@ VARIANTES_DE_ALDEA = (
     ("CasaDeLaAldea", dict(teja="TejaTurquesa", carpinteria="Carpinteria", zocalo="Zocalo", ancho=4.6, fondo=3.6, plantas=1)),
     ("CasaDeLaAldea_Azul", dict(teja="TejaAzul", carpinteria="CarpinteriaAzul", zocalo="ZocaloTurquesa", ancho=4.2, fondo=3.4, plantas=1, espejo=True)),
     ("CasaDeLaAldea_Coral", dict(teja="TejaCoral", carpinteria="CarpinteriaCoral", zocalo="ZocaloCoral", ancho=3.4, fondo=3.0, plantas=1)),
-    ("CasaDeLaAldea_Amarilla", dict(teja="TejaAmarilla", carpinteria="CarpinteriaAzul", zocalo="ZocaloAmarillo", ancho=4.8, fondo=3.6, plantas=2)),
+    ("CasaDeLaAldea_Amarilla", dict(teja="TejaAmarilla", carpinteria="CarpinteriaAzul", zocalo="ZocaloAmarillo", ancho=4.8, fondo=3.6, plantas=2, ventana_practicable=True)),
     ("CasaDeLaAldea_Alta", dict(teja="TejaTurquesa", carpinteria="Carpinteria", zocalo="ZocaloCoral", ancho=3.8, fondo=3.2, plantas=2, espejo=True)),
     ("CasaDeLaAldea_Pequena", dict(teja="TejaAzul", carpinteria="Carpinteria", zocalo="Zocalo", ancho=3.2, fondo=2.8, plantas=1)),
     # En tierra: las de la aldea que no están sobre el agua.
@@ -1747,6 +1764,9 @@ SOLO_MONTANA = "montana" in ARGS
 
 if SOLO_MONTANA:
     piezas_de_la_montana()
+elif "casa-farol" in ARGS:
+    nombre, opciones = next(v for v in VARIANTES_DE_ALDEA if v[0] == "CasaDeLaAldea_Amarilla")
+    limpiar(); exportar(casa_de_la_aldea(nombre, **opciones))
 else:
     for nombre, opciones in VARIANTES_DE_ALDEA:
         limpiar(); exportar(casa_de_la_aldea(nombre, **opciones))

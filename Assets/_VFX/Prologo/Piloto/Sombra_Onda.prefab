@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2042432371955758722}
+  - {fileID: 2644075382930987362}
   m_Father: {fileID: 3431573881316344882}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4373743833560080776
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Kits.StylizedVfx::Kits.StylizedVfx.EnergyPulse
   energyRenderers:
   - {fileID: 291861929131088875}
-  - {fileID: 2639102304065556967}
+  - {fileID: 4330927231217269366}
   pulseLight: {fileID: 614463306208680533}
   lightIntensity: 3
   lightRange: 4
@@ -258,7 +258,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   spins: []
   unscaledTime: 1
---- !u!1 &3882719811463554463
+--- !u!1 &6192964773721509645
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -266,9 +266,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2042432371955758722}
-  - component: {fileID: 7809510509181513888}
-  - component: {fileID: 2639102304065556967}
+  - component: {fileID: 2644075382930987362}
+  - component: {fileID: 2160428190167126187}
+  - component: {fileID: 4330927231217269366}
   m_Layer: 0
   m_Name: Aro
   m_TagString: Untagged
@@ -276,13 +276,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2042432371955758722
+--- !u!4 &2644075382930987362
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3882719811463554463}
+  m_GameObject: {fileID: 6192964773721509645}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -291,21 +291,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8534013447143769441}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7809510509181513888
+--- !u!33 &2160428190167126187
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3882719811463554463}
+  m_GameObject: {fileID: 6192964773721509645}
   m_Mesh: {fileID: 4300000, guid: ea486a18b089b1e4f96f9c7ae53b620a, type: 2}
---- !u!23 &2639102304065556967
+--- !u!23 &4330927231217269366
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3882719811463554463}
+  m_GameObject: {fileID: 6192964773721509645}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0

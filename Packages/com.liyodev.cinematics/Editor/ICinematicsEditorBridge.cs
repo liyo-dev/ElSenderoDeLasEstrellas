@@ -89,6 +89,8 @@ namespace Liyodev.Cinematics
         public string elemento;
         [Tooltip("Sonido que toca en ese instante (música o efecto), para el animatic.")]
         public AudioClip clip;
+        public float desdeSegundo;
+        public bool enBucle;
         [Range(0f, 1f)] public float volumen = 1f;
         [Tooltip("Qué es este trozo en la vista de pistas: acción, reacción, reacción automática o vida de fondo.")]
         public CinemaClipClase clase;
@@ -369,8 +371,8 @@ namespace Liyodev.Cinematics
         void Hornear(string id, bool storyboard);
         void AbrirTaller(string id);
         void AbrirGuion(string id);
-        void GenerarPaginaAnotable(string id);
-        void AbrirStoryboard(string id);
+        void ExportarGuion(string id, string destino);
+        void ExportarStoryboard(string id, string destino);
         void Avisar(string titulo, string mensaje);
 
         /// Aplica un lote de anotaciones de la página del storyboard (las que sabe traducir a un
@@ -392,8 +394,9 @@ namespace Liyodev.Cinematics
         /// Cuántas correcciones de esa cinemática esperan a que una sesión de IA las haga.
         int EncargosPendientes(string id);
 
-        /// Abre (o enseña en el explorador) la vista legible de esa cola de encargos.
-        void AbrirEncargos(string id);
+        /// Encargos abiertos, con una clave estable aunque compartan plano.
+        List<CinemaEncargo> LeerEncargos(string id);
+        string CerrarEncargo(string id, string clave);
 
         /// El texto de la cola de encargos, para leerla desde fuera (p. ej. el buzón de órdenes).
         string TextoDeEncargos(string id);

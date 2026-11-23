@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,7 +16,7 @@ using Liyodev.NarrativeGraph;
 
 /// El enchufe del Director con El Sendero: le contesta lo que la mesa necesita (qué cinemáticas hay,
 /// sus fotos, sus frases, sus voces y el parte del último horneado) y hace lo que sabe hacer el juego
-/// (hornear con el horneador de siempre, abrir el taller, la página anotable, el storyboard).
+/// (hornear con el horneador de siempre, exportar y guardar las revisiones).
 ///
 /// El paquete `Liyodev.Cinematics` no conoce nada de esto: solo ve el contrato.
 public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinematicsLivePreview, ICinematicsPlayControl
@@ -146,7 +147,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
             });
         }
         detalle.lineas.Sort((a, b) => a.t0.CompareTo(b.t0));
-        detalle.pistas = ConstruirPistas(guion, detalle.lineas, PerfilDeAudio());
+        detalle.pistas = ConstruirPistas(guion, detalle.lineas, PerfilDeAudio(), DefinicionDe(guion)?.musicId);
 
         var (errores, avisos) = ParteDelInforme(carpeta);
         detalle.errores = errores;
@@ -167,7 +168,9 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
 
     // ── Lo que se le puede pedir ─────────────────────────────────────────────────────────────
 
-    public void Hornear(string id, bool storyboard)
+    public void Hornear(string id, bool storyboard) => HornearEnElEditor(id, storyboard);
+
+    private bool HornearEnElEditor(string id, bool storyboard, bool avisar = true)
     {
         var entrada = Listar().Find(e => e.id == id);
         if (entrada == null || string.IsNullOrEmpty(entrada.rutaGuion))
@@ -179,9 +182,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         for (int i = 0; i < SceneManager.sceneCount; i++)
             abiertasAntes.Add(SceneManager.GetSceneAt(i).path);
 
-        string resumen = HorneadorDeGuion.Hornear(entrada.rutaGuion, storyboard) != null
-            ? HorneadorDeGuion.UltimoResumen
-            : "no se pudo hornear";
+        bool horneado = HorneadorDeGuion.Hornear(entrada.rutaGuion, storyboard) != null;
+        string resumen = horneado ? HorneadorDeGuion.UltimoResumen : "no se pudo hornear";
 
         for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
         {
@@ -192,7 +194,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
 
         s_textos = null;
         CinematicsEditorServices.AvisarCambio();
-        Avisar("Director", $"«{id}»: {resumen}");
+        if (avisar) Avisar("Director", $"«{id}»: {resumen}");
+        return horneado;
     }
 
     public void AbrirTaller(string id)
@@ -212,24 +215,50 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         else EditorUtility.RevealInFinder(RutaFisica(entrada.rutaGuion));
     }
 
-    public void GenerarPaginaAnotable(string id)
+    public void ExportarGuion(string id, string destino)
     {
-        var guion = HorneadoDe(id);
-        if (guion == null) throw new Exception($"«{id}» no está horneado: no hay fotos para la página.");
-        string hecho = StoryboardAnotable.Generar(guion);
-        if (!string.IsNullOrEmpty(hecho)) EditorUtility.RevealInFinder(RutaFisica("Tools/Storyboard"));
+        var entrada = Listar().Find(e => e.id == id);
+        if (string.IsNullOrEmpty(entrada?.rutaGuion))
+            throw new InvalidOperationException($"«{id}» no tiene guion de texto.");
+
+        string origen = RutaFisica(entrada.rutaGuion);
+        if (!string.Equals(origen, Path.GetFullPath(destino), StringComparison.OrdinalIgnoreCase))
+            File.Copy(origen, destino, true);
     }
 
-    public void AbrirStoryboard(string id)
+    public void ExportarStoryboard(string id, string destino)
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+            throw new InvalidOperationException("Sal de Play para generar el storyboard.");
+
+        if (!HornearEnElEditor(id, true, avisar: false))
+            throw new InvalidOperationException($"No se ha podido generar el storyboard de «{id}».");
+
         string carpeta = CarpetaDelStoryboard(id);
-        if (!string.IsNullOrEmpty(carpeta))
+        string portada = string.IsNullOrEmpty(carpeta) ? null : Path.Combine(carpeta, "storyboard.html");
+        if (!File.Exists(portada))
+            throw new InvalidOperationException($"«{id}» no tiene un storyboard generado.");
+
+        // El HTML y sus imágenes viajan juntos; se completa el ZIP antes de sustituir el destino.
+        string temporal = Path.GetTempFileName();
+        try
         {
-            string html = Path.Combine(carpeta, "storyboard.html");
-            if (File.Exists(html)) { EditorUtility.RevealInFinder(html); return; }
-            if (Directory.Exists(carpeta)) { EditorUtility.RevealInFinder(carpeta); return; }
+            using (var archivo = File.Open(temporal, FileMode.Create))
+            using (var zip = new ZipArchive(archivo, ZipArchiveMode.Create))
+            {
+                Anadir(portada);
+                foreach (string imagen in Directory.GetFiles(carpeta, "*.png")) Anadir(imagen);
+
+                void Anadir(string ruta)
+                {
+                    using var entrada = File.OpenRead(ruta);
+                    using var salida = zip.CreateEntry(Path.GetFileName(ruta)).Open();
+                    entrada.CopyTo(salida);
+                }
+            }
+            File.Copy(temporal, destino, true);
         }
-        throw new Exception($"«{id}» no tiene fotos horneadas: hornéalo con storyboard.");
+        finally { File.Delete(temporal); }
     }
 
     public void Avisar(string titulo, string mensaje) => OrdenesDelEditor.Avisar(titulo, mensaje);
@@ -383,7 +412,10 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         else reproductor.Reanudar();
     }
 
-    public bool RodarEnPlay(string id, float desde)    {
+    public bool RodarEnPlay(string id, float desde)
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode) return false;
+
         var guion = HorneadoDe(id);
         if (guion == null) { Avisar("Director", $"No encuentro «{id}»."); return false; }
 
@@ -419,7 +451,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         // entrada de la secuencia, igual que haría el grafo.
         SessionState.SetString("Director.Play.Senal", definicion.signalIn);
         SessionState.SetString("Director.Play.Nombre", guion.nombre);
-        SessionState.SetFloat("Director.Play.Desde", Mathf.Max(0f, desde));
+        SessionState.SetFloat("Director.Play.Desde", Mathf.Clamp(desde, 0f, Mathf.Max(0f, guion.duracion - 0.01f)));
+        EditorApplication.ExecuteMenuItem("Window/General/Game");
         EditorApplication.EnterPlaymode();
         return true;
     }
@@ -555,20 +588,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
             QuitarDeLaPizarra(guion.nombre, hechasAhora);
         }
 
-        if (aplicados > 0)
-        {
-            Hornear(guion.nombre, true);
-            var recien = HorneadoDe(guion.nombre);
-            if (recien != null)
-            {
-                StoryboardAnotable.Generar(recien);
-
-                // La página vieja del navegador ya no vale: se abre la recién hecha para seguir ahí.
-                string pagina = Path.Combine(Directory.GetParent(Application.dataPath).FullName,
-                    "Tools/Storyboard", recien.nombre + ".html");
-                if (File.Exists(pagina)) Application.OpenURL("file:///" + pagina.Replace('\\', '/'));
-            }
-        }
+        if (aplicados > 0) Hornear(guion.nombre, true);
 
         cola.guion = guion.nombre;
         cola.escena = guion.escena;
@@ -582,11 +602,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         if (repetidas > 0)
             resumen += (resumen.Length > 0 ? " · " : string.Empty) + $"{repetidas} ya aplicada(s) antes";
         if (cola.encargos.Count > 0)
-        {
-            string donde = "Guiones/_revisiones/encargos-" + Slug(guion.nombre) + ".md";
             resumen += (resumen.Length > 0 ? " · " : string.Empty) +
-                       $"{cola.encargos.Count} para la IA en {donde} (buzón: «encargos {guion.nombre}» · cerrar: «revisiones-hechas {guion.nombre}»)";
-        }
+                       $"{cola.encargos.Count} encargo(s) pendiente(s)";
         if (hechos.Count > 0)
             resumen += (resumen.Length > 0 ? " · " : string.Empty) + string.Join(" · ", hechos);
 
@@ -633,6 +650,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
                     ? $" t={encargo.t:0.0}"
                     : $" {encargo.t0:0.0}–{encargo.t1:0.0}";
                 sb.AppendLine($"- {encargo.panel} · {encargo.etiquetaElemento} · «{encargo.texto}»{cuando} · L{encargo.linea}");
+                sb.AppendLine($"  - clave para resolve_task: {encargo.clave}");
                 if (!string.IsNullOrEmpty(encargo.ordenGuion))
                     sb.AppendLine($"  - orden: {encargo.ordenGuion.Trim()}");
             }
@@ -827,19 +845,10 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
 
     public int EncargosPendientes(string id) => LeerColaDeEncargos(id).encargos.Count;
 
-    public void AbrirEncargos(string id)
-    {
-        var cola = LeerColaDeEncargos(id);
-        if (cola.encargos.Count == 0)
-        {
-            Avisar("Director · encargos", $"«{id}» no tiene correcciones pendientes para la IA.");
-            return;
-        }
+    public List<CinemaEncargo> LeerEncargos(string id) => LeerColaDeEncargos(id).encargos;
 
-        GuardarColaDeEncargos(cola);
-        string ruta = RutaEncargosMd(cola.guion);
-        if (File.Exists(ruta)) EditorUtility.RevealInFinder(ruta);
-    }
+    public string CerrarEncargo(string id, string clave) =>
+        MarcarRevisionesHechas(id + " " + clave);
 
     public string TextoDeEncargos(string id)
     {
@@ -860,12 +869,10 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         var pedida = LeerColaDeEncargos(id);
         if (pedida.encargos.Count == 0) return $"«{id}»: 0 encargos pendientes.";
 
-        GuardarColaDeEncargos(pedida);
-        string ruta = RutaEncargosMd(pedida.guion);
-        return File.Exists(ruta) ? File.ReadAllText(ruta) : TextoDeLaCola(pedida);
+        return TextoDeLaCola(pedida);
     }
 
-    private static CinemaColaDeEncargos LeerColaDeEncargos(string id)
+    internal static CinemaColaDeEncargos LeerColaDeEncargos(string id)
     {
         string ruta = RutaEncargosJson(id);
         var cola = File.Exists(ruta) ? LeerColaDeUnArchivo(ruta) : null;
@@ -1080,7 +1087,9 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         if (marcadas.Count == 0)
             return $"«{guion}»: no había encargos que coincidan con eso.";
 
-        GuardarAplicadas(guion, LeerAplicadas(guion), marcadas);
+        if (!GuardarAplicadas(guion, LeerAplicadas(guion), marcadas))
+            return $"«{guion}»: no se pudo guardar el cierre. Quedan {cola.encargos.Count} pendiente(s).";
+
         QuitarDeLaPizarra(guion, marcadas);
 
         cola.encargos.RemoveAll(e => marcadas.Contains(e.clave));
@@ -1117,7 +1126,7 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         }
     }
 
-    private static void GuardarAplicadas(string guion, List<string> antes, List<string> nuevas)
+    private static bool GuardarAplicadas(string guion, List<string> antes, List<string> nuevas)
     {
         try
         {
@@ -1127,10 +1136,12 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
             foreach (string id in nuevas)
                 if (!todas.ids.Contains(id)) todas.ids.Add(id);
             File.WriteAllText(ruta, JsonUtility.ToJson(todas, true));
+            return true;
         }
         catch (Exception e)
         {
             Debug.LogWarning("[Director] No pude apuntar las notas aplicadas de " + guion + ": " + e.Message);
+            return false;
         }
     }
 
@@ -1329,7 +1340,8 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
 
     /// Una fila por cosa: la cámara, cada personaje (voz, movimiento, gestos, presencia), y los
     /// efectos agrupados por lo que son. Es lo que el horneado sabe de verdad, sin inventar nada.
-    private static List<CinemaTrack> ConstruirPistas(GuionHorneado guion, List<CinemaLine> lineas, AudioGraphProfile perfil)
+    private static List<CinemaTrack> ConstruirPistas(GuionHorneado guion, List<CinemaLine> lineas,
+        AudioGraphProfile perfil, string musicaInicial)
     {
         var pistas = new List<CinemaTrack>();
 
@@ -1426,6 +1438,21 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
         }
 
         var porTipo = new Dictionary<CinemaTrackKind, CinemaTrack>();
+        var reglaInicial = string.IsNullOrEmpty(musicaInicial) ? null : perfil?.GetSequenceRule(musicaInicial);
+        if (reglaInicial?.music != null)
+        {
+            var pista = new CinemaTrack { nombre = "Música", tipo = CinemaTrackKind.Musica };
+            pista.clips.Add(new CinemaClip
+            {
+                t0 = 0f,
+                t1 = 0.6f,
+                etiqueta = musicaInicial,
+                clip = reglaInicial.music,
+                enBucle = !reglaInicial.sinBucle,
+            });
+            porTipo.Add(CinemaTrackKind.Musica, pista);
+            pistas.Add(pista);
+        }
         foreach (var efecto in guion.efectos)
         {
             if (efecto.beat == null || efecto.beat is SayBeat) continue;
@@ -1445,6 +1472,9 @@ public sealed class SenderoCinematicsBridge : ICinematicsEditorBridge, ICinemati
                 linea = efecto.linea,
                 clip = SonidoDe(efecto.beat, perfil),
                 volumen = VolumenDe(efecto.beat),
+                desdeSegundo = efecto.beat is MusicBeat musica ? Mathf.Max(0f, musica.desdeSegundo) : 0f,
+                enBucle = efecto.beat is MusicBeat tema && !string.IsNullOrEmpty(tema.musicId) &&
+                          perfil?.GetSequenceRule(tema.musicId) is { sinBucle: false },
             });
         }
 
