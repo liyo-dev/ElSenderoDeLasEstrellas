@@ -63,6 +63,14 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [SerializeField, Min(0f)] private float metrosAdelanteEnRespiro = 12f;
     [Tooltip("Segundo de la canción en el que se quita el borde delantero para el salto final.")]
     [SerializeField, Min(0f)] private float segundoSinTope;
+    [Tooltip("Segundos de carrera libre que se adelantan respecto a la salida del salto final.")]
+    [SerializeField, Min(0f)] private float margenDeCarreraFinal = 1.5f;
+    [Tooltip("Segundos extra para aterrizar y pisar la meta tras el plazo de la coda.")]
+    [SerializeField, Min(0f)] private float margenDeLlegadaFinal = 1.5f;
+
+    private bool EnCarreraFinal(float segundo) =>
+        segundoSinTope > 0f && segundo >= segundoSinTope - margenDeCarreraFinal;
+
     [Tooltip("Calderones en orden (X: la Z donde se paran el recuadro y la sombra; Y: los segundos): un respiro para lo que pide pararse, como cambiar de personaje y encender una antorcha. La canción sigue.")]
     [SerializeField] private Vector2[] calderones = System.Array.Empty<Vector2>();
     [Tooltip("Tramos en los que el recuadro y la sombra van más deprisa (X: la Z donde empieza; Y: los segundos que dura; Z: los metros de más que ganan en ese rato). Hay que tirar de sprint.")]
@@ -91,13 +99,20 @@ public sealed class TramoDelCoro : PruebaDelJugador
     [Tooltip("Segundos tras un cambio de personaje en los que la sombra no gana terreno.")]
     [SerializeField, Min(0f)] private float graciaDelCambio = 0.8f;
 
-    [Header("Foco de la ruta")]
-    [SerializeField] private FollowSpot focoDeRuta;
+    [Header("Focos de la ruta")]
+    [Tooltip("Tres cañones: izquierda, centro y derecha. El centro marca el camino; los otros dos mandan la luz cuando miente.")]
+    [SerializeField] private FollowSpot[] focosDeRuta = System.Array.Empty<FollowSpot>();
+    [Tooltip("Separación lateral de los focos respecto al camino (m).")]
+    [SerializeField, Min(0f)] private float separacionDeLosFocos = 3.3f;
     [SerializeField] private AnimationCurve recorridoLateralDelFoco;
     [SerializeField] private Vector2[] tramosDelFoco = System.Array.Empty<Vector2>();
+    [Tooltip("Por ventana del foco: X = foco que se enciende además (0 izquierda, 2 derecha); Y = 1 si ese foco confunde. El del centro siempre guía.")]
+    [SerializeField] private Vector2Int[] reglasDeLosFocos = System.Array.Empty<Vector2Int>();
     [SerializeField] private float segundoDeEstrecharElFoco;
     [SerializeField, Min(0.5f)] private float radioDelFoco = 3.3f;
     [SerializeField, Min(0.5f)] private float radioDelFocoEstrecho = 2.55f;
+    private float[] _brilloDeLosFocos = System.Array.Empty<float>();
+    private bool _avisoDelSenuelo;
     private float _segundosFueraDelFoco;
     private float _presionDelFoco;
 
@@ -147,6 +162,10 @@ public sealed class TramoDelCoro : PruebaDelJugador
     protected override void Awake()
     {
         base.Awake();
+        _brilloDeLosFocos = new float[focosDeRuta.Length];
+        // Compatibilidad con los montajes que aún incluyen el cenital adelantado.
+        var cenitalAdelantado = recuadro != null ? recuadro.Find("Vara de focos (va con la canción)/Cenital (0, 13)") : null;
+        if (cenitalAdelantado != null) cenitalAdelantado.gameObject.SetActive(false);
         _segundoDeEsteIntento = segundoDeSalida;
         _salidaDelPrimerIntento = salidaDelJugador;
         _posicionesDelSuelo = new Vector3[sueloQueSePierde.Length];
@@ -387,7 +406,7 @@ public sealed class TramoDelCoro : PruebaDelJugador
             return;
         }
 
-        if (segundoLimiteDeLaCoda > 0f && ahora >= segundoLimiteDeLaCoda)
+        if (segundoLimiteDeLaCoda > 0f && ahora >= segundoLimiteDeLaCoda + margenDeLlegadaFinal)
         {
             Fallar();
             return;
@@ -426,20 +445,51 @@ public sealed class TramoDelCoro : PruebaDelJugador
 
     private void ActualizarFoco(float segundo, Vector3 posicion, float dt)
     {
-        if (focoDeRuta == null || recorridoLateralDelFoco == null || !_corriendo || !EnVentanaDelFoco(segundo))
+        if (focosDeRuta == null || focosDeRuta.Length == 0 || recorridoLateralDelFoco == null
+            || !_corriendo || !EnVentanaDelFoco(segundo, out int encendido, out bool senuelo))
         {
-            if (focoDeRuta != null) focoDeRuta.SetStageMark(null);
-            _segundosFueraDelFoco = 0f;
-            _presionDelFoco = Mathf.MoveTowards(_presionDelFoco, 0f, dt);
+            ApagarFocos(dt);
             return;
         }
 
         float radio = segundo >= segundoDeEstrecharElFoco ? radioDelFocoEstrecho : radioDelFoco;
-        Vector3 marca = new Vector3(recorridoLateralDelFoco.Evaluate(segundo), 0f, CentroDelRecuadro(segundo));
-        focoDeRuta.SetStageMark(marca, radio);
-        Vector3 distancia = posicion - marca;
+        float x = recorridoLateralDelFoco.Evaluate(segundo);
+        float z = CentroDelRecuadro(segundo);
+        float pulso = PulsoDelFoco(segundo);
+        int centro = (focosDeRuta.Length - 1) / 2;
+        int confunde = Mathf.Clamp(encendido, 0, focosDeRuta.Length - 1);
+        for (int i = 0; i < focosDeRuta.Length; i++)
+        {
+            var foco = focosDeRuta[i];
+            if (foco == null) continue;
+            bool guia = i == centro;
+            bool enganio = senuelo && i == confunde;
+            if (guia || enganio)
+                foco.SetStageMark(new Vector3(x + (i - centro) * separacionDeLosFocos, 0f, z), radio);
+            else
+            {
+                float lado = i < centro ? -1f : 1f;
+                float fase = segundo * 2.4f + (i < centro ? 0f : 1.8f);
+                float lateral = lado * (3.55f + 0.85f * Mathf.Sin(fase));
+                float longitudinal = lado * (3.4f + 1.6f * Mathf.Cos(fase));
+                foco.SetStageMark(new Vector3(lateral, 0f, z + longitudinal), 1.65f);
+            }
+            float objetivo = guia ? 1f : enganio ? 0.78f : 0.72f;
+            _brilloDeLosFocos[i] = Mathf.MoveTowards(_brilloDeLosFocos[i], objetivo, dt * 3.5f);
+            foco.SetBrightness(_brilloDeLosFocos[i] * pulso);
+        }
+
+        if (senuelo && !_avisoDelSenuelo)
+        {
+            HudToastService.Instance?.ShowRaw(PresentadorDeLinea.Texto("CORO_FOCO_DEL_CENTRO", "¡Sigue el foco del centro!"), 1.4f);
+            _avisoDelSenuelo = true;
+        }
+        else if (!senuelo) _avisoDelSenuelo = false;
+
+        // Solo el foco central cuenta para la presión de la sombra.
+        Vector3 distancia = posicion - new Vector3(x, 0f, z);
         distancia.y = 0f;
-        bool fuera = !GrabadorDeMarcas.Grabando && distancia.sqrMagnitude > radio * radio
+        bool fuera = !EnCarreraFinal(segundo) && !GrabadorDeMarcas.Grabando && distancia.sqrMagnitude > radio * radio
             && (_motor == null || _motor.PisandoSuelo);
         if (fuera)
         {
@@ -458,10 +508,49 @@ public sealed class TramoDelCoro : PruebaDelJugador
         }
     }
 
-    private bool EnVentanaDelFoco(float segundo)
+    /// <summary>Apaga los focos de la ruta y deja el del centro siguiendo al jugador, como antes de correr.</summary>
+    private void ApagarFocos(float dt)
+    {
+        int centro = focosDeRuta != null ? (focosDeRuta.Length - 1) / 2 : 0;
+        if (focosDeRuta != null)
+        {
+            for (int i = 0; i < focosDeRuta.Length; i++)
+            {
+                if (focosDeRuta[i] == null) continue;
+                focosDeRuta[i].SetStageMark(null);
+                focosDeRuta[i].SetBrightness(i == centro ? 1f : 0f);
+            }
+        }
+        for (int i = 0; i < _brilloDeLosFocos.Length; i++) _brilloDeLosFocos[i] = 0f;
+        _avisoDelSenuelo = false;
+        _segundosFueraDelFoco = 0f;
+        _presionDelFoco = Mathf.MoveTowards(_presionDelFoco, 0f, dt);
+    }
+
+    /// <summary>El foco encendido late con el tiempo de la canción.</summary>
+    private float PulsoDelFoco(float segundo)
+    {
+        var partitura = reloj != null ? reloj.Score : null;
+        if (partitura == null || partitura.BeatCount < 2) return 1f;
+        int i = partitura.BeatIndexAt(segundo);
+        float inicio = partitura.BeatTime(i);
+        float fin = partitura.BeatTime(Mathf.Min(i + 1, partitura.BeatCount - 1));
+        float u = Mathf.Clamp01((segundo - inicio) / Mathf.Max(0.05f, fin - inicio));
+        return 1f + 0.3f * (1f - u) * (1f - u);
+    }
+
+    private bool EnVentanaDelFoco(float segundo, out int foco, out bool senuelo)
     {
         for (int i = 0; i < tramosDelFoco.Length; i++)
-            if (segundo >= tramosDelFoco[i].x && segundo < tramosDelFoco[i].y) return true;
+        {
+            if (segundo < tramosDelFoco[i].x || segundo >= tramosDelFoco[i].y) continue;
+            Vector2Int regla = i < reglasDeLosFocos.Length ? reglasDeLosFocos[i] : new Vector2Int(1, 0);
+            foco = regla.x;
+            senuelo = regla.y != 0;
+            return true;
+        }
+        foco = 1;
+        senuelo = false;
         return false;
     }
 
@@ -595,13 +684,24 @@ public sealed class TramoDelCoro : PruebaDelJugador
     /// </summary>
     private void AjustarElTope(float zDelJugador, float segundo)
     {
+        if (EnCarreraFinal(segundo))
+        {
+            if (_topePuesto >= 0f)
+            {
+                TopeDeVelocidadDelJugador.Quitar(this);
+                _topePuesto = -1f;
+                _margenPuesto = float.NaN;
+            }
+            return;
+        }
+
         float centro = CentroDelRecuadro(segundo);
         float tope = Mathf.Clamp(metrosPorSegundo + (centro - zDelJugador) * 1.5f, metrosPorSegundo,
                                  Mathf.Max(metrosPorSegundo, topeLibre));
         // El borde limita solo el avance: se puede cambiar de fila incluso pegado a él.
         bool parado = CentroDelRecuadro(segundo + 0.1f) - centro < 0.01f;
         if (parado) tope = metrosPorSegundo;
-        bool conBorde = recuadro != null && (segundoSinTope <= 0f || segundo < segundoSinTope);
+        bool conBorde = recuadro != null;
         float margen = conBorde ? (parado ? metrosAdelanteEnRespiro : metrosAdelante) : -1f;
         if (Mathf.Abs(tope - _topePuesto) < 0.1f && margen == _margenPuesto) return;
         _topePuesto = tope;
@@ -626,9 +726,8 @@ public sealed class TramoDelCoro : PruebaDelJugador
     private void DejarDeCorrer()
     {
         _corriendo = false;
-        _segundosFueraDelFoco = 0f;
+        ApagarFocos(1f);
         _presionDelFoco = 0f;
-        if (focoDeRuta != null) focoDeRuta.SetStageMark(null);
         if (_vineta != null) _vineta.alpha = 0f;
         TopeDeVelocidadDelJugador.Quitar(this);
     }

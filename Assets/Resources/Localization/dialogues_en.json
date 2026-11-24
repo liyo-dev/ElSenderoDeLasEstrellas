@@ -2783,6 +2783,30 @@
         {
             "key": "DLG_CAP3_MADRE_DE_PEZ_02",
             "value": "Here. Tell him the paint is dry and he can get it wet this time."
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_1",
+            "value": "One! And don't stand still!"
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_2",
+            "value": "Two! And don't scorch the people!"
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_3",
+            "value": "Three! Tired already?"
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_4",
+            "value": "Four! The bell is yours!"
+        },
+        {
+            "key": "CAP4_CAMPANA_CHAMUSCADA",
+            "value": "Again! The figures are people!"
+        },
+        {
+            "key": "CAP4_CAMPANA_ACABADA",
+            "value": "That's it. Now ring it."
         }
     ]
 }

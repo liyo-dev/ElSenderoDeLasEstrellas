@@ -632,8 +632,11 @@ public class MagicCaster : MonoBehaviour
         if (shieldController != null && shieldController.IsDefending) { reason = "Defendiendo"; return MotivoSinLanzar.Defendiendo; }
 
         // En tierra, de cara a una pendiente imposible o una pared (stopMove), no se lanza; en el
-        // aire sí (INC-483).
-        if (controller && !controller.IsAirborne && controller.stopMove) { reason = "Bloqueado contra una pared"; return MotivoSinLanzar.ContraLaPared; }
+        // aire sí (INC-483). stopMove se queda encendido cuando el jugador deja de empujar la
+        // pendiente: si no hay entrada de movimiento, es un resto y no debe impedir el hechizo
+        // (el combo teclea X, B, A quieto y se cortaba en la última tecla, INC-1455).
+        if (controller && !controller.IsAirborne && controller.stopMove && controller.MagnitudDeEntrada > 0.1f)
+        { reason = "Bloqueado contra una pared"; return MotivoSinLanzar.ContraLaPared; }
 
         float coste = RasgosDePrenda.CosteDeMana(spell);
         if (manaPool && manaPool.Current < coste)

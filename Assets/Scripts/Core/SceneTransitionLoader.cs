@@ -166,6 +166,16 @@ public static class SceneTransitionLoader
                     SceneManager.MoveGameObjectToScene(escenarioDeCarga, overlayLoaded);
                     foreach (var raiz in raices)
                         raiz.transform.SetParent(escenarioDeCarga.transform, true);
+
+                    // La cinemática puede arrancar antes de retirar la pantalla de carga.
+                    // El escenario 3D se dibuja en la textura del panel. Las cámaras con
+                    // salida directa competirían con la del mundo al fundir el panel.
+                    foreach (var camara in escenarioDeCarga.GetComponentsInChildren<Camera>(true))
+                    {
+                        if (camara.CompareTag("MainCamera")) camara.tag = "Untagged";
+                        if (camara.targetTexture == null) camara.enabled = false;
+                    }
+
                     Object.DontDestroyOnLoad(escenarioDeCarga);
                 }
 

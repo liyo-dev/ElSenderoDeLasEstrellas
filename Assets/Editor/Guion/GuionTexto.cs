@@ -49,7 +49,7 @@ using UnityEngine;
 /// En «dice», dura=s reserva un tiempo de lectura y no recorta una voz más larga.
 public sealed class GuionTexto
 {
-    public string nombre, escena, secuencia, prepara;
+    public string nombre, escena, escenaBase, secuencia, prepara;
     /// Trozo de una escena grande (MainWorld): «ZONA nombre x z mitad». Vacío = la escena entera.
     public string zona;
     public Rect zonaRect;
@@ -151,6 +151,7 @@ public sealed class GuionTexto
                     seccion = primera; continue;
                 case "GUION": g.nombre = Resto(tok); continue;
                 case "ESCENA": g.escena = Resto(tok); continue;
+                case "ESCENA_BASE": g.escenaBase = Resto(tok); continue;
                 case "ZONA":
                 {
                     var ci = System.Globalization.CultureInfo.InvariantCulture;

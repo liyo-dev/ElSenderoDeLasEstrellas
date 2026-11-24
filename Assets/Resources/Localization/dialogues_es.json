@@ -2783,6 +2783,30 @@
         {
             "key": "DLG_CAP3_MADRE_DE_PEZ_02",
             "value": "Toma. Dile que la pintura ya está seca y que esta vez puede mojarla."
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_1",
+            "value": "¡Una! ¡Y no te quedes quieto!"
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_2",
+            "value": "¡Dos! ¡Y no me quemes a la gente!"
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_3",
+            "value": "¡Tres! ¿Ya te has cansado?"
+        },
+        {
+            "key": "CAP4_CAMPANA_RONDA_4",
+            "value": "¡Cuatro! ¡La campana es tuya!"
+        },
+        {
+            "key": "CAP4_CAMPANA_CHAMUSCADA",
+            "value": "¡Otra vez! ¡Las figuras son gente!"
+        },
+        {
+            "key": "CAP4_CAMPANA_ACABADA",
+            "value": "Ya está. Ahora tócala."
         }
     ]
 }

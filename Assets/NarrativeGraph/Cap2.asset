@@ -56,9 +56,9 @@ MonoBehaviour:
   - rid: 5630202816662077838
   - rid: 5630202816662077843
   - rid: 6540294472562114912
-  - rid: 6540294796242846184
-  - rid: 6540294796242846185
-  - rid: 6540294796242846186
+  - rid: 6540294836316275459
+  - rid: 6540294836316275460
+  - rid: 6540294836316275461
   - rid: 6540294600349712458
   - rid: 6540294600349712459
   - rid: 6540294600349712460
@@ -1322,7 +1322,7 @@ MonoBehaviour:
         fraseAlAcertar: 
         claveAlAcabar: ERIKA_LECCION_ESCUDO_FIN
         fraseAlAcabar: "\xA1Roto! Cada escudo cede ante la magia de su mismo color."
-    - rid: 6540294796242846184
+    - rid: 6540294836316275459
       type: {class: RaiseCustomEventNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26d.- \xABVe a despedirte\xBB (se\xF1al)"
@@ -1338,7 +1338,7 @@ MonoBehaviour:
         outputs:
         - pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         eventKey: CAP2_A_DESPEDIRSE
-    - rid: 6540294796242846185
+    - rid: 6540294836316275460
       type: {class: StartQuestNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: "26e.- Misi\xF3n: hora de partir"
@@ -1357,7 +1357,7 @@ MonoBehaviour:
         giverId: 
         inProgressDialogue: {fileID: 0}
         noGiver: 1
-    - rid: 6540294796242846186
+    - rid: 6540294836316275461
       type: {class: CompleteQuestStepsNode, ns: Liyodev.NarrativeGraph, asm: Liyodev.NarrativeGraph}
       data:
         displayTitle: '29.- Paso: despedirse de Oliver'

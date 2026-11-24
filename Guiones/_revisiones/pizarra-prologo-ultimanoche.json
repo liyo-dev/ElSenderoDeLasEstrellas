@@ -2,24 +2,10 @@
     "guion": "Prologo_UltimaNoche",
     "notas": [
         {
-            "panel": "P18",
-            "elemento": "NPC_Archimago",
-            "texto": "vamos a cambiar este plano, enfoca al cielo y no se ve bien",
-            "t": 131.62278747558594,
-            "trazos": []
-        },
-        {
             "panel": "P20",
             "elemento": "NPC_Archimago",
             "texto": "meter niebla de suelo cuando llega el mago oscuro con la tipica luz que brilla debajo para dar sensacion de magia e intriga y misterio",
             "t": 136.42279052734375,
-            "trazos": []
-        },
-        {
-            "panel": "P18",
-            "elemento": "camara",
-            "texto": "en este clip cuando aparece el mago oscuro sale una mancha marron que ocupa toda la pantalla en lugar de enfocar al mago",
-            "t": 133.41543579101563,
             "trazos": []
         }
     ]

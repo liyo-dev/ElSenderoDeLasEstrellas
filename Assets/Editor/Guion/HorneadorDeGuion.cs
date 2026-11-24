@@ -350,6 +350,15 @@ internal sealed partial class Horno
     {
         if (Errores.Count > 0) return null;
         EditorUtility.DisplayProgressBar("Hornear guion", "Escenario…", 0.05f);
+        if (!string.IsNullOrEmpty(_g.escenaBase))
+        {
+            var escenaBase = CapturaDeEscenario.AbrirEscena(_g.escenaBase);
+            if (!escenaBase.IsValid() || !escenaBase.isLoaded)
+            {
+                Error($"No puedo abrir la escena base '{_g.escenaBase}'.");
+                return null;
+            }
+        }
         _escena = CapturaDeEscenario.AbrirEscena(_g.escena);
         EscenaDelGuion = _escena;
         if (!_escena.IsValid() || !_escena.isLoaded) { Error($"No puedo abrir la escena '{_g.escena}'."); return null; }

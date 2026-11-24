@@ -35,9 +35,12 @@ public class TemploDelCoroTrallaTests
                     Assert.GreaterOrEqual(datos.FindProperty("fallSeconds").floatValue, 0.7f);
                     // La tralla cae en ola: varias semicorcheas en línea a lo ancho de la fila.
                     Assert.AreEqual(5, datos.FindProperty("wavePieces").intValue);
-                    Assert.AreEqual(6.4f, datos.FindProperty("waveWidth").floatValue, 0.01f);
+                    Assert.AreEqual(7.2f, datos.FindProperty("waveWidth").floatValue, 0.01f);
                     Assert.Greater(datos.FindProperty("waveSeconds").floatValue, 0f);
                     Assert.IsTrue(datos.FindProperty("waveToTheRight").boolValue);
+                    float paso = datos.FindProperty("waveWidth").floatValue / (datos.FindProperty("wavePieces").intValue - 1);
+                    float anchoNota = ((GameObject)datos.FindProperty("fallingTemplate").objectReferenceValue).transform.localScale.x * 2.5f;
+                    Assert.Greater(paso, anchoNota, "Las semicorcheas de la ola no se pueden pisar.");
                     relojDelCoro = (TempoClock)datos.FindProperty("clock").objectReferenceValue;
                     var tiempos = new List<float>();
                     relojDelCoro.Score.CollectCueTimes(new[] { voz }, 0f, float.MaxValue, tiempos);
@@ -61,7 +64,7 @@ public class TemploDelCoroTrallaTests
             Assert.NotNull(recinto);
             Assert.AreEqual(4, recinto.GetComponentsInChildren<BoxCollider>(true).Length);
 
-            Assert.NotNull(datosDelTramo.FindProperty("focoDeRuta").objectReferenceValue);
+            Assert.AreEqual(3, datosDelTramo.FindProperty("focosDeRuta").arraySize);
             var recorrido = datosDelTramo.FindProperty("recorridoLateralDelFoco").animationCurveValue;
             var centrosDelEstribillo = new List<float>();
             var partitura = relojDelCoro.Score;

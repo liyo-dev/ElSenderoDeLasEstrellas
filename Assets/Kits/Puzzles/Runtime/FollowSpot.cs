@@ -33,7 +33,7 @@ namespace Kits.Puzzles
         private Light _luz;
         private Vector3? _marca;
         private float _radio;
-        private float _anguloOriginal, _anguloInteriorOriginal;
+        private float _anguloOriginal, _anguloInteriorOriginal, _intensityOriginal;
         private static readonly Quaternion Cenital = Quaternion.Euler(90f, 0f, 0f);
 
         private void Awake()
@@ -42,6 +42,13 @@ namespace Kits.Puzzles
             _luz = GetComponent<Light>();
             _anguloOriginal = _luz.spotAngle;
             _anguloInteriorOriginal = _luz.innerSpotAngle;
+            _intensityOriginal = _luz.intensity;
+        }
+
+        /// <summary>Atenúa o aviva el cañón sin perder su intensidad de montaje. 1 = tal cual está en la escena.</summary>
+        public void SetBrightness(float multiplier)
+        {
+            _luz.intensity = _intensityOriginal * Mathf.Max(0f, multiplier);
         }
 
         /// <summary>Ilumina una marca de escenario desde arriba. Sin marca vuelve a seguir al intérprete.</summary>

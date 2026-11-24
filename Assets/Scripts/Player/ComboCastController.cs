@@ -294,7 +294,10 @@ public class ComboCastController : MonoBehaviour
         {
             if (controller) controller.PlayUpperBodyAction(exitState);
             OnClosed?.Invoke(Result.Fizzled, spell);
-            Log($"Combo {spell.displayName} correcto, pero no se pudo lanzar (maná o permisos)");
+            // La secuencia era correcta: decir por qué no salió, en vez de cortar sin más (INC-1455).
+            magicCaster.PorQueNoSale(spell, out string motivo);
+            if (!string.IsNullOrEmpty(motivo)) OnDenied?.Invoke(motivo);
+            Log($"Combo {spell.displayName} correcto, pero no se pudo lanzar: {motivo}");
         }
     }
 

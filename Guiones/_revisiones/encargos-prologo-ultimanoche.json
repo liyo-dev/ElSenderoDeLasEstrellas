@@ -2,24 +2,8 @@
     "guion": "Prologo_UltimaNoche",
     "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
     "escena": "Prologo_Valle",
-    "actualizado": "2026-11-23 11:39",
+    "actualizado": "2026-11-24 09:34",
     "encargos": [
-        {
-            "clave": "p18-npc-archimago-vamos-a-cambiar-este-plano-enfoca-al-cielo-y-no-se-ve-bien",
-            "panel": "P18",
-            "elemento": "NPC_Archimago",
-            "etiquetaElemento": "NPC_Archimago",
-            "tipo": "nota",
-            "texto": "vamos a cambiar este plano, enfoca al cielo y no se ve bien",
-            "t": 131.62278747558594,
-            "t0": 131.62278747558594,
-            "t1": 134.42279052734375,
-            "linea": 619,
-            "ordenGuion": "L619: plano general cielo_oeste desde=rio_l_fin altura=1.3 lente=40",
-            "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
-            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/018_03.png",
-            "fecha": "2026-11-18 17:56"
-        },
         {
             "clave": "p20-npc-archimago-meter-niebla-de-suelo-cuando-llega-el-mago-oscuro-con-la-tipica-luz-que-brilla-debajo-para-dar-sensacion-de-magia-e-intriga-y-misterio",
             "panel": "P20",
@@ -35,22 +19,6 @@
             "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
             "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/020_04.png",
             "fecha": "2026-11-18 17:57"
-        },
-        {
-            "clave": "p18-camara-en-este-clip-cuando-aparece-el-mago-oscuro-sale-una-mancha-marron-que-ocupa-toda-la-pantalla-en-lugar-de-enfocar-al-mago",
-            "panel": "P18",
-            "elemento": "camara",
-            "etiquetaElemento": "Cámara",
-            "tipo": "nota",
-            "texto": "en este clip cuando aparece el mago oscuro sale una mancha marron que ocupa toda la pantalla en lugar de enfocar al mago",
-            "t": 133.41543579101563,
-            "t0": 131.62278747558594,
-            "t1": 134.42279052734375,
-            "linea": 619,
-            "ordenGuion": "L619: plano general cielo_oeste desde=rio_l_fin altura=1.3 lente=40",
-            "rutaGuion": "Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt",
-            "imagen": "Guiones/Prologo_Valle/Prologo_UltimaNoche/storyboard/018_03.png",
-            "fecha": "2026-11-22 18:26"
         }
     ]
 }

@@ -10,6 +10,7 @@
 
 GUION Prologo_UltimaNoche
 ESCENA Prologo_Valle
+ESCENA_BASE MainWorld
 SECUENCIA Assets/_SEQUENCES/SEQ_Prologo_UltimaNoche.asset
 PREPARA RecursosDelPrologo
 TEXTO subtitulo
@@ -100,6 +101,8 @@ rio_agua         -148.5 -369.0
 # La amenaza
 oeste            -245.0 -365.0
 cielo_oeste      -210.0 -365.0 69.0
+# El contraplano del rayo mira al oeste desde encima del talud del río.
+cam_rayo_oeste   -153.9 -367.1 44.0
 # La cima de la montaña del oeste (Montana_Prologo). Con altura a mano: debajo de la montaña sigue
 # el terreno de la costa con su NavMesh, y sin ella el punto caía ahí abajo, dentro de la montaña.
 colina           -212.3 -368.1 50.75
@@ -616,7 +619,7 @@ archimago mira oeste
 +0.5 liora cara miedo
 & liora gesto SenseSomethingStart_NoWeapon
 espera 1.6
-plano general cielo_oeste desde=rio_l_fin altura=1.3 lente=40
+plano general cielo_oeste desde=cam_rayo_oeste altura=0 lente=40
 efecto RayoBeat cantidad=2 intervalo=1.1 alFondoDelPlano=true conTrueno=true volumen=1 destello=true trueno=SFX_Prologo_Trueno_1
 espera 2.8
 plano conjunto v02 v10 v01 nina lado=frente contrapicado

@@ -220,6 +220,12 @@ public class WorldBootstrap : MonoBehaviour
 
             // El anchor ya fue establecido por SpawnManager.HandleProfileReady()
             var anchor = Partida.AnclaDeInicio;
+#if UNITY_EDITOR
+            // En un rodaje sin ancla, el preset vacío indica que basta con montar el reparto.
+            // Partida.AnclaDeInicio resuelve ese vacío a la habitación en una partida.
+            if (ArranqueEnPlayDelDirector.EsRodaje && string.IsNullOrEmpty(bootProfile.bootPreset.spawnAnchorId))
+                anchor = null;
+#endif
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[WorldBootstrap] Modo PRESET - Anchor desde profile: '{anchor}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
 #endif
@@ -295,6 +301,14 @@ public class WorldBootstrap : MonoBehaviour
     /// </summary>
     private System.Collections.IEnumerator EnsureAnchorSceneAndSpawn(string anchorId)
     {
+#if UNITY_EDITOR
+        if (ArranqueEnPlayDelDirector.EsRodaje && string.IsNullOrEmpty(anchorId))
+        {
+            MundoListo = true;
+            Telon.Soltar(ClaveTelon);
+            yield break;
+        }
+#endif
         yield return EnsureAnchorSceneLoaded(anchorId);
         ApplySpawnEnvironmentNow(anchorId);
         // yield return (no StartCoroutine suelta) — necesitamos saber cuándo termina de verdad,

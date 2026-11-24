@@ -65,8 +65,16 @@ public class PresentacionDelContraataque : MonoBehaviour
 
     private void Presentar(Vector3 donde)
     {
-        if (_tiempo != null) StopCoroutine(_tiempo);
-        _tiempo = StartCoroutine(Co_Tiempo());
+        if (_tiempo != null)
+        {
+            StopCoroutine(_tiempo);
+            _tiempo = null;
+            TimeScaleArbiterService.Release(this);
+        }
+
+        // En una prueba sin pausa, el reloj de la canción sigue marcando el recorrido.
+        if (!Kits.Core.GameContext.Has(Situaciones.PruebaSinPausa))
+            _tiempo = StartCoroutine(Co_Tiempo());
 
         if (duracionDelDestello > 0f) FeedbackService.ScreenFlash(colorDelDestello, duracionDelDestello);
         if (sacudida > 0f) FeedbackService.CameraShake(sacudida, duracionDeLaSacudida);

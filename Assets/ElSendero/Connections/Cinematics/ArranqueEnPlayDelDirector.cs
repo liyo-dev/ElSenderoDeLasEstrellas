@@ -3,6 +3,7 @@ using Liyodev.NarrativeGraph;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 /// Cuando el Director pide «Ver en Unity», deja la señal de entrada de la secuencia en SessionState
 /// y entra en Play. Esto la arranca dentro de Play igual que haría el grafo: espera a que el mundo
@@ -18,12 +19,18 @@ public static class ArranqueEnPlayDelDirector
     private const string ClaveNombre = "Director.Play.Nombre";
     private const string ClaveDesde = "Director.Play.Desde";
 
+    public static bool EsRodaje { get; private set; }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void Reiniciar() => EsRodaje = false;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Preparar()
     {
         string senal = SessionState.GetString(ClaveSenal, string.Empty);
         if (string.IsNullOrEmpty(senal)) return;
 
+        EsRodaje = true;
         SessionState.EraseString(ClaveSenal);
         string nombre = SessionState.GetString(ClaveNombre, "cinemática");
         SessionState.EraseString(ClaveNombre);
@@ -90,10 +97,31 @@ public static class ArranqueEnPlayDelDirector
             reproductor.EmpezarEnOverride = _desde;
             reproductor.EmpezarEnGuion = _nombre;
 
+            // Una escena de rodaje puede tener reparto y planos sin traer el rig del jugador.
+            // La cámara pertenece al rodaje y está disponible antes de que la secuencia la resuelva.
+            if (Camera.main == null) CrearCamaraDeRodaje();
+
             Debug.Log($"[Director] Rodando «{_nombre}» en Play (señal {_senal}" +
                       (_desde > 0f ? $", desde {_desde:0.0} s" : string.Empty) + ").");
             DefaultNarrativeSignals.EnsureInstance().RaiseCustom(_senal, $"[Director] {_nombre}");
-            Destroy(gameObject, 3f);
+            yield return null;
+            while (CinematicSequencerBase.RunningSequences.Count > 0 || CinematicSequencerBase.AnySequenceActive)
+                yield return null;
+            Destroy(gameObject);
+        }
+
+        private void CrearCamaraDeRodaje()
+        {
+            var salida = new GameObject("Director · cámara de rodaje") { tag = "MainCamera" };
+            salida.transform.SetParent(transform, false);
+            var camara = salida.AddComponent<Camera>();
+            camara.clearFlags = CameraClearFlags.Skybox;
+            camara.nearClipPlane = 0.05f;
+            camara.farClipPlane = 900f;
+            camara.GetUniversalAdditionalCameraData().renderPostProcessing = true;
+
+            if (FindAnyObjectByType<AudioListener>() == null)
+                salida.AddComponent<AudioListener>();
         }
 
         /// El reproductor de esta escena que escucha esa señal de entrada (la del asset o, si no,

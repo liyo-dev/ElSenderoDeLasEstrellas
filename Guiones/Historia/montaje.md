@@ -10,8 +10,8 @@ Aldea del mar: 9 vecinos (0 prefabs nuevos), agendas y nasas.
 Cap. 3: assets y tablas listos.
 Cap. 4: assets y tablas listos.
 Cinemáticas: 14 secuencias (0 nuevas).
-Grafo «Cap3»: 77 nodos.
-Grafo «Cap4»: 66 nodos.
+Grafo «Cap3»: 79 nodos.
+Grafo «Cap4»: 62 nodos.
 Cap. 2: despedida en la salida del pueblo (0 nodos de la despedida anterior retirados).
 Sendero: espera CH_Cap4_BACK_1 (antes CH_Cap2_BACK_1).
 Roster de MainWorld: 20 entradas de los capítulos.
@@ -38,12 +38,15 @@ Personajes según la historia: 25 (47 situaciones).
   Cap4 · enganchadas tras «4.1 · Los contrabandistas se van de su claro (Will ya está lejos)»: Contrabandista1, lo de siempre: Cap. 3–4 · se han ido del claro, Contrabandista2, lo de siempre: Cap. 3–4 · se han ido del claro, Sargento, lo de siempre: Cap. 3 · vuelve al cruce
   Cap4 · enganchadas tras «4.1 · Hacia el Bosque Prohibido (probar desde aquí)»: Ladron1: vuelve a lo de siempre (acaba «Cap. 4 · antes del bosque»), Ladron2: vuelve a lo de siempre (acaba «Cap. 4 · antes del bosque»), Ladron1 desde aquí: Cap. 4 · rodean a Estela en su claro, Ladron2 desde aquí: Cap. 4 · rodean a Estela en su claro
   Cap4 · enganchadas tras «4.2 · La casa entre raíces (probar desde aquí)»: Ladron1: vuelve a lo de siempre (acaba «Cap. 4 · rodean a Estela en su claro»), Ladron2: vuelve a lo de siempre (acaba «Cap. 4 · rodean a Estela en su claro»), Ladron1, lo de siempre: Cap. 4 · han huido, Ladron2, lo de siempre: Cap. 4 · han huido
+Atrezo: falta Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Furniture/Table03_a01.prefab (La carta de mamá).
+Atrezo: falta Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Furniture/Bed05_a01.prefab (El jergón de Estela).
 Objeto de misión Cap1: «Goods_Interactable» en (89,27, 35,63, 6,84).
 Presencia que acecha Cap1: «La presencia de la caja de Eldran» con 5 crujidos.
 Cinemáticas: 14 reproductores en MainWorld.
 Cap. 3: campamento de los contrabandistas en el claro.
 Cap. 3: carro de las jaulas tras el contrabandista, con la luz que respira.
 Cap. 3: acampada y claro despejados de flores (0 celdas de hierba).
+Ventana del farol: vano en x local 1,20, Candela en (239.25, 1.62, -521.40).
 Cap. 3: rampa del farol de (235.35, -0.58, -517.68) a (238.15, 1.61, -518.89).
 Cap. 3: la casa del farol en (240.9, 0.0, -520.5); porche medido en (241.7, 1.6, -517.6); Candela, su farol y dos boyas.
 Cap. 3: hueco bajo el puente en (-117.8, 15.3, -226.8), 6,0 × 6,6 × 20,0 m (ancho × alto × largo sobre el cauce).
@@ -55,5 +58,6 @@ Aldea del mar: Rosario sentado en «Banco junto a la puerta» (SitHigh, raíz (2
 Aldea del mar: 7 piezas apoyadas en las mesas de la terraza.
 Aldea del mar: ruta de cajas de Remedios y marcas de las pistas de la madera.
 Pueblo de Will: la boticaria recoge hierbas en el campo y de vez en cuando las lleva a su carro.
-MainWorld: 44 marcas, 21 puntos del roster, 9 llegadas, 6 puntos de inspección y 27 piezas de atrezo.
-Textos: 304 claves en las tablas ES/EN.
+AVISO: «Capítulos (generado)/Cap4 · llegadas/Llegada al claro de Estela» no lo crea el montaje (puesto a mano): no se borra, pasa a «Puesto a mano (rescatado del montaje)». Si hace falta, añádelo a las tablas del montaje (p. ej. objetos de misión) y bórralo de ahí.
+MainWorld: 44 marcas, 21 puntos del roster, 8 llegadas, 6 puntos de inspección y 31 piezas de atrezo.
+Textos: 312 claves en las tablas ES/EN.

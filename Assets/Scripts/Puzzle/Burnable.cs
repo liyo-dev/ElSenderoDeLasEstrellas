@@ -68,6 +68,18 @@ public class Burnable : MonoBehaviour, IReaccionaAMagia
     public void RecibirMagia(in ImpactoDeMagia impacto) => OnHitByMagic(impacto.Elemento, impacto.Punto);
 
     /// <summary>
+    /// Devuelve el objeto a como estaba antes de arder, para lo que se quema y se rehace varias veces
+    /// (las figuras de la prueba de la campana del Cap. 4). No toca lo que el objeto activó o
+    /// desactivó al quemarse, ni el VFX: cada sistema rehace lo suyo.
+    /// </summary>
+    public void Resetear()
+    {
+        isBurned = false;
+        var col = GetComponent<Collider>();
+        if (col != null) col.enabled = true;
+    }
+
+    /// <summary>
     /// Quema el objeto si el elemento es aceptado (también lo usa la quema en cadena).
     /// </summary>
     public void OnHitByMagic(MagicElement element, Vector3 hitPoint)

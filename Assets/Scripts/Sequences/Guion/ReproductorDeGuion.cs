@@ -595,12 +595,7 @@ public sealed class ReproductorDeGuion
                 npc.SyncTargetRotation();
             }
             if (_agente != null && _agenteEstabaActivo)
-            {
-                _agente.enabled = true;
-                if (_agente.isOnNavMesh) _agente.Warp(Actor.Transform.position);
-                else if (NavMesh.SamplePosition(Actor.Transform.position, out var hit, 2f, NavMesh.AllAreas))
-                    _agente.Warp(hit.position);
-            }
+                NavMeshAgentUtility.SafeEnable(_agente, Actor.Transform, Actor.Transform.position, 2f);
         }
 
         public void SaltarHasta(float t)

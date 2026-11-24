@@ -24,17 +24,14 @@ public static partial class MontajeDeLosCapitulos
     public const string MisionReino = "CAP4_RUMBO_AL_REINO";
     public const string FlagEstelaAparece = "ESTELA_APARECE";
     public const string FlagLiamAparece = "LIAM_APARECE";
-    public const string FlagFigurasChamuscadas = "CAP4_FIGURAS_CHAMUSCADAS";
     private const string RutaEsquirla = CarpetaItems + "/IT_EsquirlaDeCristal.asset";
 
     private static class S4
     {
         public const string Bosque = "CAP4_BOSQUE_EMPIEZA";
-        public const string LlegadaClaro = "CAP4_LLEGADA_CLARO";
         public const string Casa = "CAP4_CASA_EMPIEZA";
         public const string Dormir = "CAP4_DORMIR";
         public const string Campana = "CAP4_CAMPANA_EMPIEZA";
-        public const string Figura = "CAP4_FIGURA_CHAMUSCADA";
         public const string Tocada = "CAP4_CAMPANA_TOCADA";
         public const string CampanaFin = "CAP4_CAMPANA_FIN";
         public const string Golem = "CAP4_GOLEM_EMPIEZA";
@@ -80,8 +77,6 @@ public static partial class MontajeDeLosCapitulos
         // Frases de Estela en caja: un bocadillo del grafo sale sobre el jugador, no sobre ella.
         string dCasa = DialogoDeCaja("DLG_CAP4_CASA", "DLG_CAP4_CASA",
             L("CHAR_ESTELA", "Esta es mi casa. Mira lo que quieras, pero la cena no se toca. Duerme en el jergón.", "This is my home. Look around all you like, but don't touch dinner. Sleep on the straw mattress."));
-        string dFigura = DialogoDeCaja("DLG_CAP4_FIGURA", "DLG_CAP4_FIGURA",
-            L("CHAR_ESTELA", "¡Te has salvado tú y has chamuscado a quien tenías que proteger!", "You saved yourself and scorched the ones you were meant to protect!", NPCEmotion.Annoyed));
         string dBota = DialogoDeCaja("DLG_CAP4_BOTA", "DLG_CAP4_BOTA",
             W("¡La tengo! Enganchada entre dos ramas.", "Got it! Caught between two branches.", NPCEmotion.Happy));
 
@@ -108,6 +103,16 @@ public static partial class MontajeDeLosCapitulos
         foreach (var (k, es, en) in TextosDeCineCap4()) TextoDeCine(k, es, en);
         // La frase de villano de Liam al invocar al Gólem se cambia por el tono de la novela (propuesta del 6 oct, § 3).
         TextoDeCine("EVT_GOLEM_01", "Lo siento. Necesito que pelees.", "I'm sorry. I need you to fight.");
+        // Lo que Estela dice durante las cuatro tandas de la prueba (PruebaDeLaCampana).
+        foreach (var (clave, es, en) in new[]
+        {
+            ("CAP4_CAMPANA_RONDA_1", "¡Una! ¡Y no te quedes quieto!", "One! And don't stand still!"),
+            ("CAP4_CAMPANA_RONDA_2", "¡Dos! ¡Y no me quemes a la gente!", "Two! And don't scorch the people!"),
+            ("CAP4_CAMPANA_RONDA_3", "¡Tres! ¿Ya te has cansado?", "Three! Tired already?"),
+            ("CAP4_CAMPANA_RONDA_4", "¡Cuatro! ¡La campana es tuya!", "Four! The bell is yours!"),
+            ("CAP4_CAMPANA_CHAMUSCADA", "¡Otra vez! ¡Las figuras son gente!", "Again! The figures are people!"),
+            ("CAP4_CAMPANA_ACABADA", "Ya está. Ahora tócala.", "That's it. Now ring it."),
+        }) TextosDeLaHistoria.Poner(TextosDeLaHistoria.Tabla.Dialogos, clave, es, en);
 
         // ── Marcas, roster y escena ─────────────────────────────────────────────────────────
         M(Cap4, "Cap4_Bosque_Entrada", -140f, -110f, 300f);
@@ -162,8 +167,6 @@ public static partial class MontajeDeLosCapitulos
             },
         });
 
-        s_llegadas.Add(new Llegada { Cap = Cap4, Nombre = "Llegada al claro de Estela", Senal = S4.LlegadaClaro, Mision = MisionEstela,
-            Pos = new Vector3(-312f, float.NaN, 62f), Radio = 12f, Tramo = Tramo(S4.Bosque, S4.Casa) });
         s_llegadas.Add(new Llegada { Cap = Cap4, Nombre = "Llegada a la arena del Gólem", Senal = S4.LlegadaArena,
             Pos = new Vector3(-105f, float.NaN, 63f), Radio = 12f, Tramo = Tramo(S4.Golem, S4.Bifurcacion) });
         s_llegadas.Add(new Llegada { Cap = Cap4, Nombre = "Llegada a la bifurcación", Senal = S4.LlegadaBifurcacion,
@@ -184,6 +187,17 @@ public static partial class MontajeDeLosCapitulos
             Pos = new Vector3(-334f, float.NaN, 64f), Rumbo = 270f, Tamano = 1.6f, Tramo = Tramo(S4.Campana, S4.CampanaFin) });
         s_atrezo.Add(new Atrezo { Cap = Cap4, Nombre = "La bota de Liam", Prefab = Pack + "/Props/Goods/Rope01_a01.prefab",
             Pos = new Vector3(-184f, float.NaN, -24f), Rumbo = 0f, Tamano = 0.5f, Tramo = Tramo(S4.LiamEnGrupo, S4.Bota) });
+        // Lo que se mira en la casa: los cuatro puntos de inspección llevan su prop a la vista. Antes
+        // solo había un disparador a ras de suelo y la A se encendía sobre la nada (INC-1452).
+        var tramoCasa = Tramo(S4.Casa, S4.Campana);
+        s_atrezo.Add(new Atrezo { Cap = Cap4, Nombre = "La carta de mamá", Prefab = Pack + "/Props/Furniture/Table03_a01.prefab",
+            Pos = new Vector3(-343f, float.NaN, 66f), Rumbo = 200f, Tamano = 1.1f, Tramo = tramoCasa });
+        s_atrezo.Add(new Atrezo { Cap = Cap4, Nombre = "La tabla de los apodos", Prefab = Pack + "/Props/Goods/Signboard01_a01.prefab",
+            Pos = new Vector3(-349f, float.NaN, 64f), Rumbo = 60f, Tamano = 1.6f, Tramo = tramoCasa });
+        s_atrezo.Add(new Atrezo { Cap = Cap4, Nombre = "La cena de Estela", Prefab = Pack + "/Props/Pot/Pot03_a01.prefab",
+            Pos = new Vector3(-340f, float.NaN, 60f), Rumbo = 0f, Tamano = 0.9f, Tramo = tramoCasa });
+        s_atrezo.Add(new Atrezo { Cap = Cap4, Nombre = "El jergón de Estela", Prefab = Pack + "/Props/Furniture/Bed05_a01.prefab",
+            Pos = new Vector3(-345f, float.NaN, 59f), Rumbo = 30f, Tamano = 2f, Tramo = tramoCasa });
 
         var c4 = new Capitulo { Etiqueta = "Cap4", Ruta = "Assets/NarrativeGraph/Cap4.asset", Prefijo = "cap4-", Nombre = "Cap. 4" };
         c4.Recorrido = new List<Paso>
@@ -191,12 +205,12 @@ public static partial class MontajeDeLosCapitulos
             P("inicio", "Inicio del Cap. 4", new StartNode()),
             P("tras-cap3", "Tras el Cap. 3 (" + FinCap3 + ")", Esperar(FinCap3)),
             P("flag", "Comienza el Cap. 4", Flag("CAP4_INICIADO")),
-            P("estela-aparece", "Estela está en su claro (el roster la pone)", Flag(FlagEstelaAparece)),
             // 4.1 · El bosque y Estela
             P("bosque", "4.1 · Hacia el Bosque Prohibido (probar desde aquí)", Emitir(S4.Bosque)),
+            P("estela-aparece", "Estela está en su claro (el roster la pone)", Flag(FlagEstelaAparece)),
             P("mision-estela", "Misión: la hechicera del bosque (aviso de misión nueva)", new StartQuestNode { QuestId = MisionEstela, NoGiver = true }),
             P("punto-bosque", "4.1 · Punto de guardado: junto al claro de los contrabandistas", Punto("CAP4_INICIO", "Cap3_Matorral")),
-            P("llegada-claro", "4.1 · Llega al claro de los troncos quemados", Esperar(S4.LlegadaClaro)),
+            P("llegada-claro", "4.1 · Acércate a Estela en el claro", Hablar(Estela)),
             // Con Will ya lejos, los contrabandistas se van de su claro (camino del barco).
             P("contrabandistas-fin", "4.1 · Los contrabandistas se van de su claro (Will ya está lejos)", Emitir(S3.ContrabandistasFin)),
             P("mando-estela", "4.1 · Will al mando (la cinemática cuenta con él)", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
@@ -213,14 +227,15 @@ public static partial class MontajeDeLosCapitulos
             P("manana-will", "4.2 · Will se despierta junto a la casa", Llevar("Player", "Cap4_Campana_Salida")),
             P("punto-casa", "4.2 · Punto de guardado: la casa de Estela", Punto("CAP4_CASA", "Cap4_Campana_Salida")),
             P("mision-reino", "Misión: rumbo al Reino (aviso de misión nueva)", new StartQuestNode { QuestId = MisionReino, NoGiver = true }),
-            P("campana", "4.3 · La prueba de la campana (probar desde aquí)", Emitir(S4.Campana)),
             P("mando-manana", "4.2 · Will al mando", Grupo(PedirGrupo.Accion.PasaAlMando, "Will")),
             P("manana", "4.2 · Cinemática: el cartel y la primera receta", Cinematica("CAP4_MANANA")),
             P("cupula", "4.2 · Aprende Cúpula Estelar (primera receta del combo)", Desbloquear(SpellId.CupulaEstelar, equipar: false)),
-            P("cupula-tuto", "4.2 · Tutorial: el combo mágico", Tutorial("TUTORIAL_CAP4_CUPULA_ESTELAR", "Pulsa {BOTON} y teclea X, B, A: la Cúpula Estelar protege a quien esté debajo.", "Press {BOTON} and type X, B, A: the Star Dome protects whoever is beneath it.", esperar: true)),
+            // El combo se aprende antes de la prueba: entrar aquí (y no en la prueba) deja el hechizo
+            // en el repertorio; entrando en la prueba, X, B, A no coincide con nada y se disipa.
+            P("cupula-tuto", "4.2 · Receta del combo y prueba de la campana (probar desde aquí)", Tutorial("TUTORIAL_CAP4_CUPULA_ESTELAR", "Pulsa {BOTON} y teclea X, B, A: la Cúpula Estelar protege a quien esté debajo.", "Press {BOTON} and type X, B, A: the Star Dome protects whoever is beneath it.", esperar: true)),
             // 4.3 · La campana
             P("reglas", "4.3 · Cinemática: las reglas de la campana", Cinematica("CAP4_CAMPANA")),
-            P("campana-fork", "4.3 · La prueba (y en paralelo, las figuras chamuscadas)", new ForkNode(), "figura-0", "tocada"),
+            P("campana", "4.3 · Empieza la prueba de la campana (cuatro tandas de fuego)", Emitir(S4.Campana)),
             P("tocada", "4.3 · Will toca la campana", Esperar(S4.Tocada)),
             P("liam-aparece", "4.3 · Liam les observa (el roster le pone en la loma)", Flag(FlagLiamAparece)),
             P("campana-fin", "4.3 · Fin de la prueba (Liam, en la loma)", Emitir(S4.CampanaFin)),
@@ -262,12 +277,6 @@ public static partial class MontajeDeLosCapitulos
             P("demo-fin", "Fin de la demo (en la build de la demo, a los créditos)", GameStepNode.For(new PedirFinDeLaDemo())),
             P("demo-destapa", "Fuera de la build de la demo: se destapa la pantalla y sigue el juego", Destapar()),
         };
-        c4.Ramas.Add(new List<Paso>
-        {
-            P("figura-0", "4.3 · Una figura de barro, chamuscada", Esperar(S4.Figura)),
-            P("figura-1", "4.3 · Queda apuntado", Flag(FlagFigurasChamuscadas)),
-            P("figura-2", "4.3 · Estela: «¡Las tenías que proteger!»", Dialogo(dFigura, Estela), "figura-0"),
-        });
         c4.Notas.Add(("nota", "Cap. 4 · El Bosque Prohibido y el Gólem (GDD § 5.8). Lo monta El Sendero ▸ Historia ▸ Montar los capítulos 3 y 4: los nodos «cap4-…» se rehacen. " +
                               "Escena: claro de Estela (−330, 65), arena del Gólem (−95, 65) con el barro, bifurcación junto al puente del camino 8. Al acabar: en la build de la demo, el corte; fuera de ella, sigue el juego."));
         informe.AppendLine("Cap. 4: assets y tablas listos.");
@@ -306,6 +315,7 @@ public static partial class MontajeDeLosCapitulos
         var padre = Hijo(raiz, Cap4 + " · campana y barro");
 
         // La campana: su armazón con la campana dorada y el botón de interactuar.
+        Interactable campanaInteractuable = null;
         if (marcas.TryGetValue("Cap4_Campana", out var sitio))
         {
             var tramo = Hijo(padre, "La campana (tramo)");
@@ -319,19 +329,29 @@ public static partial class MontajeDeLosCapitulos
                 var poste = campana.AddComponent<CapsuleCollider>();
                 poste.direction = 1; poste.center = new Vector3(x, 1.35f, 0f); poste.height = 2.7f; poste.radius = 0.14f;
             }
-            var interactuable = PuntoDeInteraccion(campana.transform, 1.8f);
+            campanaInteractuable = PuntoDeInteraccion(campana.transform, 1.8f);
             var s = campana.AddComponent<SignalEmitter>();
             s.eventKey = S4.Tocada; s.trigger = SignalEmitter.TriggerType.OnInteract; s.once = true;
+            // La campana es el objetivo del paso 4.3: marcador en el minimapa e icono sobre ella
+            // mientras ese paso esté en curso (antes no había nada que guiara al jugador, INC-1454).
+            var marcador = new SerializedObject(campana.AddComponent<QuestObjectiveMarker>());
+            marcador.FindProperty("questId").stringValue = MisionReino;
+            marcador.FindProperty("stepIndex").intValue = 0;
+            marcador.FindProperty("showAfterStep").intValue = -1;
+            marcador.FindProperty("iconoSobreLaCabeza").objectReferenceValue = Cargar<GameObject>(IconoDeMision);
+            marcador.ApplyModifiedPropertiesWithoutUndo();
             EnTramo(tramo, Tramo(S4.Campana, S4.CampanaFin), campana);
         }
 
-        // Las figuras de barro: arden con el fuego (Burnable) y avisan al grafo.
+        // Las figuras de barro: arden con el fuego (Burnable). La prueba de la campana escucha el
+        // quemado, rehace la figura y repite la tanda; por eso no se destruyen al quemarse.
         var figuras = Hijo(padre, "Figuras de barro (tramo)");
         var grupo = new GameObject("Figuras");
         grupo.transform.SetParent(figuras, false);
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Weapon/Scarecrow01_a01.prefab");
         var barroMat = MaterialDeColor(new Color(0.55f, 0.38f, 0.24f), "Cap4_Barro");
         var posiciones = new[] { new Vector2(-334f, 72f), new Vector2(-326f, 73f), new Vector2(-330f, 78f), new Vector2(-336f, 80f), new Vector2(-323f, 80f) };
+        var figurasDeLaPrueba = new List<Burnable>();
         for (int i = 0; i < posiciones.Length && prefab != null; i++)
         {
             var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, padre.gameObject.scene);
@@ -344,10 +364,24 @@ public static partial class MontajeDeLosCapitulos
             if (go.GetComponentInChildren<Collider>() == null) go.AddComponent<CapsuleCollider>().height = 1.6f;
             var arde = go.AddComponent<Burnable>();
             arde.onBurned ??= new UnityEvent();
-            var aviso = go.AddComponent<SignalEmitter>();
-            aviso.eventKey = S4.Figura; aviso.trigger = SignalEmitter.TriggerType.Manual; aviso.once = true;
-            UnityEventTools.AddPersistentListener(arde.onBurned, aviso.Send);
+            var ardeSO = new SerializedObject(arde);
+            ardeSO.FindProperty("destroyOnBurn").boolValue = false;
+            ardeSO.ApplyModifiedPropertiesWithoutUndo();
+            figurasDeLaPrueba.Add(arde);
         }
+
+        // La prueba en sí: la enciende el tramo al empezar 4.3. Estela lanza las cuatro tandas y la
+        // campana solo se puede tocar al acabarlas (PruebaDeLaCampana).
+        var prueba = grupo.AddComponent<PruebaDeLaCampana>();
+        var pruebaSO = new SerializedObject(prueba);
+        pruebaSO.FindProperty("proyectil").objectReferenceValue =
+            AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_ENEMY_SPELLS/Prefabs/Plasma Sphere (1).prefab");
+        pruebaSO.FindProperty("campana").objectReferenceValue = campanaInteractuable;
+        var lista = pruebaSO.FindProperty("figuras");
+        lista.arraySize = figurasDeLaPrueba.Count;
+        for (int i = 0; i < figurasDeLaPrueba.Count; i++)
+            lista.GetArrayElementAtIndex(i).objectReferenceValue = figurasDeLaPrueba[i];
+        pruebaSO.ApplyModifiedPropertiesWithoutUndo();
         EnTramo(figuras, Tramo(S4.Campana, S4.CampanaFin), grupo);
 
         // El barro del arroyo, a un lado de la arena del Gólem.

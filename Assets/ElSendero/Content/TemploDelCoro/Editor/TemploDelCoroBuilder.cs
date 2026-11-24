@@ -133,11 +133,26 @@ public static class TemploDelCoroBuilder
     // Metros por delante del centro del recuadro donde empieza un hueco de semicorcheas, en el segundo en que se salta.
     private const float BordeDelVacioFinal = 1.5f;
 
+    // Pruebas del camino de la luz: golpes de ancho completo (se saltan, se rodan o se aguantan en el
+    // aire) y el golpe que cae justo donde miente el foco. Todos van a tiempos medidos de la partitura.
+    private const string VozSaltoAncho = "SALTO_ANCHO";
+    private const string VozDashAncho = "DASH_ANCHO";
+    private const string VozDobleSalto = "DOBLE_SALTO";
+    private const string VozSenueloDelFoco = "SENUELO_DEL_FOCO";
+    private static readonly float[] SaltosAnchos = { 31.945f, 33.994f, 70.722f, 79.778f, 122.282f };
+    private static readonly float[] DashAnchos = { 80.968f, 88.416f, 123.867f };
+    private static readonly float[] DobleSalto = { 124.633f, 125.823f };
+    private static readonly float[] SenuelosDelFoco = { 71.546f, 86.314f };
+    private const float SeparacionDeLosFocos = 3.3f;
+    // La nota mide 2,4 m de ancho a escala 1: en la ola se encoge para que las notas no se pisen.
+    private const float EscalaNotaDeLaOla = 0.8f;
+    private const int NotasDeLaOla = 5;
+
     // ── El camino ──
-    // Una sola línea (la x del pasillo en cada segundo de la canción) por la que se pasa el nivel entero sin
-    // que dé nada: los peligros fijos de medio pasillo (latigazos, llamaradas, pirotecnia) la empujan al
-    // otro lado y todo lo demás cae o sale fuera de ella, siempre en el mismo sitio. No se marca en el
-    // suelo: es para montar el nivel; se lee por el orden de los peligros y se aprende de memoria.
+    // Una sola línea (la x del pasillo en cada segundo de la canción) por la que va la luz: los peligros
+    // fijos de medio pasillo (latigazos, llamaradas, pirotecnia) la empujan al otro lado y todo lo demás
+    // cae o sale fuera de ella. No se marca en el suelo: es para montar el nivel; se lee por el orden de
+    // los peligros y se aprende de memoria. Donde la luz miente, el camino seguro está fuera de ella.
     private const float PasoDelCamino = 0.05f;
     private const float MargenDelCamino = 1f;
     private const float VelocidadLateralDelCamino = 7f;
@@ -560,6 +575,7 @@ public static class TemploDelCoroBuilder
         CrearTenor(raiz, reloj, piezas, "El Tenor (recortes)", new Vector3(0f, 5.9f, -4.35f), 1f);
         var sueloQueSePierde = CrearCorredor(raiz, reloj);
         CrearLoQueCae(raiz, escena, reloj, partitura, piezas);
+        CrearPruebasDelFoco(raiz, reloj, piezas);
         CrearLosasQueSeHunden(raiz, escena, reloj, partitura);
         var montaje = new Montaje();
         var hueco = CrearHuecoConAntorcha(raiz, escena, reloj);
@@ -599,9 +615,9 @@ public static class TemploDelCoroBuilder
         var camara = CrearCamara(raiz, doReMi);
         PonerRef(camara, "tenorDeLaDespedida", montaje.TenorDelFinal);
         var recuadro = CrearRecuadro(raiz, 12f, AdelantoEnCarrera);
-        var foco = CrearLuces(raiz, reloj, recuadro);
+        var focos = CrearLuces(raiz, reloj, recuadro);
         PonerPlanosDeEscena(camara, montaje);
-        CrearTramo(raiz, reloj, sombra, entrada, camara, recuadro, montaje, sueloQueSePierde.ToArray(), foco);
+        CrearTramo(raiz, reloj, sombra, entrada, camara, recuadro, montaje, sueloQueSePierde.ToArray(), focos);
 
         EditorSceneManager.MarkSceneDirty(escena);
         if (!EditorSceneManager.SaveScene(escena, RutaEscena))
@@ -752,6 +768,10 @@ public static class TemploDelCoroBuilder
                 if ((golpe.filas & (1 << fila)) != 0)
                     marcas.Add(new MusicScore.Cue { time = golpe.segundo, voice = VocesDeLaTralla[fila] });
         }
+        foreach (float t in SaltosAnchos) marcas.Add(new MusicScore.Cue { time = t, voice = VozSaltoAncho });
+        foreach (float t in DashAnchos) marcas.Add(new MusicScore.Cue { time = t, voice = VozDashAncho });
+        foreach (float t in DobleSalto) marcas.Add(new MusicScore.Cue { time = t, voice = VozDobleSalto });
+        foreach (float t in SenuelosDelFoco) marcas.Add(new MusicScore.Cue { time = t, voice = VozSenueloDelFoco });
         AnadirEstribillo(marcas, datos);
         OrdenarPeligros(marcas, datos.primer_tiempo_de_compas);
         partitura.SetData(cancion, datos.tiempos_s, datos.primer_tiempo_de_compas, 4, marcas.ToArray());
@@ -2606,7 +2626,7 @@ public static class TemploDelCoroBuilder
                 if ((golpe.filas & (1 << f)) != 0) AlMapa(golpe.segundo, 0f, z, medio, "fila de semicorcheas");
             var caida = Caida($"Semicorcheas (fila {f + 1})", padre, reloj, nota, VocesDeLaTralla[f], DesdeLaTralla - 0.1f,
                 SegundoDeLaFraseTriste, Puntos(padre, "Fila", new[] { new Vector3(0f, 0f, z) }),
-                1.45f, 14f, 1f, null, 0f, 0.72f);
+                0.55f, 14f, 1f, null, 0f, 0.72f);
             ConfigurarFranja(caida, new Vector2(AnchoDelCorredor, AnchoDeFilaDelCoro), 5f);
             ConfigurarOla(caida, SemicorcheasDeLaOla, AnchoDeLaOla, SegundosDeLaOla);
         }
@@ -2687,6 +2707,61 @@ public static class TemploDelCoroBuilder
         Poner(caida, "waveWidth", ancho);
         Poner(caida, "waveSeconds", segundos);
         Poner(caida, "waveToTheRight", true);
+    }
+
+    /// <summary>Puntos de una marca del camino: la X la marca la partitura y la Z la hora del golpe.</summary>
+    private static Transform[] PuntosEnElCamino(Transform padre, string nombre, float[] tiempos, int lado = 0)
+    {
+        var sitios = new Vector3[tiempos.Length];
+        for (int i = 0; i < tiempos.Length; i++)
+            sitios[i] = new Vector3(XDelCamino(tiempos[i]) + lado * SeparacionDeLosFocos, 0f, Z(tiempos[i]));
+        return Puntos(padre, nombre, sitios);
+    }
+
+    /// <summary>Franjas que cubren el corredor entero: van por el centro, no por el carril de la luz.</summary>
+    private static Transform[] PuntosDelCorredor(Transform padre, string nombre, float[] tiempos)
+    {
+        var sitios = new Vector3[tiempos.Length];
+        for (int i = 0; i < tiempos.Length; i++) sitios[i] = new Vector3(0f, 0f, Z(tiempos[i]));
+        return Puntos(padre, nombre, sitios);
+    }
+
+    /// <summary>
+    /// Lo que el camino pide hacer además de andar: franjas bajas que se saltan, altas que se rodan con
+    /// B y dos seguidas que obligan a encadenar saltos, todas en ola; y el golpe en ola bajo el foco que
+    /// confunde. Las franjas se centran en el corredor y lo ocupan entero: no se esquivan de lado.
+    /// </summary>
+    private static void CrearPruebasDelFoco(Transform raiz, TempoClock reloj, Dictionary<string, Pieza> piezas)
+    {
+        piezas.TryGetValue("nota_que_cae", out var nota);
+        var pum = AssetDatabase.LoadAssetAtPath<AudioClip>(RutaPum);
+
+        var salto = Caida("Saltos del camino", raiz, reloj, nota, VozSaltoAncho,
+            SaltosAnchos[0] - 0.2f, SaltosAnchos[SaltosAnchos.Length - 1] + 0.2f,
+            PuntosDelCorredor(raiz, "Salto ancho", SaltosAnchos), EscalaNotaDeLaOla, 12f, 1f, pum, 0.6f, 0.9f);
+        ConfigurarFranja(salto, new Vector2(AnchoDelCorredor, 2.4f), 0.7f);
+        ConfigurarOla(salto, NotasDeLaOla, AnchoDelCorredor - 0.8f, 0.26f);
+
+        var rodada = Caida("Rodadas del camino", raiz, reloj, nota, VozDashAncho,
+            DashAnchos[0] - 0.2f, DashAnchos[DashAnchos.Length - 1] + 0.2f,
+            PuntosDelCorredor(raiz, "Rodada ancha", DashAnchos), EscalaNotaDeLaOla, 16f, 1f, pum, 0.6f, 0.9f);
+        ConfigurarFranja(rodada, new Vector2(AnchoDelCorredor, 2.4f), 0f);
+        ConfigurarOla(rodada, NotasDeLaOla, AnchoDelCorredor - 0.8f, 0.26f);
+
+        var doble = Caida("Doble salto del camino", raiz, reloj, nota, VozDobleSalto,
+            DobleSalto[0] - 0.2f, DobleSalto[DobleSalto.Length - 1] + 0.2f,
+            PuntosDelCorredor(raiz, "Doble salto", DobleSalto), EscalaNotaDeLaOla, 12f, 1f, pum, 0.6f, 0.9f);
+        ConfigurarFranja(doble, new Vector2(AnchoDelCorredor, 2.4f), 0.7f);
+        ConfigurarOla(doble, NotasDeLaOla, AnchoDelCorredor - 0.8f, 0.26f);
+
+        for (int i = 0; i < SenuelosDelFoco.Length; i++)
+        {
+            int lado = i % 2 == 0 ? -1 : 1;
+            var senuelo = Caida($"Golpe bajo el foco que confunde {i + 1}", raiz, reloj, nota, VozSenueloDelFoco,
+                SenuelosDelFoco[i] - 0.2f, SenuelosDelFoco[i] + 0.2f,
+                PuntosEnElCamino(raiz, "Señuelo", new[] { SenuelosDelFoco[i] }, lado), EscalaNotaDeLaOla, 16f, 2.2f, pum, 0.7f, 0.9f);
+            ConfigurarOla(senuelo, 3, 4.4f, 0.18f);
+        }
     }
 
     private static void HacerNotaSolida(CueDrop caida)
@@ -3054,7 +3129,7 @@ public static class TemploDelCoroBuilder
     // La tralla cae como una ola: cinco semicorcheas en línea a lo ancho de la fila (sin llegar a las
     // paredes del corredor) y cruzando de izquierda a derecha, para que se vea llegar la ola.
     private const int SemicorcheasDeLaOla = 5;
-    private const float AnchoDeLaOla = 6.4f;
+    private const float AnchoDeLaOla = 7.2f;
     private const float SegundosDeLaOla = 0.24f;
 
     private static bool EnTramoDeComba(float segundo)
@@ -3392,7 +3467,7 @@ public static class TemploDelCoroBuilder
     }
 
     private static void CrearTramo(Transform raiz, TempoClock reloj, Transform sombra, Vector3 entrada,
-                                   CamaraDelCoro camara, Transform recuadro, Montaje montaje, Transform[] sueloQueSePierde, FollowSpot foco)
+                                   CamaraDelCoro camara, Transform recuadro, Montaje montaje, Transform[] sueloQueSePierde, FollowSpot[] focos)
     {
         var go = Hijo(raiz, "La huida (afinación, estrofas 1 y 2, estribillo)");
         var salida = Hijo(go, "Salida (la sala)");
@@ -3471,9 +3546,12 @@ public static class TemploDelCoroBuilder
         PonerRef(tramo, "recuadro", recuadro);
         Poner(tramo, "alturaDelFoso", -5f);
         PonerRef(tramo, "recintoDelCoro", montaje.RecintoDelCoro);
-        PonerRef(tramo, "focoDeRuta", foco);
+        PonerRefs(tramo, "focosDeRuta", focos);
+        Poner(tramo, "separacionDeLosFocos", SeparacionDeLosFocos);
         Poner(tramo, "segundoDeEstrecharElFoco", DesdeElEstribillo);
-        PonerVector2s(tramo, "tramosDelFoco", VentanasDelFoco());
+        var ventanasDelFoco = VentanasDelFoco();
+        PonerVector2s(tramo, "tramosDelFoco", ventanasDelFoco);
+        PonerVector2Ints(tramo, "reglasDeLosFocos", ReglasDelFoco(ventanasDelFoco));
         var ajustesDelTramo = new SerializedObject(tramo);
         ajustesDelTramo.FindProperty("recorridoLateralDelFoco").animationCurveValue = CurvaDelFoco();
         ajustesDelTramo.FindProperty("limitesDelCoro").vector2Value = new Vector2(AnchoDelCorredor * 0.5f, AnchoDeFilaDelCoro * 1.5f);
@@ -3568,15 +3646,15 @@ public static class TemploDelCoroBuilder
     }
 
     /// <summary>
-    /// La luz de la función: una vara de focos que va con el recuadro (cuatro cenitales de colores que
-    /// laten en cada tiempo y cambian de paleta por tramos de la canción) y el cañón de seguimiento sobre
-    /// quien va al mando. En la frase triste se apaga todo menos el cañón.
+    /// La luz de la función: una vara de focos que va con el recuadro (tres cenitales de colores que
+    /// laten en cada tiempo y cambian de paleta por tramos de la canción) y tres cañones de seguimiento
+    /// con dos barridos laterales alrededor de la guía. En la frase triste se apaga todo menos el del centro.
     /// </summary>
-    private static FollowSpot CrearLuces(Transform raiz, TempoClock reloj, Transform recuadro)
+    private static FollowSpot[] CrearLuces(Transform raiz, TempoClock reloj, Transform recuadro)
     {
         var vara = Hijo(recuadro, "Vara de focos (va con la canción)");
         var focos = new List<Light>();
-        foreach (var sitio in new[] { new Vector3(-4f, 11f, 1f), new Vector3(0f, 12f, 3f), new Vector3(4f, 11f, 1f), new Vector3(0f, 11f, 13f) })
+        foreach (var sitio in new[] { new Vector3(-4f, 11f, 1f), new Vector3(0f, 12f, 3f), new Vector3(4f, 11f, 1f) })
         {
             var go = Hijo(vara, $"Cenital ({sitio.x:0}, {sitio.z:0})");
             go.localPosition = sitio;
@@ -3619,11 +3697,23 @@ public static class TemploDelCoroBuilder
         }
         tramos.ApplyModifiedPropertiesWithoutUndo();
 
-        // El cañón de seguimiento: luz cálida y cerrada sobre quien va al mando.
-        var canon = Hijo(raiz, "Cañón de seguimiento");
+        // Tres cañones de colores: el del centro marca el camino, los de los lados encienden la luz
+        // cuando miente. Todos siguen a quien va al mando fuera de las ventanas de la ruta.
+        return new[]
+        {
+            CrearCanion(raiz, "Foco de la izquierda", new Color(0.5f, 0.85f, 1f), -SeparacionDeLosFocos),
+            CrearCanion(raiz, "Foco del centro", new Color(1f, 0.92f, 0.78f), 0f),
+            CrearCanion(raiz, "Foco de la derecha", new Color(1f, 0.5f, 0.82f), SeparacionDeLosFocos)
+        };
+    }
+
+    private static FollowSpot CrearCanion(Transform raiz, string nombre, Color color, float lateral)
+    {
+        var canon = Hijo(raiz, nombre);
+        canon.position = new Vector3(lateral, 14f, -7f);
         var luz = canon.gameObject.AddComponent<Light>();
         luz.type = LightType.Spot;
-        luz.color = new Color(1f, 0.92f, 0.78f);
+        luz.color = color;
         luz.intensity = 14f;
         luz.range = 30f;
         luz.spotAngle = 22f;
@@ -3651,6 +3741,24 @@ public static class TemploDelCoroBuilder
         }
         if (desde < SaltoFinal - 0.4f) ventanas.Add(new Vector2(desde, SaltoFinal - 0.4f));
         return ventanas.ToArray();
+    }
+
+    /// <summary>
+    /// Una regla por ventana del foco: el del centro guía siempre y su sitio es el seguro; en los tramos
+    /// de confusión se enciende además uno de los lados, bajo el que cae un golpe en ola.
+    /// </summary>
+    private static Vector2Int[] ReglasDelFoco(Vector2[] ventanas)
+    {
+        var reglas = new Vector2Int[ventanas.Length];
+        for (int i = 0; i < reglas.Length; i++) reglas[i] = new Vector2Int(1, 0);
+        for (int s = 0; s < SenuelosDelFoco.Length; s++)
+        {
+            float t = SenuelosDelFoco[s];
+            for (int i = 0; i < ventanas.Length; i++)
+                if (t >= ventanas[i].x && t < ventanas[i].y)
+                    reglas[i] = new Vector2Int(s % 2 == 0 ? 0 : 2, 1);
+        }
+        return reglas;
     }
 
     private static AnimationCurve CurvaDelFoco()
@@ -3807,6 +3915,14 @@ public static class TemploDelCoroBuilder
         var so = new SerializedObject(c); var p = Campo(so, c, campo); if (p == null) return;
         p.arraySize = v.Length;
         for (int i = 0; i < v.Length; i++) p.GetArrayElementAtIndex(i).vector2Value = v[i];
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static void PonerVector2Ints(Object c, string campo, Vector2Int[] v)
+    {
+        var so = new SerializedObject(c); var p = Campo(so, c, campo); if (p == null) return;
+        p.arraySize = v.Length;
+        for (int i = 0; i < v.Length; i++) p.GetArrayElementAtIndex(i).vector2IntValue = v[i];
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
