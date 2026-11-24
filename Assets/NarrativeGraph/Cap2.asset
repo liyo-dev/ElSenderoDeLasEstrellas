@@ -124,7 +124,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 562a84cd-8ae4-43e1-92b9-36f411700e01
-        position: {x: 0, y: 472}
+        position: {x: 0, y: 424}
         outputs:
         - 89e3c01b-4b7d-4edf-9c26-c0fa9b1db4d3
         checkpointId: CAP2_INICIO_TRAS_DEMONIO
@@ -144,7 +144,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 89e3c01b-4b7d-4edf-9c26-c0fa9b1db4d3
-        position: {x: 280, y: 472}
+        position: {x: 280, y: 424}
         outputs:
         - ccda44d1-808e-43b9-bdd1-2833e19985e5
         operacion: 0
@@ -162,7 +162,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: ccda44d1-808e-43b9-bdd1-2833e19985e5
-        position: {x: 560, y: 472}
+        position: {x: 560, y: 424}
         outputs:
         - f9727755-a7d3-4139-b632-6be36c051717
         eventKey: LIAM_CRYSTAL_START
@@ -178,7 +178,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f9727755-a7d3-4139-b632-6be36c051717
-        position: {x: 840, y: 472}
+        position: {x: 840, y: 424}
         outputs:
         - 5d1d3c34-cd28-464d-8039-73856cd7338e
         eventKey: LIAM_CRYSTAL_DONE
@@ -197,7 +197,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 5d1d3c34-cd28-464d-8039-73856cd7338e
-        position: {x: 1120, y: 472}
+        position: {x: 1120, y: 424}
         outputs:
         - c07008ca-ae29-4d50-848f-8c80e0dfa16a
         operacion: 1
@@ -215,7 +215,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-fork
-        position: {x: 280, y: 1060}
+        position: {x: 280, y: 1140}
         outputs:
         - cap2-prepara-viaje-victoria-0
         - cap2-prepara-viaje-boticaria-0
@@ -250,7 +250,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-0
-        position: {x: 560, y: 1060}
+        position: {x: 560, y: 1140}
         outputs:
         - cap2-prepara-viaje-victoria-1
         npcId: NPC_Victoria
@@ -269,7 +269,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-1
-        position: {x: 840, y: 1060}
+        position: {x: 840, y: 1140}
         outputs:
         - cap2-prepara-viaje-victoria-2
         dialogue: {fileID: 11400000, guid: fa547693d02e99e449e4b2ed340b54a9, type: 2}
@@ -287,7 +287,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-4
-        position: {x: 1680, y: 1060}
+        position: {x: 1680, y: 1140}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Victoria
@@ -310,7 +310,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-0
-        position: {x: 560, y: 1222}
+        position: {x: 560, y: 1366}
         outputs:
         - cap2-prepara-viaje-boticaria-1
         npcId: NPC_Boticaria
@@ -329,7 +329,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-1
-        position: {x: 840, y: 1222}
+        position: {x: 840, y: 1366}
         outputs:
         - cap2-prepara-viaje-boticaria-2
         dialogue: {fileID: 11400000, guid: a4a02d6147efb0045818a78facdef920, type: 2}
@@ -347,7 +347,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-2
-        position: {x: 1120, y: 1252}
+        position: {x: 1120, y: 1396}
         outputs:
         - cap2-prepara-viaje-boticaria-3
         item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
@@ -366,7 +366,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-4
-        position: {x: 1680, y: 1222}
+        position: {x: 1680, y: 1366}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Boticaria
@@ -389,7 +389,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-0
-        position: {x: 560, y: 1384}
+        position: {x: 560, y: 1592}
         outputs:
         - cap2-erika-lecciones-intro
         npcId: NPC_Erika
@@ -408,7 +408,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-2
-        position: {x: 1680, y: 1384}
+        position: {x: 1120, y: 2184}
         outputs:
         - cap2-prepara-viaje-encargo-hecho
         standingActorId: NPC_Erika
@@ -431,7 +431,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-motivos
-        position: {x: 1120, y: 1606}
+        position: {x: 1120, y: 1878}
         outputs:
         - cap2-prepara-viaje-completar
         dialogue: {fileID: 11400000, guid: e3e9c5d6b93ecac4087a29210890a696, type: 2}
@@ -449,7 +449,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-oliver-talk
-        position: {x: 840, y: 2134}
+        position: {x: 840, y: 2820}
         outputs:
         - cap2-despedida-oliver-dlg
         npcId: NPC_Oliver
@@ -468,7 +468,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-oliver-dlg
-        position: {x: 1120, y: 2134}
+        position: {x: 1120, y: 2820}
         outputs:
         - cap2-adios-paso-oliver
         dialogue: {fileID: 11400000, guid: 5630ba1303db3fd4086d7168d232b93c, type: 2}
@@ -486,7 +486,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-despedida-join
-        position: {x: 1680, y: 2134}
+        position: {x: 1680, y: 2820}
         outputs:
         - cap2-final-checkpoint
         flagKey: CAP2_COMPLETADO
@@ -503,7 +503,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-final-checkpoint
-        position: {x: 0, y: 2450}
+        position: {x: 0, y: 3200}
         outputs:
         - cap2-fin-senal
         checkpointId: CAP2_FIN
@@ -523,7 +523,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-encargo-hecho
-        position: {x: 1960, y: 1060}
+        position: {x: 1960, y: 1140}
         outputs: []
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
     - rid: 5630202655468159110
@@ -538,7 +538,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-espera
-        position: {x: 560, y: 1546}
+        position: {x: 560, y: 1818}
         outputs:
         - cap2-prepara-viaje-volver
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
@@ -556,7 +556,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-completar
-        position: {x: 1400, y: 1606}
+        position: {x: 1400, y: 1908}
         outputs:
         - cap2-adios-senal
         standingActorId: 
@@ -579,7 +579,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-volver
-        position: {x: 840, y: 1546}
+        position: {x: 840, y: 1818}
         outputs:
         - cap2-despedida-motivos
         npcId: NPC_Eldran
@@ -598,7 +598,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-fin-senal
-        position: {x: 280, y: 2450}
+        position: {x: 280, y: 3200}
         outputs:
         - pieza-npc_eldran-usual-tras-el-cap-2-en-la-capital-cap2-fin-senal
         eventKey: CH_Cap2_BACK_1
@@ -614,7 +614,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-grimorio
-        position: {x: 840, y: 1384}
+        position: {x: 280, y: 2184}
         outputs:
         - cap2-prepara-viaje-erika-desbloqueo
         flagKey: GRIMORIO_RECIBIDO
@@ -631,7 +631,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-8
-        position: {x: 1680, y: 472}
+        position: {x: 1680, y: 424}
         outputs:
         - cap2-manana-despues-9
         operacion: 0
@@ -649,7 +649,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-9
-        position: {x: 1960, y: 472}
+        position: {x: 1960, y: 424}
         outputs:
         - cap2-manana-despues-10
         actorId: Player
@@ -668,7 +668,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-10
-        position: {x: 0, y: 714}
+        position: {x: 0, y: 730}
         outputs:
         - cap2-manana-despues-11
         actorId: NPC_Eldran
@@ -687,7 +687,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-12
-        position: {x: 560, y: 714}
+        position: {x: 560, y: 730}
         outputs:
         - cap2-manana-despues-13
         actorId: NPC_Eldran
@@ -706,7 +706,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-13
-        position: {x: 840, y: 714}
+        position: {x: 840, y: 730}
         outputs:
         - cap2-manana-despues-14
         item: {fileID: 11400000, guid: fb04f79e6fa44b847874ba45ec777e3c, type: 2}
@@ -725,7 +725,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-14
-        position: {x: 1120, y: 714}
+        position: {x: 1120, y: 730}
         outputs:
         - cap2-manana-despues-15
         questId: PREPARA_VIAJE
@@ -744,7 +744,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-15
-        position: {x: 0, y: 1060}
+        position: {x: 0, y: 1140}
         outputs:
         - cap2-prepara-viaje-fork
         checkpointId: CAP2_MANANA_DESPUES
@@ -764,7 +764,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-        position: {x: 1960, y: 1222}
+        position: {x: 1960, y: 1622}
         outputs:
         - pieza-npc_eldran-fromhere-cap-23-espera-en-la-salida-del-pueblo-cap2-adios-senal
         actorId: NPC_Boticaria
@@ -785,7 +785,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_eldran-fromhere-cap-23-espera-en-la-salida-del-pueblo-cap2-adios-senal
-        position: {x: 0, y: 1818}
+        position: {x: 0, y: 2410}
         outputs:
         - pieza-npc_erika-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         actorId: NPC_Eldran
@@ -806,7 +806,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_erika-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-        position: {x: 280, y: 1818}
+        position: {x: 280, y: 2410}
         outputs:
         - pieza-npc_tomasa-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         actorId: NPC_Erika
@@ -827,7 +827,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_tomasa-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-        position: {x: 560, y: 1818}
+        position: {x: 560, y: 2440}
         outputs:
         - pieza-npc_oliver-fromhere-cap-2-tras-despedirse-de-will-cap2-adios-senal
         actorId: NPC_Tomasa
@@ -848,7 +848,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_oliver-fromhere-cap-2-tras-despedirse-de-will-cap2-adios-senal
-        position: {x: 840, y: 1818}
+        position: {x: 840, y: 2440}
         outputs:
         - c62594ac-e55c-44b4-8377-eee4fab61348
         actorId: NPC_Oliver
@@ -869,7 +869,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_victoria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
-        position: {x: 280, y: 2134}
+        position: {x: 280, y: 2820}
         outputs:
         - cap2-adios-mision
         actorId: NPC_Victoria
@@ -890,7 +890,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: pieza-npc_eldran-usual-tras-el-cap-2-en-la-capital-cap2-fin-senal
-        position: {x: 560, y: 2450}
+        position: {x: 560, y: 3200}
         outputs: []
         actorId: NPC_Eldran
         layer: 1
@@ -909,7 +909,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c62594ac-e55c-44b4-8377-eee4fab61348
-        position: {x: 0, y: 2134}
+        position: {x: 0, y: 2820}
         outputs:
         - pieza-npc_victoria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         checkpointId: PUNTO_C62594
@@ -929,7 +929,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
-        position: {x: 1400, y: 472}
+        position: {x: 1400, y: 424}
         outputs:
         - cap2-manana-despues-8
         request:
@@ -948,7 +948,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-manana-despues-11
-        position: {x: 280, y: 714}
+        position: {x: 280, y: 730}
         outputs:
         - cap2-manana-despues-12
         - 
@@ -968,7 +968,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-2
-        position: {x: 1120, y: 1060}
+        position: {x: 1120, y: 1140}
         outputs:
         - cap2-prepara-viaje-victoria-3
         request:
@@ -987,7 +987,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-victoria-3
-        position: {x: 1400, y: 1060}
+        position: {x: 1400, y: 1140}
         outputs:
         - cap2-prepara-viaje-victoria-4
         request:
@@ -1006,7 +1006,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-3
-        position: {x: 1400, y: 1252}
+        position: {x: 1400, y: 1396}
         outputs:
         - cap2-prepara-viaje-boticaria-4
         request:
@@ -1025,7 +1025,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-desbloqueo
-        position: {x: 1120, y: 1414}
+        position: {x: 560, y: 2184}
         outputs:
         - cap2-erika-duelo
         request:
@@ -1096,7 +1096,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-lecciones-intro
-        position: {x: 560, y: 1704}
+        position: {x: 840, y: 1592}
         outputs:
         - cap2-erika-desbloqueo-proteccion
         dialogue: {fileID: 11400000, guid: 47bca80bad3d6334eb7961e009e2e59f, type: 2}
@@ -1114,7 +1114,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-desbloqueo-proteccion
-        position: {x: 840, y: 1704}
+        position: {x: 1120, y: 1622}
         outputs:
         - cap2-erika-leccion-devolver
         request:
@@ -1133,7 +1133,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-leccion-protegerse
-        position: {x: 1400, y: 1704}
+        position: {x: 1680, y: 1592}
         outputs:
         - cap2-erika-leccion-escudo
         request:
@@ -1152,7 +1152,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-leccion-devolver
-        position: {x: 1120, y: 1704}
+        position: {x: 1400, y: 1652}
         outputs:
         - cap2-erika-leccion-protegerse
         request:
@@ -1171,7 +1171,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-elementos
-        position: {x: 1960, y: 1704}
+        position: {x: 0, y: 2184}
         outputs:
         - cap2-prepara-viaje-erika-grimorio
         dialogue: {fileID: 11400000, guid: e39b6281d368271459be4ce0ef09bf12, type: 2}
@@ -1189,7 +1189,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-duelo
-        position: {x: 1400, y: 1414}
+        position: {x: 840, y: 2184}
         outputs:
         - cap2-prepara-viaje-erika-2
         - cap2-erika-duelo
@@ -1287,7 +1287,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-erika-leccion-escudo
-        position: {x: 1680, y: 1704}
+        position: {x: 1960, y: 1366}
         outputs:
         - cap2-erika-elementos
         request:
@@ -1334,7 +1334,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-adios-senal
-        position: {x: 1400, y: 1806}
+        position: {x: 1680, y: 1848}
         outputs:
         - pieza-npc_boticaria-fromhere-cap-2-despedida-de-will-cap2-adios-senal
         eventKey: CAP2_A_DESPEDIRSE
@@ -1350,7 +1350,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-adios-mision
-        position: {x: 1780, y: 1806}
+        position: {x: 560, y: 2820}
         outputs:
         - cap2-despedida-oliver-talk
         questId: CAP2_HORA_DE_PARTIR
@@ -1369,7 +1369,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-adios-paso-oliver
-        position: {x: 1380, y: 2134}
+        position: {x: 1400, y: 2820}
         outputs:
         - cap2-despedida-join
         standingActorId: 
